@@ -1,0 +1,10 @@
+apply plugin: 'groovy'
+
+dependencies {
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.2.0'
+
+    compile group: 'org.springframework', name: 'spring-context', version: '4.0.3.RELEASE'
+}
+
+apply plugin: 'application'
+mainClassName = 'com.gihub.diplodoc.diplobase.shell.GetAllSources'

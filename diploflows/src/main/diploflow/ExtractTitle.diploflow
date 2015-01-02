@@ -1,0 +1,9 @@
+listen to: 'load-post'
+
+input 'post'
+
+description "Extracts title from post '${post.url}'"
+
+require 'title-extractor'
+
+extractTitle from: post

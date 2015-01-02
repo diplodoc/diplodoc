@@ -1,0 +1,23 @@
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+
+        resources {
+            srcDir 'src/main/resources'
+            srcDir 'src/main/python'
+        }
+    }
+}
+
+dependencies {
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.2.0'
+    compile group: 'org.python', name: 'jython', version: '2.5.3'
+
+    compile group: 'org.springframework', name: 'spring-context', version: '4.0.3.RELEASE'
+
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.7.3'
+}
+
+apply plugin: 'groovy'

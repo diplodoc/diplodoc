@@ -1,0 +1,1 @@
+include 'diplobase', 'diplobase:diplobase-shell', 'diplocore', 'diploexec', 'diploexec:diploexec-shell', 'diploflows'

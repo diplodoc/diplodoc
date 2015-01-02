@@ -1,0 +1,21 @@
+import com.github.diplodoc.diploexec.DiploflowsRuntimeEnvironment
+import com.github.diplodoc.diploexec.FlowRepository
+import org.apache.commons.dbcp.BasicDataSource
+import org.springframework.context.support.GenericGroovyApplicationContext
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
+
+beans {
+
+    importBeans('diplobase.context')
+
+    xmlns([ context: 'http://www.springframework.org/schema/context' ])
+    context.'component-scan'('base-package': 'com.github.diplodoc.diploexec')
+
+    threadPool(ThreadPoolTaskExecutor) {
+    }
+
+    diploflowsRuntimeEnvirnment(DiploflowsRuntimeEnvironment) {
+        modulesContext = new GenericGroovyApplicationContext('diplocore.context')
+        threadPool = threadPool
+    }
+}

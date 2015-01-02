@@ -1,0 +1,12 @@
+dependencies {
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.3.6'
+
+    compile group: 'org.springframework', name: 'spring-context', version: '4.1.0.RELEASE'
+    compile 'org.springframework:spring-web:4.1.0.RELEASE'
+    compile 'org.springframework:spring-webmvc:4.1.0.RELEASE'
+
+    compile 'com.fasterxml.jackson.core:jackson-core:2.3.3'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.3.3'
+}
+
+apply plugin: 'groovy'

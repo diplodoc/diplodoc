@@ -1,0 +1,28 @@
+dependencies {
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.3.6'
+    compile group: 'org.python', name: 'jython', version: '2.5.3'
+
+    compile group: 'org.springframework', name: 'spring-context', version: '4.1.0.RELEASE'
+
+    compile 'org.springframework:spring-web:4.1.0.RELEASE'
+    compile 'org.springframework:spring-webmvc:4.1.0.RELEASE'
+    compile 'javax.servlet:javax.servlet-api:3.+'
+
+    compile 'com.fasterxml.jackson.core:jackson-core:2.3.3'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.3.3'
+
+    compile group: 'org.postgresql', name: 'postgresql', version: '9.3-1101-jdbc41'
+    compile group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
+
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.7.3'
+}
+
+apply plugin: 'groovy'
+
+apply plugin: 'war'
+apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
+
+gretty {
+    port = 8080
+    contextPath = '/diploexec'
+}

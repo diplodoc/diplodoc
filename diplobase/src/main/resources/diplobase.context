@@ -1,0 +1,30 @@
+import org.apache.commons.dbcp.BasicDataSource
+import org.springframework.orm.jpa.JpaTransactionManager
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
+import org.springframework.orm.jpa.vendor.HibernateJpaDialect
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
+
+beans {
+
+    xmlns([ data: 'http://www.springframework.org/schema/data/jpa' ])
+
+    data.repositories('base-package': 'com.github.diplodoc.diplobase.repository')
+
+    dataSource(BasicDataSource) {
+        driverClassName = 'org.postgresql.Driver'
+        url = 'jdbc:postgresql://localhost:5432/diplobase'
+        username = 'postgres'
+        password = '25011992'
+    }
+
+    entityManagerFactory(LocalContainerEntityManagerFactoryBean) {
+        dataSource = dataSource
+        jpaVendorAdapter = new HibernateJpaVendorAdapter()
+        packagesToScan = 'com.github.diplodoc.diplobase.domain'
+        jpaDialect = new HibernateJpaDialect()
+    }
+
+    transactionManager(JpaTransactionManager) {
+        entityManagerFactory = entityManagerFactory
+    }
+}

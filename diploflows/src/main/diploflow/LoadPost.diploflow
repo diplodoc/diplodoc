@@ -1,0 +1,9 @@
+input 'source', 'url'
+
+description "Loads post from '${url}'"
+
+require 'post-loader'
+
+def post = load from: source, url: url
+
+output post: post

@@ -1,0 +1,34 @@
+subprojects {
+    group = 'com.github.diplodoc'
+    version = '0.0'
+
+    apply plugin: 'java'
+
+	repositories {
+	    jcenter()
+	}
+}
+
+project(':diplobase:diplobase-shell') {
+	dependencies {
+		compile project(':diplobase')
+	}
+}
+
+project(':diplocore') {
+	dependencies {
+		compile project(':diplobase')
+	}
+}
+
+project(':diploexec') {
+	dependencies {
+		compile project(':diplocore')
+	}
+}
+
+project(':diploexec:diploexec-shell') {
+	dependencies {
+		compile project(':diplobase')
+	}
+}

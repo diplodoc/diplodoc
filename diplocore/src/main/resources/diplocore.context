@@ -1,0 +1,46 @@
+import com.github.diplodoc.diplocore.modules.ActionRegistrant
+import com.github.diplodoc.diplocore.modules.FootballUaNewPostsFinder
+import com.github.diplodoc.diplocore.modules.UserRegistrant
+import com.github.diplodoc.diplocore.modules.TestActor
+import com.github.diplodoc.diplocore.modules.TextExtractor
+import com.github.diplodoc.diplocore.modules.TitleExtractor
+import com.github.diplodoc.diplocore.modules.PostLoader
+import com.github.diplodoc.diplocore.services.Web
+
+beans {
+
+    importBeans('diplobase.context')
+
+    xmlns([ context: 'http://www.springframework.org/schema/context' ])
+    context.'component-scan'('base-package': 'com.github.diplodoc.diplocore')
+
+    web(Web)
+
+    'football.ua-new-posts-finder'(FootballUaNewPostsFinder) {
+        web = web
+    }
+
+    'post-loader'(PostLoader) {
+        web = web
+    }
+
+    'title-extractor'(TitleExtractor) {
+        web = web
+    }
+
+    'text-extractor'(TextExtractor) {
+        web = web
+    }
+
+    'user-registrant'(UserRegistrant) {
+    }
+
+    'action-registrant'(ActionRegistrant) {
+    }
+
+    'jython-test'(TestActor) {
+    }
+
+    'diplobase.source'(DiplobaseSource) {
+    }
+}

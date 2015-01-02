@@ -1,0 +1,12 @@
+apply plugin: 'groovy'
+
+dependencies {
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.2.0'
+
+    compile group: 'org.springframework', name: 'spring-context', version: '4.0.3.RELEASE'
+    compile group: 'org.springframework.data', name: 'spring-data-jpa', version: '1.7.1.RELEASE'
+
+    compile group: 'org.postgresql', name: 'postgresql', version: '9.3-1101-jdbc41'
+    compile group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
+    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.3.6.Final'
+}
