@@ -1,0 +1,33 @@
+ext {
+    versions = [:]
+    versions.spring = '4.1.0.RELEASE'
+    versions.jackson = '2.3.3'
+
+    dependency = [:]
+
+    dependency.groovy = 'org.codehaus.groovy:groovy-all:2.3.9'
+    dependency.jython = 'org.python:jython:2.5.3'
+
+    dependency.servlet = 'javax.servlet:javax.servlet-api:3.+'
+
+    dependency.spring = [:]
+    dependency.spring.context = "org.springframework:spring-context:${versions.spring}"
+    dependency.spring.web = "org.springframework:spring-web:${versions.spring}"
+    dependency.spring.webmvc = "org.springframework:spring-webmvc:${versions.spring}"
+
+    dependency.spring.data = [:]
+    dependency.spring.data.jpa = 'org.springframework.data:spring-data-jpa:1.7.1.RELEASE'
+
+    dependency.postgresql = 'org.postgresql:postgresql:9.3-1101-jdbc41'
+
+    dependency.commons = [:]
+    dependency.commons.dbcp = 'commons-dbcp:commons-dbcp:1.4'
+
+    dependency.hibernate = 'org.hibernate:hibernate-entitymanager:4.3.6.Final'
+
+    dependency.jsoup = 'org.jsoup:jsoup:1.7.3'
+
+    dependency.jackson = [:]
+    dependency.jackson.core = "com.fasterxml.jackson.core:jackson-core:${versions.jackson}"
+    dependency.jackson.databind = "com.fasterxml.jackson.core:jackson-databind:${versions.jackson}"
+}
