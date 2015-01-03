@@ -17,6 +17,7 @@ ext {
 
     dependency.spring.data = [:]
     dependency.spring.data.jpa = 'org.springframework.data:spring-data-jpa:1.7.1.RELEASE'
+    dependency.spring.data.rest = 'org.springframework.data:spring-data-rest-webmvc:2.2.1.RELEASE'
 
     dependency.postgresql = 'org.postgresql:postgresql:9.3-1101-jdbc41'
 
