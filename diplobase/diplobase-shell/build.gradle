@@ -1,2 +1,0 @@
-apply plugin: 'application'
-mainClassName = 'com.gihub.diplodoc.diplobase.shell.GetAllSources'

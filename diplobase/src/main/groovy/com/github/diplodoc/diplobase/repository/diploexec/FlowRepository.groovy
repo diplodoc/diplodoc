@@ -7,6 +7,4 @@ import org.springframework.data.repository.CrudRepository
  * @author yaroslav.yermilov
  */
 interface FlowRepository extends CrudRepository<Flow, Long> {
-
-    Flow findOneByName(String name)
 }
