@@ -40,7 +40,11 @@ class ApplicationConfig {
         LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean()
         entityManagerFactory.dataSource = dataSource
         entityManagerFactory.jpaVendorAdapter = jpaVendorAdapter
-        entityManagerFactory.packagesToScan = 'com.github.diplodoc.diplobase.domain'
+        entityManagerFactory.packagesToScan = [
+                'com.github.diplodoc.diplobase.domain.diplodata',
+                'com.github.diplodoc.diplobase.domain.diploexec',
+                'com.github.diplodoc.diplobase.domain.diplouser'
+        ]
 
         return entityManagerFactory
     }
