@@ -43,3 +43,7 @@ develop-eggs
 lib
 lib64
 MANIFEST
+
+# Runtime
+*.log
+*.history

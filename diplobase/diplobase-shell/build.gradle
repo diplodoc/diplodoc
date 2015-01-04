@@ -10,3 +10,6 @@ dependencies {
 
 apply plugin: 'application'
 mainClassName = 'org.springframework.shell.Bootstrap'
+run {
+    standardInput = System.in
+}

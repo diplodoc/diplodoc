@@ -1,6 +1,6 @@
 package com.github.diplodoc.diplobase.shell
 
-import org.springframework.beans.factory.annotation.Autowired
+import groovy.json.JsonSlurper
 import org.springframework.shell.core.CommandMarker
 import org.springframework.shell.core.annotation.CliCommand
 import org.springframework.stereotype.Component
@@ -13,12 +13,19 @@ import org.springframework.web.client.RestTemplate
 class SourcesCommands implements CommandMarker {
 
     RestTemplate restTemplate = new RestTemplate()
+    JsonSlurper jsonSlurper = new JsonSlurper()
 
     @CliCommand(value = 'sources list', help = 'list all sources')
     String list() {
-        List sources = restTemplate.getForObject('http://localhost:8080/diplobase/sources', List.class)
-        sources.each {
-            println it
-        }
+        def sourcesJson = jsonSlurper.parseText(restTemplate.getForObject('http://localhost:8080/diplobase/sources', String))
+        List sourcesLinks = (sourcesJson.links as List).findAll { link -> link.rel == 'source' }
+
+        sourcesLinks.collect { sourceLink ->
+            def sourceJson = jsonSlurper.parseText(restTemplate.getForObject(sourceLink.href, String))
+
+            "${sourceLink.href.substring(sourceLink.href.lastIndexOf('/') + 1)}".padLeft(5) +
+            "${sourceJson.name}".padLeft(30) +
+            "${sourceJson.newPostsFinderName}".padLeft(50)
+        }.join('\n')
     }
 }
