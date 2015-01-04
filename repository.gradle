@@ -15,6 +15,8 @@ ext {
     dependency.spring.web = "org.springframework:spring-web:${versions.spring}"
     dependency.spring.webmvc = "org.springframework:spring-webmvc:${versions.spring}"
 
+    dependency.spring.shell = 'org.springframework.shell:spring-shell:1.1.0.RELEASE'
+
     dependency.spring.data = [:]
     dependency.spring.data.jpa = 'org.springframework.data:spring-data-jpa:1.7.1.RELEASE'
     dependency.spring.data.rest = 'org.springframework.data:spring-data-rest-webmvc:2.2.1.RELEASE'

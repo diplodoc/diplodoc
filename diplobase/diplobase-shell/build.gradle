@@ -1,0 +1,12 @@
+dependencies {
+    compile dependency.spring.shell
+
+    compile dependency.spring.web
+    compile dependency.spring.webmvc
+
+    compile dependency.jackson.core
+    compile dependency.jackson.databind
+}
+
+apply plugin: 'application'
+mainClassName = 'org.springframework.shell.Bootstrap'
