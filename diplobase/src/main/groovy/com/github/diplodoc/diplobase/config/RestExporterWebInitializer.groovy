@@ -1,11 +1,8 @@
 package com.github.diplodoc.diplobase.config
 
-import org.springframework.beans.factory.groovy.GroovyBeanDefinitionReader
-import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration
 import org.springframework.web.WebApplicationInitializer
 import org.springframework.web.context.ContextLoaderListener
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext
-import org.springframework.web.context.support.GroovyWebApplicationContext
 import org.springframework.web.servlet.DispatcherServlet
 
 import javax.servlet.ServletContext

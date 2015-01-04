@@ -12,5 +12,5 @@ import javax.sql.DataSource
  */
 @Configuration
 @Import(RepositoryRestMvcConfiguration.class)
-class WebConfig extends RepositoryRestMvcConfiguration {
+class WebConfig {
 }
