@@ -21,13 +21,13 @@ class WebApiFacade {
     @Autowired
     DiploflowsRuntimeEnvironment runtime
 
-    @RequestMapping(value='flow/{name}/start', method=RequestMethod.POST)
+    @RequestMapping(value='/flow/{name}/start', method=RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     void startFlow(@PathVariable('name') String name, @RequestBody Map<String, Object> input) {
         runtime.startFlow(name, input)
     }
 
-    @RequestMapping(value='status', method=RequestMethod.GET)
+    @RequestMapping(value='/status', method=RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody def status() {
         runtime.status()

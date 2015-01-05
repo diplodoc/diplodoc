@@ -24,6 +24,6 @@ class DiploexecWebInitializer implements WebApplicationInitializer {
 
         ServletRegistration.Dynamic dispatcher = servletContext.addServlet('dispatcher', new DispatcherServlet(webContext))
         dispatcher.setLoadOnStartup(1)
-        dispatcher.addMapping('/')
+        dispatcher.addMapping('/*')
     }
 }
