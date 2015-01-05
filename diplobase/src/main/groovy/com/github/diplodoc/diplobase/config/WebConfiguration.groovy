@@ -11,6 +11,6 @@ import javax.sql.DataSource
  * @author yaroslav.yermilov
  */
 @Configuration
-@Import(RepositoryRestMvcConfiguration.class)
-class WebConfig {
+@Import(RepositoryRestMvcConfiguration)
+class WebConfiguration {
 }

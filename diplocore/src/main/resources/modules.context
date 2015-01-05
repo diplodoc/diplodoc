@@ -1,4 +1,5 @@
 import com.github.diplodoc.diplocore.modules.ActionRegistrant
+import com.github.diplodoc.diplocore.modules.DiplobaseSource
 import com.github.diplodoc.diplocore.modules.FootballUaNewPostsFinder
 import com.github.diplodoc.diplocore.modules.UserRegistrant
 import com.github.diplodoc.diplocore.modules.TestActor
@@ -8,11 +9,6 @@ import com.github.diplodoc.diplocore.modules.PostLoader
 import com.github.diplodoc.diplocore.services.Web
 
 beans {
-
-    importBeans('diplobase.context')
-
-    xmlns([ context: 'http://www.springframework.org/schema/context' ])
-    context.'component-scan'('base-package': 'com.github.diplodoc.diplocore')
 
     web(Web)
 
@@ -32,15 +28,11 @@ beans {
         web = web
     }
 
-    'user-registrant'(UserRegistrant) {
-    }
+    'user-registrant'(UserRegistrant)
 
-    'action-registrant'(ActionRegistrant) {
-    }
+    'action-registrant'(ActionRegistrant)
 
-    'jython-test'(TestActor) {
-    }
+    'jython-test'(TestActor)
 
-    'diplobase.source'(DiplobaseSource) {
-    }
+    'diplobase.source'(DiplobaseSource)
 }

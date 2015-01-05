@@ -11,18 +11,18 @@ import javax.servlet.ServletRegistration
 /**
  * @author yaroslav.yermilov
  */
-class RestExporterWebInitializer implements WebApplicationInitializer {
+class DiplobaseWebInitializer implements WebApplicationInitializer {
 
     @Override
     void onStartup(ServletContext servletContext) {
-        AnnotationConfigWebApplicationContext rootCtx = new AnnotationConfigWebApplicationContext()
-        rootCtx.register(ApplicationConfig)
-        servletContext.addListener(new ContextLoaderListener(rootCtx))
+        AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext()
+        rootContext.register(DiplobaseConfiguration)
+        servletContext.addListener(new ContextLoaderListener(rootContext))
 
-        AnnotationConfigWebApplicationContext webCtx = new AnnotationConfigWebApplicationContext()
-        webCtx.register(WebConfig)
+        AnnotationConfigWebApplicationContext webContext = new AnnotationConfigWebApplicationContext()
+        webContext.register(WebConfiguration)
 
-        DispatcherServlet dispatcherServlet = new DispatcherServlet(webCtx)
+        DispatcherServlet dispatcherServlet = new DispatcherServlet(webContext)
         ServletRegistration.Dynamic reg = servletContext.addServlet("rest-exporter", dispatcherServlet)
         reg.setLoadOnStartup(1)
         reg.addMapping("/*")
