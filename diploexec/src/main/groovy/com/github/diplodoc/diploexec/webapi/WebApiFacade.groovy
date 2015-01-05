@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
  * @author yaroslav.yermilov
  */
 @Controller
-@RequestMapping("/api")
+@RequestMapping('/api')
 class WebApiFacade {
 
     @Autowired

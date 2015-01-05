@@ -26,6 +26,6 @@ class DiplobaseWebInitializer implements WebApplicationInitializer {
         DispatcherServlet dispatcherServlet = new DispatcherServlet(webContext)
         ServletRegistration.Dynamic reg = servletContext.addServlet("rest-exporter", dispatcherServlet)
         reg.setLoadOnStartup(1)
-        reg.addMapping("/*")
+        reg.addMapping('/*')
     }
 }
