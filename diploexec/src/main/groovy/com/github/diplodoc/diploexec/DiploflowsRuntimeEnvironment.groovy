@@ -27,10 +27,10 @@ class DiploflowsRuntimeEnvironment {
         runs = []
     }
 
-    def startFlow(String name, Map input) {
-        println "Starting flow [${name}] with parameters [${input}]..."
+    def startFlow(Long id, Map input) {
+        println "Starting flow [${id}] with parameters [${input}]..."
 
-        def flow = flows.find { it.name == name }
+        def flow = flows.find { it.id == id }
 
         def run = new FlowRun(runtime: this, flow: flow, params: input)
         runs << run
