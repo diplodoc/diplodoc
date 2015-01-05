@@ -35,7 +35,7 @@ class StatusCommands implements CommandMarker {
 
         result += 'FINISHED\n'
         result += 'id'.padRight(40) + 'name'.padRight(30) + 'status'.padRight(10) + 'start'.padRight(30) + 'end'.padRight(30) + 'description'.padRight(80) + '\n'
-        status.findAll { it.status == "FINISHED" }.each {
+        status.findAll { it.status == 'FINISHED' }.each {
             result += "${it.id}".padRight(40) + "${it.name}".padRight(30) + "${it.status}".padRight(10) + "${it.startTime}".padRight(30) + "${it.endTime}".padRight(30) + "${it.description}".padRight(80) + '\n'
         }
         result += '\n'
