@@ -1,4 +1,4 @@
-package com.github.diplodoc.diplobase.config
+package com.github.diplodoc.diplobase.rest.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -11,6 +11,6 @@ import javax.sql.DataSource
  * @author yaroslav.yermilov
  */
 @Configuration
-@Import(RepositoryRestMvcConfiguration.class)
-class WebConfig {
+@Import(RepositoryRestMvcConfiguration)
+class WebConfiguration {
 }

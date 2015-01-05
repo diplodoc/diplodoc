@@ -21,7 +21,7 @@ import javax.sql.DataSource
 @Configuration
 @EnableJpaRepositories('com.github.diplodoc.diplobase.repository')
 @EnableTransactionManagement
-class ApplicationConfig {
+class DiplobaseConfiguration {
 
     @Bean
     DataSource dataSource() {

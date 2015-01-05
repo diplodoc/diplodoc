@@ -1,1 +1,10 @@
-include 'diplobase', 'diplobase:diplobase-shell', 'diplocore', 'diploexec', 'diploexec:diploexec-shell', 'diploflows'
+include 'diplobase'
+include 'diplobase:diplobase-shell'
+include 'diplobase:diplobase-rest'
+
+include 'diplocore'
+
+include 'diploexec'
+include 'diploexec:diploexec-shell'
+
+include 'diploflows'

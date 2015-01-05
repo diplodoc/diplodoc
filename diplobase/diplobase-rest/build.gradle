@@ -1,0 +1,12 @@
+dependencies {
+    compile dependency.spring.data.rest
+    compile dependency.spring.web
+}
+
+apply plugin: 'war'
+apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
+
+gretty {
+    port = 8080
+    contextPath = '/diplobase'
+}
