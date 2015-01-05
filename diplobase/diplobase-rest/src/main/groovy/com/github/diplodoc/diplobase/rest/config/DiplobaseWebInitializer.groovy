@@ -1,5 +1,6 @@
-package com.github.diplodoc.diplobase.config
+package com.github.diplodoc.diplobase.rest.config
 
+import com.github.diplodoc.diplobase.config.DiplobaseConfiguration
 import org.springframework.web.WebApplicationInitializer
 import org.springframework.web.context.ContextLoaderListener
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext

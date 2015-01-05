@@ -1,4 +1,4 @@
-package com.github.diplodoc.diplobase.config
+package com.github.diplodoc.diplobase.rest.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

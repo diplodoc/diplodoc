@@ -1,17 +1,7 @@
 dependencies {
     compile dependency.spring.data.jpa
-    compile dependency.spring.data.rest
-    compile dependency.spring.web
 
     compile dependency.postgresql
     compile dependency.commons.dbcp
     compile dependency.hibernate
-}
-
-apply plugin: 'war'
-apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
-
-gretty {
-    port = 8080
-    contextPath = '/diplobase'
 }

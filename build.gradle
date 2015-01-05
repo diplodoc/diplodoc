@@ -23,6 +23,12 @@ project(':diplobase:diplobase-shell') {
 	}
 }
 
+project(':diplobase:diplobase-rest') {
+	dependencies {
+		compile project(':diplobase')
+	}
+}
+
 project(':diplocore') {
 	dependencies {
 		compile project(':diplobase')
