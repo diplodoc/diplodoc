@@ -38,6 +38,7 @@ project(':diplocore') {
 project(':diploexec') {
 	dependencies {
 		compile project(':diplocore')
+		compile project(':diplomodules')
 	}
 }
 
