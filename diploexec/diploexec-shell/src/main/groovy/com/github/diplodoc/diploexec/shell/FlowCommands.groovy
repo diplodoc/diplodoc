@@ -1,14 +1,11 @@
 package com.github.diplodoc.diploexec.shell
 
 import com.github.diplodoc.diplobase.client.FlowClient
-import com.github.diplodoc.diplobase.domain.diplodata.Source
 import com.github.diplodoc.diplobase.domain.diploexec.Flow
-import groovy.json.JsonSlurper
 import org.springframework.shell.core.CommandMarker
 import org.springframework.shell.core.annotation.CliCommand
 import org.springframework.shell.core.annotation.CliOption
 import org.springframework.stereotype.Component
-import org.springframework.web.client.RestTemplate
 
 /**
  * @author yaroslav.yermilov
