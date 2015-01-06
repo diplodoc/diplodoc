@@ -1,9 +1,0 @@
-input 'action'
-
-description "Registers ${action.type} of ${action.user.id}"
-
-require 'action-registrant'
-
-register action
-
-notify that: "${action.type.name}-happend", action: action

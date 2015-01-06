@@ -1,9 +1,0 @@
-input 'user'
-
-description "Registers new user '${user.name}'"
-
-require 'user-registrant'
-
-register user
-
-output user: user

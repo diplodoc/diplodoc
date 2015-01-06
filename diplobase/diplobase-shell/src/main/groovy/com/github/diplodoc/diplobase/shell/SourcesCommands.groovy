@@ -25,7 +25,7 @@ class SourcesCommands implements CommandMarker {
 
             "${sourceLink.href.substring(sourceLink.href.lastIndexOf('/') + 1)}".padLeft(5) +
             "${sourceJson.name}".padLeft(30) +
-            "${sourceJson.newPostsFinderName}".padLeft(50)
+            "${sourceJson.newPostsFinderModule}".padLeft(50)
         }.join('\n')
     }
 }

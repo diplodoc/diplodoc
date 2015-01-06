@@ -1,7 +1,5 @@
-import com.github.diplodoc.diplocore.modules.ActionRegistrant
 import com.github.diplodoc.diplocore.modules.DiplobaseSource
 import com.github.diplodoc.diplocore.modules.FootballUaNewPostsFinder
-import com.github.diplodoc.diplocore.modules.UserRegistrant
 import com.github.diplodoc.diplocore.modules.TestActor
 import com.github.diplodoc.diplocore.modules.TextExtractor
 import com.github.diplodoc.diplocore.modules.TitleExtractor
@@ -27,10 +25,6 @@ beans {
     'text-extractor'(TextExtractor) {
         web = web
     }
-
-    'user-registrant'(UserRegistrant)
-
-    'action-registrant'(ActionRegistrant)
 
     'jython-test'(TestActor)
 

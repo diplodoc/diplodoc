@@ -19,5 +19,5 @@ class Source {
 
     String name
 
-    String newPostsFinderName
+    String newPostsFinderModule
 }
