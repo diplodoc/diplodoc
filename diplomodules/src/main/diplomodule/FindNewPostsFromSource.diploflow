@@ -2,12 +2,8 @@ input 'source'
 
 description "Finds new posts from '${source.name}'"
 
-require 'diplobase.source'
-
-source = load source
-
 require source.newPostsFinderModule
 
-findNew source: source, action: {
+findNewPosts source: source, action: {
     url -> send to: 'load-post', source: source, url: url
 }

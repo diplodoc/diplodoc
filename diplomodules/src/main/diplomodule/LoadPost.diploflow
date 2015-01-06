@@ -1,9 +1,9 @@
 input 'source', 'url'
 
-description "Loads post from '${url}'"
+description "Loads post from '${url}' (${source.name})"
 
 require 'post-loader'
 
-def post = load from: source, url: url
+def post = loadPost from: source, url: url
 
 output post: post
