@@ -5,11 +5,11 @@ import java.time.LocalDateTime
 /**
  * @author yaroslav.yermilov
  */
-class FlowRun {
+class ModuleRun {
 
-    DiploflowsRuntimeEnvironment runtime
+    DiploexecRuntimeEnvironment runtime
 
-    def flow
+    def module
     def params
 
     def id = UUID.randomUUID()
@@ -22,7 +22,7 @@ class FlowRun {
         status = 'RUNNING'
         startTime = LocalDateTime.now()
 
-        new GroovyShell(binding(params)).evaluate(flow.definition)
+        new GroovyShell(binding(params)).evaluate(module.definition)
 
         status = 'FINISHED'
         endTime = LocalDateTime.now()
@@ -87,14 +87,14 @@ class FlowRun {
                 def destination = params.to
                 params.remove 'to'
 
-                runtime.startFlow(destination, params)
+                runtime.startModule(destination, params)
         }
     }
 
     private def bindOutput(Binding binding) {
         binding.output = {
             Map params ->
-                runtime.outputed(flow, params)
+                runtime.outputed(module, params)
         }
     }
 

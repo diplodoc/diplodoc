@@ -12,7 +12,7 @@ import javax.persistence.Transient
  */
 @Entity
 @Table(schema = 'diploexec')
-class Flow {
+class Module {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

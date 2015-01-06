@@ -1,7 +1,7 @@
 package com.github.diplodoc.diploexec
 
-import com.github.diplodoc.diplobase.domain.diploexec.Flow
-import com.github.diplodoc.diplobase.repository.diploexec.FlowRepository
+import com.github.diplodoc.diplobase.domain.diploexec.Module
+import com.github.diplodoc.diplobase.repository.diploexec.ModuleRepository
 import org.springframework.context.ApplicationContext
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 
@@ -10,34 +10,34 @@ import javax.annotation.PostConstruct
 /**
  * @author yaroslav.yermilov
  */
-class DiploflowsRuntimeEnvironment {
+class DiploexecRuntimeEnvironment {
 
-    FlowRepository flowRepository
+    ModuleRepository moduleRepository
     ApplicationContext modulesContext
     ThreadPoolTaskExecutor threadPool
 
-    List<Flow> flows
-    List<FlowRun> runs
+    List<Module> modules
+    List<ModuleRun> runs
 
     @PostConstruct
     def run() {
-        println "Starting Diploflows Runtime Environment..."
+        println "Starting Diploexec Runtime Environment..."
 
-        flows = retrieveFlows()
+        modules = retrieveModules()
         runs = []
     }
 
-    def startFlow(Long id, Map input) {
-        println "Starting flow [${id}] with parameters [${input}]..."
+    def startModule(Long id, Map input) {
+        println "Starting module [${id}] with parameters [${input}]..."
 
-        def flow = flows.find { it.id == id }
+        def module = modules.find { it.id == id }
 
-        def run = new FlowRun(runtime: this, flow: flow, params: input)
+        def run = new ModuleRun(runtime: this, module: module, params: input)
         runs << run
 
         threadPool.execute({
             run.run()
-            println "Flow [${flow.name}] finished"
+            println "Module [${module.name}] finished"
         })
     }
 
@@ -45,7 +45,7 @@ class DiploflowsRuntimeEnvironment {
         runs.collect {
             def status = [:]
             status.id = it.id
-            status.name = it.flow.name
+            status.name = it.module.name
             status.description = it.description
             status.status = it.status
             status.startTime = it.startTime.toString()
@@ -59,38 +59,38 @@ class DiploflowsRuntimeEnvironment {
         modulesContext.getBean(name)
     }
 
-    def outputed(Flow flow, Map params) {
-        flows.findAll { it.listensTo.contains(flow.name) } .each {
-            startFlow(it.name, params)
+    def outputed(Module module, Map params) {
+        modules.findAll { it.listensTo.contains(module.name) } .each {
+            startModule(it.name, params)
         }
     }
 
     def notified(String eventName, Map params) {
-        flows.findAll { it.waitingFor.contains(eventName) }.each {
-            startFlow(it.name, params)
+        modules.findAll { it.waitingFor.contains(eventName) }.each {
+            startModule(it.name, params)
         }
     }
 
-    private def retrieveFlows() {
-        println "Retrieving flows..."
+    private def retrieveModules() {
+        println "Retrieving modules..."
 
-        def flows = flowRepository.findAll()
-        flows.each {
+        def modules = moduleRepository.findAll()
+        modules.each {
             it.listensTo = getListenTo(it)
             it.waitingFor = getWaitingFor(it)
         }
 
-        println "${flows.size()} flows retrieved:"
+        println "${modules.size()} modules retrieved:"
         println "id".padRight(5).plus("name".padRight(40)).plus("Listens to".padRight(60)).plus("Waiting for".padRight(60))
-        flows.each {
+        modules.each {
             println "${it.id}".padRight(5).plus("${it.name}".padRight(40)).plus("${it.listensTo}".padRight(60)).plus("${it.waitingFor}".padRight(60))
         }
 
-        return flows
+        return modules
     }
 
-    private def getListenTo(Flow flow) {
-        def flowListenDefinition = flow.definition.readLines().collect {
+    private def getListenTo(Module module) {
+        def moduleListenDefinition = module.definition.readLines().collect {
             if (it.startsWith('listen')) {
                 it
             } else {
@@ -106,12 +106,12 @@ class DiploflowsRuntimeEnvironment {
                 result <<  params.to
         }
 
-        new GroovyShell(binding).evaluate(flowListenDefinition)
+        new GroovyShell(binding).evaluate(moduleListenDefinition)
         result
     }
 
-    private def getWaitingFor(Flow flow) {
-        def flowListenDefinition = flow.definition.readLines().collect {
+    private def getWaitingFor(Module module) {
+        def moduleListenDefinition = module.definition.readLines().collect {
             if (it.startsWith('waiting')) {
                 it
             } else {
@@ -127,7 +127,7 @@ class DiploflowsRuntimeEnvironment {
                 result <<  params.for
         }
 
-        new GroovyShell(binding).evaluate(flowListenDefinition)
+        new GroovyShell(binding).evaluate(moduleListenDefinition)
         result
     }
 }

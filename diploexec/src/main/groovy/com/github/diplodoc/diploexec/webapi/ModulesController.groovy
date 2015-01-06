@@ -1,6 +1,6 @@
 package com.github.diplodoc.diploexec.webapi
 
-import com.github.diplodoc.diploexec.DiploflowsRuntimeEnvironment
+import com.github.diplodoc.diploexec.DiploexecRuntimeEnvironment
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.ResponseStatus
  */
 @Controller
 @RequestMapping('/api/v1')
-class FlowsController {
+class ModulesController {
 
     @Autowired
-    DiploflowsRuntimeEnvironment runtime
+    DiploexecRuntimeEnvironment runtime
 
-    @RequestMapping(value='/flow/{id}/start', method=RequestMethod.POST)
+    @RequestMapping(value='/module/{id}/start', method=RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    void startFlow(@PathVariable('id') Long id, @RequestBody Map<String, Object> input) {
-        runtime.startFlow(id, input)
+    void startModule(@PathVariable('id') Long id, @RequestBody Map<String, Object> input) {
+        runtime.startModule(id, input)
     }
 }

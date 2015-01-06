@@ -7,4 +7,4 @@ include 'diplocore'
 include 'diploexec'
 include 'diploexec:diploexec-shell'
 
-include 'diploflows'
+include 'diplomodules'

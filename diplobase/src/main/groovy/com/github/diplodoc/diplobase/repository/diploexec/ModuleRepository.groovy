@@ -1,13 +1,13 @@
 package com.github.diplodoc.diplobase.repository.diploexec
 
-import com.github.diplodoc.diplobase.domain.diploexec.Flow
+import com.github.diplodoc.diplobase.domain.diploexec.Module
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 
 /**
  * @author yaroslav.yermilov
  */
-interface FlowRepository extends CrudRepository<Flow, Long> {
+interface ModuleRepository extends CrudRepository<Module, Long> {
 
-    Flow findOneByName(@Param('name') String name)
+    Module findOneByName(@Param('name') String name)
 }
