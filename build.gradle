@@ -17,6 +17,12 @@ subprojects {
 	}
 }
 
+project(':diplobase:diplobase-client') {
+	dependencies {
+		compile project(':diplobase')
+	}
+}
+
 project(':diplobase:diplobase-shell') {
 	dependencies {
 		compile project(':diplobase')
@@ -43,6 +49,6 @@ project(':diploexec') {
 
 project(':diploexec:diploexec-shell') {
 	dependencies {
-		compile project(':diplobase')
+		compile project(':diplobase:diplobase-client')
 	}
 }

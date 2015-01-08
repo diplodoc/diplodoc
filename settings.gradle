@@ -1,6 +1,7 @@
 include 'diplobase'
-include 'diplobase:diplobase-shell'
+include 'diplobase:diplobase-client'
 include 'diplobase:diplobase-rest'
+include 'diplobase:diplobase-shell'
 
 include 'diplocore'
 
