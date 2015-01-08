@@ -49,6 +49,10 @@ class ModuleClient {
         hateoasTemplate.exchange("${rootUrl}/diplobase/modules/${module.id}", HttpMethod.PUT, new HttpEntity<Module>(module), MODULE)
     }
 
+    void delete(Module module) {
+        hateoasTemplate.exchange("${rootUrl}/diplobase/modules/${module.id}", HttpMethod.DELETE, null, MODULE)
+    }
+
     private static Module fromResource(Resource<Module> resource) {
         Module module = resource.content
         String selfHref = resource.id.href

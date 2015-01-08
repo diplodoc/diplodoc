@@ -32,6 +32,13 @@ class ModuleCommands implements CommandMarker {
         longToString(module)
     }
 
+    @CliCommand(value = 'module remove', help = 'remove module')
+    String remove(@CliOption(key = '', mandatory = true, help = 'module name') final String name) {
+        Module module = moduleClient.findOneByName(name)
+        moduleClient.delete(module)
+        'Done'
+    }
+
     @CliCommand(value = 'module update', help = 'update module description')
     String update(@CliOption(key = 'name', mandatory = true, help = 'module name') final String name,
                   @CliOption(key = 'definition', mandatory = true, help = 'path to definition file') final String pathToDefinitionFile) {
