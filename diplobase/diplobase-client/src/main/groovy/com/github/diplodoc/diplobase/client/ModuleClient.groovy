@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.client.RestTemplate
 
+import java.time.LocalDateTime
+
 /**
  * @author yaroslav.yermilov
  */
@@ -43,6 +45,7 @@ class ModuleClient {
     }
 
     void update(Module module) {
+        module.lastUpdate = LocalDateTime.now().toString()
         hateoasTemplate.exchange("${rootUrl}/diplobase/modules/${module.id}", HttpMethod.PUT, new HttpEntity<Module>(module), MODULE)
     }
 
