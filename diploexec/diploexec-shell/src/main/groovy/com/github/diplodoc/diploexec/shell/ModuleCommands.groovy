@@ -43,7 +43,7 @@ class ModuleCommands implements CommandMarker {
                   @CliOption(key = 'definition', mandatory = true, help = 'path to definition file') final String pathToDefinitionFile) {
         Module module = moduleClient.findOneByName(name)
         module.definition = resourceLoader.getResource("file:${pathToDefinitionFile}").file.text
-        module = moduleClient.save(module)
+        moduleClient.update(module)
 
         "id:".padRight(20) + "${module.id}\n" +
         "name:".padRight(20) + "${module.name}\n" +
