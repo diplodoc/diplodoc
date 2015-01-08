@@ -15,12 +15,12 @@ class FootballUaNewPostsFinder {
     PostRepository postRepository
 
     def bind(Binding binding) {
-        binding.findNew = {
-            Map params -> findNew(params.source, params.action)
+        binding.findNewPosts = {
+            Map params -> findNewPosts(params.source, params.action)
         }
     }
 
-    def findNew(def source, Closure action) {
+    def findNewPosts(def source, Closure action) {
         def newFound = true
         def archivePageIndex = 1
 

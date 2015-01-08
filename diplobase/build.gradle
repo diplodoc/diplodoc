@@ -1,9 +1,6 @@
 dependencies {
-    compile dependency.spring.data.jpa
-
-    compile dependency.spring.web
-
     compile dependency.postgresql
     compile dependency.commons.dbcp
     compile dependency.hibernate
+    compile dependency.spring.data.jpa
 }

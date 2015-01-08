@@ -6,6 +6,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.Table
 import javax.persistence.Transient
+import java.time.LocalDateTime
 
 /**
  * @author yaroslav.yermilov
@@ -21,6 +22,8 @@ class Module {
     String name
 
     String definition
+
+    String lastUpdate
 
     @Transient
     List<String> listensTo

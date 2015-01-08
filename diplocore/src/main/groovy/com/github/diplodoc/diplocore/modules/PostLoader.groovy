@@ -17,12 +17,12 @@ class PostLoader {
     PostRepository postRepository
 
     def bind(Binding binding) {
-        binding.load = {
-            Map params -> load(params.from, params.url)
+        binding.loadPost = {
+            Map params -> loadPost(params.from, params.url)
         }
     }
 
-    def load(Source source, String url) {
+    def loadPost(Source source, String url) {
         def document = web.load(url)
         def post = new Post(url: url, html: document.html(), source: source)
 

@@ -1,0 +1,7 @@
+dependencies {
+    compile dependency.spring.web
+    compile dependency.spring.hateoas
+
+    compile dependency.jackson.core
+    compile dependency.jackson.databind
+}
