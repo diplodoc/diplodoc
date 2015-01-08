@@ -25,6 +25,11 @@ class ProcessCommands implements CommandMarker {
         processDataClient.processes().collect(ProcessCommands.&shortToString).join('\n')
     }
 
+    @CliCommand(value = 'process run', help = 'run process')
+    String run() {
+        assert false : 'not implemented yet'
+    }
+
     @CliCommand(value = 'process get', help = 'get full description of process')
     String get(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
         Process process = processDataClient.findOneByName(name)
