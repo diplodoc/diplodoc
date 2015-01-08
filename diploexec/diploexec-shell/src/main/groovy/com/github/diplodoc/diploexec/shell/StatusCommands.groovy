@@ -16,7 +16,7 @@ class StatusCommands implements CommandMarker {
 
     @CliCommand(value = 'status', help = 'current diploexec runtime status')
     String status() {
-        def status = restTemplate.getForObject('http://localhost:8080/diploexec/v1/api/status', List.class)
+        def status = restTemplate.getForObject('http://localhost:8080/diploexec/api/v1/status', List.class)
 
         String result = ''
         result += 'RUNNING\n'

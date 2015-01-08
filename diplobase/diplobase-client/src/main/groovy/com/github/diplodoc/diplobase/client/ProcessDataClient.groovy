@@ -3,8 +3,6 @@ package com.github.diplodoc.diplobase.client
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.diplodoc.diplobase.domain.diploexec.Process
-import com.sun.org.apache.xpath.internal.operations.Mod
-import groovy.json.JsonSlurper
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.hateoas.MediaTypes
 import org.springframework.hateoas.Resource
@@ -21,7 +19,7 @@ import java.time.LocalDateTime
 /**
  * @author yaroslav.yermilov
  */
-class ProcessClient {
+class ProcessDataClient {
 
     private final static PROCESSES = new ParameterizedTypeReference<Resources<Resource<Process>>>() {}
     private final static PROCESS = new ParameterizedTypeReference<Resource<Process>>() {}
@@ -30,18 +28,18 @@ class ProcessClient {
 
     RestTemplate hateoasTemplate = newHateoasTemplate()
 
-    ProcessClient(String rootUrl) {
+    ProcessDataClient(String rootUrl) {
         this.rootUrl = rootUrl
     }
 
     List<Process> processes() {
         ResponseEntity<Resources<Resource<Process>>> response = hateoasTemplate.exchange("${rootUrl}/diplobase/processes", HttpMethod.GET, null, PROCESSES)
-        response.body.collect ProcessClient.&fromResource
+        response.body.collect ProcessDataClient.&fromResource
     }
 
     Process findOneByName(String name) {
         ResponseEntity<Resource<Process>> response = hateoasTemplate.exchange("${rootUrl}/diplobase/processes/search/findOneByName?name=${name}", HttpMethod.GET, null, PROCESSES)
-        response.body.collect(ProcessClient.&fromResource).first()
+        response.body.collect(ProcessDataClient.&fromResource).first()
     }
 
     void update(Process process) {
