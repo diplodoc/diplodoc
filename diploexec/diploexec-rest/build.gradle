@@ -1,0 +1,16 @@
+dependencies {
+    compile dependency.spring.web
+    compile dependency.spring.webmvc
+    compile dependency.servlet
+
+    compile dependency.jackson.core
+    compile dependency.jackson.databind
+}
+
+apply plugin: 'war'
+apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
+
+gretty {
+    port = 8080
+    contextPath = '/diploexec'
+}
