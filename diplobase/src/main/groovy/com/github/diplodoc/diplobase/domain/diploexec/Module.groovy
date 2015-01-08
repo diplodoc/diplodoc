@@ -13,7 +13,7 @@ import java.time.LocalDateTime
  */
 @Entity
 @Table(schema = 'diploexec')
-class Module {
+class Process {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

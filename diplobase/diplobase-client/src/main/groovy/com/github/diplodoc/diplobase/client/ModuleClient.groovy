@@ -2,7 +2,7 @@ package com.github.diplodoc.diplobase.client
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.diplodoc.diplobase.domain.diploexec.Module
+import com.github.diplodoc.diplobase.domain.diploexec.Process
 import com.sun.org.apache.xpath.internal.operations.Mod
 import groovy.json.JsonSlurper
 import org.springframework.core.ParameterizedTypeReference
@@ -21,43 +21,43 @@ import java.time.LocalDateTime
 /**
  * @author yaroslav.yermilov
  */
-class ModuleClient {
+class ProcessClient {
 
-    private final static MODULES = new ParameterizedTypeReference<Resources<Resource<Module>>>() {}
-    private final static MODULE = new ParameterizedTypeReference<Resource<Module>>() {}
+    private final static PROCESSES = new ParameterizedTypeReference<Resources<Resource<Process>>>() {}
+    private final static PROCESS = new ParameterizedTypeReference<Resource<Process>>() {}
 
     String rootUrl
 
     RestTemplate hateoasTemplate = newHateoasTemplate()
 
-    ModuleClient(String rootUrl) {
+    ProcessClient(String rootUrl) {
         this.rootUrl = rootUrl
     }
 
-    List<Module> modules() {
-        ResponseEntity<Resources<Resource<Module>>> response = hateoasTemplate.exchange("${rootUrl}/diplobase/modules", HttpMethod.GET, null, MODULES)
-        response.body.collect ModuleClient.&fromResource
+    List<Process> processes() {
+        ResponseEntity<Resources<Resource<Process>>> response = hateoasTemplate.exchange("${rootUrl}/diplobase/processes", HttpMethod.GET, null, PROCESSES)
+        response.body.collect ProcessClient.&fromResource
     }
 
-    Module findOneByName(String name) {
-        ResponseEntity<Resource<Module>> response = hateoasTemplate.exchange("${rootUrl}/diplobase/modules/search/findOneByName?name=${name}", HttpMethod.GET, null, MODULES)
-        response.body.collect(ModuleClient.&fromResource).first()
+    Process findOneByName(String name) {
+        ResponseEntity<Resource<Process>> response = hateoasTemplate.exchange("${rootUrl}/diplobase/processes/search/findOneByName?name=${name}", HttpMethod.GET, null, PROCESSES)
+        response.body.collect(ProcessClient.&fromResource).first()
     }
 
-    void update(Module module) {
-        module.lastUpdate = LocalDateTime.now().toString()
-        hateoasTemplate.exchange("${rootUrl}/diplobase/modules/${module.id}", HttpMethod.PUT, new HttpEntity<Module>(module), MODULE)
+    void update(Process process) {
+        process.lastUpdate = LocalDateTime.now().toString()
+        hateoasTemplate.exchange("${rootUrl}/diplobase/processes/${process.id}", HttpMethod.PUT, new HttpEntity<Process>(process), PROCESS)
     }
 
-    void delete(Module module) {
-        hateoasTemplate.exchange("${rootUrl}/diplobase/modules/${module.id}", HttpMethod.DELETE, null, MODULE)
+    void delete(Process process) {
+        hateoasTemplate.exchange("${rootUrl}/diplobase/processes/${process.id}", HttpMethod.DELETE, null, PROCESS)
     }
 
-    private static Module fromResource(Resource<Module> resource) {
-        Module module = resource.content
+    private static Process fromResource(Resource<Process> resource) {
+        Process process = resource.content
         String selfHref = resource.id.href
-        module.id = Long.parseLong(selfHref.substring(selfHref.lastIndexOf('/') + 1))
-        return module
+        process.id = Long.parseLong(selfHref.substring(selfHref.lastIndexOf('/') + 1))
+        return process
     }
 
     private static RestTemplate newHateoasTemplate() {

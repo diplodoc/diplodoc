@@ -1,7 +1,7 @@
 package com.github.diplodoc.diploexec.shell
 
-import com.github.diplodoc.diplobase.client.ModuleClient
-import com.github.diplodoc.diplobase.domain.diploexec.Module
+import com.github.diplodoc.diplobase.client.ProcessClient
+import com.github.diplodoc.diplobase.domain.diploexec.Process
 import com.sun.org.apache.xpath.internal.operations.Mod
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.ResourceLoader
@@ -14,48 +14,48 @@ import org.springframework.stereotype.Component
  * @author yaroslav.yermilov
  */
 @Component
-class ModuleCommands implements CommandMarker {
+class ProcessCommands implements CommandMarker {
 
     @Autowired
     ResourceLoader resourceLoader
 
-    ModuleClient moduleClient = new ModuleClient('http://localhost:8080')
+    ProcessClient processClient = new ProcessClient('http://localhost:8080')
 
-    @CliCommand(value = 'module list', help = 'list all modules')
+    @CliCommand(value = 'process list', help = 'list all processes')
     String list() {
-        moduleClient.modules().collect(ModuleCommands.&shortToString).join('\n')
+        processClient.processes().collect(ProcessCommands.&shortToString).join('\n')
     }
 
-    @CliCommand(value = 'module get', help = 'get full description of module')
-    String get(@CliOption(key = '', mandatory = true, help = 'module name') final String name) {
-        Module module = moduleClient.findOneByName(name)
-        longToString(module)
+    @CliCommand(value = 'process get', help = 'get full description of process')
+    String get(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
+        Process process = processClient.findOneByName(name)
+        longToString(process)
     }
 
-    @CliCommand(value = 'module remove', help = 'remove module')
-    String remove(@CliOption(key = '', mandatory = true, help = 'module name') final String name) {
-        Module module = moduleClient.findOneByName(name)
-        moduleClient.delete(module)
+    @CliCommand(value = 'process remove', help = 'remove process')
+    String remove(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
+        Process process = processClient.findOneByName(name)
+        processClient.delete(process)
         'Done'
     }
 
-    @CliCommand(value = 'module update', help = 'update module description')
-    String update(@CliOption(key = 'name', mandatory = true, help = 'module name') final String name,
+    @CliCommand(value = 'process update', help = 'update process description')
+    String update(@CliOption(key = 'name', mandatory = true, help = 'process name') final String name,
                   @CliOption(key = 'definition', mandatory = true, help = 'path to definition file') final String pathToDefinitionFile) {
-        Module module = moduleClient.findOneByName(name)
-        module.definition = resourceLoader.getResource("file:${pathToDefinitionFile}").file.text
-        moduleClient.update(module)
-        longToString(module)
+        Process process = processClient.findOneByName(name)
+        process.definition = resourceLoader.getResource("file:${pathToDefinitionFile}").file.text
+        processClient.update(process)
+        longToString(process)
     }
 
-    private static shortToString(Module module) {
-        "${module.id}".padLeft(5) + "${module.name}".padLeft(30) + "${module.lastUpdate}".padLeft(50)
+    private static shortToString(Process process) {
+        "${process.id}".padLeft(5) + "${process.name}".padLeft(30) + "${process.lastUpdate}".padLeft(50)
     }
 
-    private static longToString(Module module) {
-        "id:".padRight(20) + "${module.id}\n" +
-        "name:".padRight(20) + "${module.name}\n" +
-        "last update:".padRight(20) + "${module.lastUpdate}\n" +
-        "definition:\n" + "${module.definition}"
+    private static longToString(Process process) {
+        "id:".padRight(20) + "${process.id}\n" +
+        "name:".padRight(20) + "${process.name}\n" +
+        "last update:".padRight(20) + "${process.lastUpdate}\n" +
+        "definition:\n" + "${process.definition}"
     }
 }

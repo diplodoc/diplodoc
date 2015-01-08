@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.ResponseStatus
  */
 @Controller
 @RequestMapping('/api/v1')
-class ModulesController {
+class ProcessesController {
 
     @Autowired
     DiploexecRuntimeEnvironment runtime
 
-    @RequestMapping(value='/module/{id}/start', method=RequestMethod.POST)
+    @RequestMapping(value='/process/{id}/start', method=RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    void startModule(@PathVariable('id') Long id, @RequestBody Map<String, Object> input) {
-        runtime.startModule(id, input)
+    void startProcess(@PathVariable('id') Long id, @RequestBody Map<String, Object> input) {
+        runtime.startProcess(id, input)
     }
 }

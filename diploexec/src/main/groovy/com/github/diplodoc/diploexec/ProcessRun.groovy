@@ -5,11 +5,11 @@ import java.time.LocalDateTime
 /**
  * @author yaroslav.yermilov
  */
-class ModuleRun {
+class ProcessRun {
 
     DiploexecRuntimeEnvironment runtime
 
-    def module
+    def process
     def params
 
     def id = UUID.randomUUID()
@@ -22,7 +22,7 @@ class ModuleRun {
         status = 'RUNNING'
         startTime = LocalDateTime.now()
 
-        new GroovyShell(binding(params)).evaluate(module.definition)
+        new GroovyShell(binding(params)).evaluate(process.definition)
 
         status = 'FINISHED'
         endTime = LocalDateTime.now()
@@ -70,13 +70,13 @@ class ModuleRun {
 
     private def bindRequire(Binding binding) {
         binding.require = {
-            String[] moduleNames ->
-                println "Loading required modules:"
-                moduleNames.each {
-                    String moduleName ->
-                        println moduleName
-                        def module = runtime.getModule(moduleName)
-                        module.bind binding
+            String[] processNames ->
+                println "Loading required processes:"
+                processNames.each {
+                    String processName ->
+                        println processName
+                        def process = runtime.getProcess(processName)
+                        process.bind binding
                 }
         }
     }
@@ -87,14 +87,14 @@ class ModuleRun {
                 def destination = params.to
                 params.remove 'to'
 
-                runtime.startModule(destination, params)
+                runtime.startProcess(destination, params)
         }
     }
 
     private def bindOutput(Binding binding) {
         binding.output = {
             Map params ->
-                runtime.outputed(module, params)
+                runtime.outputed(process, params)
         }
     }
 

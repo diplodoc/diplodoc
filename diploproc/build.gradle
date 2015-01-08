@@ -1,7 +1,7 @@
 sourceSets {
     main {
         resources {
-            srcDir 'src/main/diplomodule'
+            srcDir 'src/main/diploprocess'
         }
     }
 }

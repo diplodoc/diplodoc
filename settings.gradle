@@ -8,4 +8,4 @@ include 'diplocore'
 include 'diploexec'
 include 'diploexec:diploexec-shell'
 
-include 'diplomodules'
+include 'diploproc'
