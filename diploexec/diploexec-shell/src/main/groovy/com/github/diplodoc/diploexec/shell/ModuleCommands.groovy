@@ -40,9 +40,9 @@ class ModuleCommands implements CommandMarker {
 
     @CliCommand(value = 'module update', help = 'update module description')
     String update(@CliOption(key = 'name', mandatory = true, help = 'module name') final String name,
-                  @CliOption(key = 'definition', mandatory = true, help = 'definition file name') final String definitionFileName) {
+                  @CliOption(key = 'definition', mandatory = true, help = 'path to definition file') final String pathToDefinitionFile) {
         Module module = moduleClient.findOneByName(name)
-        module.definition = resourceLoader.getResource("classpath*:${definitionFileName}.diplomodule").file.text
+        module.definition = resourceLoader.getResource("file:${pathToDefinitionFile}").file.text
         module = moduleClient.save(module)
 
         "id:".padRight(20) + "${module.id}\n" +

@@ -1,6 +1,7 @@
 package com.github.diplodoc.diplobase.client
 
 import com.github.diplodoc.diplobase.domain.diploexec.Module
+import com.sun.org.apache.xpath.internal.operations.Mod
 import groovy.json.JsonSlurper
 import org.springframework.web.client.RestTemplate
 
@@ -29,6 +30,15 @@ class ModuleClient {
 
     Module findOneByName(String name) {
         def modulesJson = jsonSlurper.parseText(restTemplate.getForObject("${rootUrl}/diplobase/modules/search/findOneByName?name=${name}", String))
+        def moduleLink = (modulesJson.links as List).findAll { link -> link.rel == 'module' }.first()
+
+        jsonToModule(jsonSlurper.parseText(restTemplate.getForObject(moduleLink.href, String)))
+    }
+
+    Module save(Module module) {
+        restTemplate.put("${rootUrl}/diplobase/modules/${module.id}", module)
+
+        def modulesJson = jsonSlurper.parseText(restTemplate.getForObject("${rootUrl}/diplobase/modules/${module.id}", String))
         def moduleLink = (modulesJson.links as List).findAll { link -> link.rel == 'module' }.first()
 
         jsonToModule(jsonSlurper.parseText(restTemplate.getForObject(moduleLink.href, String)))
