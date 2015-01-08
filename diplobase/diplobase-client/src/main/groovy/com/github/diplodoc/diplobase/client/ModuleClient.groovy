@@ -34,12 +34,12 @@ class ModuleClient {
 
     List<Module> modules() {
         ResponseEntity<Resources<Resource<Module>>> response = hateoasTemplate.exchange("${rootUrl}/diplobase/modules", HttpMethod.GET, null, MODULES)
-        response.body.collect() { Resource<Module> resource -> fromResource(resource) }
+        response.body.collect ModuleClient.&fromResource
     }
 
     Module findOneByName(String name) {
         ResponseEntity<Resource<Module>> response = hateoasTemplate.exchange("${rootUrl}/diplobase/modules/search/findOneByName?name=${name}", HttpMethod.GET, null, MODULES)
-        response.body.collect() { Resource<Module> resource -> fromResource(resource) }.first()
+        response.body.collect(ModuleClient.&fromResource).first()
     }
 
     void update(Module module) {
