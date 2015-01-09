@@ -3,6 +3,7 @@ package com.github.diplodoc.diploexec.shell
 import com.github.diplodoc.diplobase.client.ProcessDataClient
 import com.github.diplodoc.diplobase.domain.diploexec.Process
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.domain.diploexec.ProcessRunParameter
 import com.github.diplodoc.diploexec.client.DiploexecClient
 import groovy.json.JsonSlurper
 import org.springframework.beans.factory.annotation.Autowired
@@ -68,9 +69,21 @@ class ProcessCommands implements CommandMarker {
     }
 
     private static longToString(Process process) {
-        "id:".padRight(20) + "${process.id}\n" +
-        "name:".padRight(20) + "${process.name}\n" +
-        "last update:".padRight(20) + "${process.lastUpdate}\n" +
-        "definition:\n" + "${process.definition}"
+        'id:'.padRight(20) + "${process.id}\n" +
+        'name:'.padRight(20) + "${process.name}\n" +
+        'last update:'.padRight(20) + "${process.lastUpdate}\n" +
+        'definition:\n' + "${process.definition}"
+    }
+
+    private static longToString(ProcessRun processRun) {
+        'id:'.padRight(20) + "${processRun.id}\n" +
+        'process:'.padRight(20) + shortToString(processRun.process) +
+        'parameters:\n'.padRight(20) + processRun.parameters.collect(ProcessCommands.&longToString).join('\n')
+    }
+
+    private static longToString(ProcessRunParameter processRunParameter) {
+        'key:'.padRight(20) + "${processRunParameter.id}\n" +
+        'type:'.padRight(20) + "${processRunParameter.type}\n" +
+        'value:\n'.padRight(20) + "${processRunParameter.value}"
     }
 }
