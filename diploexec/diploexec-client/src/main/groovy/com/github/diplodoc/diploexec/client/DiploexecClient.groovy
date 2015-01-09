@@ -36,7 +36,7 @@ class DiploexecClient {
             new ProcessRunParameter(key: key, value: value, type: value.class.name, processRun: processRun)
         }
 
-        ResponseEntity<Resource<ProcessRun>> response = hateoasTemplate.exchange("${rootUrl}/diploexec/api/v1/process/${process.id}/run", HttpMethod.POST, processRun, PROCESS_RUN)
+        ResponseEntity<Resource<ProcessRun>> response = hateoasTemplate.exchange("${rootUrl}/diploexec/api/v1/process/run", HttpMethod.POST, processRun, PROCESS_RUN)
         fromResource(response)
     }
 
