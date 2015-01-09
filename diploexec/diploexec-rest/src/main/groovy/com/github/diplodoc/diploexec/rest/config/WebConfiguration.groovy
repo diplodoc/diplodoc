@@ -9,6 +9,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan('com.github.diplodoc.diploexec.webapi')
+@ComponentScan('com.github.diplodoc.diploexec.rest.controller')
 class WebConfiguration {
 }
