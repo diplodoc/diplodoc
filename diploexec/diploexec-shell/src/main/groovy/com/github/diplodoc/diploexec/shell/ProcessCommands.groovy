@@ -2,7 +2,9 @@ package com.github.diplodoc.diploexec.shell
 
 import com.github.diplodoc.diplobase.client.ProcessDataClient
 import com.github.diplodoc.diplobase.domain.diploexec.Process
+import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
 import com.github.diplodoc.diploexec.client.DiploexecClient
+import groovy.json.JsonSlurper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.ResourceLoader
 import org.springframework.shell.core.CommandMarker
@@ -22,16 +24,21 @@ class ProcessCommands implements CommandMarker {
     ProcessDataClient processDataClient = new ProcessDataClient('http://localhost:8080')
     DiploexecClient diploexecClient = new DiploexecClient('http://localhost:8080')
 
+    JsonSlurper jsonSlurper = new JsonSlurper()
+
     @CliCommand(value = 'process list', help = 'list all processes')
     String list() {
         processDataClient.processes().collect(ProcessCommands.&shortToString).join('\n')
     }
 
     @CliCommand(value = 'process run', help = 'run process')
-    String run(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
+    String run(@CliOption(key = 'name', mandatory = true, help = 'process name') final String name,
+               @CliOption(key = 'parameters', mandatory = true, help = 'path to paramters file') final String pathToParametersFile) {
         Process process = processDataClient.findOneByName(name)
-        diploexecClient.run(process)
-        'Done'
+        Map<String, Object> parameters = jsonSlurper.parse(resourceLoader.getResource("file:${pathToParametersFile}").file)
+
+        ProcessRun processRun = diploexecClient.run(process, parameters)
+        longToString(processRun)
     }
 
     @CliCommand(value = 'process get', help = 'get full description of process')
