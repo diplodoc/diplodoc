@@ -1,5 +1,6 @@
 package com.github.diplodoc.diploexec.rest.config
 
+import com.github.diplodoc.diploexec.config.DiploexecConfiguration
 import org.springframework.web.WebApplicationInitializer
 import org.springframework.web.context.ContextLoaderListener
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext
