@@ -1,7 +1,7 @@
 package com.github.diplodoc.diploexec.config
 
 import com.github.diplodoc.diplobase.config.DiplobaseConfiguration
-import com.github.diplodoc.diploexec.DiploexecRuntimeEnvironment
+import com.github.diplodoc.diploexec._DiploexecRuntimeEnvironment
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
@@ -31,8 +31,8 @@ class DiploexecConfiguration {
 
     @Bean
     @Autowired
-    DiploexecRuntimeEnvironment diploexecRuntimeEnvironment(ApplicationContext modulesContext, ThreadPoolTaskExecutor threadPool) {
-        DiploexecRuntimeEnvironment diploexecRuntimeEnvironment = new DiploexecRuntimeEnvironment()
+    _DiploexecRuntimeEnvironment diploexecRuntimeEnvironment(ApplicationContext modulesContext, ThreadPoolTaskExecutor threadPool) {
+        _DiploexecRuntimeEnvironment diploexecRuntimeEnvironment = new _DiploexecRuntimeEnvironment()
         diploexecRuntimeEnvironment.modulesContext = modulesContext
         diploexecRuntimeEnvironment.threadPool = threadPool
 

@@ -10,14 +10,14 @@ import javax.annotation.PostConstruct
 /**
  * @author yaroslav.yermilov
  */
-class DiploexecRuntimeEnvironment {
+class _DiploexecRuntimeEnvironment {
 
     ProcessRepository processRepository
     ApplicationContext modulesContext
     ThreadPoolTaskExecutor threadPool
 
     List<Process> processes
-    List<ProcessRun> runs
+    List<_ProcessRun> runs
 
     @PostConstruct
     def run() {
@@ -32,7 +32,7 @@ class DiploexecRuntimeEnvironment {
 
         def process = processes.find { it.id == id }
 
-        def run = new ProcessRun(runtime: this, process: process, params: input)
+        def run = new _ProcessRun(runtime: this, process: process, params: input)
         runs << run
 
         threadPool.execute({

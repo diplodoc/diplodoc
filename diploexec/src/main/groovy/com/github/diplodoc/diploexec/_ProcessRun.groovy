@@ -5,9 +5,9 @@ import java.time.LocalDateTime
 /**
  * @author yaroslav.yermilov
  */
-class ProcessRun {
+class _ProcessRun {
 
-    DiploexecRuntimeEnvironment runtime
+    _DiploexecRuntimeEnvironment runtime
 
     def process
     def params
