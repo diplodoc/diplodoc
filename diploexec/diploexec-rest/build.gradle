@@ -1,7 +1,8 @@
 dependencies {
+    compile dependency.servlet
     compile dependency.spring.web
     compile dependency.spring.webmvc
-    compile dependency.servlet
+    compile dependency.spring.hateoas
 
     compile dependency.jackson.core
     compile dependency.jackson.databind
