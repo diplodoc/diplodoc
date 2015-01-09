@@ -56,5 +56,6 @@ project(':diploexec:diploexec-rest') {
 project(':diploexec:diploexec-shell') {
 	dependencies {
 		compile project(':diplobase:diplobase-client')
+		compile project(':diploexec:diploexec-client')
 	}
 }

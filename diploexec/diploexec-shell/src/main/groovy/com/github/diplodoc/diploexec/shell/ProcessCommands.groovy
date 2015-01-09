@@ -2,6 +2,7 @@ package com.github.diplodoc.diploexec.shell
 
 import com.github.diplodoc.diplobase.client.ProcessDataClient
 import com.github.diplodoc.diplobase.domain.diploexec.Process
+import com.github.diplodoc.diploexec.client.DiploexecClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.ResourceLoader
 import org.springframework.shell.core.CommandMarker
@@ -19,6 +20,7 @@ class ProcessCommands implements CommandMarker {
     ResourceLoader resourceLoader
 
     ProcessDataClient processDataClient = new ProcessDataClient('http://localhost:8080')
+    DiploexecClient diploexecClient = new DiploexecClient('http://localhost:8080')
 
     @CliCommand(value = 'process list', help = 'list all processes')
     String list() {
@@ -26,8 +28,10 @@ class ProcessCommands implements CommandMarker {
     }
 
     @CliCommand(value = 'process run', help = 'run process')
-    String run() {
-        assert false : 'not implemented yet'
+    String run(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
+        Process process = processDataClient.findOneByName(name)
+        diploexecClient.run(process)
+        'Done'
     }
 
     @CliCommand(value = 'process get', help = 'get full description of process')
