@@ -38,7 +38,7 @@ class ProcessDataClient {
     }
 
     Process findOneByName(String name) {
-        ResponseEntity<Resource<Process>> response = hateoasTemplate.exchange("${rootUrl}/diplobase/processes/search/findOneByName?name=${name}", HttpMethod.GET, null, PROCESSES)
+        ResponseEntity<Resources<Process>> response = hateoasTemplate.exchange("${rootUrl}/diplobase/processes/search/findOneByName?name=${name}", HttpMethod.GET, null, PROCESSES)
         response.body.collect(ProcessDataClient.&fromResource).first()
     }
 
