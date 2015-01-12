@@ -8,14 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired
 /**
  * @author yaroslav.yermilov
  */
-class TitleExtractor {
+class TitleExtractor implements Module {
 
     Web web
 
     @Autowired
     PostRepository postRepository
 
-    def bind(Binding binding) {
+    @Override
+    void bindSelf(Binding binding) {
         binding.extractTitle = {
             Map params -> extractTitle(params.from)
         }

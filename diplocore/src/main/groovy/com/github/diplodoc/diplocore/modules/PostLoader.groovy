@@ -9,14 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired
 /**
  * @author yaroslav.yermilov
  */
-class PostLoader {
+class PostLoader implements Module {
 
     Web web
 
     @Autowired
     PostRepository postRepository
 
-    def bind(Binding binding) {
+    @Override
+    void bindSelf(Binding binding) {
         binding.loadPost = {
             Map params -> loadPost(params.from, params.url)
         }

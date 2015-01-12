@@ -5,9 +5,10 @@ import com.github.diplodoc.diplocore.modules.support.JythonIntegrationSupport
 /**
  * @author yaroslav.yermilov
  */
-class TestActor extends JythonIntegrationSupport {
+class TestActor extends JythonIntegrationSupport implements Module {
 
-    def bind(Binding binding) {
+    @Override
+    void bindSelf(Binding binding) {
         binding.modify = instance().&modify
     }
 

@@ -9,14 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired
 /**
  * @author yaroslav.yermilov
  */
-class TextExtractor {
+class TextExtractor implements Module {
 
     Web web
 
     @Autowired
     PostRepository postRepository
 
-    def bind(Binding binding) {
+    @Override
+    void bindSelf(Binding binding) {
         binding.extractText = {
             Map params -> extractText(params.from)
         }

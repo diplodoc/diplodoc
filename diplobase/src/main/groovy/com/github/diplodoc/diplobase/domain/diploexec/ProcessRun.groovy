@@ -24,4 +24,8 @@ class ProcessRun {
 
     @OneToMany
     Collection<ProcessRunParameter> parameters
+
+    String startTime
+
+    String endTime
 }

@@ -34,6 +34,10 @@ class ProcessRunDataClient {
         fromResource(response.body)
     }
 
+    void update(ProcessRun processRun) {
+        hateoasTemplate.exchange("${rootUrl}/diplobase/processruns/${processRun.id}", HttpMethod.PUT, new HttpEntity<ProcessRun>(processRun), PROCESS_RUN)
+    }
+
     private static ProcessRun fromResource(Resource<ProcessRun> resource) {
         ProcessRun processRun = resource.content
         String selfHref = resource.id.href

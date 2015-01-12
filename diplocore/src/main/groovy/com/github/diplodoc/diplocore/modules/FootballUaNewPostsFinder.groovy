@@ -7,14 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired
 /**
  * @author yaroslav.yermilov
  */
-class FootballUaNewPostsFinder {
+class FootballUaNewPostsFinder implements Module {
 
     Web web
 
     @Autowired
     PostRepository postRepository
 
-    def bind(Binding binding) {
+    @Override
+    void bindSelf(Binding binding) {
         binding.findNewPosts = {
             Map params -> findNewPosts(params.source, params.action)
         }
