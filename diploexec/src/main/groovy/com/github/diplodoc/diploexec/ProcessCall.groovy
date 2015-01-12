@@ -11,7 +11,7 @@ import java.util.concurrent.Callable
 /**
  * @author yaroslav.yermilov
  */
-class ProcessCall implements Callable<ProcessCallResult> {
+class ProcessCall implements Runnable {
 
     ProcessRunDataClient processRunDataClient
     Diploexec diploexec
@@ -24,7 +24,7 @@ class ProcessCall implements Callable<ProcessCallResult> {
     }
 
     @Override
-    ProcessCallResult call() {
+    void run() {
         processRun.startTime = LocalDateTime.now().toString()
         processRunDataClient.create processRun
 
@@ -37,8 +37,6 @@ class ProcessCall implements Callable<ProcessCallResult> {
 
         processRun.endTime = LocalDateTime.now().toString()
         processRunDataClient.update processRun
-
-        new ProcessCallResult()
     }
 
     private Binding binding(Map<String, Object> parameters) {

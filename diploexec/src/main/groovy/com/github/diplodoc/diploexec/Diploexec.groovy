@@ -33,7 +33,7 @@ class Diploexec {
     }
 
     ProcessRun run(ProcessRun processRun) {
-        threadPool.submitListenable(new ProcessCall(processRun)).addCallback(new ProcessCallback())
+        threadPool.execute(new ProcessCall(processRun))
     }
 
     void notify(DiploexecEvent event) {
