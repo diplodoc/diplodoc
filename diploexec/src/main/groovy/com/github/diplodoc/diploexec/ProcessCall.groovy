@@ -30,7 +30,7 @@ class ProcessCall implements Runnable {
 
         String script = processRun.process.definition
         Map<String, Object> parameters = processRun.parameters.collectEntries { parameter ->
-            [ parameter.key,  Class.forName(parameter.type).newInstance([jsonSlurper.parseText(parameter.value)])]
+            [ parameter.key,  Class.forName(parameter.type).newInstance([jsonSlurper.parseText(parameter.value)]) ]
         }
 
         new GroovyShell(binding(parameters)).evaluate(script)

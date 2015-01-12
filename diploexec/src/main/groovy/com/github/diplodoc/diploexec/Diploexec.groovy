@@ -27,8 +27,8 @@ class Diploexec {
     void init() {
         processes = processDataClient.processes()
         processes.each { Process process ->
-            waitingMap << waitsFor(process)
-            outputMap << inputFor(process)
+            waitingMap[process] = waitsFor(process)
+            outputMap[process] = inputFor(process)
         }
     }
 
@@ -37,9 +37,7 @@ class Diploexec {
     }
 
     void notify(DiploexecEvent event) {
-        event.notifiedRuns().each { ProcessRun processRun ->
-            run(processRun)
-        }
+        event.notifiedRuns().each { ProcessRun processRun -> run(processRun) }
     }
 
     Module getModule(String name) {
@@ -51,15 +49,11 @@ class Diploexec {
     }
 
     Collection<Process> getWaitProcesses(String eventName) {
-        waitingMap
-                .findAll { Process process, Collection<String> waitsFor -> waitsFor.contains(eventName) }
-                .keySet()
+        waitingMap.findAll { Process process, Collection<String> waitsFor -> waitsFor.contains(eventName) }.keySet()
     }
 
     Collection<Process> getInputProcesses(Process outputProcess) {
-        outputMap
-                .findAll { Process process, Collection<String> inputFor -> inputFor.contains(outputProcess.name) }
-                .keySet()
+        outputMap.findAll { Process process, Collection<String> inputFor -> inputFor.contains(outputProcess.name) }.keySet()
     }
 
     Collection<Process> waitsFor(Process process) {
