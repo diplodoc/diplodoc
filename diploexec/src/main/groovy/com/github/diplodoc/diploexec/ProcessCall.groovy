@@ -6,27 +6,25 @@ import com.github.diplodoc.diplocore.modules.Module
 import groovy.json.JsonSlurper
 
 import java.time.LocalDateTime
-import java.util.concurrent.Callable
 
 /**
  * @author yaroslav.yermilov
  */
 class ProcessCall implements Runnable {
 
-    ProcessRunDataClient processRunDataClient
-    Diploexec diploexec
-    JsonSlurper jsonSlurper
+    JsonSlurper jsonSlurper = new JsonSlurper()
 
+    Diploexec diploexec
     ProcessRun processRun
 
-    ProcessCall(ProcessRun processRun) {
+    ProcessCall(Diploexec diploexec, ProcessRun processRun) {
+        this.diploexec = diploexec
         this.processRun = processRun
     }
 
     @Override
     void run() {
-        processRun.startTime = LocalDateTime.now().toString()
-        processRunDataClient.create processRun
+        diploexec.notify(ProcessCallEvent.started(processRun))
 
         String script = processRun.process.definition
         Map<String, Object> parameters = processRun.parameters.collectEntries { parameter ->
@@ -35,8 +33,7 @@ class ProcessCall implements Runnable {
 
         new GroovyShell(binding(parameters)).evaluate(script)
 
-        processRun.endTime = LocalDateTime.now().toString()
-        processRunDataClient.update processRun
+        diploexec.notify(ProcessCallEvent.ended(processRun))
     }
 
     private Binding binding(Map<String, Object> parameters) {

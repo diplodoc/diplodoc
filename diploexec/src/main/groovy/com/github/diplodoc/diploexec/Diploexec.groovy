@@ -1,6 +1,7 @@
 package com.github.diplodoc.diploexec
 
 import com.github.diplodoc.diplobase.client.ProcessDataClient
+import com.github.diplodoc.diplobase.client.ProcessRunDataClient
 import com.github.diplodoc.diplobase.domain.diploexec.Process
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
 import com.github.diplodoc.diplocore.modules.Module
@@ -15,17 +16,20 @@ import javax.annotation.PostConstruct
 class Diploexec {
 
     ThreadPoolTaskExecutor threadPool
-
     ApplicationContext modulesContext
     ProcessDataClient processDataClient
+    ProcessRunDataClient processRunDataClient
 
     Collection<Process> processes
-    Map<Process, Collection<String>> waitingMap = new HashMap<>()
-    Map<Process, Collection<String>> outputMap = new HashMap<>()
+    Map<Process, Collection<String>> waitingMap
+    Map<Process, Collection<String>> outputMap
 
     @PostConstruct
     void init() {
         processes = processDataClient.processes()
+        waitingMap = new HashMap<>()
+        outputMap = new HashMap<>()
+
         processes.each { Process process ->
             waitingMap[process] = waitsFor(process)
             outputMap[process] = inputFor(process)
@@ -38,6 +42,20 @@ class Diploexec {
 
     void notify(DiploexecEvent event) {
         event.notifiedRuns().each { ProcessRun processRun -> run(processRun) }
+    }
+
+    void notify(ProcessCallEvent event) {
+        switch (event.type) {
+            case ProcessCallEvent.Type.PROCESS_RUN_STARTED:
+                event.processRun.startTime = event.time.toString()
+                processRunDataClient.create event.processRun
+            break;
+
+            case ProcessCallEvent.Type.PROCESS_RUN_ENDED:
+                event.processRun.endTime = event.time.toString()
+                processRunDataClient.update event.processRun
+            break;
+        }
     }
 
     Module getModule(String name) {

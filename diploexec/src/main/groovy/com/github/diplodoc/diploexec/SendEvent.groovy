@@ -1,6 +1,5 @@
 package com.github.diplodoc.diploexec
 
-import com.github.diplodoc.diplobase.client.ProcessDataClient
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRunParameter
 import groovy.json.JsonOutput

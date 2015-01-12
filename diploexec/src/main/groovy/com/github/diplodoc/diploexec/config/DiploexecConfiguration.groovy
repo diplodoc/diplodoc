@@ -1,7 +1,9 @@
 package com.github.diplodoc.diploexec.config
 
+import com.github.diplodoc.diplobase.client.ProcessDataClient
+import com.github.diplodoc.diplobase.client.ProcessRunDataClient
 import com.github.diplodoc.diplobase.config.DiplobaseConfiguration
-import com.github.diplodoc.diploexec._DiploexecRuntimeEnvironment
+import com.github.diplodoc.diploexec.Diploexec
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
@@ -30,12 +32,24 @@ class DiploexecConfiguration {
     }
 
     @Bean
-    @Autowired
-    _DiploexecRuntimeEnvironment diploexecRuntimeEnvironment(ApplicationContext modulesContext, ThreadPoolTaskExecutor threadPool) {
-        _DiploexecRuntimeEnvironment diploexecRuntimeEnvironment = new _DiploexecRuntimeEnvironment()
-        diploexecRuntimeEnvironment.modulesContext = modulesContext
-        diploexecRuntimeEnvironment.threadPool = threadPool
+    ProcessDataClient processDataClient() {
+        new ProcessDataClient('http://localhost:8080')
+    }
 
-        return diploexecRuntimeEnvironment
+    @Bean
+    ProcessRunDataClient processRunDataClient() {
+        new ProcessRunDataClient('http://localhost:8080')
+    }
+
+    @Bean
+    @Autowired
+    Diploexec diploexec(ApplicationContext modulesContext, ThreadPoolTaskExecutor threadPool, ProcessDataClient processDataClient, ProcessRunDataClient processRunDataClient) {
+        Diploexec diploexec = new Diploexec()
+        diploexec.threadPool = threadPool
+        diploexec.modulesContext = modulesContext
+        diploexec.processDataClient = processDataClient
+        diploexec.processRunDataClient = processRunDataClient
+
+        return diploexec
     }
 }
