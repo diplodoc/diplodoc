@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
+import org.springframework.context.annotation.Lazy
 import org.springframework.context.support.GenericGroovyApplicationContext
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 
@@ -43,6 +44,7 @@ class DiploexecConfiguration {
 
     @Bean
     @Autowired
+    @Lazy
     Diploexec diploexec(ApplicationContext modulesContext, ThreadPoolTaskExecutor threadPool, ProcessDataClient processDataClient, ProcessRunDataClient processRunDataClient) {
         Diploexec diploexec = new Diploexec()
         diploexec.threadPool = threadPool

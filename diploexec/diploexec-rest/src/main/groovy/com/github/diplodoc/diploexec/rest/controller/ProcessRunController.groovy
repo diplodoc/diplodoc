@@ -3,6 +3,7 @@ package com.github.diplodoc.diploexec.rest.controller
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
 import com.github.diplodoc.diploexec.Diploexec
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Lazy
 import org.springframework.hateoas.Resource
 import org.springframework.hateoas.ResourceSupport
 import org.springframework.hateoas.mvc.ControllerLinkBuilder
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 class ProcessRunController {
 
     @Autowired
+    @Lazy
     Diploexec diploexec
 
     @RequestMapping(value='/process/run', method=RequestMethod.POST)
