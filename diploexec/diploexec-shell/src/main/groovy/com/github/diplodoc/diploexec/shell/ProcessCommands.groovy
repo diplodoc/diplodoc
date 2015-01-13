@@ -37,8 +37,8 @@ class ProcessCommands implements CommandMarker {
                @CliOption(key = 'parameters', mandatory = true, help = 'path to paramters file') final String pathToParametersFile) {
         Process process = processDataClient.findOneByName(name)
         Map<String, Object> jsonParameters = jsonSlurper.parse(resourceLoader.getResource("file:${pathToParametersFile}").file)
-        Map<String, Object> parameters = jsonParameters.collect { String key, Object jsonValue ->
-            [ key, Class.forName(jsonValue.getAt('class')).newInstance([jsonValue]) ]
+        Map<String, Object> parameters = jsonParameters.collectEntries { String key, Map<String, Object> parameter ->
+            [ key,  Class.forName(parameter['type']).newInstance([parameter]) ]
         }
 
         ProcessRun processRun = diploexecClient.run(process, parameters)

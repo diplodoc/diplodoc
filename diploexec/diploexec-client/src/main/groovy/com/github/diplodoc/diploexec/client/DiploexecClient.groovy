@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.diplodoc.diplobase.domain.diploexec.Process
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRunParameter
+import groovy.json.JsonOutput
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.hateoas.MediaTypes
 import org.springframework.hateoas.Resource
@@ -32,8 +33,8 @@ class DiploexecClient {
     ProcessRun run(Process process, Map<String, Object> parameters) {
         ProcessRun processRun = new ProcessRun()
         processRun.process = process
-        processRun.parameters = parameters.collect { String key, String value ->
-            new ProcessRunParameter(key: key, value: value, type: value.class.name, processRun: processRun)
+        processRun.parameters = parameters.collect { String key, Object value ->
+            new ProcessRunParameter(key: key, value: JsonOutput.toJson(value), type: value.class.name, processRun: processRun)
         }
 
         ResponseEntity<Resource<ProcessRun>> response = hateoasTemplate.exchange("${rootUrl}/diploexec/api/v1/process/run", HttpMethod.POST, processRun, PROCESS_RUN)
