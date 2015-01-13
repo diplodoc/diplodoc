@@ -2,6 +2,7 @@ package com.github.diplodoc.diploexec
 
 import com.github.diplodoc.diplobase.client.ProcessRunDataClient
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.domain.diploexec.ProcessRunParameter
 import com.github.diplodoc.diplocore.modules.Module
 import groovy.json.JsonSlurper
 
@@ -27,8 +28,8 @@ class ProcessCall implements Runnable {
         diploexec.notify(ProcessCallEvent.started(processRun))
 
         String script = processRun.process.definition
-        Map<String, Object> parameters = processRun.parameters.collectEntries { parameter ->
-            [ parameter.key,  Class.forName(parameter.type).newInstance([jsonSlurper.parseText(parameter.value)]) ]
+        Map<String, Object> parameters = processRun.parameters.collectEntries { ProcessRunParameter parameter ->
+            [ parameter.key,  Class.forName(parameter.type).newInstance(jsonSlurper.parseText(parameter.value)) ]
         }
 
         new GroovyShell(binding(parameters)).evaluate(script)

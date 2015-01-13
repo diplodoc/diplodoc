@@ -30,12 +30,12 @@ class ProcessRunDataClient {
     }
 
     ProcessRun create(ProcessRun processRun) {
-        ResponseEntity<Resource<ProcessRun>> response = hateoasTemplate.exchange("${rootUrl}/diplobase/processruns", HttpMethod.POST, new HttpEntity<ProcessRun>(processRun), PROCESS_RUN)
+        ResponseEntity<Resource<ProcessRun>> response = hateoasTemplate.exchange("${rootUrl}/diplobase/processRuns", HttpMethod.POST, new HttpEntity<ProcessRun>(processRun), PROCESS_RUN)
         fromResource(response.body)
     }
 
     void update(ProcessRun processRun) {
-        hateoasTemplate.exchange("${rootUrl}/diplobase/processruns/${processRun.id}", HttpMethod.PUT, new HttpEntity<ProcessRun>(processRun), PROCESS_RUN)
+        hateoasTemplate.exchange("${rootUrl}/diplobase/processRuns/${processRun.id}", HttpMethod.PUT, new HttpEntity<ProcessRun>(processRun), PROCESS_RUN)
     }
 
     private static ProcessRun fromResource(Resource<ProcessRun> resource) {

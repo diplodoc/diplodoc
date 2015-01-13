@@ -10,6 +10,7 @@ import org.springframework.core.ParameterizedTypeReference
 import org.springframework.hateoas.MediaTypes
 import org.springframework.hateoas.Resource
 import org.springframework.hateoas.hal.Jackson2HalModule
+import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
@@ -34,10 +35,10 @@ class DiploexecClient {
         ProcessRun processRun = new ProcessRun()
         processRun.process = process
         processRun.parameters = parameters.collect { String key, Object value ->
-            new ProcessRunParameter(key: key, value: JsonOutput.toJson(value), type: value.class.name, processRun: processRun)
+            new ProcessRunParameter(key: key, value: JsonOutput.toJson(value), type: value.class.name)
         }
 
-        ResponseEntity<Resource<ProcessRun>> response = hateoasTemplate.exchange("${rootUrl}/diploexec/api/v1/process/run", HttpMethod.POST, processRun, PROCESS_RUN)
+        ResponseEntity<Resource<ProcessRun>> response = hateoasTemplate.exchange("${rootUrl}/diploexec/api/v1/process/run", HttpMethod.POST, new HttpEntity<ProcessRun>(processRun), PROCESS_RUN)
         fromResource(response)
     }
 
