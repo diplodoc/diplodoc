@@ -32,7 +32,7 @@ class DiploexecClient {
     ProcessRun run(Process process, Map<String, Object> parameters) {
         ProcessRun processRun = new ProcessRun()
         processRun.process = process
-        processRun.parameters = parameters.collect { String key, Object value ->
+        processRun.parameters = parameters.collect { String key, String value ->
             new ProcessRunParameter(key: key, value: value, type: value.class.name, processRun: processRun)
         }
 
