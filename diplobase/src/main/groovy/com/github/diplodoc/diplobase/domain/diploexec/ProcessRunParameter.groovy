@@ -23,4 +23,7 @@ class ProcessRunParameter {
     String type
 
     String value
+
+    @ManyToOne
+    ProcessRun processRun
 }
