@@ -1,8 +1,8 @@
 package com.github.diplodoc.diploexec.config
 
-import com.github.diplodoc.diplobase.client.ProcessDataClient
-import com.github.diplodoc.diplobase.client.ProcessRunDataClient
 import com.github.diplodoc.diplobase.config.DiplobaseConfiguration
+import com.github.diplodoc.diplobase.repository.diploexec.ProcessRepository
+import com.github.diplodoc.diplobase.repository.diploexec.ProcessRunRepository
 import com.github.diplodoc.diploexec.Diploexec
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
@@ -33,24 +33,14 @@ class DiploexecConfiguration {
     }
 
     @Bean
-    ProcessDataClient processDataClient() {
-        new ProcessDataClient('http://localhost:8080')
-    }
-
-    @Bean
-    ProcessRunDataClient processRunDataClient() {
-        new ProcessRunDataClient('http://localhost:8080')
-    }
-
-    @Bean
     @Autowired
     @Lazy
-    Diploexec diploexec(ApplicationContext modulesContext, ThreadPoolTaskExecutor threadPool, ProcessDataClient processDataClient, ProcessRunDataClient processRunDataClient) {
+    Diploexec diploexec(ApplicationContext modulesContext, ThreadPoolTaskExecutor threadPool, ProcessRepository processRepository, ProcessRunRepository processRunRepository) {
         Diploexec diploexec = new Diploexec()
         diploexec.threadPool = threadPool
         diploexec.modulesContext = modulesContext
-        diploexec.processDataClient = processDataClient
-        diploexec.processRunDataClient = processRunDataClient
+        diploexec.processRepository = processRepository
+        diploexec.processRunRepository = processRunRepository
 
         return diploexec
     }

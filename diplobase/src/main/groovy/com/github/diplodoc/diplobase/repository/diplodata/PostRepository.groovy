@@ -6,5 +6,4 @@ import org.springframework.data.repository.PagingAndSortingRepository
 /**
  * @author yaroslav.yermilov
  */
-interface PostRepository extends PagingAndSortingRepository<Post, Long> {
-}
+interface PostRepository extends PagingAndSortingRepository<Post, Long> {}

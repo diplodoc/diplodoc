@@ -1,9 +1,9 @@
 package com.github.diplodoc.diploexec
 
-import com.github.diplodoc.diplobase.client.ProcessDataClient
-import com.github.diplodoc.diplobase.client.ProcessRunDataClient
 import com.github.diplodoc.diplobase.domain.diploexec.Process
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.repository.diploexec.ProcessRepository
+import com.github.diplodoc.diplobase.repository.diploexec.ProcessRunRepository
 import com.github.diplodoc.diplocore.modules.Module
 import org.springframework.context.ApplicationContext
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
@@ -17,8 +17,8 @@ class Diploexec {
 
     ThreadPoolTaskExecutor threadPool
     ApplicationContext modulesContext
-    ProcessDataClient processDataClient
-    ProcessRunDataClient processRunDataClient
+    ProcessRepository processRepository
+    ProcessRunRepository processRunRepository
 
     Collection<Process> processes
     Map<Process, Collection<String>> waitingMap
@@ -26,7 +26,7 @@ class Diploexec {
 
     @PostConstruct
     void init() {
-        processes = processDataClient.processes()
+        processes = processRepository.findAll()
         waitingMap = new HashMap<>()
         outputMap = new HashMap<>()
 
@@ -48,12 +48,12 @@ class Diploexec {
         switch (event.type) {
             case ProcessCallEvent.Type.PROCESS_RUN_STARTED:
                 event.processRun.startTime = event.time.toString()
-                processRunDataClient.create event.processRun
+                processRunRepository.save event.processRun
             break;
 
             case ProcessCallEvent.Type.PROCESS_RUN_ENDED:
                 event.processRun.endTime = event.time.toString()
-                processRunDataClient.update event.processRun
+                processRunRepository.save event.processRun
             break;
         }
     }

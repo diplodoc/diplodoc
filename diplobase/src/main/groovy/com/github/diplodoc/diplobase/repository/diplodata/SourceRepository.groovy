@@ -7,4 +7,6 @@ import org.springframework.data.repository.PagingAndSortingRepository
  * @author yaroslav.yermilov
  */
 interface SourceRepository extends PagingAndSortingRepository<Source, Long> {
+
+    Source findOneByName(String name)
 }

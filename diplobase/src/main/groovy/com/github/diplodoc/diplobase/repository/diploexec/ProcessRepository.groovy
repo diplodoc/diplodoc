@@ -9,5 +9,5 @@ import org.springframework.data.repository.query.Param
  */
 interface ProcessRepository extends CrudRepository<Process, Long> {
 
-    Process findOneByName(@Param('name') String name)
+    Process findOneByName(String name)
 }

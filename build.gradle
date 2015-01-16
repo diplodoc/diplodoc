@@ -17,7 +17,6 @@ buildscript {
 
 apply plugin: 'org.akhikhl.gretty'
 farm {
-	webapp ':diplobase:diplobase-rest'
 	webapp ':diploexec:diploexec-rest'
 }
 
@@ -45,19 +44,7 @@ subprojects {
 	}
 }
 
-project(':diplobase:diplobase-client') {
-	dependencies {
-		compile project(':diplobase')
-	}
-}
-
 project(':diplobase:diplobase-shell') {
-	dependencies {
-		compile project(':diplobase')
-	}
-}
-
-project(':diplobase:diplobase-rest') {
 	dependencies {
 		compile project(':diplobase')
 	}
@@ -72,7 +59,7 @@ project(':diplocore') {
 project(':diploexec') {
 	dependencies {
 		compile project(':diplocore')
-		compile project(':diplobase:diplobase-client')
+		compile project(':diplobase')
 	}
 }
 
@@ -84,7 +71,7 @@ project(':diploexec:diploexec-rest') {
 
 project(':diploexec:diploexec-shell') {
 	dependencies {
-		compile project(':diplobase:diplobase-client')
+		compile project(':diplobase')
 		compile project(':diploexec:diploexec-client')
 	}
 }
