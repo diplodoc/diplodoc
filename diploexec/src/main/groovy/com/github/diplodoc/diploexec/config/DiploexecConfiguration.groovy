@@ -35,10 +35,10 @@ class DiploexecConfiguration {
     @Bean
     @Autowired
     @Lazy
-    Diploexec diploexec(ApplicationContext modulesContext, ThreadPoolTaskExecutor threadPool, ProcessRepository processRepository, ProcessRunRepository processRunRepository) {
+    Diploexec diploexec(ThreadPoolTaskExecutor threadPool, ProcessRepository processRepository, ProcessRunRepository processRunRepository) {
         Diploexec diploexec = new Diploexec()
         diploexec.threadPool = threadPool
-        diploexec.modulesContext = modulesContext
+        diploexec.modulesContext = modulesContext()
         diploexec.processRepository = processRepository
         diploexec.processRunRepository = processRunRepository
 
