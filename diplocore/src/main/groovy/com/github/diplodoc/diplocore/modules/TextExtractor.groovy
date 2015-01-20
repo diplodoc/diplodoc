@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 /**
  * @author yaroslav.yermilov
  */
-class TextExtractor implements Module {
+class TextExtractor implements Bindable {
 
     Web web
 

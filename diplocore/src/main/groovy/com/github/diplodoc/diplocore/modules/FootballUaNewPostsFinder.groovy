@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 /**
  * @author yaroslav.yermilov
  */
-class FootballUaNewPostsFinder implements Module {
+class FootballUaNewPostsFinder implements Bindable {
 
     Web web
 

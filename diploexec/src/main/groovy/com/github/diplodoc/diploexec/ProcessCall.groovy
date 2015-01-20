@@ -2,10 +2,8 @@ package com.github.diplodoc.diploexec
 
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRunParameter
-import com.github.diplodoc.diplocore.modules.Module
+import com.github.diplodoc.diplocore.modules.Bindable
 import groovy.json.JsonSlurper
-
-import java.time.LocalDateTime
 
 /**
  * @author yaroslav.yermilov
@@ -69,7 +67,7 @@ class ProcessCall implements Runnable {
     private void bindRequire(Binding binding) {
         binding.require = { String[] modulesNames ->
             modulesNames.each { String moduleName ->
-                Module module = diploexec.getModule(moduleName)
+                Bindable module = diploexec.getModule(moduleName)
                 module.bindSelf binding
             }
         }

@@ -4,7 +4,7 @@ import com.github.diplodoc.diplobase.domain.diploexec.Process
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.repository.diploexec.ProcessRepository
 import com.github.diplodoc.diplobase.repository.diploexec.ProcessRunRepository
-import com.github.diplodoc.diplocore.modules.Module
+import com.github.diplodoc.diplocore.modules.Bindable
 import org.springframework.context.ApplicationContext
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 
@@ -58,7 +58,7 @@ class Diploexec {
         }
     }
 
-    Module getModule(String name) {
+    Bindable getModule(String name) {
         modulesContext.getBean(name)
     }
 

@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 /**
  * @author yaroslav.yermilov
  */
-class PostLoader implements Module {
+class PostLoader implements Bindable {
 
     Web web
 

@@ -5,7 +5,7 @@ import com.github.diplodoc.diplocore.modules.support.JythonIntegrationSupport
 /**
  * @author yaroslav.yermilov
  */
-class TestActor extends JythonIntegrationSupport implements Module {
+class TestActor extends JythonIntegrationSupport implements Bindable {
 
     @Override
     void bindSelf(Binding binding) {

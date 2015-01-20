@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 /**
  * @author yaroslav.yermilov
  */
-class TitleExtractor implements Module {
+class TitleExtractor implements Bindable {
 
     Web web
 
