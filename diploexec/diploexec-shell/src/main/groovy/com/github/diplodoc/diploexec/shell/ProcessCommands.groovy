@@ -45,8 +45,8 @@ class ProcessCommands implements CommandMarker {
             [ key,  Class.forName(type).newInstance(parameter) ]
         }
 
-        ProcessRun processRun = diploexecClient.run(process, parameters)
-        longToString(processRun)
+        diploexecClient.run(process, parameters)
+        'Started'
     }
 
     @CliCommand(value = 'process get', help = 'get full description of process')
