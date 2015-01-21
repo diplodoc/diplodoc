@@ -1,10 +1,15 @@
 package com.github.diplodoc.diploexec.shell
 
-import groovy.json.JsonSlurper
+import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.domain.diploexec.ProcessRunParameter
+import com.github.diplodoc.diplobase.repository.diploexec.ProcessRunRepository
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.shell.core.CommandMarker
 import org.springframework.shell.core.annotation.CliCommand
+import org.springframework.shell.core.annotation.CliOption
 import org.springframework.stereotype.Component
-import org.springframework.web.client.RestTemplate
 
 /**
  * @author yaroslav.yermilov
@@ -12,34 +17,26 @@ import org.springframework.web.client.RestTemplate
 @Component
 class StatusCommands implements CommandMarker {
 
-    RestTemplate restTemplate = new RestTemplate()
+    @Autowired
+    ProcessRunRepository processRunRepository
 
     @CliCommand(value = 'status', help = 'current diploexec runtime status')
-    String status() {
-        def status = restTemplate.getForObject('http://localhost:8080/diploexec/api/v1/status', List.class)
+    String status(@CliOption(key = 'count', mandatory = false, help = 'number of last runs to show') final Integer count) {
+        Iterable<ProcessRun> lastProcessRuns = processRunRepository.findAll(new PageRequest(0, count?:10, Sort.Direction.DESC, 'startTime'))
+        lastProcessRuns.collect(StatusCommands.&longToString).join('\n')
+    }
 
-        String result = ''
-        result += 'RUNNING\n'
-        result += 'id'.padRight(40) + 'name'.padRight(30) + 'status'.padRight(10) + 'start'.padRight(30) + 'end'.padRight(30) + 'description'.padRight(80) + '\n'
-        status.findAll { it.status == 'RUNNING' }.each {
-            result += "${it.id}".padRight(40) + "${it.name}".padRight(30) + "${it.status}".padRight(10) + "${it.startTime}".padRight(30) + "${it.endTime}".padRight(30) + "${it.description}".padRight(80) + '\n'
-        }
-        result += '\n'
+    private static longToString(ProcessRun processRun) {
+        'id:'.padRight(20) + processRun.id + '\n' +
+        'process:'.padRight(20) + processRun.process.name + '\n' +
+        'start time:'.padRight(20) + processRun.startTime + '\n' +
+        'end time:'.padRight(20) + processRun.endTime + '\n' +
+        ((!processRun.parameters.isEmpty()) ? 'parameters:\n' + processRun.parameters.collect(ProcessCommands.&longToString).join('\n') : '')
+    }
 
-        result += 'WAITING\n'
-        result += 'id'.padRight(40) + 'name'.padRight(30) + 'status'.padRight(10) + 'start'.padRight(30) + 'end'.padRight(30) + 'description'.padRight(80) + '\n'
-        status.findAll { it.status == 'WAITING' }.each {
-            result += "${it.id}".padRight(40) + "${it.name}".padRight(30) + "${it.status}".padRight(10) + "${it.startTime}".padRight(30) + "${it.endTime}".padRight(30) + "${it.description}".padRight(80) + '\n'
-        }
-        result += '\n'
-
-        result += 'FINISHED\n'
-        result += 'id'.padRight(40) + 'name'.padRight(30) + 'status'.padRight(10) + 'start'.padRight(30) + 'end'.padRight(30) + 'description'.padRight(80) + '\n'
-        status.findAll { it.status == 'FINISHED' }.each {
-            result += "${it.id}".padRight(40) + "${it.name}".padRight(30) + "${it.status}".padRight(10) + "${it.startTime}".padRight(30) + "${it.endTime}".padRight(30) + "${it.description}".padRight(80) + '\n'
-        }
-        result += '\n'
-
-        return result
+    private static longToString(ProcessRunParameter processRunParameter) {
+        '    key:'.padRight(20) + "${processRunParameter.key}\n" +
+        '    type:'.padRight(20) + "${processRunParameter.type}\n" +
+        '    value:'.padRight(20) + "${processRunParameter.value}"
     }
 }

@@ -2,6 +2,7 @@ package com.github.diplodoc.diplobase.domain.diploexec
 
 import javax.persistence.CascadeType
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -23,7 +24,7 @@ class ProcessRun {
     @ManyToOne
     Process process
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = 'processRun')
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = 'processRun', fetch = FetchType.EAGER)
     Collection<ProcessRunParameter> parameters
 
     String startTime
