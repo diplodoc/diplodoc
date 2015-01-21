@@ -29,10 +29,10 @@ class ProcessRunController {
 
     @RequestMapping(value='/process/run', method=RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody Resource<ProcessRun> run(@RequestBody ProcessRun processRun) {
-        ProcessRun result = diploexec.run(processRun)
+    @ResponseBody ResourceSupport run(@RequestBody ProcessRun processRun) {
+        diploexec.run(processRun)
 
-        Resource<ProcessRun> resource = new Resource<>(result)
+        ResourceSupport resource = new ResourceSupport()
         resource.add(ControllerLinkBuilder.linkTo(ProcessRunController).slash('process').slash('run').withSelfRel())
         return resource
     }

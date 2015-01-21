@@ -83,14 +83,13 @@ class ProcessCommands implements CommandMarker {
     }
 
     private static longToString(ProcessRun processRun) {
-        'id:'.padRight(20) + "${processRun.id}\n" +
-        'process:'.padRight(20) + shortToString(processRun.process) +
-        'parameters:\n'.padRight(20) + processRun.parameters.collect(ProcessCommands.&longToString).join('\n')
+        'process:'.padRight(20) + shortToString(processRun.process) + '\n' +
+        'parameters:\n' + processRun.parameters.collect(ProcessCommands.&longToString).join('\n')
     }
 
     private static longToString(ProcessRunParameter processRunParameter) {
-        'key:'.padRight(20) + "${processRunParameter.id}\n" +
+        'key:'.padRight(20) + "${processRunParameter.key}\n" +
         'type:'.padRight(20) + "${processRunParameter.type}\n" +
-        'value:\n'.padRight(20) + "${processRunParameter.value}"
+        'value:'.padRight(20) + "${processRunParameter.value}"
     }
 }

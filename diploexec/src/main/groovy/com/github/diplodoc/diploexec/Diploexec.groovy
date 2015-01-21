@@ -36,12 +36,12 @@ class Diploexec {
         }
     }
 
-    ProcessRun run(ProcessRun processRun) {
+    void run(ProcessRun processRun) {
         threadPool.execute(new ProcessCall(this, processRun))
     }
 
     void notify(DiploexecEvent event) {
-        event.notifiedRuns().each { ProcessRun processRun -> run(processRun) }
+        event.notifiedRuns(this).each { ProcessRun processRun -> run(processRun) }
     }
 
     void notify(ProcessCallEvent event) {

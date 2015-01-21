@@ -38,14 +38,8 @@ class DiploexecClient {
             new ProcessRunParameter(key: key, value: JsonOutput.toJson(value), type: value.class.name)
         }
 
-        ResponseEntity<Resource<ProcessRun>> response = hateoasTemplate.exchange("${rootUrl}/diploexec/api/v1/process/run", HttpMethod.POST, new HttpEntity<ProcessRun>(processRun), PROCESS_RUN)
-        fromResource(response)
-    }
+        hateoasTemplate.exchange("${rootUrl}/diploexec/api/v1/process/run", HttpMethod.POST, new HttpEntity<ProcessRun>(processRun), PROCESS_RUN)
 
-    private static ProcessRun fromResource(Resource<ProcessRun> resource) {
-        ProcessRun processRun = resource.content
-        String selfHref = resource.id.href
-        processRun.id = Long.parseLong(selfHref.substring(selfHref.lastIndexOf('/') + 1))
         return processRun
     }
 
