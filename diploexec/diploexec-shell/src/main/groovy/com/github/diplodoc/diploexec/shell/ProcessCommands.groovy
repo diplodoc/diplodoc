@@ -72,7 +72,7 @@ class ProcessCommands implements CommandMarker {
     }
 
     private static shortToString(Process process) {
-        "${process.id}".padLeft(5) + "${process.name}".padLeft(30) + "${process.lastUpdate}".padLeft(50)
+        "${process.id}".padRight(5) + "${process.name}".padLeft(30) + "${process.lastUpdate}".padLeft(50)
     }
 
     private static longToString(Process process) {
@@ -80,16 +80,5 @@ class ProcessCommands implements CommandMarker {
         'name:'.padRight(20) + "${process.name}\n" +
         'last update:'.padRight(20) + "${process.lastUpdate}\n" +
         'definition:\n' + "${process.definition}"
-    }
-
-    private static longToString(ProcessRun processRun) {
-        'process:'.padRight(20) + shortToString(processRun.process) + '\n' +
-        'parameters:\n' + processRun.parameters.collect(ProcessCommands.&longToString).join('\n')
-    }
-
-    private static longToString(ProcessRunParameter processRunParameter) {
-        'key:'.padRight(20) + "${processRunParameter.key}\n" +
-        'type:'.padRight(20) + "${processRunParameter.type}\n" +
-        'value:'.padRight(20) + "${processRunParameter.value}"
     }
 }
