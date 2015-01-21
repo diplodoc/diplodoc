@@ -12,7 +12,6 @@ import org.springframework.context.annotation.ImportResource
  */
 @Configuration
 @Import(DiplobaseConfiguration)
-@ImportResource(value = 'classpath:modules.context', reader = GroovyBeanDefinitionReader)
 @ComponentScan('com.github.diplodoc.diplocore')
 class DiplocoreConfiguration {
 }

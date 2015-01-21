@@ -3,18 +3,22 @@ package com.github.diplodoc.diplocore.modules
 import com.github.diplodoc.diplobase.repository.diplodata.PostRepository
 import com.github.diplodoc.diplocore.services.Web
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 
 /**
  * @author yaroslav.yermilov
  */
-class FootballUaNewPostsFinder {
+@Component('football.ua-new-posts-finder')
+class FootballUaNewPostsFinder implements Bindable {
 
+    @Autowired
     Web web
 
     @Autowired
     PostRepository postRepository
 
-    def bind(Binding binding) {
+    @Override
+    void bindSelf(Binding binding) {
         binding.findNewPosts = {
             Map params -> findNewPosts(params.source, params.action)
         }

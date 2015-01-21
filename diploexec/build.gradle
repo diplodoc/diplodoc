@@ -1,23 +1,8 @@
 dependencies {
     compile dependency.jython
 
-    compile dependency.spring.web
-    compile dependency.spring.webmvc
-    compile dependency.servlet
-
-    compile dependency.jackson.core
-    compile dependency.jackson.databind
-
     compile dependency.postgresql
     compile dependency.commons.dbcp
 
     compile dependency.jsoup
-}
-
-apply plugin: 'war'
-apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
-
-gretty {
-    port = 8080
-    contextPath = '/diploexec'
 }

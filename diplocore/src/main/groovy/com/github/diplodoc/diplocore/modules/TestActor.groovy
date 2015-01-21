@@ -1,13 +1,16 @@
 package com.github.diplodoc.diplocore.modules
 
 import com.github.diplodoc.diplocore.modules.support.JythonIntegrationSupport
+import org.springframework.stereotype.Component
 
 /**
  * @author yaroslav.yermilov
  */
-class TestActor extends JythonIntegrationSupport {
+@Component('jython-test')
+class TestActor extends JythonIntegrationSupport implements Bindable {
 
-    def bind(Binding binding) {
+    @Override
+    void bindSelf(Binding binding) {
         binding.modify = instance().&modify
     }
 

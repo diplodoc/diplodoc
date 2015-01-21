@@ -1,11 +1,38 @@
 apply from: 'repository.gradle'
 
-subprojects {
-    group = 'com.github.diplodoc'
-    version = '0.0'
+allprojects {
+	group = 'com.github.diplodoc'
+	version = '0.0'
+}
 
+buildscript {
+	repositories {
+		jcenter()
+	}
+
+	dependencies {
+		classpath 'org.akhikhl.gretty:gretty:+'
+	}
+}
+
+apply plugin: 'org.akhikhl.gretty'
+farm {
+	webapp ':diploexec:diploexec-rest'
+}
+
+subprojects {
     apply plugin: 'java'
 	apply plugin: 'groovy'
+
+	buildscript {
+		repositories {
+			jcenter()
+		}
+
+		dependencies {
+			classpath 'org.akhikhl.gretty:gretty:+'
+		}
+	}
 
 	repositories {
 	    jcenter()
@@ -17,19 +44,7 @@ subprojects {
 	}
 }
 
-project(':diplobase:diplobase-client') {
-	dependencies {
-		compile project(':diplobase')
-	}
-}
-
 project(':diplobase:diplobase-shell') {
-	dependencies {
-		compile project(':diplobase')
-	}
-}
-
-project(':diplobase:diplobase-rest') {
 	dependencies {
 		compile project(':diplobase')
 	}
@@ -44,11 +59,25 @@ project(':diplocore') {
 project(':diploexec') {
 	dependencies {
 		compile project(':diplocore')
+		compile project(':diplobase')
+	}
+}
+
+project(':diploexec:diploexec-rest') {
+	dependencies {
+		compile project(':diploexec')
 	}
 }
 
 project(':diploexec:diploexec-shell') {
 	dependencies {
-		compile project(':diplobase:diplobase-client')
+		compile project(':diplobase')
+		compile project(':diploexec:diploexec-client')
+	}
+}
+
+project(':diploexec:diploexec-client') {
+	dependencies {
+		compile project(':diplobase')
 	}
 }

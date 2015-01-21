@@ -1,8 +1,11 @@
 package com.github.diplodoc.diploexec.shell
 
-import com.github.diplodoc.diplobase.client.ProcessClient
 import com.github.diplodoc.diplobase.domain.diploexec.Process
-import com.sun.org.apache.xpath.internal.operations.Mod
+import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.domain.diploexec.ProcessRunParameter
+import com.github.diplodoc.diplobase.repository.diploexec.ProcessRepository
+import com.github.diplodoc.diploexec.client.DiploexecClient
+import groovy.json.JsonSlurper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.ResourceLoader
 import org.springframework.shell.core.CommandMarker
@@ -19,32 +22,52 @@ class ProcessCommands implements CommandMarker {
     @Autowired
     ResourceLoader resourceLoader
 
-    ProcessClient processClient = new ProcessClient('http://localhost:8080')
+    @Autowired
+    ProcessRepository processRepository
+
+    DiploexecClient diploexecClient = new DiploexecClient('http://localhost:8080')
+
+    JsonSlurper jsonSlurper = new JsonSlurper()
 
     @CliCommand(value = 'process list', help = 'list all processes')
     String list() {
-        processClient.processes().collect(ProcessCommands.&shortToString).join('\n')
+        processRepository.findAll().collect(ProcessCommands.&shortToString).join('\n')
+    }
+
+    @CliCommand(value = 'process run', help = 'run process')
+    String run(@CliOption(key = 'name', mandatory = true, help = 'process name') final String name,
+               @CliOption(key = 'parameters', mandatory = true, help = 'path to paramters file') final String pathToParametersFile) {
+        Process process = processRepository.findOneByName(name)
+        Map<String, Object> jsonParameters = jsonSlurper.parse(resourceLoader.getResource("file:${pathToParametersFile}").file)
+        Map<String, Object> parameters = jsonParameters.collectEntries { String key, Map<String, Object> parameter ->
+            String type = parameter['type']
+            parameter.remove('type')
+            [ key,  Class.forName(type).newInstance(parameter) ]
+        }
+
+        ProcessRun processRun = diploexecClient.run(process, parameters)
+        longToString(processRun)
     }
 
     @CliCommand(value = 'process get', help = 'get full description of process')
     String get(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
-        Process process = processClient.findOneByName(name)
+        Process process = processRepository.findOneByName(name)
         longToString(process)
     }
 
     @CliCommand(value = 'process remove', help = 'remove process')
     String remove(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
-        Process process = processClient.findOneByName(name)
-        processClient.delete(process)
+        Process process = processRepository.findOneByName(name)
+        processRepository.delete(process)
         'Done'
     }
 
     @CliCommand(value = 'process update', help = 'update process description')
     String update(@CliOption(key = 'name', mandatory = true, help = 'process name') final String name,
                   @CliOption(key = 'definition', mandatory = true, help = 'path to definition file') final String pathToDefinitionFile) {
-        Process process = processClient.findOneByName(name)
+        Process process = processRepository.findOneByName(name)
         process.definition = resourceLoader.getResource("file:${pathToDefinitionFile}").file.text
-        processClient.update(process)
+        processRepository.save(process)
         longToString(process)
     }
 
@@ -53,9 +76,20 @@ class ProcessCommands implements CommandMarker {
     }
 
     private static longToString(Process process) {
-        "id:".padRight(20) + "${process.id}\n" +
-        "name:".padRight(20) + "${process.name}\n" +
-        "last update:".padRight(20) + "${process.lastUpdate}\n" +
-        "definition:\n" + "${process.definition}"
+        'id:'.padRight(20) + "${process.id}\n" +
+        'name:'.padRight(20) + "${process.name}\n" +
+        'last update:'.padRight(20) + "${process.lastUpdate}\n" +
+        'definition:\n' + "${process.definition}"
+    }
+
+    private static longToString(ProcessRun processRun) {
+        'process:'.padRight(20) + shortToString(processRun.process) + '\n' +
+        'parameters:\n' + processRun.parameters.collect(ProcessCommands.&longToString).join('\n')
+    }
+
+    private static longToString(ProcessRunParameter processRunParameter) {
+        'key:'.padRight(20) + "${processRunParameter.key}\n" +
+        'type:'.padRight(20) + "${processRunParameter.type}\n" +
+        'value:'.padRight(20) + "${processRunParameter.value}"
     }
 }
