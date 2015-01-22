@@ -7,6 +7,7 @@ import com.github.diplodoc.diplocore.config.DiplocoreConfiguration
 import com.github.diplodoc.diploexec.Diploexec
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
+import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -19,22 +20,26 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
  * @author yaroslav.yermilov
  */
 @Configuration
-@Import([ DiplobaseConfiguration, DiplocoreConfiguration ])
+@Import(DiplocoreConfiguration)
 @ComponentScan('com.github.diplodoc.diploexec')
 class DiploexecConfiguration {
 
     @Bean
     ThreadPoolTaskExecutor threadPool() {
-        new ThreadPoolTaskExecutor()
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor()
+        taskExecutor.corePoolSize = 5
+        taskExecutor.maxPoolSize = 20
+
+        return taskExecutor
     }
 
     @Bean
     @Autowired
     @Lazy
-    Diploexec diploexec(ThreadPoolTaskExecutor threadPool, ApplicationContext modulesContext, ProcessRepository processRepository, ProcessRunRepository processRunRepository) {
+    Diploexec diploexec(ThreadPoolTaskExecutor threadPool, ProcessRepository processRepository, ProcessRunRepository processRunRepository) {
         Diploexec diploexec = new Diploexec()
         diploexec.threadPool = threadPool
-        diploexec.modulesContext = modulesContext
+        diploexec.modulesContext = new AnnotationConfigApplicationContext(DiplocoreConfiguration)
         diploexec.processRepository = processRepository
         diploexec.processRunRepository = processRunRepository
 

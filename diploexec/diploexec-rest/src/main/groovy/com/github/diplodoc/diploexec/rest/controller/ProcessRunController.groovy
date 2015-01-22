@@ -30,6 +30,8 @@ class ProcessRunController {
     @RequestMapping(value='/process/run', method=RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody ResourceSupport run(@RequestBody ProcessRun processRun) {
+        processRun.parameters.each { ProcessRunParameter parameter -> parameter.processRun = processRun }
+
         diploexec.run(processRun)
 
         ResourceSupport resource = new ResourceSupport()

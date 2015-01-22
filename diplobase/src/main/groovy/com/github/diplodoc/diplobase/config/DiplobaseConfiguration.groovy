@@ -42,8 +42,7 @@ class DiplobaseConfiguration {
         entityManagerFactory.jpaVendorAdapter = jpaVendorAdapter
         entityManagerFactory.packagesToScan = [
                 'com.github.diplodoc.diplobase.domain.diplodata',
-                'com.github.diplodoc.diplobase.domain.diploexec',
-                'com.github.diplodoc.diplobase.domain.diplouser'
+                'com.github.diplodoc.diplobase.domain.diploexec'
         ]
 
         return entityManagerFactory
