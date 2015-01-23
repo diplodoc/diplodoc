@@ -8,5 +8,5 @@ import org.springframework.data.repository.PagingAndSortingRepository
  */
 interface SourceRepository extends PagingAndSortingRepository<Source, Long> {
 
-    Source findOneByName()
+    Source findOneByName(String name)
 }

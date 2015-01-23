@@ -5,18 +5,22 @@ import com.github.diplodoc.diplobase.repository.diplodata.PostRepository
 import com.github.diplodoc.diplocore.services.Web
 import org.jsoup.nodes.Element
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 
 /**
  * @author yaroslav.yermilov
  */
-class TextExtractor {
+@Component('text-extractor')
+class TextExtractor implements Bindable {
 
+    @Autowired
     Web web
 
     @Autowired
     PostRepository postRepository
 
-    def bind(Binding binding) {
+    @Override
+    void bindSelf(Binding binding) {
         binding.extractText = {
             Map params -> extractText(params.from)
         }

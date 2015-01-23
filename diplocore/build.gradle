@@ -12,12 +12,7 @@ sourceSets {
 }
 
 dependencies {
-    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.2.0'
-    compile group: 'org.python', name: 'jython', version: '2.5.3'
+    compile dependency.jython
 
-    compile group: 'org.springframework', name: 'spring-context', version: '4.0.3.RELEASE'
-
-    compile group: 'org.jsoup', name: 'jsoup', version: '1.7.3'
+    compile dependency.jsoup
 }
-
-apply plugin: 'groovy'
