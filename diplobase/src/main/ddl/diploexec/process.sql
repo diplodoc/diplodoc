@@ -4,7 +4,7 @@
 
 CREATE TABLE diploexec.process
 (
-  id serial NOT NULL,
+  id bigserial NOT NULL,
   definition text,
   name character varying(80),
   lastupdate character varying(80),
