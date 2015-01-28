@@ -25,25 +25,20 @@ class TextExtractor implements Bindable {
     }
 
     Post extractText(Post post) {
-        def divElements = [:]
-        web.document(post).select('div').each {
-            divElements[it] = 0.0
-        }
+        Map<Element, Double> divElements = [:]
+        web.document(post).select('div').each { divElements[it] = 0.0 }
 
         decreaseByLinks divElements
         decreaseByChildren divElements
         increaseByPoints divElements
         increaseByTextSize divElements
 
-        post.meaningText = divElements.max {
-            it.value
-        }.key.text()
-
         post = postRepository.findOne(post.id)
+        post.meaningText = divElements.max { it.value }.key.text()
         postRepository.save post
     }
 
-    def decreaseByLinks(Map<Element, Double> divElements) {
+    void decreaseByLinks(Map<Element, Double> divElements) {
         divElements.each {
             double size = it.key.html().size()
             double linksCount = it.key.select('a').size()
@@ -54,7 +49,7 @@ class TextExtractor implements Bindable {
         }
     }
 
-    def decreaseByChildren(Map<Element, Double> divElements) {
+    void decreaseByChildren(Map<Element, Double> divElements) {
         divElements.each {
             double size = it.key.html().size()
             double childrenCount = it.key.allElements.size()
@@ -65,7 +60,7 @@ class TextExtractor implements Bindable {
         }
     }
 
-    def increaseByPoints(Map<Element, Double> divElements) {
+    void increaseByPoints(Map<Element, Double> divElements) {
         divElements.each {
             double size = it.key.html().size()
             double pointsCount = 0;
@@ -80,7 +75,7 @@ class TextExtractor implements Bindable {
         }
     }
 
-    def increaseByTextSize(Map<Element, Double> divElements) {
+    void increaseByTextSize(Map<Element, Double> divElements) {
         divElements.each {
             double size = it.key.html().size()
             double textSize = it.key.text().size()
