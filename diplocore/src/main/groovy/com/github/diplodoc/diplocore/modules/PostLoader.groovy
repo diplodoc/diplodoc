@@ -22,9 +22,7 @@ class PostLoader implements Bindable {
 
     @Override
     void bindSelf(Binding binding) {
-        binding.loadPost = {
-            Map params -> loadPost(params.from, params.url)
-        }
+        binding.loadPost = { Map params -> loadPost(params.from, params.url) }
     }
 
     Post loadPost(Source source, String url) {

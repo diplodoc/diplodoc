@@ -20,9 +20,7 @@ class TitleExtractor implements Bindable {
 
     @Override
     void bindSelf(Binding binding) {
-        binding.extractTitle = {
-            Map params -> extractTitle(params.from)
-        }
+        binding.extractTitle = { Map params -> extractTitle(params.from) }
     }
 
     Post extractTitle(Post post) {

@@ -21,9 +21,7 @@ class TextExtractor implements Bindable {
 
     @Override
     void bindSelf(Binding binding) {
-        binding.extractText = {
-            Map params -> extractText(params.from)
-        }
+        binding.extractText = { Map params -> extractText(params.from) }
     }
 
     Post extractText(Post post) {

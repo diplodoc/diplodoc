@@ -21,9 +21,7 @@ class FootballUaNewPostsFinder implements Bindable {
 
     @Override
     void bindSelf(Binding binding) {
-        binding.findNewPosts = {
-            Map params -> findNewPosts(params.source, params.action)
-        }
+        binding.findNewPosts = { Map params -> findNewPosts(params.source, params.action) }
     }
 
     void findNewPosts(Source source, Closure action) {
