@@ -2,6 +2,7 @@ package com.github.diplodoc.diplocore.services
 
 import com.github.diplodoc.diplobase.domain.diplodata.Post
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.springframework.stereotype.Component
 
 /**
@@ -10,11 +11,11 @@ import org.springframework.stereotype.Component
 @Component
 class Web {
 
-    def load(String url) {
+    Document load(String url) {
         Jsoup.connect(url).get()
     }
 
-    def document(Post post) {
+    Document document(Post post) {
         Jsoup.parse(post.html)
     }
 }

@@ -7,3 +7,5 @@ description "Extracts title from post '${post.url}'"
 require 'title-extractor'
 
 extractTitle from: post
+
+output post: post

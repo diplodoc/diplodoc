@@ -28,4 +28,6 @@ class Post {
     String title
 
     String meaningText
+
+    String type
 }

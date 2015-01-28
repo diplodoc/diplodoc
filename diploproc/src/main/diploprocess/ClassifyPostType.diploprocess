@@ -1,0 +1,11 @@
+listen to: 'extract-text'
+
+input 'post'
+
+description "Classify type of post '${post.url}'"
+
+require 'post-type-classifier'
+
+classify post
+
+output post: post

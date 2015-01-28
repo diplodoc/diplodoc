@@ -1,7 +1,9 @@
 package com.github.diplodoc.diplocore.modules
 
+import com.github.diplodoc.diplobase.domain.diplodata.Source
 import com.github.diplodoc.diplobase.repository.diplodata.PostRepository
 import com.github.diplodoc.diplocore.services.Web
+import org.jsoup.nodes.Document
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -19,36 +21,30 @@ class FootballUaNewPostsFinder implements Bindable {
 
     @Override
     void bindSelf(Binding binding) {
-        binding.findNewPosts = {
-            Map params -> findNewPosts(params.source, params.action)
-        }
+        binding.findNewPosts = { Map params -> findNewPosts(params.source, params.action) }
     }
 
-    def findNewPosts(def source, Closure action) {
-        def newFound = true
-        def archivePageIndex = 1
+    void findNewPosts(Source source, Closure action) {
+        boolean newFound = true
+        int archivePageIndex = 1
 
         while (newFound) {
-            def archivePage = web.load("http://football.ua/newsarc/page${archivePageIndex}.html")
+            Document archivePage = web.load("http://football.ua/newsarc/page${archivePageIndex}.html")
 
-            def candidates = []
+            List<String> candidates = []
             archivePage.select('h4').select('a').each {
                 candidates.add it.attr('href')
             }
             archivePageIndex++
 
             newFound = false
-            candidates.each {
-                url ->
-                    if (doNotExistsWebPageFor(url)) {
+            candidates
+                    .findAll { url ->
+                        postRepository.findOneByUrl(url) == null
+                    }.each { url ->
                         newFound = true
                         action.call url
                     }
-            }
         }
-    }
-
-    def doNotExistsWebPageFor(String url) {
-        return postRepository.findOneByUrl(url) == null
     }
 }
