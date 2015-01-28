@@ -26,7 +26,7 @@ class TextExtractor implements Bindable {
         }
     }
 
-    def extractText(Post post) {
+    Post extractText(Post post) {
         def divElements = [:]
         web.document(post).select('div').each {
             divElements[it] = 0.0

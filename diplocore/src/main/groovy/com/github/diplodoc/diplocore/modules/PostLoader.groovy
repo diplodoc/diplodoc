@@ -4,6 +4,7 @@ import com.github.diplodoc.diplobase.domain.diplodata.Post
 import com.github.diplodoc.diplobase.domain.diplodata.Source
 import com.github.diplodoc.diplobase.repository.diplodata.PostRepository
 import com.github.diplodoc.diplocore.services.Web
+import org.jsoup.nodes.Document
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -26,9 +27,9 @@ class PostLoader implements Bindable {
         }
     }
 
-    def loadPost(Source source, String url) {
-        def document = web.load(url)
-        def post = new Post(url: url, html: document.html(), source: source)
+    Post loadPost(Source source, String url) {
+        Document document = web.load(url)
+        Post post = new Post(url: url, html: document.html(), source: source)
 
         postRepository.save post
     }

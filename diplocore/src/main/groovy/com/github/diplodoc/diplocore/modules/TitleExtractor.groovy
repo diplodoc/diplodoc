@@ -25,7 +25,7 @@ class TitleExtractor implements Bindable {
         }
     }
 
-    def extractTitle(Post post) {
+    Post extractTitle(Post post) {
         post = postRepository.findOne(post.id)
         post.title = web.document(post).select('meta[property=og:title]').attr('content')
         postRepository.save post
