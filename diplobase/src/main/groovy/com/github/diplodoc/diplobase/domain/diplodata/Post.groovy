@@ -30,4 +30,6 @@ class Post {
     String meaningText
 
     String type
+
+    String loadTime
 }

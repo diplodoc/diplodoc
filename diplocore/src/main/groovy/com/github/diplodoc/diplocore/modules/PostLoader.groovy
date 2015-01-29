@@ -8,6 +8,8 @@ import org.jsoup.nodes.Document
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
+import java.time.LocalDateTime
+
 /**
  * @author yaroslav.yermilov
  */
@@ -27,7 +29,7 @@ class PostLoader implements Bindable {
 
     Post loadPost(Source source, String url) {
         Document document = web.load(url)
-        Post post = new Post(url: url, html: document.html(), source: source)
+        Post post = new Post(url: url, html: document.html(), source: source, loadTime: LocalDateTime.now().toString())
 
         postRepository.save post
     }
