@@ -36,5 +36,5 @@ ext {
     dependency.jackson.core = "com.fasterxml.jackson.core:jackson-core:${versions.jackson}"
     dependency.jackson.databind = "com.fasterxml.jackson.core:jackson-databind:${versions.jackson}"
 
-    dependency.spock = 'org.spockframework:spock-core:1.0-groovy-2.3-SNAPSHOT'
+    dependency.spock = 'org.spockframework:spock-core:0.7-groovy-2.0'
 }
