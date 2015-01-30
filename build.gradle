@@ -41,6 +41,8 @@ subprojects {
 	dependencies {
 		compile dependency.groovy
 		compile dependency.spring.context
+
+        testCompile dependency.spock
 	}
 }
 
