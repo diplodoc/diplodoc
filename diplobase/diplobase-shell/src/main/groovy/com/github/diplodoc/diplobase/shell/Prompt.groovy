@@ -14,6 +14,6 @@ class Prompt extends DefaultPromptProvider {
 
     @Override
     String getPrompt() {
-        return "diplobase-shell>";
+        return 'diplobase-shell>';
     }
 }
