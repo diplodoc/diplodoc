@@ -55,6 +55,9 @@ class Diploexec {
                 event.processRun.endTime = event.time.toString()
                 processRunRepository.save event.processRun
             break;
+
+            default:
+                assert false : "unknown ProcessCallEvent: ${event.type}"
         }
     }
 
@@ -74,8 +77,8 @@ class Diploexec {
         outputMap.findAll { Process process, Collection<String> inputFor -> inputFor.contains(outputProcess.name) }.keySet()
     }
 
-    Collection<Process> waitsFor(Process process) {
-        Collection<Process> waitsFor = []
+    Collection<String> waitsFor(Process process) {
+        Collection<String> waitsFor = []
 
         String processWaitingDefinition = process.definition.readLines().findAll({ String line -> line.startsWith('waiting') }).join('\n')
         Binding binding = new Binding()
@@ -85,8 +88,8 @@ class Diploexec {
         return waitsFor
     }
 
-    Collection<Process> inputFor(Process process) {
-        Collection<Process> inputFor = []
+    Collection<String> inputFor(Process process) {
+        Collection<String> inputFor = []
 
         String processListenDefinition = process.definition.readLines().findAll({ String line -> line.startsWith('listen') }).join('\n')
         Binding binding = new Binding()

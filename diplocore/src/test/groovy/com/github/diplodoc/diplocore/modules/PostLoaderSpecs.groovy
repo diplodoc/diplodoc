@@ -17,11 +17,12 @@ class PostLoaderSpecs extends Specification {
     PostLoader postLoader = new PostLoader(web: web, postRepository: postRepository)
 
     def 'load post'() {
-        when:
+        given:
             Source source = new Source()
             String url = 'url'
-
             Document document = Mock(Document)
+
+        when:
             document.html() >> 'html'
             web.load(url) >> document
 

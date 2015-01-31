@@ -14,7 +14,7 @@ class PostTypeClassifierSpecs extends Specification {
     PostTypeClassifier postTypeClassifier = new PostTypeClassifier(postRepository: postRepository)
 
     def 'classify article'() {
-        when:
+        given:
             Source source = new Source()
             Post post = new Post()
             post.html = 'html'
@@ -23,6 +23,7 @@ class PostTypeClassifierSpecs extends Specification {
             post.url = 'url'
             post.meaningText = ('-' * 10000)
 
+        when:
             postRepository.findOne(1) >> post
 
             postRepository.save(_) >> { Post arg -> arg }
@@ -41,7 +42,7 @@ class PostTypeClassifierSpecs extends Specification {
     }
 
     def 'classify news'() {
-        when:
+        given:
             Source source = new Source()
             Post post = new Post()
             post.html = 'html'
@@ -50,6 +51,7 @@ class PostTypeClassifierSpecs extends Specification {
             post.url = 'url'
             post.meaningText = ('-' * 1000)
 
+        when:
             postRepository.findOne(1) >> post
 
             postRepository.save(_) >> { Post arg -> arg }
