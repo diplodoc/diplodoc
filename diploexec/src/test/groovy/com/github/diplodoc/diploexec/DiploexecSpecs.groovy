@@ -148,8 +148,8 @@ command
 
     def 'inputFor()'() {
         setup:
-        Process process0 = new Process(name: 'process-0')
-        process0.definition = '''command
+            Process process0 = new Process(name: 'process-0')
+            process0.definition = '''command
 waiting for: 'process-1'
 command
 listen to: 'process-2'
@@ -157,10 +157,10 @@ command
 '''
 
         when:
-        Collection<Process> actual = diploexec.inputFor(process0)
+            Collection<Process> actual = diploexec.inputFor(process0)
 
         then:
-        actual.size() == 1
-        actual[0] == 'process-2'
+            actual.size() == 1
+            actual[0] == 'process-2'
     }
 }
