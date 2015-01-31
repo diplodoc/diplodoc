@@ -13,7 +13,7 @@ import spock.lang.Specification
 class PostLoaderSpecs extends Specification {
 
     Web web = Mock(Web)
-    PostRepository postRepository = [ save : { Post post -> post.id = 1; return post } ] as PostRepository
+    PostRepository postRepository = Mock(PostRepository)
     PostLoader postLoader = new PostLoader(web: web, postRepository: postRepository)
 
     def 'load post'() {
@@ -24,6 +24,11 @@ class PostLoaderSpecs extends Specification {
             Document document = Mock(Document)
             document.html() >> 'html'
             web.load(url) >> document
+
+            postRepository.save(_) >> { Post post ->
+                post.id = 1;
+                return post
+            }
 
         then:
             Post actual = postLoader.loadPost(source, url)
