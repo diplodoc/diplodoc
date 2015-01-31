@@ -24,18 +24,24 @@ class PostsCommandsSpec extends Specification {
             ])
 
         then:
-            postsCommands.list(null) == '1    load-time-1                   source-name-1       url-1\n' +
-                                        '2    load-time-2                   source-name-2       url-2'
+            String actual = postsCommands.list(null)
+
+        expect:
+            actual == '1    load-time-1                   source-name-1       url-1\n' +
+                      '2    load-time-2                   source-name-2       url-2'
     }
 
     def '`posts list` command with count option'() {
         when:
             postRepository.findAll(new PageRequest(0, 1, Sort.Direction.DESC, 'id')) >> new PageImpl<Post>([
-                    new Post(id: 1, loadTime: 'load-time-1', source: new Source(name: 'source-name-1'), url: 'url-1')
+                new Post(id: 1, loadTime: 'load-time', source: new Source(name: 'source-name'), url: 'url')
             ])
 
         then:
-            postsCommands.list(1) == '1    load-time-1                   source-name-1       url-1'
+            String actual = postsCommands.list(1)
+
+        expect:
+            actual == '1    load-time                     source-name         url'
     }
 
     def '`posts get` command'() {
@@ -50,12 +56,15 @@ class PostsCommandsSpec extends Specification {
                                                     )
 
         then:
-            postsCommands.get('url') == 'id:                 1\n' +
-                                        'source:             source-name\n' +
-                                        'load time:          load-time\n' +
-                                        'url:                url\n' +
-                                        'title:              title\n' +
-                                        'meaning text:\n' +
-                                        'meaning text'
+            String actual = postsCommands.get('url')
+
+        expect:
+            actual == 'id:                 1\n' +
+                      'source:             source-name\n' +
+                      'load time:          load-time\n' +
+                      'url:                url\n' +
+                      'title:              title\n' +
+                      'meaning text:\n' +
+                      'meaning text'
     }
 }

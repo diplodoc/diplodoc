@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
  * @author yaroslav.yermilov
  */
 @Component('jython-test')
-class TestActor extends JythonIntegrationSupport implements Bindable {
+class JythonTestModule extends JythonIntegrationSupport implements Bindable {
 
     @Override
     void bindSelf(Binding binding) {

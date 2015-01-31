@@ -20,8 +20,11 @@ class SourcesCommandsSpec extends Specification {
             ]
 
         then:
-            sourcesCommands.list() == '    1                        name-1                                          module-1\n' +
-                                      '    2                        name-2                                          module-2'
+            String actual = sourcesCommands.list()
+
+        expect:
+            actual == '    1                        name-1                                          module-1\n' +
+                      '    2                        name-2                                          module-2'
     }
 
     def '`sources dump` command'() {
@@ -31,6 +34,9 @@ class SourcesCommandsSpec extends Specification {
         then:
             String tempDir = File.createTempDir().absolutePath
             sourcesCommands.dump('name', "${tempDir}/file.txt")
-            new File("${tempDir}/file.txt").text == '{"type":"com.github.diplodoc.diplobase.domain.diplodata.Source","id":1,"newPostsFinderModule":"module","name":"name"}'
+            String actual = new File("${tempDir}/file.txt").text
+
+        expect:
+            actual == '{"type":"com.github.diplodoc.diplobase.domain.diplodata.Source","id":1,"newPostsFinderModule":"module","name":"name"}'
     }
 }
