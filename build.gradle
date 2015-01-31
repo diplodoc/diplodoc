@@ -43,6 +43,8 @@ subprojects {
 		compile dependency.spring.context
 
         testCompile dependency.spock
+        testCompile dependency.cglib
+        testCompile dependency.objenesis
 	}
 }
 

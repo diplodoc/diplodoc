@@ -37,4 +37,6 @@ ext {
     dependency.jackson.databind = "com.fasterxml.jackson.core:jackson-databind:${versions.jackson}"
 
     dependency.spock = 'org.spockframework:spock-core:0.7-groovy-2.0'
+    dependency.cglib = 'cglib:cglib-nodep:2.2'
+    dependency.objenesis = 'org.objenesis:objenesis:1.2'
 }
