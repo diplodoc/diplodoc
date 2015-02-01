@@ -1,5 +1,7 @@
 package com.github.diplodoc.diplobase.domain.diploexec
 
+import groovy.transform.EqualsAndHashCode
+
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -15,6 +17,7 @@ import javax.persistence.Table
  */
 @Entity
 @Table(schema = 'diploexec')
+@EqualsAndHashCode
 class ProcessRun {
 
     @Id

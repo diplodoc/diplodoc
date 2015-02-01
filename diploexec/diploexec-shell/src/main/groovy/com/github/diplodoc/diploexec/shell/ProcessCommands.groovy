@@ -61,7 +61,7 @@ class ProcessCommands implements CommandMarker {
     String remove(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
         Process process = processRepository.findOneByName(name)
         processRepository.delete(process)
-        'Done'
+        'Removed'
     }
 
     @CliCommand(value = 'process update', help = 'update process description')
@@ -70,7 +70,7 @@ class ProcessCommands implements CommandMarker {
         Process process = processRepository.findOneByName(name)
         process.definition = resourceLoader.getResource("file:${pathToDefinitionFile}").file.text
         process.lastUpdate = LocalDateTime.now().toString()
-        processRepository.save(process)
+        process = processRepository.save(process)
         longToString(process)
     }
 
@@ -82,7 +82,7 @@ class ProcessCommands implements CommandMarker {
         process.lastUpdate = LocalDateTime.now().toString()
         process.definition = resourceLoader.getResource("file:${pathToDefinitionFile}").file.text
 
-        processRepository.save(process)
+        process = processRepository.save(process)
         longToString(process)
     }
 
