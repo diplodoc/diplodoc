@@ -10,15 +10,15 @@ class ProcessCallEventSpecs extends Specification {
 
     def 'started event'() {
         setup:
-        ProcessRun processRun = new ProcessRun()
+            ProcessRun processRun = new ProcessRun()
 
         when:
-        ProcessCallEvent actual = ProcessCallEvent.started(processRun)
+            ProcessCallEvent actual = ProcessCallEvent.started(processRun)
 
         then:
-        actual.processRun == processRun
-        actual.time != null
-        actual.type == ProcessCallEvent.Type.PROCESS_RUN_STARTED
+            actual.processRun == processRun
+            actual.time != null
+            actual.type == ProcessCallEvent.Type.PROCESS_RUN_STARTED
     }
 
     def 'ended event'() {
