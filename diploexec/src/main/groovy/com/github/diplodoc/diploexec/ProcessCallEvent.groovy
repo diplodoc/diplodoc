@@ -1,12 +1,14 @@
 package com.github.diplodoc.diploexec
 
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
+import groovy.transform.ToString
 
 import java.time.LocalDateTime
 
 /**
  * @author yaroslav.yermilov
  */
+@ToString
 class ProcessCallEvent {
 
     enum Type { PROCESS_RUN_STARTED, PROCESS_RUN_SUCCEED, PROCESS_RUN_FAILED }

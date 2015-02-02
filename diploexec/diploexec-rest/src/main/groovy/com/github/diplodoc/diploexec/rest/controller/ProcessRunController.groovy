@@ -3,6 +3,7 @@ package com.github.diplodoc.diploexec.rest.controller
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRunParameter
 import com.github.diplodoc.diploexec.Diploexec
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Lazy
 import org.springframework.hateoas.Resource
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
  */
 @Controller
 @RequestMapping('/api/v1')
+@Slf4j
 class ProcessRunController {
 
     @Autowired
@@ -30,6 +32,8 @@ class ProcessRunController {
     @RequestMapping(value='/process/run', method=RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody ResourceSupport run(@RequestBody ProcessRun processRun) {
+        log.info('receive process run call {}', processRun)
+
         processRun.parameters.each { ProcessRunParameter parameter -> parameter.processRun = processRun }
 
         diploexec.run(processRun)

@@ -3,6 +3,7 @@ package com.github.diplodoc.diplocore.modules
 import com.github.diplodoc.diplobase.domain.diplodata.Post
 import com.github.diplodoc.diplobase.repository.diplodata.PostRepository
 import com.github.diplodoc.diplocore.services.Web
+import groovy.util.logging.Slf4j
 import org.jsoup.nodes.Element
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component
  * @author yaroslav.yermilov
  */
 @Component('text-extractor')
+@Slf4j
 class TextExtractor implements Bindable {
 
     @Autowired
@@ -25,6 +27,8 @@ class TextExtractor implements Bindable {
     }
 
     Post extractText(Post post) {
+        log.info('going to extract text from {}...', post.url)
+
         Map<Element, Double> divElements = [:]
         web.document(post).select('div').each { divElements[it] = 0.0 }
 
@@ -35,7 +39,9 @@ class TextExtractor implements Bindable {
 
         post = postRepository.findOne(post.id)
         post.meaningText = divElements.max { it.value }.key.text()
-        postRepository.save post
+        post = postRepository.save post
+        log.debug('for post {} meaning text extracted: {}', post.url, post.meaningText)
+        return post
     }
 
     void decreaseByLinks(Map<Element, Double> divElements) {

@@ -3,10 +3,12 @@ package com.github.diplodoc.diploexec
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRunParameter
 import groovy.json.JsonOutput
+import groovy.transform.ToString
 
 /**
  * @author yaroslav.yermilov
  */
+@ToString
 class SendEvent implements DiploexecEvent {
 
     String destination

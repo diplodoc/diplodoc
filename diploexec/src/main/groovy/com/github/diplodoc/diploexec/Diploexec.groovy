@@ -5,6 +5,7 @@ import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.repository.diploexec.ProcessRepository
 import com.github.diplodoc.diplobase.repository.diploexec.ProcessRunRepository
 import com.github.diplodoc.diplocore.modules.Bindable
+import groovy.util.logging.Slf4j
 import org.springframework.context.ApplicationContext
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import org.springframework.util.concurrent.ListenableFuture
@@ -14,6 +15,7 @@ import javax.annotation.PostConstruct
 /**
  * @author yaroslav.yermilov
  */
+@Slf4j
 class Diploexec {
 
     ThreadPoolTaskExecutor threadPool
@@ -27,10 +29,14 @@ class Diploexec {
 
     @PostConstruct
     void init() {
+        log.info('initializing diploexec runtime...')
+
+        log.debug('loading processes...')
         processes = processRepository.findAll()
         waitingMap = new HashMap<>()
         outputMap = new HashMap<>()
 
+        log.debug('creating process interaction map...')
         processes.each { Process process ->
             waitingMap[process] = waitsFor(process)
             outputMap[process] = inputFor(process)
@@ -38,14 +44,18 @@ class Diploexec {
     }
 
     void run(ProcessRun processRun) {
+        log.info('starting process {}...', processRun)
         threadPool.execute(new ProcessCall(this, processRun))
     }
 
     void notify(DiploexecEvent event) {
+        log.info('event fired {}...', event)
         event.notifiedRuns(this).each { ProcessRun processRun -> run(processRun) }
     }
 
     void notify(ProcessCallEvent event) {
+        log.info('event fired {}...', event)
+
         switch (event.type) {
             case ProcessCallEvent.Type.PROCESS_RUN_STARTED:
                 event.processRun.exitStatus = 'NOT FINISHED'

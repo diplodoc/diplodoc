@@ -1,6 +1,7 @@
 package com.github.diplodoc.diplobase.domain.diplodata
 
 import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -15,6 +16,7 @@ import javax.persistence.Table
 @Entity
 @Table(schema = 'diplodata')
 @EqualsAndHashCode
+@ToString(excludes = [ 'meaningText', 'html' ])
 class Post {
 
     @Id
@@ -24,7 +26,7 @@ class Post {
     String url
 
     @ManyToOne
-    Source source;
+    Source source
 
     String html
 
