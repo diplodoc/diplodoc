@@ -29,7 +29,7 @@ class SourcesCommands implements CommandMarker {
 
     @CliCommand(value = 'sources dump', help = 'dump source to file')
     String dump(@CliOption(key = 'name', mandatory = true, help = 'source name') final String name,
-               @CliOption(key = 'path', mandatory = true, help = 'path to dump file') final String path) {
+                @CliOption(key = 'path', mandatory = true, help = 'path to dump file') final String path) {
         Source source = sourceRepository.findOneByName(name)
 
         Map<String, String> sourceProperties = source.properties.collectEntries { String key, Object value ->

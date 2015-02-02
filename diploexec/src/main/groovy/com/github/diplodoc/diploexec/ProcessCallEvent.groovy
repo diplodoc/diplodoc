@@ -1,15 +1,17 @@
 package com.github.diplodoc.diploexec
 
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
+import groovy.transform.ToString
 
 import java.time.LocalDateTime
 
 /**
  * @author yaroslav.yermilov
  */
+@ToString
 class ProcessCallEvent {
 
-    enum Type { PROCESS_RUN_STARTED, PROCESS_RUN_ENDED }
+    enum Type { PROCESS_RUN_STARTED, PROCESS_RUN_SUCCEED, PROCESS_RUN_FAILED }
 
     Type type
     LocalDateTime time
@@ -24,10 +26,19 @@ class ProcessCallEvent {
         return event
     }
 
-    static ProcessCallEvent ended(ProcessRun processRun) {
+    static ProcessCallEvent succeed(ProcessRun processRun) {
         ProcessCallEvent event = new ProcessCallEvent()
         event.time = LocalDateTime.now()
-        event.type = ProcessCallEvent.Type.PROCESS_RUN_ENDED
+        event.type = ProcessCallEvent.Type.PROCESS_RUN_SUCCEED
+        event.processRun = processRun
+
+        return event
+    }
+
+    static ProcessCallEvent failed(ProcessRun processRun) {
+        ProcessCallEvent event = new ProcessCallEvent()
+        event.time = LocalDateTime.now()
+        event.type = ProcessCallEvent.Type.PROCESS_RUN_FAILED
         event.processRun = processRun
 
         return event

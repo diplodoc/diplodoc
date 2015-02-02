@@ -1,6 +1,5 @@
 package com.github.diplodoc.diploexec.config
 
-import com.github.diplodoc.diplobase.config.DiplobaseConfiguration
 import com.github.diplodoc.diplobase.repository.diploexec.ProcessRepository
 import com.github.diplodoc.diplobase.repository.diploexec.ProcessRunRepository
 import com.github.diplodoc.diplocore.config.DiplocoreConfiguration
@@ -13,7 +12,6 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.context.annotation.Lazy
-import org.springframework.context.support.GenericGroovyApplicationContext
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 
 /**
@@ -39,10 +37,14 @@ class DiploexecConfiguration {
     Diploexec diploexec(ThreadPoolTaskExecutor threadPool, ProcessRepository processRepository, ProcessRunRepository processRunRepository) {
         Diploexec diploexec = new Diploexec()
         diploexec.threadPool = threadPool
-        diploexec.modulesContext = new AnnotationConfigApplicationContext(DiplocoreConfiguration)
+        diploexec.modulesContext = modulesContext()
         diploexec.processRepository = processRepository
         diploexec.processRunRepository = processRunRepository
 
         return diploexec
+    }
+
+    ApplicationContext modulesContext() {
+        new AnnotationConfigApplicationContext(DiplocoreConfiguration)
     }
 }

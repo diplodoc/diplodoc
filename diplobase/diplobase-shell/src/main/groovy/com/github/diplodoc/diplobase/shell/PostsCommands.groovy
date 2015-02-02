@@ -25,6 +25,7 @@ class PostsCommands implements CommandMarker {
 
         lastPosts.findAll().collect { Post post ->
             "${post.id}".padRight(5) +
+            "${post.loadTime}".padRight(30) +
             "${post.source.name}".padRight(20) +
             "${post.url}"
         }.join('\n')
@@ -36,6 +37,7 @@ class PostsCommands implements CommandMarker {
 
         'id:'.padRight(20) + "${post.id}\n" +
         'source:'.padRight(20) + "${post.source.name}\n" +
+        'load time:'.padRight(20) + "${post.loadTime}\n" +
         'url:'.padRight(20) + "${post.url}\n" +
         'title:'.padRight(20) + "${post.title}\n" +
         'meaning text:\n' + "${post.meaningText}"

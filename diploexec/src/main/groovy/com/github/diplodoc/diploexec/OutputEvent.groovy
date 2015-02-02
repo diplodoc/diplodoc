@@ -4,10 +4,12 @@ import com.github.diplodoc.diplobase.domain.diploexec.Process
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRunParameter
 import groovy.json.JsonOutput
+import groovy.transform.ToString
 
 /**
  * @author yaroslav.yermilov
  */
+@ToString
 class OutputEvent implements DiploexecEvent {
 
     ProcessRun source

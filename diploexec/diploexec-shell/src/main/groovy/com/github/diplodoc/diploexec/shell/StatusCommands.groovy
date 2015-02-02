@@ -29,6 +29,7 @@ class StatusCommands implements CommandMarker {
     private static longToString(ProcessRun processRun) {
         'id:'.padRight(20) + processRun.id + '\n' +
         'process:'.padRight(20) + processRun.process.name + '\n' +
+        'status:'.padRight(20) + processRun.exitStatus + '\n' +
         'start time:'.padRight(20) + processRun.startTime + '\n' +
         'end time:'.padRight(20) + processRun.endTime + '\n' +
         ((!processRun.parameters.isEmpty()) ? 'parameters:\n' + processRun.parameters.collect(StatusCommands.&longToString).join('\n') : '')

@@ -4,12 +4,14 @@
 
 CREATE TABLE diplodata.post
 (
-  id serial NOT NULL,
+  id bigserial NOT NULL,
   url character varying(1000),
   html text,
   title character varying(200),
   meaningtext text,
-  source_id integer,
+  source_id biginteger,
+  type character varying(80),
+  loadtime character varying(80),
   CONSTRAINT page_pk PRIMARY KEY (id),
   CONSTRAINT source_fk FOREIGN KEY (source_id)
   REFERENCES diplodata.source (id) MATCH SIMPLE

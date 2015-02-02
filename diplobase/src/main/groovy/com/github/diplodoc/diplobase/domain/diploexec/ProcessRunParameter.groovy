@@ -1,5 +1,8 @@
 package com.github.diplodoc.diplobase.domain.diploexec
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -12,6 +15,8 @@ import javax.persistence.Table
  */
 @Entity
 @Table(schema = 'diploexec')
+@EqualsAndHashCode
+@ToString(excludes = 'processRun')
 class ProcessRunParameter {
 
     @Id

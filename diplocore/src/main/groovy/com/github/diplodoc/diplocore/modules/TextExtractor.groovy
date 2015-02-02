@@ -3,6 +3,7 @@ package com.github.diplodoc.diplocore.modules
 import com.github.diplodoc.diplobase.domain.diplodata.Post
 import com.github.diplodoc.diplobase.repository.diplodata.PostRepository
 import com.github.diplodoc.diplocore.services.Web
+import groovy.util.logging.Slf4j
 import org.jsoup.nodes.Element
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component
  * @author yaroslav.yermilov
  */
 @Component('text-extractor')
+@Slf4j
 class TextExtractor implements Bindable {
 
     @Autowired
@@ -21,31 +23,28 @@ class TextExtractor implements Bindable {
 
     @Override
     void bindSelf(Binding binding) {
-        binding.extractText = {
-            Map params -> extractText(params.from)
-        }
+        binding.extractText = { Map params -> extractText(params.from) }
     }
 
-    def extractText(Post post) {
-        def divElements = [:]
-        web.document(post).select('div').each {
-            divElements[it] = 0.0
-        }
+    Post extractText(Post post) {
+        log.info('going to extract text from {}...', post.url)
+
+        Map<Element, Double> divElements = [:]
+        web.document(post).select('div').each { divElements[it] = 0.0 }
 
         decreaseByLinks divElements
         decreaseByChildren divElements
         increaseByPoints divElements
         increaseByTextSize divElements
 
-        post.meaningText = divElements.max {
-            it.value
-        }.key.text()
-
         post = postRepository.findOne(post.id)
-        postRepository.save post
+        post.meaningText = divElements.max { it.value }.key.text()
+        post = postRepository.save post
+        log.debug('for post {} meaning text extracted: {}', post.url, post.meaningText)
+        return post
     }
 
-    def decreaseByLinks(Map<Element, Double> divElements) {
+    void decreaseByLinks(Map<Element, Double> divElements) {
         divElements.each {
             double size = it.key.html().size()
             double linksCount = it.key.select('a').size()
@@ -56,7 +55,7 @@ class TextExtractor implements Bindable {
         }
     }
 
-    def decreaseByChildren(Map<Element, Double> divElements) {
+    void decreaseByChildren(Map<Element, Double> divElements) {
         divElements.each {
             double size = it.key.html().size()
             double childrenCount = it.key.allElements.size()
@@ -67,7 +66,7 @@ class TextExtractor implements Bindable {
         }
     }
 
-    def increaseByPoints(Map<Element, Double> divElements) {
+    void increaseByPoints(Map<Element, Double> divElements) {
         divElements.each {
             double size = it.key.html().size()
             double pointsCount = 0;
@@ -82,7 +81,7 @@ class TextExtractor implements Bindable {
         }
     }
 
-    def increaseByTextSize(Map<Element, Double> divElements) {
+    void increaseByTextSize(Map<Element, Double> divElements) {
         divElements.each {
             double size = it.key.html().size()
             double textSize = it.key.text().size()

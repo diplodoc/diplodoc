@@ -1,7 +1,10 @@
 package com.github.diplodoc.diplocore.modules
 
+import com.github.diplodoc.diplobase.domain.diplodata.Source
 import com.github.diplodoc.diplobase.repository.diplodata.PostRepository
 import com.github.diplodoc.diplocore.services.Web
+import groovy.util.logging.Slf4j
+import org.jsoup.nodes.Document
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Component
  * @author yaroslav.yermilov
  */
 @Component('football.ua-new-posts-finder')
+@Slf4j
 class FootballUaNewPostsFinder implements Bindable {
 
     @Autowired
@@ -19,36 +23,37 @@ class FootballUaNewPostsFinder implements Bindable {
 
     @Override
     void bindSelf(Binding binding) {
-        binding.findNewPosts = {
-            Map params -> findNewPosts(params.source, params.action)
-        }
+        binding.findNewPosts = { Map params -> findNewPosts(params.source, params.action) }
     }
 
-    def findNewPosts(def source, Closure action) {
-        def newFound = true
-        def archivePageIndex = 1
+    void findNewPosts(Source source, Closure action) {
+        log.info('looking for new posts from {}...', source.name)
+
+        boolean newFound = true
+        int archivePageIndex = 1
 
         while (newFound) {
-            def archivePage = web.load("http://football.ua/newsarc/page${archivePageIndex}.html")
+            String archivePageUrl = "http://football.ua/newsarc/page${archivePageIndex}.html"
+            log.debug('looking for archive page [{}]', archivePageUrl)
 
-            def candidates = []
+            Document archivePage = web.load(archivePageUrl)
+
+            List<String> candidates = []
             archivePage.select('h4').select('a').each {
                 candidates.add it.attr('href')
             }
             archivePageIndex++
 
             newFound = false
-            candidates.each {
-                url ->
-                    if (doNotExistsWebPageFor(url)) {
+            candidates
+                    .findAll { url ->
+                        postRepository.findOneByUrl(url) == null
+                    }.each { url ->
+                        log.debug('found new posts at {}', archivePageUrl)
                         newFound = true
                         action.call url
                     }
-            }
         }
-    }
-
-    def doNotExistsWebPageFor(String url) {
-        return postRepository.findOneByUrl(url) == null
+        log.debug('all new posts have been found')
     }
 }

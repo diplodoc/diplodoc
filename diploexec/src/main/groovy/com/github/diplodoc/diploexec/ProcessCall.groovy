@@ -4,10 +4,12 @@ import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.domain.diploexec.ProcessRunParameter
 import com.github.diplodoc.diplocore.modules.Bindable
 import groovy.json.JsonSlurper
+import groovy.util.logging.Slf4j
 
 /**
  * @author yaroslav.yermilov
  */
+@Slf4j
 class ProcessCall implements Runnable {
 
     JsonSlurper jsonSlurper = new JsonSlurper()
@@ -22,16 +24,24 @@ class ProcessCall implements Runnable {
 
     @Override
     void run() {
-        diploexec.notify(ProcessCallEvent.started(processRun))
+        try {
+            log.info('process started {}', processRun)
+            diploexec.notify(ProcessCallEvent.started(processRun))
 
-        String script = processRun.process.definition
-        Map<String, Object> parameters = processRun.parameters.collectEntries { ProcessRunParameter parameter ->
-            [ parameter.key,  Class.forName(parameter.type).newInstance(jsonSlurper.parseText(parameter.value)) ]
+            String script = processRun.process.definition
+            Map<String, Object> parameters = processRun.parameters.collectEntries { ProcessRunParameter parameter ->
+                [ parameter.key,  Class.forName(parameter.type).newInstance(jsonSlurper.parseText(parameter.value)) ]
+            }
+            log.debug('process definition {}', script)
+
+            new GroovyShell(binding(parameters)).evaluate(script)
+
+            log.info('process succeeded {}', processRun)
+            diploexec.notify(ProcessCallEvent.succeed(processRun))
+        } catch (e) {
+            log.warn('process failed {}', processRun)
+            diploexec.notify(ProcessCallEvent.failed(processRun))
         }
-
-        new GroovyShell(binding(parameters)).evaluate(script)
-
-        diploexec.notify(ProcessCallEvent.ended(processRun))
     }
 
     private Binding binding(Map<String, Object> parameters) {

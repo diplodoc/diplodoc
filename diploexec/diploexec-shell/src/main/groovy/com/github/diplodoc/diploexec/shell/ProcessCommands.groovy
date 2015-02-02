@@ -13,6 +13,8 @@ import org.springframework.shell.core.annotation.CliCommand
 import org.springframework.shell.core.annotation.CliOption
 import org.springframework.stereotype.Component
 
+import java.time.LocalDateTime
+
 /**
  * @author yaroslav.yermilov
  */
@@ -59,7 +61,7 @@ class ProcessCommands implements CommandMarker {
     String remove(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
         Process process = processRepository.findOneByName(name)
         processRepository.delete(process)
-        'Done'
+        'Removed'
     }
 
     @CliCommand(value = 'process update', help = 'update process description')
@@ -67,7 +69,20 @@ class ProcessCommands implements CommandMarker {
                   @CliOption(key = 'definition', mandatory = true, help = 'path to definition file') final String pathToDefinitionFile) {
         Process process = processRepository.findOneByName(name)
         process.definition = resourceLoader.getResource("file:${pathToDefinitionFile}").file.text
-        processRepository.save(process)
+        process.lastUpdate = LocalDateTime.now().toString()
+        process = processRepository.save(process)
+        longToString(process)
+    }
+
+    @CliCommand(value = 'process add', help = 'add new process')
+    String add(@CliOption(key = 'name', mandatory = true, help = 'process name') final String name,
+               @CliOption(key = 'definition', mandatory = true, help = 'path to definition file') final String pathToDefinitionFile) {
+        Process process = new Process()
+        process.name = name
+        process.lastUpdate = LocalDateTime.now().toString()
+        process.definition = resourceLoader.getResource("file:${pathToDefinitionFile}").file.text
+
+        process = processRepository.save(process)
         longToString(process)
     }
 
