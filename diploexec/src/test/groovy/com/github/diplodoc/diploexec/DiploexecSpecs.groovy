@@ -6,6 +6,7 @@ import com.github.diplodoc.diplobase.repository.diploexec.ProcessRunRepository
 import com.github.diplodoc.diplocore.modules.Bindable
 import org.springframework.context.ApplicationContext
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
+import org.springframework.util.concurrent.ListenableFuture
 import spock.lang.Specification
 
 /**
@@ -24,6 +25,7 @@ class DiploexecSpecs extends Specification {
             DiploexecEvent event = Mock(DiploexecEvent)
 
             event.notifiedRuns(_) >> processRuns
+            threadPool.submitListenable(_) >> Mock(ListenableFuture)
             diploexec.threadPool = threadPool
 
         when:
@@ -49,13 +51,14 @@ class DiploexecSpecs extends Specification {
             1 * processRunRepository.save(processCallEvent.processRun)
 
         expect:
+            processCallEvent.processRun.exitStatus == 'NOT FINISHED'
             processCallEvent.processRun.startTime != null
     }
 
-    def 'notify by process call events: process run ended'() {
+    def 'notify by process call events: process run succeed'() {
         setup:
             ProcessCallEvent processCallEvent = new ProcessCallEvent()
-            processCallEvent.type = ProcessCallEvent.Type.PROCESS_RUN_ENDED
+            processCallEvent.type = ProcessCallEvent.Type.PROCESS_RUN_SUCCEED
             processCallEvent.processRun = new ProcessRun()
 
             diploexec.processRunRepository = processRunRepository
@@ -67,6 +70,26 @@ class DiploexecSpecs extends Specification {
             1 * processRunRepository.save(processCallEvent.processRun)
 
         expect:
+            processCallEvent.processRun.exitStatus == 'SUCCEED'
+            processCallEvent.processRun.endTime != null
+    }
+
+    def 'notify by process call events: process run failed'() {
+        setup:
+            ProcessCallEvent processCallEvent = new ProcessCallEvent()
+            processCallEvent.type = ProcessCallEvent.Type.PROCESS_RUN_FAILED
+            processCallEvent.processRun = new ProcessRun()
+
+            diploexec.processRunRepository = processRunRepository
+
+        when:
+            diploexec.notify(processCallEvent)
+
+        then:
+            1 * processRunRepository.save(processCallEvent.processRun)
+
+        expect:
+            processCallEvent.processRun.exitStatus == 'FAILED'
             processCallEvent.processRun.endTime != null
     }
 

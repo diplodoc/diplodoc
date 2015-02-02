@@ -33,4 +33,6 @@ class ProcessRun {
     String startTime
 
     String endTime
+
+    String exitStatus
 }

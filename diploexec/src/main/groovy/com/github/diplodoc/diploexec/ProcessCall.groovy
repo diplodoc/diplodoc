@@ -22,16 +22,20 @@ class ProcessCall implements Runnable {
 
     @Override
     void run() {
-        diploexec.notify(ProcessCallEvent.started(processRun))
+        try {
+            diploexec.notify(ProcessCallEvent.started(processRun))
 
-        String script = processRun.process.definition
-        Map<String, Object> parameters = processRun.parameters.collectEntries { ProcessRunParameter parameter ->
-            [ parameter.key,  Class.forName(parameter.type).newInstance(jsonSlurper.parseText(parameter.value)) ]
+            String script = processRun.process.definition
+            Map<String, Object> parameters = processRun.parameters.collectEntries { ProcessRunParameter parameter ->
+                [ parameter.key,  Class.forName(parameter.type).newInstance(jsonSlurper.parseText(parameter.value)) ]
+            }
+
+            new GroovyShell(binding(parameters)).evaluate(script)
+
+            diploexec.notify(ProcessCallEvent.succeed(processRun))
+        } catch (e) {
+            diploexec.notify(ProcessCallEvent.failed(processRun))
         }
-
-        new GroovyShell(binding(parameters)).evaluate(script)
-
-        diploexec.notify(ProcessCallEvent.ended(processRun))
     }
 
     private Binding binding(Map<String, Object> parameters) {

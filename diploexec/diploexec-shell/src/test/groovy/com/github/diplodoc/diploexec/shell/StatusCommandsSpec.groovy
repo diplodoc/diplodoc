@@ -22,8 +22,8 @@ class StatusCommandsSpec extends Specification {
     def '`status` command with default option'() {
         when:
             processRunRepository.findAll(new PageRequest(0, 10, Sort.Direction.DESC, 'startTime')) >> new PageImpl<ProcessRun>([
-                new ProcessRun(id: 1, process: new Process(name: 'process-1'), startTime: 'starttime-1', endTime: 'endtime-1', parameters: [ new ProcessRunParameter(key: 'key', type: 'type', value: 'value') ]),
-                new ProcessRun(id: 2, process: new Process(name: 'process-2'), startTime: 'starttime-2', endTime: 'endtime-2', parameters: [ ])
+                new ProcessRun(id: 1, process: new Process(name: 'process-1'), exitStatus: 'status', startTime: 'starttime-1', endTime: 'endtime-1', parameters: [ new ProcessRunParameter(key: 'key', type: 'type', value: 'value') ]),
+                new ProcessRun(id: 2, process: new Process(name: 'process-2'), exitStatus: 'status', startTime: 'starttime-2', endTime: 'endtime-2', parameters: [ ])
             ])
 
         then:
@@ -32,6 +32,7 @@ class StatusCommandsSpec extends Specification {
         expect:
             actual ==   'id:                 1\n' +
                         'process:            process-1\n' +
+                        'status:             status\n' +
                         'start time:         starttime-1\n' +
                         'end time:           endtime-1\n' +
                         'parameters:\n' +
@@ -40,6 +41,7 @@ class StatusCommandsSpec extends Specification {
                         '    value:          value\n' +
                         'id:                 2\n' +
                         'process:            process-2\n' +
+                        'status:             status\n' +
                         'start time:         starttime-2\n' +
                         'end time:           endtime-2\n'
     }
@@ -47,7 +49,7 @@ class StatusCommandsSpec extends Specification {
     def '`status` command with count option'() {
         when:
             processRunRepository.findAll(new PageRequest(0, 1, Sort.Direction.DESC, 'startTime')) >> new PageImpl<ProcessRun>([
-                new ProcessRun(id: 1, process: new Process(name: 'process-1'), startTime: 'starttime-1', endTime: 'endtime-1', parameters: [ new ProcessRunParameter(key: 'key', type: 'type', value: 'value') ]),
+                new ProcessRun(id: 1, process: new Process(name: 'process-1'), exitStatus: 'status', startTime: 'starttime-1', endTime: 'endtime-1', parameters: [ new ProcessRunParameter(key: 'key', type: 'type', value: 'value') ]),
             ])
 
         then:
@@ -56,6 +58,7 @@ class StatusCommandsSpec extends Specification {
         expect:
             actual ==   'id:                 1\n' +
                         'process:            process-1\n' +
+                        'status:             status\n' +
                         'start time:         starttime-1\n' +
                         'end time:           endtime-1\n' +
                         'parameters:\n' +

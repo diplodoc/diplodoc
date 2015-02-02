@@ -9,7 +9,7 @@ import java.time.LocalDateTime
  */
 class ProcessCallEvent {
 
-    enum Type { PROCESS_RUN_STARTED, PROCESS_RUN_ENDED }
+    enum Type { PROCESS_RUN_STARTED, PROCESS_RUN_SUCCEED, PROCESS_RUN_FAILED }
 
     Type type
     LocalDateTime time
@@ -24,10 +24,19 @@ class ProcessCallEvent {
         return event
     }
 
-    static ProcessCallEvent ended(ProcessRun processRun) {
+    static ProcessCallEvent succeed(ProcessRun processRun) {
         ProcessCallEvent event = new ProcessCallEvent()
         event.time = LocalDateTime.now()
-        event.type = ProcessCallEvent.Type.PROCESS_RUN_ENDED
+        event.type = ProcessCallEvent.Type.PROCESS_RUN_SUCCEED
+        event.processRun = processRun
+
+        return event
+    }
+
+    static ProcessCallEvent failed(ProcessRun processRun) {
+        ProcessCallEvent event = new ProcessCallEvent()
+        event.time = LocalDateTime.now()
+        event.type = ProcessCallEvent.Type.PROCESS_RUN_FAILED
         event.processRun = processRun
 
         return event

@@ -7,6 +7,7 @@ import com.github.diplodoc.diplobase.repository.diploexec.ProcessRunRepository
 import com.github.diplodoc.diplocore.modules.Bindable
 import org.springframework.context.ApplicationContext
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
+import org.springframework.util.concurrent.ListenableFuture
 
 import javax.annotation.PostConstruct
 
@@ -47,14 +48,22 @@ class Diploexec {
     void notify(ProcessCallEvent event) {
         switch (event.type) {
             case ProcessCallEvent.Type.PROCESS_RUN_STARTED:
+                event.processRun.exitStatus = 'NOT FINISHED'
                 event.processRun.startTime = event.time.toString()
                 processRunRepository.save event.processRun
             break;
 
-            case ProcessCallEvent.Type.PROCESS_RUN_ENDED:
+            case ProcessCallEvent.Type.PROCESS_RUN_SUCCEED:
+                event.processRun.exitStatus = 'SUCCEED'
                 event.processRun.endTime = event.time.toString()
                 processRunRepository.save event.processRun
             break;
+
+            case ProcessCallEvent.Type.PROCESS_RUN_FAILED:
+                event.processRun.exitStatus = 'FAILED'
+                event.processRun.endTime = event.time.toString()
+                processRunRepository.save event.processRun
+                break;
 
             default:
                 assert false : "unknown ProcessCallEvent: ${event.type}"

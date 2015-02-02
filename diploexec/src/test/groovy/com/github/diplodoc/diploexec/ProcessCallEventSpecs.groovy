@@ -8,7 +8,7 @@ import spock.lang.Specification
  */
 class ProcessCallEventSpecs extends Specification {
 
-    def 'started event'() {
+    def 'static ProcessCallEvent started(ProcessRun processRun)'() {
         setup:
             ProcessRun processRun = new ProcessRun()
 
@@ -21,16 +21,29 @@ class ProcessCallEventSpecs extends Specification {
             actual.type == ProcessCallEvent.Type.PROCESS_RUN_STARTED
     }
 
-    def 'ended event'() {
+    def 'static ProcessCallEvent succeed(ProcessRun processRun)'() {
         setup:
             ProcessRun processRun = new ProcessRun()
 
         when:
-            ProcessCallEvent actual = ProcessCallEvent.ended(processRun)
+            ProcessCallEvent actual = ProcessCallEvent.succeed(processRun)
 
         then:
             actual.processRun == processRun
             actual.time != null
-            actual.type == ProcessCallEvent.Type.PROCESS_RUN_ENDED
+            actual.type == ProcessCallEvent.Type.PROCESS_RUN_SUCCEED
+    }
+
+    def 'static ProcessCallEvent failed(ProcessRun processRun))'() {
+        setup:
+            ProcessRun processRun = new ProcessRun()
+
+        when:
+            ProcessCallEvent actual = ProcessCallEvent.failed(processRun)
+
+        then:
+            actual.processRun == processRun
+            actual.time != null
+            actual.type == ProcessCallEvent.Type.PROCESS_RUN_FAILED
     }
 }
