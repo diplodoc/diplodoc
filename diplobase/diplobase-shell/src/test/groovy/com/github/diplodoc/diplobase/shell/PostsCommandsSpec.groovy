@@ -1,5 +1,6 @@
 package com.github.diplodoc.diplobase.shell
 
+import com.github.diplodoc.diplobase.client.diplodata.PostDataClient
 import com.github.diplodoc.diplobase.domain.diplodata.Post
 import com.github.diplodoc.diplobase.domain.diplodata.Source
 import com.github.diplodoc.diplobase.repository.diplodata.PostRepository
@@ -13,15 +14,15 @@ import spock.lang.Specification
  */
 class PostsCommandsSpec extends Specification {
 
-    PostRepository postRepository = Mock(PostRepository)
-    PostsCommands postsCommands = new PostsCommands(postRepository: postRepository)
+    PostDataClient postDataClient = Mock(PostDataClient)
+    PostsCommands postsCommands = new PostsCommands(postDataClient: postDataClient)
 
     def '`posts list` command with default option'() {
         when:
-            postRepository.findAll(new PageRequest(0, 10, Sort.Direction.DESC, 'id')) >> new PageImpl<Post>([
+            postDataClient.findAllWithLimit(10) >> [
                 new Post(id: 1, loadTime: 'load-time-1', source: new Source(name: 'source-name-1'), url: 'url-1'),
                 new Post(id: 2, loadTime: 'load-time-2', source: new Source(name: 'source-name-2'), url: 'url-2')
-            ])
+            ]
 
         then:
             String actual = postsCommands.list(null)
@@ -33,9 +34,9 @@ class PostsCommandsSpec extends Specification {
 
     def '`posts list` command with count option'() {
         when:
-            postRepository.findAll(new PageRequest(0, 1, Sort.Direction.DESC, 'id')) >> new PageImpl<Post>([
+            postDataClient.findAllWithLimit(1) >> [
                 new Post(id: 1, loadTime: 'load-time', source: new Source(name: 'source-name'), url: 'url')
-            ])
+            ]
 
         then:
             String actual = postsCommands.list(1)
@@ -46,7 +47,7 @@ class PostsCommandsSpec extends Specification {
 
     def '`posts get` command'() {
         when:
-            postRepository.findOneByUrl('url') >> new Post(
+            postDataClient.findOneByUrl('url') >> new Post(
                                                         id: 1,
                                                         loadTime: 'load-time',
                                                         source: new Source(name: 'source-name'),
