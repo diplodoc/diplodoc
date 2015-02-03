@@ -27,14 +27,26 @@ class SourcesCommands implements CommandMarker {
         }.join('\n')
     }
 
-    @CliCommand(value = 'sources dump', help = 'dump source to file')
-    String dump(@CliOption(key = 'name', mandatory = true, help = 'source name') final String name,
-                @CliOption(key = 'path', mandatory = true, help = 'path to dump file') final String path) {
+    @CliCommand(value = 'sources get', help = 'get source parameters')
+    String get(@CliOption(key = '', mandatory = true, help = 'source name') final String name,
+               @CliOption(key = 'representation', mandatory = false, help = 'convert to json', unspecifiedDefaultValue = 'text') final String representation) {
         Source source = sourceRepository.findOneByName(name)
 
-        Map<String, String> sourceProperties = source.properties.collectEntries { String key, Object value ->
-            key.toString() != 'class' ? [ key, value ] : [ 'type', Source.class.name ]
+        switch (representation) {
+            case 'text':
+                'id:'.padRight(30) + "${source.id}\n" +
+                'name:'.padRight(30) + "${source.name}\n" +
+                'new posts finder module:'.padRight(30) + "${source.newPostsFinderModule}"
+            break
+
+            case 'json':
+                Map<String, String> sourceProperties = source.properties.collectEntries { String key, Object value ->
+                    key.toString() != 'class' ? [ key, value ] : [ 'type', Source.class.name ]
+                }
+                JsonOutput.toJson(sourceProperties)
+            break
+
+            default: 'Unknown presentation type'
         }
-        new File(path).text = JsonOutput.toJson(sourceProperties)
     }
 }

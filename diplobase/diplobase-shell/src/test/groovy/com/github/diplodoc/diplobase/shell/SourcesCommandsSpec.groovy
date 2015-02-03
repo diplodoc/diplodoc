@@ -27,14 +27,25 @@ class SourcesCommandsSpec extends Specification {
                       '    2                        name-2                                          module-2'
     }
 
-    def '`sources dump` command'() {
+    def '`sources get --representation text` command'() {
         when:
             sourceRepository.findOneByName('name') >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module')
 
         then:
-            String tempDir = File.createTempDir().absolutePath
-            sourcesCommands.dump('name', "${tempDir}/file.txt")
-            String actual = new File("${tempDir}/file.txt").text
+            String actual = sourcesCommands.get('name', 'text')
+
+        expect:
+            actual ==   'id:                           1\n' +
+                        'name:                         name\n' +
+                        'new posts finder module:      module'
+    }
+
+    def '`sources get --representation json` command'() {
+        when:
+            sourceRepository.findOneByName('name') >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module')
+
+        then:
+            String actual = sourcesCommands.get('name', 'json')
 
         expect:
             actual == '{"type":"com.github.diplodoc.diplobase.domain.diplodata.Source","id":1,"newPostsFinderModule":"module","name":"name"}'
