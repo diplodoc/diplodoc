@@ -1,6 +1,9 @@
 package com.github.diplodoc.diplobase.client.diplodata
 
+import com.github.diplodoc.diplobase.domain.diplodata.Post
+import com.github.diplodoc.diplobase.domain.diplodata.Source
 import com.github.diplodoc.diplobase.repository.diplodata.PostRepository
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import spock.lang.Specification
@@ -15,17 +18,28 @@ class PostDataClientSpec extends Specification {
 
     def 'Iterable<Post> findAllWithLimit(int limit)'() {
         when:
-            postDataClient.findAllWithLimit(28)
+            def actual = postDataClient.findAllWithLimit(28)
 
         then:
-            1 * postRepository.findAll(new PageRequest(0, 28, Sort.Direction.DESC, 'id'))
+            1 * postRepository.findAll(new PageRequest(0, 28, Sort.Direction.DESC, 'id')) >> new PageImpl<Post>([
+                new Post(id: 1, loadTime: 'load-time-1', source: new Source(name: 'source-name-1'), url: 'url-1'),
+                new Post(id: 2, loadTime: 'load-time-2', source: new Source(name: 'source-name-2'), url: 'url-2')
+            ])
+
+        expect:
+            actual.size() == 2
+            actual[0] == new Post(id: 1, loadTime: 'load-time-1', source: new Source(name: 'source-name-1'), url: 'url-1')
+            actual[1] == new Post(id: 2, loadTime: 'load-time-2', source: new Source(name: 'source-name-2'), url: 'url-2')
     }
 
     def 'Post findOneByUrl(String url)'() {
         when:
-            postDataClient.findOneByUrl('url')
+            Post actual = postDataClient.findOneByUrl('url')
 
         then:
-            1 * postRepository.findOneByUrl('url')
+            1 * postRepository.findOneByUrl('url') >> new Post(id: 1, loadTime: 'load-time', source: new Source(name: 'source-name'), url: 'url')
+
+        expect:
+            actual == new Post(id: 1, loadTime: 'load-time', source: new Source(name: 'source-name'), url: 'url')
     }
 }
