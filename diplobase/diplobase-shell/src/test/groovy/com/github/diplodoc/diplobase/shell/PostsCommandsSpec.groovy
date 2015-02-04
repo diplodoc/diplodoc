@@ -17,32 +17,19 @@ class PostsCommandsSpec extends Specification {
     PostDataClient postDataClient = Mock(PostDataClient)
     PostsCommands postsCommands = new PostsCommands(postDataClient: postDataClient)
 
-    def '`posts list` command with default option'() {
+    def '`posts list`'() {
         when:
-            postDataClient.findAllWithLimit(10) >> [
+            postDataClient.findAllWithLimit(5) >> [
                 new Post(id: 1, loadTime: 'load-time-1', source: new Source(name: 'source-name-1'), url: 'url-1'),
                 new Post(id: 2, loadTime: 'load-time-2', source: new Source(name: 'source-name-2'), url: 'url-2')
             ]
 
         then:
-            String actual = postsCommands.list(null)
+            String actual = postsCommands.list(5)
 
         expect:
             actual == '1    load-time-1                   source-name-1       url-1\n' +
                       '2    load-time-2                   source-name-2       url-2'
-    }
-
-    def '`posts list` command with count option'() {
-        when:
-            postDataClient.findAllWithLimit(1) >> [
-                new Post(id: 1, loadTime: 'load-time', source: new Source(name: 'source-name'), url: 'url')
-            ]
-
-        then:
-            String actual = postsCommands.list(1)
-
-        expect:
-            actual == '1    load-time                     source-name         url'
     }
 
     def '`posts get` command'() {

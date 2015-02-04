@@ -18,8 +18,8 @@ class PostsCommands implements CommandMarker {
     PostDataClient postDataClient
 
     @CliCommand(value = 'posts list', help = 'list all posts')
-    String list(@CliOption(key = 'count', mandatory = false, help = 'number of last posts to show') final Integer count) {
-        postDataClient.findAllWithLimit(count?:10).collect(PostsCommands.&toSingleLineDescription).join('\n')
+    String list(@CliOption(key = 'count', mandatory = false, help = 'number of last posts to show', unspecifiedDefaultValue = '10') final Integer count) {
+        postDataClient.findAllWithLimit(count).collect(PostsCommands.&toSingleLineDescription).join('\n')
     }
 
     @CliCommand(value = 'posts get', help = 'get full description of post')
