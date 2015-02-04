@@ -1,9 +1,7 @@
 package com.github.diplodoc.diploexec.shell
 
+import com.github.diplodoc.diplobase.client.diploexec.ProcessDataClient
 import com.github.diplodoc.diplobase.domain.diploexec.Process
-import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
-import com.github.diplodoc.diplobase.domain.diploexec.ProcessRunParameter
-import com.github.diplodoc.diplobase.repository.diploexec.ProcessRepository
 import com.github.diplodoc.diploexec.client.DiploexecClient
 import groovy.json.JsonSlurper
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,7 +23,7 @@ class ProcessCommands implements CommandMarker {
     ResourceLoader resourceLoader
 
     @Autowired
-    ProcessRepository processRepository
+    ProcessDataClient processDataClient
 
     DiploexecClient diploexecClient = new DiploexecClient('http://localhost:8080')
 
@@ -33,13 +31,13 @@ class ProcessCommands implements CommandMarker {
 
     @CliCommand(value = 'process list', help = 'list all processes')
     String list() {
-        processRepository.findAll().collect(ProcessCommands.&shortToString).join('\n')
+        processDataClient.findAll().collect(ProcessCommands.&toSingleLineDescription).join('\n')
     }
 
     @CliCommand(value = 'process run', help = 'run process')
     String run(@CliOption(key = 'name', mandatory = true, help = 'process name') final String name,
                @CliOption(key = 'parameters', mandatory = true, help = 'path to paramters file') final String pathToParametersFile) {
-        Process process = processRepository.findOneByName(name)
+        Process process = processDataClient.findOneByName(name)
         Map<String, Object> jsonParameters = jsonSlurper.parse(resourceLoader.getResource("file:${pathToParametersFile}").file)
         Map<String, Object> parameters = jsonParameters.collectEntries { String key, Map<String, Object> parameter ->
             String type = parameter['type']
@@ -53,25 +51,24 @@ class ProcessCommands implements CommandMarker {
 
     @CliCommand(value = 'process get', help = 'get full description of process')
     String get(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
-        Process process = processRepository.findOneByName(name)
-        longToString(process)
+        toDescription(processDataClient.findOneByName(name))
     }
 
     @CliCommand(value = 'process remove', help = 'remove process')
     String remove(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
-        Process process = processRepository.findOneByName(name)
-        processRepository.delete(process)
+        Process process = processDataClient.findOneByName(name)
+        processDataClient.delete(process)
         'Removed'
     }
 
     @CliCommand(value = 'process update', help = 'update process description')
     String update(@CliOption(key = 'name', mandatory = true, help = 'process name') final String name,
                   @CliOption(key = 'definition', mandatory = true, help = 'path to definition file') final String pathToDefinitionFile) {
-        Process process = processRepository.findOneByName(name)
+        Process process = processDataClient.findOneByName(name)
         process.definition = resourceLoader.getResource("file:${pathToDefinitionFile}").file.text
         process.lastUpdate = LocalDateTime.now().toString()
-        process = processRepository.save(process)
-        longToString(process)
+        process = processDataClient.save(process)
+        toDescription(process)
     }
 
     @CliCommand(value = 'process add', help = 'add new process')
@@ -82,15 +79,15 @@ class ProcessCommands implements CommandMarker {
         process.lastUpdate = LocalDateTime.now().toString()
         process.definition = resourceLoader.getResource("file:${pathToDefinitionFile}").file.text
 
-        process = processRepository.save(process)
-        longToString(process)
+        process = processDataClient.save(process)
+        toDescription(process)
     }
 
-    private static shortToString(Process process) {
+    private static toSingleLineDescription(Process process) {
         "${process.id}".padRight(5) + "${process.name}".padLeft(30) + "${process.lastUpdate}".padLeft(50)
     }
 
-    private static longToString(Process process) {
+    private static toDescription(Process process) {
         'id:'.padRight(20) + "${process.id}\n" +
         'name:'.padRight(20) + "${process.name}\n" +
         'last update:'.padRight(20) + "${process.lastUpdate}\n" +
