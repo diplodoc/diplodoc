@@ -1,5 +1,6 @@
 package com.github.diplodoc.diplobase.shell
 
+import com.github.diplodoc.diplobase.client.diplodata.SourceDataClient
 import com.github.diplodoc.diplobase.domain.diplodata.Source
 import com.github.diplodoc.diplobase.repository.diplodata.SourceRepository
 import spock.lang.Specification
@@ -9,12 +10,12 @@ import spock.lang.Specification
  */
 class SourcesCommandsSpec extends Specification {
 
-    SourceRepository sourceRepository = Mock(SourceRepository)
-    SourcesCommands sourcesCommands = new SourcesCommands(sourceRepository: sourceRepository)
+    SourceDataClient sourceDataClient = Mock(SourceDataClient)
+    SourcesCommands sourcesCommands = new SourcesCommands(sourceDataClient: sourceDataClient)
 
     def '`sources list` command'() {
         when:
-            sourceRepository.findAll() >> [
+            sourceDataClient.findAll() >> [
                 new Source(id: 1, name: 'name-1', newPostsFinderModule: 'module-1'),
                 new Source(id: 2, name: 'name-2', newPostsFinderModule: 'module-2')
             ]
@@ -29,7 +30,7 @@ class SourcesCommandsSpec extends Specification {
 
     def '`sources get --representation text` command'() {
         when:
-            sourceRepository.findOneByName('name') >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module')
+            sourceDataClient.findOneByName('name') >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module')
 
         then:
             String actual = sourcesCommands.get('name', 'text')
@@ -42,7 +43,7 @@ class SourcesCommandsSpec extends Specification {
 
     def '`sources get --representation json` command'() {
         when:
-            sourceRepository.findOneByName('name') >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module')
+            sourceDataClient.findOneByName('name') >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module')
 
         then:
             String actual = sourcesCommands.get('name', 'json')

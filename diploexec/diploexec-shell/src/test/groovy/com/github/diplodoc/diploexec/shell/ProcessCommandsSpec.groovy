@@ -1,8 +1,8 @@
 package com.github.diplodoc.diploexec.shell
 
+import com.github.diplodoc.diplobase.client.diploexec.ProcessDataClient
 import com.github.diplodoc.diplobase.domain.diplodata.Source
 import com.github.diplodoc.diplobase.domain.diploexec.Process
-import com.github.diplodoc.diplobase.repository.diploexec.ProcessRepository
 import com.github.diplodoc.diploexec.client.DiploexecClient
 import org.springframework.core.io.FileSystemResourceLoader
 import spock.lang.Specification
@@ -12,12 +12,12 @@ import spock.lang.Specification
  */
 class ProcessCommandsSpec extends Specification {
 
-    ProcessRepository processRepository = Mock(ProcessRepository)
-    ProcessCommands processCommands = new ProcessCommands(processRepository: processRepository)
+    ProcessDataClient processDataClient = Mock(ProcessDataClient)
+    ProcessCommands processCommands = new ProcessCommands(processDataClient: processDataClient)
 
     def '`process list` command'() {
         when:
-            processRepository.findAll() >> [
+            processDataClient.findAll() >> [
                 new Process(id: 1, name: 'process-1', lastUpdate: 'time-1'),
                 new Process(id: 2, name: 'process-2', lastUpdate: 'time-2')
             ]
@@ -40,7 +40,7 @@ class ProcessCommandsSpec extends Specification {
         when:
             processCommands.diploexecClient = diploexecClient
             processCommands.resourceLoader = new FileSystemResourceLoader()
-            processRepository.findOneByName('process') >> new Process(name: 'process')
+            processDataClient.findOneByName('process') >> new Process(name: 'process')
 
             String actual = processCommands.run('process', tempFile.absolutePath)
 
@@ -56,7 +56,7 @@ class ProcessCommandsSpec extends Specification {
 
     def '`process get` command'() {
         when:
-            processRepository.findOneByName('process') >> new Process(id: 1, name: 'process', definition: 'definition', lastUpdate: 'time')
+            processDataClient.findOneByName('process') >> new Process(id: 1, name: 'process', definition: 'definition', lastUpdate: 'time')
 
         then:
             String actual = processCommands.get('process')
@@ -71,12 +71,12 @@ class ProcessCommandsSpec extends Specification {
 
     def '`process remove` command'() {
         when:
-            processRepository.findOneByName('process') >> new Process(name: 'process')
+            processDataClient.findOneByName('process') >> new Process(name: 'process')
 
             String actual = processCommands.remove('process')
 
         then:
-            1 * processRepository.delete(new Process(name: 'process'))
+            1 * processDataClient.delete(new Process(name: 'process'))
 
         expect:
             actual == 'Removed'
@@ -89,12 +89,12 @@ class ProcessCommandsSpec extends Specification {
 
         when:
             processCommands.resourceLoader = new FileSystemResourceLoader()
-            processRepository.findOneByName('process') >> new Process(id: 1, name: 'process')
+            processDataClient.findOneByName('process') >> new Process(id: 1, name: 'process')
 
             String actual = processCommands.update('process', tempFile.absolutePath)
 
         then:
-            1 * processRepository.save({ Process it ->
+            1 * processDataClient.save({ Process it ->
                 it.name == 'process' && it.definition == 'definition' && it.lastUpdate != null
             }) >> new Process(id: 1, name: 'process', definition: 'definition', lastUpdate: 'time')
 
@@ -117,7 +117,7 @@ class ProcessCommandsSpec extends Specification {
             String actual = processCommands.add('process', tempFile.absolutePath)
 
         then:
-            1 * processRepository.save({ Process it ->
+            1 * processDataClient.save({ Process it ->
                 it.name == 'process' && it.definition == 'definition' && it.lastUpdate != null
             }) >> new Process(id: 1, name: 'process', definition: 'definition', lastUpdate: 'time')
 
