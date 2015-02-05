@@ -26,17 +26,18 @@ class PostLoader implements Bindable {
 
     @Override
     void bindSelf(Binding binding) {
-        binding.loadPost = { Map params -> loadPost(params.from, params.url) }
+        binding.loadPost = { Map params -> loadPost(params.post) }
     }
 
-    Post loadPost(Source source, String url) {
-        log.info('loading post from {}...', url)
+    Post loadPost(Post post) {
+        log.info('loading post from {}...', post.url)
 
-        Document document = web.load(url)
-        Post post = new Post(url: url, html: document.html(), source: source, loadTime: LocalDateTime.now().toString())
+        Document document = web.load(post.url)
+        post.html = document.html()
+        post.loadTime = LocalDateTime.now().toString()
 
         post = postRepository.save post
-        log.debug('load post from {}', url)
+        log.debug('load post {}', post)
         return post
     }
 }
