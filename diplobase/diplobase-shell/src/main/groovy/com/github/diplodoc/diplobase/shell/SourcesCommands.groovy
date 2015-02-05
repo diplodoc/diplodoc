@@ -23,6 +23,18 @@ class SourcesCommands implements CommandMarker {
         sourceDataClient.findAll().collect(SourcesCommands.&toSingleLineDescription).join('\n')
     }
 
+    @CliCommand(value = 'sources update', help = 'update existing source')
+    String update(@CliOption(key = '', mandatory = true, help = 'source name') final String name,
+                  @CliOption(key = 'new-post-finder-module', mandatory = false, help = 'new posts finder module') final String newPostsFinderModule,
+                  @CliOption(key = 'rssUrl', mandatory = false, help = 'rss url') final String rssUrl) {
+        Source source = sourceDataClient.findOneByName(name)
+        source.newPostsFinderModule = newPostsFinderModule?:source.newPostsFinderModule
+        source.rssUrl = rssUrl?:source.rssUrl
+
+        source = sourceDataClient.save(source)
+        toDescription(source)
+    }
+
     @CliCommand(value = 'sources get', help = 'get source parameters')
     String get(@CliOption(key = '', mandatory = true, help = 'source name') final String name,
                @CliOption(key = 'representation', mandatory = false, help = 'convert to json', unspecifiedDefaultValue = 'text') final String representation) {
@@ -49,7 +61,7 @@ class SourcesCommands implements CommandMarker {
     static String toDescription(Source source) {
         'id:'.padRight(30) + "${source.id}\n" +
         'name:'.padRight(30) + "${source.name}\n" +
-        'new posts finder module:'.padRight(30) + "${source.newPostsFinderModule}" +
+        'new posts finder module:'.padRight(30) + "${source.newPostsFinderModule}\n" +
         'rss url:'.padRight(30) + "${source.rssUrl}"
     }
 

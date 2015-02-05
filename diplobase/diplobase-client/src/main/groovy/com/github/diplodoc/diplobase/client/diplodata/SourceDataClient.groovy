@@ -21,4 +21,8 @@ class SourceDataClient {
     Source findOneByName(String name) {
         sourceRepository.findOneByName(name)
     }
+
+    Source save(Source source) {
+        sourceRepository.save(source)
+    }
 }
