@@ -1,0 +1,11 @@
+listen to: 'load-post'
+
+input 'post'
+
+description "Extracts text from post '${post.url}'"
+
+require 'text-extractor'
+
+extractText from: post
+
+output post: post
