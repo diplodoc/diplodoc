@@ -39,7 +39,7 @@ class ProcessCall implements Runnable {
             log.info('process succeeded {}', processRun)
             diploexec.notify(ProcessCallEvent.succeed(processRun))
         } catch (e) {
-            log.warn('process failed {}', processRun)
+            log.warn("process failed ${processRun}", e)
             diploexec.notify(ProcessCallEvent.failed(processRun))
         }
     }

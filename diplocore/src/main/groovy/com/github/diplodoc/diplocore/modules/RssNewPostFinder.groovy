@@ -36,7 +36,7 @@ class RssNewPostFinder implements Bindable {
         feed.entries.each { rssEntry ->
             log.debug('found rss entry {}', rssEntry)
 
-            if (postRepository.findOneByUrl(rssEntry.link)) {
+            if (!postRepository.findOneByUrl(rssEntry.link)) {
                 Post post = new Post(   url: rssEntry.link,
                                         source: source,
                                         title: rssEntry.title,
