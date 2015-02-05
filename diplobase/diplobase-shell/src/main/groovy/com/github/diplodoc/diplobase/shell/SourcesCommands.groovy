@@ -43,14 +43,14 @@ class SourcesCommands implements CommandMarker {
 
     static String toSingleLineDescription(Source source) {
         "${source.id}".padLeft(5) +
-        "${source.name}".padLeft(30) +
-        "${source.newPostsFinderModule}".padLeft(50)
+        "${source.name}".padLeft(30)
     }
 
     static String toDescription(Source source) {
         'id:'.padRight(30) + "${source.id}\n" +
         'name:'.padRight(30) + "${source.name}\n" +
-        'new posts finder module:'.padRight(30) + "${source.newPostsFinderModule}"
+        'new posts finder module:'.padRight(30) + "${source.newPostsFinderModule}" +
+        'rss url:'.padRight(30) + "${source.rssUrl}"
     }
 
     static String toJson(Source source) {

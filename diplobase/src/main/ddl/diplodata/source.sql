@@ -7,6 +7,7 @@ CREATE TABLE diplodata.source
   id bigserial NOT NULL,
   name character varying(80),
   newpostsfindermodule character varying(80),
+  rssurl character varying(80),
   CONSTRAINT source_pk PRIMARY KEY (id)
 )
 WITH (

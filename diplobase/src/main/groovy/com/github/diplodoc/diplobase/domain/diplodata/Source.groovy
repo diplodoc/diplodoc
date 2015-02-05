@@ -25,4 +25,6 @@ class Source {
     String name
 
     String newPostsFinderModule
+
+    String rssUrl
 }
