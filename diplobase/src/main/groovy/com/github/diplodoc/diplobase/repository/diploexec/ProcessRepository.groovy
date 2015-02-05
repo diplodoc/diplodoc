@@ -10,4 +10,6 @@ import org.springframework.data.repository.query.Param
 interface ProcessRepository extends CrudRepository<Process, Long> {
 
     Process findOneByName(String name)
+
+    Collection<Process> findByActiveIsTrue()
 }

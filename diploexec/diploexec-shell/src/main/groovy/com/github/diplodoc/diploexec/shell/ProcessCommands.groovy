@@ -54,11 +54,20 @@ class ProcessCommands implements CommandMarker {
         toDescription(processDataClient.findOneByName(name))
     }
 
-    @CliCommand(value = 'process remove', help = 'remove process')
-    String remove(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
+    @CliCommand(value = 'process disable', help = 'disable process')
+    String disable(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
         Process process = processDataClient.findOneByName(name)
-        processDataClient.delete(process)
-        'Removed'
+        process.active = false
+        processDataClient.save(process)
+        'Disabled'
+    }
+
+    @CliCommand(value = 'process enable', help = 'enable process')
+    String enable(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
+        Process process = processDataClient.findOneByName(name)
+        process.active = true
+        processDataClient.save(process)
+        'Enabled'
     }
 
     @CliCommand(value = 'process update', help = 'update process description')
@@ -76,6 +85,7 @@ class ProcessCommands implements CommandMarker {
                @CliOption(key = 'definition', mandatory = true, help = 'path to definition file') final String pathToDefinitionFile) {
         Process process = new Process()
         process.name = name
+        process.active = false
         process.lastUpdate = LocalDateTime.now().toString()
         process.definition = resourceLoader.getResource("file:${pathToDefinitionFile}").file.text
 
@@ -84,13 +94,14 @@ class ProcessCommands implements CommandMarker {
     }
 
     private static toSingleLineDescription(Process process) {
-        "${process.id}".padRight(5) + "${process.name}".padLeft(30) + "${process.lastUpdate}".padLeft(50)
+        "${process.id}".padRight(5) + "${process.name}".padLeft(30) + "${process.lastUpdate}".padLeft(30) + "${process.active?'active':'disabled'}".padLeft(10)
     }
 
     private static toDescription(Process process) {
         'id:'.padRight(20) + "${process.id}\n" +
         'name:'.padRight(20) + "${process.name}\n" +
         'last update:'.padRight(20) + "${process.lastUpdate}\n" +
+        'status:'.padRight(20) + "${process.active?'active':'disabled'}\n"
         'definition:\n' + "${process.definition}"
     }
 }

@@ -8,7 +8,6 @@ import com.github.diplodoc.diplocore.modules.Bindable
 import groovy.util.logging.Slf4j
 import org.springframework.context.ApplicationContext
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
-import org.springframework.util.concurrent.ListenableFuture
 
 import javax.annotation.PostConstruct
 
@@ -32,7 +31,7 @@ class Diploexec {
         log.info('initializing diploexec runtime...')
 
         log.debug('loading processes...')
-        processes = processRepository.findAll()
+        processes = processRepository.findByActiveIsTrue()
         waitingMap = new HashMap<>()
         outputMap = new HashMap<>()
 

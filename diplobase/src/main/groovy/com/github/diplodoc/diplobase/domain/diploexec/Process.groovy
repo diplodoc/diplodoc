@@ -27,4 +27,6 @@ class Process {
     String definition
 
     String lastUpdate
+
+    boolean active
 }
