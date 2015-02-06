@@ -16,7 +16,7 @@ import javax.persistence.Table
 @Entity
 @Table(schema = 'diploexec')
 @EqualsAndHashCode
-@ToString(excludes = 'processRun')
+@ToString(excludes = [ 'processRun', 'type', 'value' ])
 class ProcessRunParameter {
 
     @Id

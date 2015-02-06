@@ -34,7 +34,11 @@ class Post {
 
     String meaningText
 
+    String description
+
     String type
 
     String loadTime
+
+    String publishTime
 }
