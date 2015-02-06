@@ -15,18 +15,18 @@ class SourceDataClientSpec extends Specification {
 
     def 'Iterable<Source> findAll()'() {
         when:
-        def actual = sourceDataClient.findAll()
+            def actual = sourceDataClient.findAll()
 
         then:
-        1 * sourceRepository.findAll() >> [
-                new Source(id: 1, name: 'name-1', newPostsFinderModule: 'module-1'),
-                new Source(id: 2, name: 'name-2', newPostsFinderModule: 'module-2')
-        ]
+            1 * sourceRepository.findAll() >> [
+                new Source(id: 1, name: 'name-1', newPostsFinderModule: 'module-1', rssUrl: 'rss-url-1'),
+                new Source(id: 2, name: 'name-2', newPostsFinderModule: 'module-2', rssUrl: 'rss-url-2')
+            ]
 
         expect:
-        actual.size() == 2
-        actual[0] == new Source(id: 1, name: 'name-1', newPostsFinderModule: 'module-1')
-        actual[1] == new Source(id: 2, name: 'name-2', newPostsFinderModule: 'module-2')
+            actual.size() == 2
+            actual[0] == new Source(id: 1, name: 'name-1', newPostsFinderModule: 'module-1', rssUrl: 'rss-url-1')
+            actual[1] == new Source(id: 2, name: 'name-2', newPostsFinderModule: 'module-2', rssUrl: 'rss-url-2')
     }
 
     def 'Source findOneByName(String name)'() {
@@ -34,9 +34,20 @@ class SourceDataClientSpec extends Specification {
             Source actual = sourceDataClient.findOneByName('name')
 
         then:
-            1 * sourceRepository.findOneByName('name') >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module')
+            1 * sourceRepository.findOneByName('name') >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module', rssUrl: 'rss-url')
 
         expect:
-            actual == new Source(id: 1, name: 'name', newPostsFinderModule: 'module')
+            actual == new Source(id: 1, name: 'name', newPostsFinderModule: 'module', rssUrl: 'rss-url')
+    }
+
+    def 'Source save(Source source)'() {
+        when:
+            Source actual = sourceDataClient.save(new Source(name: 'name', newPostsFinderModule: 'module', rssUrl: 'rss-url'))
+
+        then:
+            1 * sourceRepository.save(new Source(name: 'name', newPostsFinderModule: 'module', rssUrl: 'rss-url')) >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module', rssUrl: 'rss-url')
+
+        expect:
+            actual == new Source(id: 1, name: 'name', newPostsFinderModule: 'module', rssUrl: 'rss-url')
     }
 }

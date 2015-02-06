@@ -15,22 +15,22 @@ class ProcessCommandsSpec extends Specification {
     ProcessDataClient processDataClient = Mock(ProcessDataClient)
     ProcessCommands processCommands = new ProcessCommands(processDataClient: processDataClient)
 
-    def '`process list` command'() {
+    def 'process list'() {
         when:
             processDataClient.findAll() >> [
-                new Process(id: 1, name: 'process-1', lastUpdate: 'time-1'),
-                new Process(id: 2, name: 'process-2', lastUpdate: 'time-2')
+                new Process(id: 1, name: 'process-1', lastUpdate: 'time-1', active: true),
+                new Process(id: 2, name: 'process-2', lastUpdate: 'time-2', active: false)
             ]
 
         then:
             String actual = processCommands.list()
 
         expect:
-            actual ==   '1                         process-1                                            time-1\n' +
-                        '2                         process-2                                            time-2'
+            actual ==   '1                         process-1                        time-1    active\n' +
+                        '2                         process-2                        time-2  disabled'
     }
 
-    def '`process run` command'() {
+    def 'process run'() {
         given:
             File tempFile = File.createTempFile('diploexec-shell-test', null)
             tempFile.text = '{"source": {"type":"com.github.diplodoc.diplobase.domain.diplodata.Source","id":1,"newPostsFinderModule":"football.ua-new-posts-finder","name":"football.ua"}}'
@@ -54,9 +54,9 @@ class ProcessCommandsSpec extends Specification {
             actual == 'Started'
     }
 
-    def '`process get` command'() {
+    def '`process get` for active process'() {
         when:
-            processDataClient.findOneByName('process') >> new Process(id: 1, name: 'process', definition: 'definition', lastUpdate: 'time')
+            processDataClient.findOneByName('process') >> new Process(id: 1, name: 'process', definition: 'definition', lastUpdate: 'time', active: true)
 
         then:
             String actual = processCommands.get('process')
@@ -65,24 +65,54 @@ class ProcessCommandsSpec extends Specification {
             actual ==   'id:                 1\n' +
                         'name:               process\n' +
                         'last update:        time\n' +
+                        'status:             active\n' +
                         'definition:\n' +
                         'definition'
     }
 
-    def '`process remove` command'() {
+    def '`process get` for passive process'() {
         when:
-            processDataClient.findOneByName('process') >> new Process(name: 'process')
-
-            String actual = processCommands.remove('process')
+            processDataClient.findOneByName('process') >> new Process(id: 1, name: 'process', definition: 'definition', lastUpdate: 'time', active: false)
 
         then:
-            1 * processDataClient.delete(new Process(name: 'process'))
+            String actual = processCommands.get('process')
 
         expect:
-            actual == 'Removed'
+            actual ==   'id:                 1\n' +
+                        'name:               process\n' +
+                        'last update:        time\n' +
+                        'status:             disabled\n' +
+                        'definition:\n' +
+                        'definition'
     }
 
-    def '`process update` command'() {
+    def 'process disable'() {
+        when:
+            processDataClient.findOneByName('process') >> new Process(name: 'process', active: true)
+
+            String actual = processCommands.disable('process')
+
+        then:
+            1 * processDataClient.save(new Process(name: 'process', active: false))
+
+        expect:
+            actual == 'Disabled'
+    }
+
+    def 'process enable'() {
+        when:
+            processDataClient.findOneByName('process') >> new Process(name: 'process', active: false)
+
+            String actual = processCommands.enable('process')
+
+        then:
+            1 * processDataClient.save(new Process(name: 'process', active: true))
+
+        expect:
+            actual == 'Enabled'
+    }
+
+    def 'process update'() {
         given:
             File tempFile = File.createTempFile('diploexec-shell-test', null)
             tempFile.text = 'definition'
@@ -96,17 +126,18 @@ class ProcessCommandsSpec extends Specification {
         then:
             1 * processDataClient.save({ Process it ->
                 it.name == 'process' && it.definition == 'definition' && it.lastUpdate != null
-            }) >> new Process(id: 1, name: 'process', definition: 'definition', lastUpdate: 'time')
+            }) >> new Process(id: 1, name: 'process', definition: 'definition', lastUpdate: 'time', active: true)
 
         expect:
             actual ==   'id:                 1\n' +
                         'name:               process\n' +
                         'last update:        time\n' +
+                        'status:             active\n' +
                         'definition:\n' +
                         'definition'
     }
 
-    def '`process add` command'() {
+    def 'process add'() {
         given:
             File tempFile = File.createTempFile('diploexec-shell-test', null)
             tempFile.text = 'definition'
@@ -119,12 +150,13 @@ class ProcessCommandsSpec extends Specification {
         then:
             1 * processDataClient.save({ Process it ->
                 it.name == 'process' && it.definition == 'definition' && it.lastUpdate != null
-            }) >> new Process(id: 1, name: 'process', definition: 'definition', lastUpdate: 'time')
+            }) >> new Process(id: 1, name: 'process', definition: 'definition', lastUpdate: 'time', active: false)
 
         expect:
         actual ==   'id:                 1\n' +
                     'name:               process\n' +
                     'last update:        time\n' +
+                    'status:             disabled\n' +
                     'definition:\n' +
                     'definition'
     }

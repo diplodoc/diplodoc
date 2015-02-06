@@ -26,7 +26,7 @@ class SourcesCommands implements CommandMarker {
     @CliCommand(value = 'sources update', help = 'update existing source')
     String update(@CliOption(key = '', mandatory = true, help = 'source name') final String name,
                   @CliOption(key = 'new-post-finder-module', mandatory = false, help = 'new posts finder module') final String newPostsFinderModule,
-                  @CliOption(key = 'rssUrl', mandatory = false, help = 'rss url') final String rssUrl) {
+                  @CliOption(key = 'rss-url', mandatory = false, help = 'rss url') final String rssUrl) {
         Source source = sourceDataClient.findOneByName(name)
         source.newPostsFinderModule = newPostsFinderModule?:source.newPostsFinderModule
         source.rssUrl = rssUrl?:source.rssUrl

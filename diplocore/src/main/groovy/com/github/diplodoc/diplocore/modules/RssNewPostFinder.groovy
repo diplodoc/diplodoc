@@ -3,6 +3,7 @@ package com.github.diplodoc.diplocore.modules
 import com.github.diplodoc.diplobase.domain.diplodata.Post
 import com.github.diplodoc.diplobase.domain.diplodata.Source
 import com.github.diplodoc.diplobase.repository.diplodata.PostRepository
+import com.github.diplodoc.diplocore.services.Rss
 import com.rometools.rome.feed.synd.SyndFeed
 import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.XmlReader
@@ -23,6 +24,9 @@ class RssNewPostFinder implements Bindable {
     @Autowired
     PostRepository postRepository
 
+    @Autowired
+    Rss rss
+
     @Override
     void bindSelf(Binding binding) {
         binding.findNewPosts = { Map params -> findNewPosts(params.source, params.action) }
@@ -31,9 +35,7 @@ class RssNewPostFinder implements Bindable {
     void findNewPosts(Source source, Closure action) {
         log.info('looking for new posts from {}...', source.name)
 
-        SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(source.rssUrl)))
-
-        feed.entries.each { rssEntry ->
+        rss.feed(source.rssUrl).each { rssEntry ->
             log.debug('found rss entry {}', rssEntry)
 
             if (!postRepository.findOneByUrl(rssEntry.link)) {

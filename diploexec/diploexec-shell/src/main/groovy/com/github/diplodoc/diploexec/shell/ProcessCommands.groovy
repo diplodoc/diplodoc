@@ -101,7 +101,7 @@ class ProcessCommands implements CommandMarker {
         'id:'.padRight(20) + "${process.id}\n" +
         'name:'.padRight(20) + "${process.name}\n" +
         'last update:'.padRight(20) + "${process.lastUpdate}\n" +
-        'status:'.padRight(20) + "${process.active?'active':'disabled'}\n"
+        'status:'.padRight(20) + "${process.active?'active':'disabled'}\n" +
         'definition:\n' + "${process.definition}"
     }
 }

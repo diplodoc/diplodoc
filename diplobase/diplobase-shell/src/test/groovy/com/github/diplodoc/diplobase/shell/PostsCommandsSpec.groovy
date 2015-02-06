@@ -40,19 +40,23 @@ class PostsCommandsSpec extends Specification {
                                                         source: new Source(name: 'source-name'),
                                                         url: 'url',
                                                         title: 'title',
-                                                        meaningText: 'meaning text'
+                                                        meaningText: 'meaning text',
+                                                        publishTime: 'publish-time',
+                                                        description: 'description'
                                                     )
 
         then:
             String actual = postsCommands.get('url')
 
         expect:
-            actual == 'id:                 1\n' +
-                      'source:             source-name\n' +
-                      'load time:          load-time\n' +
-                      'url:                url\n' +
-                      'title:              title\n' +
-                      'meaning text:\n' +
-                      'meaning text'
+            actual ==   'id:                 1\n' +
+                        'source:             source-name\n' +
+                        'load time:          load-time\n' +
+                        'publish time:       publish-time\n' +
+                        'url:                url\n' +
+                        'title:              title\n' +
+                        'description:        description\n' +
+                        'meaning text:\n' +
+                        'meaning text'
     }
 }

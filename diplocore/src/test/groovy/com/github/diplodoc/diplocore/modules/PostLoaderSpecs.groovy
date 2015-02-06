@@ -19,20 +19,21 @@ class PostLoaderSpecs extends Specification {
     def 'load post'() {
         given:
             Source source = new Source()
-            String url = 'url'
             Document document = Mock(Document)
+
+            Post post = new Post(url: 'url', source: source)
 
         when:
             document.html() >> 'html'
-            web.load(url) >> document
+            web.load('url') >> document
 
-            postRepository.save(_) >> { Post post ->
-                post.id = 1;
-                return post
+            postRepository.save(_) >> { Post arg ->
+                arg.id = 1
+                return arg
             }
 
         then:
-            Post actual = postLoader.loadPost(source, url)
+            Post actual = postLoader.loadPost(post)
 
         expect:
             actual.html == 'html'
