@@ -35,14 +35,18 @@ class ProcessCommands implements CommandMarker {
     }
 
     @CliCommand(value = 'process run', help = 'run process')
-    String run(@CliOption(key = 'name', mandatory = true, help = 'process name') final String name,
-               @CliOption(key = 'parameters', mandatory = true, help = 'path to paramters file') final String pathToParametersFile) {
+    String run(@CliOption(key = '', mandatory = true, help = 'process name') final String name,
+               @CliOption(key = 'parameters', mandatory = false, help = 'path to paramters file') final String pathToParametersFile) {
         Process process = processDataClient.findOneByName(name)
-        Map<String, Object> jsonParameters = jsonSlurper.parse(resourceLoader.getResource("file:${pathToParametersFile}").file)
-        Map<String, Object> parameters = jsonParameters.collectEntries { String key, Map<String, Object> parameter ->
-            String type = parameter['type']
-            parameter.remove('type')
-            [ key,  Class.forName(type).newInstance(parameter) ]
+
+        Map<String, Object> parameters = [:]
+        if (pathToParametersFile) {
+            Map<String, Object> jsonParameters = jsonSlurper.parse(resourceLoader.getResource("file:${pathToParametersFile}").file)
+            parameters = jsonParameters.collectEntries { String key, Map<String, Object> parameter ->
+                String type = parameter['type']
+                parameter.remove('type')
+                [ key,  Class.forName(type).newInstance(parameter) ]
+            }
         }
 
         diploexecClient.run(process, parameters)
@@ -94,7 +98,7 @@ class ProcessCommands implements CommandMarker {
     }
 
     private static toSingleLineDescription(Process process) {
-        "${process.id}".padRight(5) + "${process.name}".padLeft(30) + "${process.lastUpdate}".padLeft(30) + "${process.active?'active':'disabled'}".padLeft(10)
+        "${process.id}".padRight(5) + "${process.name}".padLeft(40) + "${process.lastUpdate}".padLeft(30) + "${process.active?'active':'disabled'}".padLeft(10)
     }
 
     private static toDescription(Process process) {

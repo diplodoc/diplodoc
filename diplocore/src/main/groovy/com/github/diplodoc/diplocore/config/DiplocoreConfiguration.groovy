@@ -12,5 +12,5 @@ import org.springframework.context.annotation.ImportResource
  */
 @Configuration
 @Import(DiplobaseConfiguration)
-@ComponentScan('com.github.diplodoc.diplocore')
+@ComponentScan([ 'com.github.diplodoc.diplocore', 'com.github.diplodoc.diplocore.data' ])
 class DiplocoreConfiguration { }
