@@ -53,6 +53,20 @@ class SourcesCommandsSpec extends Specification {
             actual == '{"type":"com.github.diplodoc.diplobase.domain.diplodata.Source","id":1,"newPostsFinderModule":"module","rssUrl":"rss-url","name":"name"}'
     }
 
+    def 'sources add name --new-post-finder-module module --rss-url rss-url'() {
+        when:
+            String actual = sourcesCommands.add('name', 'module', 'rss-url')
+
+        then:
+            1 * sourceDataClient.save(new Source(name: 'name', newPostsFinderModule: 'module', rssUrl: 'rss-url')) >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module', rssUrl: 'rss-url')
+
+        expect:
+            actual ==   'id:                           1\n' +
+                        'name:                         name\n' +
+                        'new posts finder module:      module\n' +
+                        'rss url:                      rss-url'
+    }
+
     def 'sources update name --new-post-finder-module module'() {
         when:
             sourceDataClient.findOneByName('name') >> new Source(id: 1, name: 'name')

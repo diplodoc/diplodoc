@@ -23,6 +23,18 @@ class SourcesCommands implements CommandMarker {
         sourceDataClient.findAll().collect(SourcesCommands.&toSingleLineDescription).join('\n')
     }
 
+    @CliCommand(value = 'sources add', help = 'add new source')
+    String add(@CliOption(key = '', mandatory = true, help = 'source name') final String name,
+               @CliOption(key = 'new-post-finder-module', mandatory = true, help = 'new posts finder module') final String newPostsFinderModule,
+               @CliOption(key = 'rss-url', mandatory = false, help = 'rss url') final String rssUrl) {
+        Source source = new Source(name: name)
+        source.newPostsFinderModule = newPostsFinderModule
+        source.rssUrl = rssUrl
+
+        source = sourceDataClient.save(source)
+        toDescription(source)
+    }
+
     @CliCommand(value = 'sources update', help = 'update existing source')
     String update(@CliOption(key = '', mandatory = true, help = 'source name') final String name,
                   @CliOption(key = 'new-post-finder-module', mandatory = false, help = 'new posts finder module') final String newPostsFinderModule,
