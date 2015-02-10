@@ -38,7 +38,7 @@ class TextExtractor implements Bindable {
         increaseByTextSize divElements
 
         post = postRepository.findOne(post.id)
-        post.meaningText = divElements.max { it.value }.key.text()
+        post.meaningText = divElements.max { it.value }?.key?.text()?:web.document(post)
         post = postRepository.save post
         log.debug('for post {} meaning text extracted: {}', post.url, post.meaningText)
         return post
