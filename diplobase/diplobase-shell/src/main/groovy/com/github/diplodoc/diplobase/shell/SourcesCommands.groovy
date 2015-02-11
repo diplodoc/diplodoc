@@ -66,7 +66,6 @@ class SourcesCommands implements CommandMarker {
     }
 
     static String toSingleLineDescription(Source source) {
-        "${source.id}".padLeft(5) +
         "${source.name}".padLeft(30)
     }
 
