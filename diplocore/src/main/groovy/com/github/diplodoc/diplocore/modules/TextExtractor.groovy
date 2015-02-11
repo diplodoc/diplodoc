@@ -1,7 +1,7 @@
 package com.github.diplodoc.diplocore.modules
 
-import com.github.diplodoc.diplobase.domain.diplodata.Post
-import com.github.diplodoc.diplobase.repository.diplodata.PostRepository
+import com.github.diplodoc.diplobase.domain.mongodb.Post
+import com.github.diplodoc.diplobase.repository.mongodb.PostRepository
 import com.github.diplodoc.diplocore.services.Web
 import groovy.util.logging.Slf4j
 import org.jsoup.nodes.Element

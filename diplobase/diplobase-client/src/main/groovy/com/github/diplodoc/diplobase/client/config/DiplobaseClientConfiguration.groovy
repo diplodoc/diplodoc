@@ -11,5 +11,4 @@ import org.springframework.context.annotation.Import
 @Configuration
 @ComponentScan('com.github.diplodoc.diplobase.client')
 @Import(DiplobaseConfiguration)
-class DiplobaseClientConfiguration {
-}
+class DiplobaseClientConfiguration { }

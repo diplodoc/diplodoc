@@ -1,7 +1,7 @@
 package com.github.diplodoc.diploexec.shell
 
 import com.github.diplodoc.diplobase.client.diploexec.ProcessDataClient
-import com.github.diplodoc.diplobase.domain.diploexec.Process
+import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
 import com.github.diplodoc.diploexec.client.DiploexecClient
 import groovy.json.JsonSlurper
 import org.springframework.beans.factory.annotation.Autowired
@@ -79,7 +79,7 @@ class ProcessCommands implements CommandMarker {
                   @CliOption(key = 'definition', mandatory = true, help = 'path to definition file') final String pathToDefinitionFile) {
         Process process = processDataClient.findOneByName(name)
         process.definition = resourceLoader.getResource("file:${pathToDefinitionFile}").file.text
-        process.lastUpdate = LocalDateTime.now().toString()
+        process.lastUpdate = LocalDateTime.now()
         process = processDataClient.save(process)
         toDescription(process)
     }
@@ -90,7 +90,7 @@ class ProcessCommands implements CommandMarker {
         Process process = new Process()
         process.name = name
         process.active = false
-        process.lastUpdate = LocalDateTime.now().toString()
+        process.lastUpdate = LocalDateTime.now()
         process.definition = resourceLoader.getResource("file:${pathToDefinitionFile}").file.text
 
         process = processDataClient.save(process)

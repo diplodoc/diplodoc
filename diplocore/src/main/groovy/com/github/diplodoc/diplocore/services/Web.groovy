@@ -1,6 +1,6 @@
 package com.github.diplodoc.diplocore.services
 
-import com.github.diplodoc.diplobase.domain.diplodata.Post
+import com.github.diplodoc.diplobase.domain.mongodb.Post
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.springframework.stereotype.Component

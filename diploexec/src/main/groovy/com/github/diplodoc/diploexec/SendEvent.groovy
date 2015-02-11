@@ -1,7 +1,7 @@
 package com.github.diplodoc.diploexec
 
-import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
-import com.github.diplodoc.diplobase.domain.diploexec.ProcessRunParameter
+import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRunParameter
 import groovy.json.JsonOutput
 import groovy.transform.ToString
 

@@ -1,4 +1,4 @@
-package com.github.diplodoc.diplobase.domain.diploexec
+package com.github.diplodoc.diplobase.domain.jpa.diploexec
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString

@@ -1,7 +1,7 @@
 package com.github.diplodoc.diplobase.shell
 
 import com.github.diplodoc.diplobase.client.diplodata.PostDataClient
-import com.github.diplodoc.diplobase.domain.diplodata.Post
+import com.github.diplodoc.diplobase.domain.mongodb.Post
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.shell.core.CommandMarker
 import org.springframework.shell.core.annotation.CliCommand
@@ -28,10 +28,7 @@ class PostsCommands implements CommandMarker {
     }
 
     static String toSingleLineDescription(Post post) {
-        "${post.id}".padRight(5) +
-        "${post.loadTime}".padRight(30) +
-        "${post.source.name}".padRight(20) +
-        "${post.url}"
+        "${post.id}".padRight(5) + "${post.loadTime}".padRight(30) + "${post.source.name}".padRight(20) + "${post.url}"
     }
 
     static String toDescription(Post post) {

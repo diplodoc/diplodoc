@@ -1,4 +1,4 @@
-package com.github.diplodoc.diplobase.domain.diploexec
+package com.github.diplodoc.diplobase.domain.jpa.diploexec
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
@@ -12,6 +12,7 @@ import javax.persistence.Id
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 import javax.persistence.Table
+import java.time.LocalDateTime
 
 /**
  * @author yaroslav.yermilov

@@ -1,7 +1,7 @@
 package com.github.diplodoc.diplobase.shell
 
 import com.github.diplodoc.diplobase.client.diplodata.SourceDataClient
-import com.github.diplodoc.diplobase.domain.diplodata.Source
+import com.github.diplodoc.diplobase.domain.mongodb.Source
 import groovy.json.JsonOutput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.shell.core.CommandMarker
@@ -66,7 +66,6 @@ class SourcesCommands implements CommandMarker {
     }
 
     static String toSingleLineDescription(Source source) {
-        "${source.id}".padLeft(5) +
         "${source.name}".padLeft(30)
     }
 

@@ -1,4 +1,4 @@
-package com.github.diplodoc.diplobase.domain.diplodata
+package com.github.diplodoc.diplobase.domain.mongodb
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
@@ -12,15 +12,11 @@ import javax.persistence.Table
 /**
  * @author yaroslav.yermilov
  */
-@Entity
-@Table(schema = 'diplodata')
 @EqualsAndHashCode
 @ToString
 class Source {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id
+    String id
 
     String name
 

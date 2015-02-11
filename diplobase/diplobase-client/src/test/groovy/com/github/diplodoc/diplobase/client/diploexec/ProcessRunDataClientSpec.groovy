@@ -1,9 +1,9 @@
 package com.github.diplodoc.diplobase.client.diploexec
 
-import com.github.diplodoc.diplobase.domain.diploexec.Process
-import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
-import com.github.diplodoc.diplobase.domain.diploexec.ProcessRunParameter
-import com.github.diplodoc.diplobase.repository.diploexec.ProcessRunRepository
+import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
+import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRunParameter
+import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRunRepository
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
