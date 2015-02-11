@@ -7,7 +7,7 @@ CREATE TABLE diploexec.process
   id bigserial NOT NULL,
   definition text,
   name character varying(80),
-  lastupdate timestamp without time zone,
+  lastupdate character varying(80),
   active boolean,
   CONSTRAINT process_pk PRIMARY KEY (id)
 )

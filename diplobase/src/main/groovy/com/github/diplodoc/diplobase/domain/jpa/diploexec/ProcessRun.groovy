@@ -33,9 +33,9 @@ class ProcessRun {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = 'processRun', fetch = FetchType.EAGER)
     Collection<ProcessRunParameter> parameters
 
-    LocalDateTime startTime
+    String startTime
 
-    LocalDateTime endTime
+    String endTime
 
     String exitStatus
 }

@@ -6,8 +6,8 @@ CREATE TABLE diploexec.processrun
 (
   id bigserial NOT NULL,
   process_id bigint,
-  starttime timestamp without time zone,
-  endtime timestamp without time zone,
+  starttime character varying(80),
+  endtime character varying(80),
   exitstatus character varying(80),
   CONSTRAINT processrun_pk PRIMARY KEY (id),
   CONSTRAINT process_fk FOREIGN KEY (process_id)

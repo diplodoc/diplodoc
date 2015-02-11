@@ -58,19 +58,19 @@ class Diploexec {
         switch (event.type) {
             case ProcessCallEvent.Type.PROCESS_RUN_STARTED:
                 event.processRun.exitStatus = 'NOT FINISHED'
-                event.processRun.startTime = event.time.toString()
+                event.processRun.startTime = event.time
                 processRunRepository.save event.processRun
             break;
 
             case ProcessCallEvent.Type.PROCESS_RUN_SUCCEED:
                 event.processRun.exitStatus = 'SUCCEED'
-                event.processRun.endTime = event.time.toString()
+                event.processRun.endTime = event.time
                 processRunRepository.save event.processRun
             break;
 
             case ProcessCallEvent.Type.PROCESS_RUN_FAILED:
                 event.processRun.exitStatus = 'FAILED'
-                event.processRun.endTime = event.time.toString()
+                event.processRun.endTime = event.time
                 processRunRepository.save event.processRun
                 break;
 

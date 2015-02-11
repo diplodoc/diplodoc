@@ -20,7 +20,7 @@ class Post {
     @DBRef
     Source source
 
-    LocalDateTime loadTime
+    String loadTime
 
 
     String html
@@ -29,7 +29,7 @@ class Post {
 
     String description
 
-    LocalDateTime publishTime
+    String publishTime
 
 
     String meaningText

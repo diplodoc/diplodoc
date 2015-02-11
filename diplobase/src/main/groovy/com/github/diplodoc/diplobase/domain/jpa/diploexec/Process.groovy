@@ -27,7 +27,7 @@ class Process {
 
     String definition
 
-    LocalDateTime lastUpdate
+    String lastUpdate
 
     boolean active
 }
