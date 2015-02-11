@@ -1,7 +1,7 @@
 package com.github.diplodoc.diplobase.client.diplodata
 
-import com.github.diplodoc.diplobase.domain.diplodata.Post
-import com.github.diplodoc.diplobase.repository.diplodata.PostRepository
+import com.github.diplodoc.diplobase.domain.mongodb.Post
+import com.github.diplodoc.diplobase.repository.mongodb.PostRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -16,8 +16,8 @@ class PostDataClient {
     @Autowired
     PostRepository postRepository
 
-    Iterable<Post> findAllWithLimit(int limit) {
-        postRepository.findAll(new PageRequest(0, limit, Sort.Direction.DESC, 'id'))
+    List<Post> findAllWithLimit(int limit) {
+        postRepository.findAll(new PageRequest(0, limit, Sort.Direction.DESC, 'loadTime'))
     }
 
     Post findOneByUrl(String url) {

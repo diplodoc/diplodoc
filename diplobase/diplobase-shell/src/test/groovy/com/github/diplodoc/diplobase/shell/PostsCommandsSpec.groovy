@@ -1,12 +1,8 @@
 package com.github.diplodoc.diplobase.shell
 
 import com.github.diplodoc.diplobase.client.diplodata.PostDataClient
-import com.github.diplodoc.diplobase.domain.diplodata.Post
-import com.github.diplodoc.diplobase.domain.diplodata.Source
-import com.github.diplodoc.diplobase.repository.diplodata.PostRepository
-import org.springframework.data.domain.PageImpl
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
+import com.github.diplodoc.diplobase.domain.mongodb.Post
+import com.github.diplodoc.diplobase.domain.mongodb.Source
 import spock.lang.Specification
 
 /**

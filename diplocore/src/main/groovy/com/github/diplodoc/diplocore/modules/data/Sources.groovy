@@ -1,7 +1,7 @@
 package com.github.diplodoc.diplocore.modules.data
 
-import com.github.diplodoc.diplobase.domain.diplodata.Source
-import com.github.diplodoc.diplobase.repository.diplodata.SourceRepository
+import com.github.diplodoc.diplobase.domain.mongodb.Source
+import com.github.diplodoc.diplobase.repository.mongodb.SourceRepository
 import com.github.diplodoc.diplocore.modules.Bindable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component

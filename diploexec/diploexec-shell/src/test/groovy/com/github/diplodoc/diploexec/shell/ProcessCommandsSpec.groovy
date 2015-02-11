@@ -1,8 +1,8 @@
 package com.github.diplodoc.diploexec.shell
 
 import com.github.diplodoc.diplobase.client.diploexec.ProcessDataClient
-import com.github.diplodoc.diplobase.domain.diplodata.Source
-import com.github.diplodoc.diplobase.domain.diploexec.Process
+import com.github.diplodoc.diplobase.domain.mongodb.Source
+import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
 import com.github.diplodoc.diploexec.client.DiploexecClient
 import org.springframework.core.io.FileSystemResourceLoader
 import spock.lang.Specification
@@ -33,7 +33,7 @@ class ProcessCommandsSpec extends Specification {
     def 'process run'() {
         given:
             File tempFile = File.createTempFile('diploexec-shell-test', null)
-            tempFile.text = '{"source": {"type":"com.github.diplodoc.diplobase.domain.diplodata.Source","id":1,"newPostsFinderModule":"football.ua-new-posts-finder","name":"football.ua"}}'
+            tempFile.text = '{"source": {"type":"com.github.diplodoc.diplobase.domain.mongodb.Source","id":1,"newPostsFinderModule":"football.ua-new-posts-finder","name":"football.ua"}}'
 
             DiploexecClient diploexecClient = Mock(DiploexecClient)
 

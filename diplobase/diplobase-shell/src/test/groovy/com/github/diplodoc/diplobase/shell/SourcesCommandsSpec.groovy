@@ -1,8 +1,7 @@
 package com.github.diplodoc.diplobase.shell
 
 import com.github.diplodoc.diplobase.client.diplodata.SourceDataClient
-import com.github.diplodoc.diplobase.domain.diplodata.Source
-import com.github.diplodoc.diplobase.repository.diplodata.SourceRepository
+import com.github.diplodoc.diplobase.domain.mongodb.Source
 import spock.lang.Specification
 
 /**
@@ -50,7 +49,7 @@ class SourcesCommandsSpec extends Specification {
             String actual = sourcesCommands.get('name', 'json')
 
         expect:
-            actual == '{"type":"com.github.diplodoc.diplobase.domain.diplodata.Source","id":1,"newPostsFinderModule":"module","rssUrl":"rss-url","name":"name"}'
+            actual == '{"type":"com.github.diplodoc.diplobase.domain.mongodb.Source","id":1,"newPostsFinderModule":"module","rssUrl":"rss-url","name":"name"}'
     }
 
     def 'sources add name --new-post-finder-module module --rss-url rss-url'() {
