@@ -1,7 +1,7 @@
 package com.github.diplodoc.diplobase.client.diploexec
 
-import com.github.diplodoc.diplobase.domain.diploexec.Process
-import com.github.diplodoc.diplobase.repository.diploexec.ProcessRepository
+import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
+import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRepository
 import spock.lang.Specification
 
 /**

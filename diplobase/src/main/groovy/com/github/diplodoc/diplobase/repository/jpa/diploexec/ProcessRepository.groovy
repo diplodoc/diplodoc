@@ -1,8 +1,7 @@
-package com.github.diplodoc.diplobase.repository.diploexec
+package com.github.diplodoc.diplobase.repository.jpa.diploexec
 
-import com.github.diplodoc.diplobase.domain.diploexec.Process
+import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
 import org.springframework.data.repository.CrudRepository
-import org.springframework.data.repository.query.Param
 
 /**
  * @author yaroslav.yermilov

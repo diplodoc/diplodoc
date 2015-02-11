@@ -1,8 +1,8 @@
 package com.github.diplodoc.diploexec.shell
 
 import com.github.diplodoc.diplobase.client.diploexec.ProcessRunDataClient
-import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
-import com.github.diplodoc.diplobase.domain.diploexec.ProcessRunParameter
+import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRunParameter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.shell.core.CommandMarker
 import org.springframework.shell.core.annotation.CliCommand
