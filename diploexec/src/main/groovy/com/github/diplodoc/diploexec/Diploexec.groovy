@@ -1,14 +1,13 @@
 package com.github.diplodoc.diploexec
 
-import com.github.diplodoc.diplobase.domain.diploexec.Process
-import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
-import com.github.diplodoc.diplobase.repository.diploexec.ProcessRepository
-import com.github.diplodoc.diplobase.repository.diploexec.ProcessRunRepository
+import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
+import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRepository
+import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRunRepository
 import com.github.diplodoc.diplocore.modules.Bindable
 import groovy.util.logging.Slf4j
 import org.springframework.context.ApplicationContext
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
-import org.springframework.util.concurrent.ListenableFuture
 
 import javax.annotation.PostConstruct
 
@@ -32,7 +31,7 @@ class Diploexec {
         log.info('initializing diploexec runtime...')
 
         log.debug('loading processes...')
-        processes = processRepository.findAll()
+        processes = processRepository.findByActiveIsTrue()
         waitingMap = new HashMap<>()
         outputMap = new HashMap<>()
 
@@ -59,19 +58,19 @@ class Diploexec {
         switch (event.type) {
             case ProcessCallEvent.Type.PROCESS_RUN_STARTED:
                 event.processRun.exitStatus = 'NOT FINISHED'
-                event.processRun.startTime = event.time.toString()
+                event.processRun.startTime = event.time
                 processRunRepository.save event.processRun
             break;
 
             case ProcessCallEvent.Type.PROCESS_RUN_SUCCEED:
                 event.processRun.exitStatus = 'SUCCEED'
-                event.processRun.endTime = event.time.toString()
+                event.processRun.endTime = event.time
                 processRunRepository.save event.processRun
             break;
 
             case ProcessCallEvent.Type.PROCESS_RUN_FAILED:
                 event.processRun.exitStatus = 'FAILED'
-                event.processRun.endTime = event.time.toString()
+                event.processRun.endTime = event.time
                 processRunRepository.save event.processRun
                 break;
 

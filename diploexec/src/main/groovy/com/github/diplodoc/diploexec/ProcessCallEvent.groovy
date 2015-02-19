@@ -1,6 +1,6 @@
 package com.github.diplodoc.diploexec
 
-import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
 import groovy.transform.ToString
 
 import java.time.LocalDateTime

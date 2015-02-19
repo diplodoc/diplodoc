@@ -1,7 +1,7 @@
 package com.github.diplodoc.diploexec.config
 
-import com.github.diplodoc.diplobase.repository.diploexec.ProcessRepository
-import com.github.diplodoc.diplobase.repository.diploexec.ProcessRunRepository
+import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRepository
+import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRunRepository
 import com.github.diplodoc.diplocore.config.DiplocoreConfiguration
 import com.github.diplodoc.diploexec.Diploexec
 import org.springframework.beans.factory.annotation.Autowired

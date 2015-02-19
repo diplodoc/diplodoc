@@ -1,7 +1,7 @@
 package com.github.diplodoc.diplobase.shell
 
-import com.github.diplodoc.diplobase.domain.diplodata.Source
-import com.github.diplodoc.diplobase.repository.diplodata.SourceRepository
+import com.github.diplodoc.diplobase.client.diplodata.SourceDataClient
+import com.github.diplodoc.diplobase.domain.mongodb.Source
 import spock.lang.Specification
 
 /**
@@ -9,34 +9,108 @@ import spock.lang.Specification
  */
 class SourcesCommandsSpec extends Specification {
 
-    SourceRepository sourceRepository = Mock(SourceRepository)
-    SourcesCommands sourcesCommands = new SourcesCommands(sourceRepository: sourceRepository)
+    SourceDataClient sourceDataClient = Mock(SourceDataClient)
+    SourcesCommands sourcesCommands = new SourcesCommands(sourceDataClient: sourceDataClient)
 
-    def '`sources list` command'() {
+    def 'sources list'() {
         when:
-            sourceRepository.findAll() >> [
-                new Source(id: 1, name: 'name-1', newPostsFinderModule: 'module-1'),
-                new Source(id: 2, name: 'name-2', newPostsFinderModule: 'module-2')
+            sourceDataClient.findAll() >> [
+                new Source(id: 1, name: 'name-1', newPostsFinderModule: 'module-1', rssUrl: 'rss-url-1'),
+                new Source(id: 2, name: 'name-2', newPostsFinderModule: 'module-2', rssUrl: 'rss-url-2')
             ]
 
         then:
             String actual = sourcesCommands.list()
 
         expect:
-            actual == '    1                        name-1                                          module-1\n' +
-                      '    2                        name-2                                          module-2'
+            actual == '    1                        name-1\n' +
+                      '    2                        name-2'
     }
 
-    def '`sources dump` command'() {
+    def 'sources get --representation text'() {
         when:
-            sourceRepository.findOneByName('name') >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module')
+            sourceDataClient.findOneByName('name') >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module', rssUrl: 'rss-url')
 
         then:
-            String tempDir = File.createTempDir().absolutePath
-            sourcesCommands.dump('name', "${tempDir}/file.txt")
-            String actual = new File("${tempDir}/file.txt").text
+            String actual = sourcesCommands.get('name', 'text')
 
         expect:
-            actual == '{"type":"com.github.diplodoc.diplobase.domain.diplodata.Source","id":1,"newPostsFinderModule":"module","name":"name"}'
+            actual ==   'id:                           1\n' +
+                        'name:                         name\n' +
+                        'new posts finder module:      module\n' +
+                        'rss url:                      rss-url'
+    }
+
+    def 'sources get --representation json'() {
+        when:
+            sourceDataClient.findOneByName('name') >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module', rssUrl: 'rss-url')
+
+        then:
+            String actual = sourcesCommands.get('name', 'json')
+
+        expect:
+            actual == '{"type":"com.github.diplodoc.diplobase.domain.mongodb.Source","id":1,"newPostsFinderModule":"module","rssUrl":"rss-url","name":"name"}'
+    }
+
+    def 'sources add name --new-post-finder-module module --rss-url rss-url'() {
+        when:
+            String actual = sourcesCommands.add('name', 'module', 'rss-url')
+
+        then:
+            1 * sourceDataClient.save(new Source(name: 'name', newPostsFinderModule: 'module', rssUrl: 'rss-url')) >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module', rssUrl: 'rss-url')
+
+        expect:
+            actual ==   'id:                           1\n' +
+                        'name:                         name\n' +
+                        'new posts finder module:      module\n' +
+                        'rss url:                      rss-url'
+    }
+
+    def 'sources update name --new-post-finder-module module'() {
+        when:
+            sourceDataClient.findOneByName('name') >> new Source(id: 1, name: 'name')
+
+            String actual = sourcesCommands.update('name', 'module', null)
+
+        then:
+            1 * sourceDataClient.save(new Source(id: 1, name: 'name', newPostsFinderModule: 'module')) >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module')
+
+        expect:
+            actual ==   'id:                           1\n' +
+                        'name:                         name\n' +
+                        'new posts finder module:      module\n' +
+                        'rss url:                      null'
+    }
+
+    def 'sources update name --rss-url rss-url'() {
+        when:
+            sourceDataClient.findOneByName('name') >> new Source(id: 1, name: 'name')
+
+            String actual = sourcesCommands.update('name', null, 'rss-url')
+
+        then:
+            1 * sourceDataClient.save(new Source(id: 1, name: 'name', rssUrl: 'rss-url')) >> new Source(id: 1, name: 'name', rssUrl: 'rss-url')
+
+        expect:
+            actual ==   'id:                           1\n' +
+                        'name:                         name\n' +
+                        'new posts finder module:      null\n' +
+                        'rss url:                      rss-url'
+    }
+
+    def 'sources update name --new-post-finder-module module --rss-url rss-url'() {
+        when:
+            sourceDataClient.findOneByName('name') >> new Source(id: 1, name: 'name')
+
+            String actual = sourcesCommands.update('name', 'module', 'rss-url')
+
+        then:
+            1 * sourceDataClient.save(new Source(id: 1, name: 'name', newPostsFinderModule: 'module', rssUrl: 'rss-url')) >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module', rssUrl: 'rss-url')
+
+        expect:
+            actual ==   'id:                           1\n' +
+                        'name:                         name\n' +
+                        'new posts finder module:      module\n' +
+                        'rss url:                      rss-url'
     }
 }

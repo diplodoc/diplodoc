@@ -1,7 +1,7 @@
 package com.github.diplodoc.diplobase.shell
 
-import com.github.diplodoc.diplobase.domain.diplodata.Source
-import com.github.diplodoc.diplobase.repository.diplodata.SourceRepository
+import com.github.diplodoc.diplobase.client.diplodata.SourceDataClient
+import com.github.diplodoc.diplobase.domain.mongodb.Source
 import groovy.json.JsonOutput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.shell.core.CommandMarker
@@ -16,25 +16,70 @@ import org.springframework.stereotype.Component
 class SourcesCommands implements CommandMarker {
 
     @Autowired
-    SourceRepository sourceRepository
+    SourceDataClient sourceDataClient
 
     @CliCommand(value = 'sources list', help = 'list all sources')
     String list() {
-        sourceRepository.findAll().collect { Source source ->
-            "${source.id}".padLeft(5) +
-            "${source.name}".padLeft(30) +
-            "${source.newPostsFinderModule}".padLeft(50)
-        }.join('\n')
+        sourceDataClient.findAll().collect(SourcesCommands.&toSingleLineDescription).join('\n')
     }
 
-    @CliCommand(value = 'sources dump', help = 'dump source to file')
-    String dump(@CliOption(key = 'name', mandatory = true, help = 'source name') final String name,
-                @CliOption(key = 'path', mandatory = true, help = 'path to dump file') final String path) {
-        Source source = sourceRepository.findOneByName(name)
+    @CliCommand(value = 'sources add', help = 'add new source')
+    String add(@CliOption(key = '', mandatory = true, help = 'source name') final String name,
+               @CliOption(key = 'new-post-finder-module', mandatory = true, help = 'new posts finder module') final String newPostsFinderModule,
+               @CliOption(key = 'rss-url', mandatory = false, help = 'rss url') final String rssUrl) {
+        Source source = new Source(name: name)
+        source.newPostsFinderModule = newPostsFinderModule
+        source.rssUrl = rssUrl
 
+        source = sourceDataClient.save(source)
+        toDescription(source)
+    }
+
+    @CliCommand(value = 'sources update', help = 'update existing source')
+    String update(@CliOption(key = '', mandatory = true, help = 'source name') final String name,
+                  @CliOption(key = 'new-post-finder-module', mandatory = false, help = 'new posts finder module') final String newPostsFinderModule,
+                  @CliOption(key = 'rss-url', mandatory = false, help = 'rss url') final String rssUrl) {
+        Source source = sourceDataClient.findOneByName(name)
+        source.newPostsFinderModule = newPostsFinderModule?:source.newPostsFinderModule
+        source.rssUrl = rssUrl?:source.rssUrl
+
+        source = sourceDataClient.save(source)
+        toDescription(source)
+    }
+
+    @CliCommand(value = 'sources get', help = 'get source parameters')
+    String get(@CliOption(key = '', mandatory = true, help = 'source name') final String name,
+               @CliOption(key = 'representation', mandatory = false, help = 'convert to json', unspecifiedDefaultValue = 'text') final String representation) {
+        Source source = sourceDataClient.findOneByName(name)
+
+        switch (representation) {
+            case 'text':
+                toDescription(source)
+            break
+
+            case 'json':
+                toJson(source)
+            break
+
+            default: 'Unknown presentation type'
+        }
+    }
+
+    static String toSingleLineDescription(Source source) {
+        "${source.name}".padLeft(30)
+    }
+
+    static String toDescription(Source source) {
+        'id:'.padRight(30) + "${source.id}\n" +
+        'name:'.padRight(30) + "${source.name}\n" +
+        'new posts finder module:'.padRight(30) + "${source.newPostsFinderModule}\n" +
+        'rss url:'.padRight(30) + "${source.rssUrl}"
+    }
+
+    static String toJson(Source source) {
         Map<String, String> sourceProperties = source.properties.collectEntries { String key, Object value ->
             key.toString() != 'class' ? [ key, value ] : [ 'type', Source.class.name ]
         }
-        new File(path).text = JsonOutput.toJson(sourceProperties)
+        JsonOutput.toJson(sourceProperties)
     }
 }

@@ -8,6 +8,10 @@ ext {
     dependency.groovy = 'org.codehaus.groovy:groovy-all:2.3.9'
     dependency.jython = 'org.python:jython:2.5.3'
 
+    dependency.spock = 'org.spockframework:spock-core:0.7-groovy-2.0'
+    dependency.cglib = 'cglib:cglib-nodep:2.2'
+    dependency.objenesis = 'org.objenesis:objenesis:1.2'
+
     dependency.servlet = 'javax.servlet:javax.servlet-api:3.+'
 
     dependency.spring = [:]
@@ -19,11 +23,14 @@ ext {
 
     dependency.spring.data = [:]
     dependency.spring.data.jpa = 'org.springframework.data:spring-data-jpa:1.7.1.RELEASE'
+    dependency.spring.data.mongodb = 'org.springframework.data:spring-data-mongodb:1.6.2.RELEASE'
     dependency.spring.data.rest = 'org.springframework.data:spring-data-rest-webmvc:2.2.1.RELEASE'
 
     dependency.spring.hateoas = 'org.springframework.hateoas:spring-hateoas:0.16.0.RELEASE'
 
     dependency.postgresql = 'org.postgresql:postgresql:9.3-1101-jdbc41'
+
+    dependency.mongodb = 'org.mongodb:mongo-java-driver:2.13.0'
 
     dependency.commons = [:]
     dependency.commons.dbcp = 'commons-dbcp:commons-dbcp:1.4'
@@ -36,7 +43,6 @@ ext {
     dependency.jackson.core = "com.fasterxml.jackson.core:jackson-core:${versions.jackson}"
     dependency.jackson.databind = "com.fasterxml.jackson.core:jackson-databind:${versions.jackson}"
 
-    dependency.spock = 'org.spockframework:spock-core:0.7-groovy-2.0'
-    dependency.cglib = 'cglib:cglib-nodep:2.2'
-    dependency.objenesis = 'org.objenesis:objenesis:1.2'
+    dependency.rome = 'com.rometools:rome:1.5.0'
+
 }

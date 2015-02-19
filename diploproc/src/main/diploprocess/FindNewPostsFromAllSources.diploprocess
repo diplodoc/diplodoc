@@ -1,0 +1,7 @@
+description 'Finds new posts from all sources'
+
+require 'data.sources'
+
+findAllSources().each {
+    source -> send to: 'find-new-posts-from-source', source: source
+}

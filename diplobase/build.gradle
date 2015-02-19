@@ -3,4 +3,7 @@ dependencies {
     compile dependency.commons.dbcp
     compile dependency.hibernate
     compile dependency.spring.data.jpa
+
+    compile dependency.mongodb
+    compile dependency.spring.data.mongodb
 }

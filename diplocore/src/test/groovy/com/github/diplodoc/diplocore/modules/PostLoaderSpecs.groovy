@@ -1,8 +1,8 @@
 package com.github.diplodoc.diplocore.modules
 
-import com.github.diplodoc.diplobase.domain.diplodata.Post
-import com.github.diplodoc.diplobase.domain.diplodata.Source
-import com.github.diplodoc.diplobase.repository.diplodata.PostRepository
+import com.github.diplodoc.diplobase.domain.mongodb.Post
+import com.github.diplodoc.diplobase.domain.mongodb.Source
+import com.github.diplodoc.diplobase.repository.mongodb.PostRepository
 import com.github.diplodoc.diplocore.services.Web
 import org.jsoup.nodes.Document
 import spock.lang.Specification
@@ -19,20 +19,21 @@ class PostLoaderSpecs extends Specification {
     def 'load post'() {
         given:
             Source source = new Source()
-            String url = 'url'
             Document document = Mock(Document)
+
+            Post post = new Post(url: 'url', source: source)
 
         when:
             document.html() >> 'html'
-            web.load(url) >> document
+            web.load('url') >> document
 
-            postRepository.save(_) >> { Post post ->
-                post.id = 1;
-                return post
+            postRepository.save(_) >> { Post arg ->
+                arg.id = 1
+                return arg
             }
 
         then:
-            Post actual = postLoader.loadPost(source, url)
+            Post actual = postLoader.loadPost(post)
 
         expect:
             actual.html == 'html'

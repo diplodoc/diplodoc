@@ -1,7 +1,7 @@
 package com.github.diplodoc.diploexec
 
-import com.github.diplodoc.diplobase.domain.diploexec.Process
-import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
+import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
 import spock.lang.Specification
 
 /**

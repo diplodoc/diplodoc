@@ -2,9 +2,9 @@ package com.github.diplodoc.diploexec.client
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.diplodoc.diplobase.domain.diploexec.Process
-import com.github.diplodoc.diplobase.domain.diploexec.ProcessRun
-import com.github.diplodoc.diplobase.domain.diploexec.ProcessRunParameter
+import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
+import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRunParameter
 import groovy.json.JsonOutput
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.hateoas.MediaTypes
@@ -12,7 +12,6 @@ import org.springframework.hateoas.Resource
 import org.springframework.hateoas.hal.Jackson2HalModule
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
-import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.client.RestTemplate
 

@@ -15,4 +15,5 @@ dependencies {
     compile dependency.jython
 
     compile dependency.jsoup
+    compile dependency.rome
 }

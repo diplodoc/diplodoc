@@ -1,11 +1,8 @@
 package com.github.diplodoc.diplobase.shell
 
-import com.github.diplodoc.diplobase.domain.diplodata.Post
-import com.github.diplodoc.diplobase.domain.diplodata.Source
-import com.github.diplodoc.diplobase.repository.diplodata.PostRepository
-import org.springframework.data.domain.PageImpl
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
+import com.github.diplodoc.diplobase.client.diplodata.PostDataClient
+import com.github.diplodoc.diplobase.domain.mongodb.Post
+import com.github.diplodoc.diplobase.domain.mongodb.Source
 import spock.lang.Specification
 
 /**
@@ -13,58 +10,49 @@ import spock.lang.Specification
  */
 class PostsCommandsSpec extends Specification {
 
-    PostRepository postRepository = Mock(PostRepository)
-    PostsCommands postsCommands = new PostsCommands(postRepository: postRepository)
+    PostDataClient postDataClient = Mock(PostDataClient)
+    PostsCommands postsCommands = new PostsCommands(postDataClient: postDataClient)
 
-    def '`posts list` command with default option'() {
+    def '`posts list`'() {
         when:
-            postRepository.findAll(new PageRequest(0, 10, Sort.Direction.DESC, 'id')) >> new PageImpl<Post>([
+            postDataClient.findAllWithLimit(5) >> [
                 new Post(id: 1, loadTime: 'load-time-1', source: new Source(name: 'source-name-1'), url: 'url-1'),
                 new Post(id: 2, loadTime: 'load-time-2', source: new Source(name: 'source-name-2'), url: 'url-2')
-            ])
+            ]
 
         then:
-            String actual = postsCommands.list(null)
+            String actual = postsCommands.list(5)
 
         expect:
             actual == '1    load-time-1                   source-name-1       url-1\n' +
                       '2    load-time-2                   source-name-2       url-2'
     }
 
-    def '`posts list` command with count option'() {
-        when:
-            postRepository.findAll(new PageRequest(0, 1, Sort.Direction.DESC, 'id')) >> new PageImpl<Post>([
-                new Post(id: 1, loadTime: 'load-time', source: new Source(name: 'source-name'), url: 'url')
-            ])
-
-        then:
-            String actual = postsCommands.list(1)
-
-        expect:
-            actual == '1    load-time                     source-name         url'
-    }
-
     def '`posts get` command'() {
         when:
-            postRepository.findOneByUrl('url') >> new Post(
+            postDataClient.findOneByUrl('url') >> new Post(
                                                         id: 1,
                                                         loadTime: 'load-time',
                                                         source: new Source(name: 'source-name'),
                                                         url: 'url',
                                                         title: 'title',
-                                                        meaningText: 'meaning text'
+                                                        meaningText: 'meaning text',
+                                                        publishTime: 'publish-time',
+                                                        description: 'description'
                                                     )
 
         then:
             String actual = postsCommands.get('url')
 
         expect:
-            actual == 'id:                 1\n' +
-                      'source:             source-name\n' +
-                      'load time:          load-time\n' +
-                      'url:                url\n' +
-                      'title:              title\n' +
-                      'meaning text:\n' +
-                      'meaning text'
+            actual ==   'id:                 1\n' +
+                        'source:             source-name\n' +
+                        'load time:          load-time\n' +
+                        'publish time:       publish-time\n' +
+                        'url:                url\n' +
+                        'title:              title\n' +
+                        'description:        description\n' +
+                        'meaning text:\n' +
+                        'meaning text'
     }
 }
