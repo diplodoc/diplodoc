@@ -1,0 +1,17 @@
+test 'find-new-posts-from-all-sources'
+
+mock 'data.sources', by: 'test.data.sources'
+
+verify {
+    assert it[0].destination == 'find-new-posts-from-source'
+    assert it[0].source.id == 0
+    assert it[0].source.name == 'name-0'
+    assert it[0].source.newPostsFinderModule == 'newPostsFinderModule-0'
+    assert it[0].source.rssUrl == 'rssUrl-0'
+
+    assert it[1].destination == 'find-new-posts-from-source'
+    assert it[1].source.id == 1
+    assert it[1].source.name == 'name-1'
+    assert it[1].source.newPostsFinderModule == 'newPostsFinderModule-1'
+    assert it[1].source.rssUrl == 'rssUrl-1'
+}
