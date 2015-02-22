@@ -75,7 +75,7 @@ project(':diploexec') {
 
 project(':diploexec:diploexec-test') {
     dependencies {
-        compile project(':diplobase')
+        compile project(':diplobase:diplobase-client')
     }
 }
 

@@ -1,6 +1,7 @@
 package com.github.diplodoc.diploexec.shell
 
 import com.github.diplodoc.diplobase.client.diploexec.ProcessDataClient
+import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
 import com.github.diplodoc.diploexec.test.DiploexecTest
 import com.github.diplodoc.diploexec.test.TestResults
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,7 +27,7 @@ class TestCommands implements CommandMarker {
         Process process = processDataClient.findOneByName("test-${name}")
 
         TestResults testResults = diploexecTest.test(process)
-        
+
         assert null : 'not implemented yet'
     }
 }
