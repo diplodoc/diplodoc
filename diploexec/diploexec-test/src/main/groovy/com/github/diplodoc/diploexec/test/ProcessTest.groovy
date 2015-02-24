@@ -14,6 +14,7 @@ class ProcessTest {
 
     Process processUnderTest
     Map<String, String> mockedModules = [:]
+    Closure verifications
 
     ProcessTest(Process process, DiploexecTest diploexecTest) {
         this.process = process
@@ -21,31 +22,26 @@ class ProcessTest {
     }
 
     TestResults test() {
-        try {
-            new GroovyShell(binding()).evaluate(process.definition)
-        } catch (e) {
-            assert null : "not implemented yet: $e"
-        }
+        new GroovyShell(testDefinitionBinding()).evaluate(process.definition)
 
         assert null : 'not implemented yet'
     }
 
-    private Binding binding() {
+    private Binding testDefinitionBinding() {
         Binding binding = new Binding()
 
         binding.test = { String processUnderTestName ->
             processUnderTest = diploexecTest.getProcess(processUnderTestName)
-
-            println "Process under test ${processUnderTest.name}"
         }
 
         binding.mock = { Map param ->
             mockedModules[param.module] = param.by
+        }
 
-            println "Module ${param.module} will be mocked by ${param.by}"
+        binding.verify = { Closure verifications ->
+            this.verifications = verifications
         }
 
         return binding
-        assert null : 'not implemented yet'
     }
 }
