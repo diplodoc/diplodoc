@@ -28,6 +28,6 @@ class TestCommands implements CommandMarker {
 
         TestResults testResults = diploexecTest.test(process)
 
-        assert null : 'not implemented yet'
+        return testResults.toString()
     }
 }

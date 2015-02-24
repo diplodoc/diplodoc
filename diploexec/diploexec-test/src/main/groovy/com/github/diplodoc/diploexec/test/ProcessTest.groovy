@@ -1,7 +1,6 @@
 package com.github.diplodoc.diploexec.test
 
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
-import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRunParameter
 import com.github.diplodoc.diplocore.modules.Bindable
 
 /**
@@ -16,29 +15,50 @@ class ProcessTest {
     Map<String, String> mockedModules = [:]
     Closure verifications
 
+    List<Map> outputs = []
+
     ProcessTest(Process process, DiploexecTest diploexecTest) {
         this.process = process
         this.diploexecTest = diploexecTest
     }
 
     TestResults test() {
-        new GroovyShell(testDefinitionBinding()).evaluate(process.definition)
+        try {
+            new GroovyShell(testDefinitionBinding()).evaluate(process.definition)
+        } catch (Throwable e) {
+            return TestResults.wrongTestDefinition(e)
+        }
 
-        new GroovyShell(testRunBinding([:])).evaluate(processUnderTest.definition)
+        try {
+            new GroovyShell(testRunBinding([:])).evaluate(processUnderTest.definition)
+        } catch (Throwable e) {
+            return TestResults.runFailed(e)
+        }
 
-        assert null : 'not implemented yet'
+        try {
+            verifications.call(outputs)
+        } catch (Throwable e) {
+            return TestResults.verificationFailed(e)
+        }
+
+        return TestResults.passed()
     }
 
     private void send(String destination, Map parameters) {
-        assert null : 'not implemented yet'
+        Map output = new HashMap(parameters)
+        output['destination'] = destination
+        outputs << output
     }
 
     private void output(Map parameters) {
-        assert null : 'not implemented yet'
+        Map output = new HashMap(parameters)
+        outputs << output
     }
 
     private void event(String name, Map parameres) {
-        assert null : 'not implemented yet'
+        Map output = new HashMap(parameters)
+        output['destination'] = name
+        outputs << output
     }
 
     private Binding testDefinitionBinding() {
