@@ -1,6 +1,6 @@
 test 'find-new-posts-from-all-sources'
 
-mock 'data.sources', by: 'test.data.sources'
+mock module: 'data.sources', by: 'test.data.sources'
 
 verify {
     assert it.size == 2
