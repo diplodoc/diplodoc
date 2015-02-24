@@ -22,8 +22,8 @@ class TestSources implements Bindable {
 
     Collection<Source> findAll() {
         [
-            new Source(id: 0, name: 'name-0', newPostsFinderModule: 'newPostsFinderModule-0', rssUrl: 'rssUrl-0'),
-            new Source(id: 1, name: 'name-1', newPostsFinderModule: 'newPostsFinderModule-1', rssUrl: 'rssUrl-1')
+            new Source(id: '0', name: 'name-0', newPostsFinderModule: 'newPostsFinderModule-0', rssUrl: 'rssUrl-0'),
+            new Source(id: '1', name: 'name-1', newPostsFinderModule: 'newPostsFinderModule-1', rssUrl: 'rssUrl-1')
         ]
     }
 }
