@@ -14,8 +14,10 @@ class ProcessTest {
     Process processUnderTest
     Map<String, String> mockedModules = [:]
     Closure verifications
+    Map<String, String> inputParameters = [:]
 
     List<Map> outputs = []
+    List<String> requiredModules = []
 
     ProcessTest(Process process, DiploexecTest diploexecTest) {
         this.process = process
@@ -30,13 +32,13 @@ class ProcessTest {
         }
 
         try {
-            new GroovyShell(testRunBinding([:])).evaluate(processUnderTest.definition)
+            new GroovyShell(testRunBinding(inputParameters)).evaluate(processUnderTest.definition)
         } catch (Throwable e) {
             return TestResults.runFailed(e)
         }
 
         try {
-            verifications.call(outputs)
+            verifications.call(new Expando(required: requiredModules, output: outputs))
         } catch (Throwable e) {
             return TestResults.verificationFailed(e)
         }
@@ -55,7 +57,7 @@ class ProcessTest {
         outputs << output
     }
 
-    private void event(String name, Map parameres) {
+    private void event(String name, Map parameters) {
         Map output = new HashMap(parameters)
         output['destination'] = name
         outputs << output
@@ -67,6 +69,7 @@ class ProcessTest {
         bindTest   binding
         bindMock   binding
         bindVerify binding
+        bindParams binding
 
         return binding
     }
@@ -108,6 +111,13 @@ class ProcessTest {
         return binding
     }
 
+    private Binding bindParams(Binding binding) {
+        binding.params = { Map params ->
+            inputParameters.putAll(params)
+        }
+        return binding
+    }
+
     private void bindInputParameters(Binding binding, Map<String, Object> parameters) {
         parameters.each {
             binding."${it.key}" = it.value
@@ -125,6 +135,7 @@ class ProcessTest {
     private void bindRequire(Binding binding) {
         binding.require = { String[] modulesNames ->
             modulesNames.each { String moduleName ->
+                requiredModules << moduleName
                 Bindable module = diploexecTest.getModule(mockedModules[moduleName]?:moduleName)
                 module.bindSelf binding
             }
