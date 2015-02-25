@@ -14,6 +14,7 @@ class ProcessTest {
     Process processUnderTest
     Map<String, String> mockedModules = [:]
     Closure verifications
+    Map<String, String> inputParameters = [:]
 
     List<Map> outputs = []
     List<String> requiredModules = []
@@ -31,7 +32,7 @@ class ProcessTest {
         }
 
         try {
-            new GroovyShell(testRunBinding([:])).evaluate(processUnderTest.definition)
+            new GroovyShell(testRunBinding(inputParameters)).evaluate(processUnderTest.definition)
         } catch (Throwable e) {
             return TestResults.runFailed(e)
         }
@@ -56,7 +57,7 @@ class ProcessTest {
         outputs << output
     }
 
-    private void event(String name, Map parameres) {
+    private void event(String name, Map parameters) {
         Map output = new HashMap(parameters)
         output['destination'] = name
         outputs << output
@@ -68,6 +69,7 @@ class ProcessTest {
         bindTest   binding
         bindMock   binding
         bindVerify binding
+        bindParams binding
 
         return binding
     }
@@ -105,6 +107,13 @@ class ProcessTest {
     private Binding bindVerify(Binding binding) {
         binding.verify = { Closure verifications ->
             this.verifications = verifications
+        }
+        return binding
+    }
+
+    private Binding bindParams(Binding binding) {
+        binding.params = { Map params ->
+            inputParameters.putAll(params)
         }
         return binding
     }
