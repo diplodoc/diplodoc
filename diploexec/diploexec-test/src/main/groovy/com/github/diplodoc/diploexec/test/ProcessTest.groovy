@@ -16,6 +16,7 @@ class ProcessTest {
     Closure verifications
 
     List<Map> outputs = []
+    List<String> requiredModules = []
 
     ProcessTest(Process process, DiploexecTest diploexecTest) {
         this.process = process
@@ -36,7 +37,7 @@ class ProcessTest {
         }
 
         try {
-            verifications.call(outputs)
+            verifications.call(new Expando(required: requiredModules, output: outputs))
         } catch (Throwable e) {
             return TestResults.verificationFailed(e)
         }
@@ -125,6 +126,7 @@ class ProcessTest {
     private void bindRequire(Binding binding) {
         binding.require = { String[] modulesNames ->
             modulesNames.each { String moduleName ->
+                requiredModules << moduleName
                 Bindable module = diploexecTest.getModule(mockedModules[moduleName]?:moduleName)
                 module.bindSelf binding
             }
