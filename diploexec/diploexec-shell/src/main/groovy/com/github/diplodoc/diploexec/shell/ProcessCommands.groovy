@@ -78,9 +78,14 @@ class ProcessCommands implements CommandMarker {
     String update(@CliOption(key = 'name', mandatory = true, help = 'process name') final String name,
                   @CliOption(key = 'definition', mandatory = true, help = 'path to definition file') final String pathToDefinitionFile) {
         Process process = processDataClient.findOneByName(name)
-        process.definition = resourceLoader.getResource("file:${pathToDefinitionFile}").file.text
-        process.lastUpdate = LocalDateTime.now()
-        process = processDataClient.save(process)
+
+        String definition = resourceLoader.getResource("file:${pathToDefinitionFile}").file.text
+        if (process.definition != definition) {
+            process.definition = definition
+            process.lastUpdate = LocalDateTime.now()
+            process = processDataClient.save(process)
+        }
+
         toDescription(process)
     }
 
