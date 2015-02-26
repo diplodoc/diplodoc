@@ -17,7 +17,7 @@ class ProcessRunDataClientSpec extends Specification {
     ProcessRunRepository processRunRepository = Mock(ProcessRunRepository)
     ProcessRunDataClient processRunDataClient = new ProcessRunDataClient(processRunRepository: processRunRepository)
 
-    def 'Iterable<ProcessRun> findAllWithLimit(int limit)'() {
+    def 'List<ProcessRun> all(int limit)'() {
         when:
             def actual = processRunDataClient.all(5)
 

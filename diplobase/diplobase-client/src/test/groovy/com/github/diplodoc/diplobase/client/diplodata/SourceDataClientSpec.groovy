@@ -13,7 +13,7 @@ class SourceDataClientSpec extends Specification {
     SourceRepository sourceRepository = Mock(SourceRepository)
     SourceDataClient sourceDataClient = new SourceDataClient(sourceRepository: sourceRepository)
 
-    def 'Iterable<Source> findAll()'() {
+    def 'Collection<Source> all()'() {
         when:
             def actual = sourceDataClient.all()
 
@@ -29,7 +29,7 @@ class SourceDataClientSpec extends Specification {
             actual[1] == new Source(id: 2, name: 'name-2', newPostsFinderModule: 'module-2', rssUrl: 'rss-url-2')
     }
 
-    def 'Source findOneByName(String name)'() {
+    def 'Source byName(String name)'() {
         when:
             Source actual = sourceDataClient.byName('name')
 
