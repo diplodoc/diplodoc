@@ -168,8 +168,8 @@ class ProcessTest {
     }
 
     private void bindListen(Binding binding) {
-        binding.listen = { String processName ->
-            listensTo << processName
+        binding.listen = { Map params ->
+            listensTo << params.to
         }
     }
 
