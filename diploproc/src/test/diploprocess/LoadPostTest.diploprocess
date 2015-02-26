@@ -8,6 +8,8 @@ mock module: 'post-loader', by: 'test.post-loader'
 params post: new Post(url: 'url', source: new Source())
 
 verify {
+    assert it.listensTo.size == 0
+
     assert it.required.size == 1
     assert it.required[0] == 'post-loader'
 

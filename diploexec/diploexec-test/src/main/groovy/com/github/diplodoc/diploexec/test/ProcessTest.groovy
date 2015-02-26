@@ -18,6 +18,7 @@ class ProcessTest {
 
     List<Map> outputs = []
     List<String> requiredModules = []
+    List<String> listensTo = []
 
     ProcessTest(Process process, DiploexecTest diploexecTest) {
         this.process = process
@@ -38,7 +39,7 @@ class ProcessTest {
         }
 
         try {
-            verifications.call(new Expando(required: requiredModules, output: outputs))
+            verifications.call(new Expando(required: requiredModules, output: outputs, listensTo: listensTo))
         } catch (Throwable e) {
             return TestResults.verificationFailed(e)
         }
@@ -167,7 +168,9 @@ class ProcessTest {
     }
 
     private void bindListen(Binding binding) {
-        binding.listen = { /* do nothing */ }
+        binding.listen = { Map params ->
+            listensTo << params.to
+        }
     }
 
     private void bindWaiting(Binding binding) {
