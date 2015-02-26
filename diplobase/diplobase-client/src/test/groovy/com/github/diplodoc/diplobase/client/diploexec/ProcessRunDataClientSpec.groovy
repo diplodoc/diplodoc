@@ -19,7 +19,7 @@ class ProcessRunDataClientSpec extends Specification {
 
     def 'Iterable<ProcessRun> findAllWithLimit(int limit)'() {
         when:
-            def actual = processRunDataClient.findAllWithLimit(5)
+            def actual = processRunDataClient.all(5)
 
         then:
             1 * processRunRepository.findAll(new PageRequest(0, 5, Sort.Direction.DESC, 'startTime')) >> new PageImpl<ProcessRun>([

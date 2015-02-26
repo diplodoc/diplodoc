@@ -20,7 +20,7 @@ class StatusCommands implements CommandMarker {
 
     @CliCommand(value = 'status', help = 'current diploexec runtime status')
     String status(@CliOption(key = 'count', mandatory = false, help = 'number of last runs to show', unspecifiedDefaultValue = '10') final Integer count) {
-        processRunDataClient.findAllWithLimit(count).collect(StatusCommands.&toDescription).join('\n')
+        processRunDataClient.all(count).collect(StatusCommands.&toDescription).join('\n')
     }
 
     private static toDescription(ProcessRun processRun) {
