@@ -1,0 +1,22 @@
+import com.github.diplodoc.diplobase.domain.mongodb.Post
+import com.github.diplodoc.diplobase.domain.mongodb.Source
+
+test 'extract-text'
+
+mock module: 'text-extractor', by: 'test.text-extractor'
+
+params post: new Post(url: 'url', html: 'html', source: new Source())
+
+verify {
+    assert it.listensTo.size == 1
+    assert it.listensTo[0] == 'load-post'
+
+    assert it.required.size == 1
+    assert it.required[0] == 'text-extractor'
+
+    assert it.output.size == 1
+    assert it.output[0].destination == null
+    assert it.output[0].post.url == 'url'
+    assert it.output[0].post.html == 'html'
+    assert it.output[0].post.meaningText == 'meaning text'
+}
