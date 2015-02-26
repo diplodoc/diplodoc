@@ -22,6 +22,10 @@ class ProcessDataClient {
         processRepository.findOneByName(name)
     }
 
+    List<Process> findByNameLike(String pattern) {
+        processRepository.findByNameLike(pattern)
+    }
+
     void delete(Process process) {
         processRepository.delete(process)
     }

@@ -26,8 +26,15 @@ class TestCommands implements CommandMarker {
     String run(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
         Process process = processDataClient.findOneByName("test-${name}")
 
-        TestResults testResults = diploexecTest.test(process)
+        diploexecTest.test(process).toString()
+    }
 
-        return testResults.toString()
+    @CliCommand(value = 'process test-all', help = 'run tests for all processes')
+    String runAll() {
+        List<Process> testProcesses = processDataClient.findByNameLike('test%')
+
+        testProcesses.collect { Process process ->
+            process.name.padRight(50) + diploexecTest.test(process)
+        }.join('\n')
     }
 }

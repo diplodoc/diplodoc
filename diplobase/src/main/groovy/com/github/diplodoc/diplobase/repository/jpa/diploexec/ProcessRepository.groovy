@@ -11,4 +11,6 @@ interface ProcessRepository extends CrudRepository<Process, Long> {
     Process findOneByName(String name)
 
     Collection<Process> findByActiveIsTrue()
+
+    Collection<Process> findByNameLike(String pattern)
 }
