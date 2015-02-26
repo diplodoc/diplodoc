@@ -16,9 +16,9 @@ class PostDataClientSpec extends Specification {
     PostRepository postRepository = Mock(PostRepository)
     PostDataClient postDataClient = new PostDataClient(postRepository: postRepository)
 
-    def 'Iterable<Post> findAllWithLimit(int limit)'() {
+    def 'List<Post> all(int limit)'() {
         when:
-            def actual = postDataClient.findAllWithLimit(28)
+            def actual = postDataClient.all(28)
 
         then:
             1 * postRepository.findAll(new PageRequest(0, 28, Sort.Direction.DESC, 'id')) >> new PageImpl<Post>([
@@ -32,9 +32,9 @@ class PostDataClientSpec extends Specification {
             actual[1] == new Post(id: 2, loadTime: 'load-time-2', source: new Source(name: 'source-name-2'), url: 'url-2')
     }
 
-    def 'Post findOneByUrl(String url)'() {
+    def 'Post byUrl(String url)'() {
         when:
-            Post actual = postDataClient.findOneByUrl('url')
+            Post actual = postDataClient.byUrl('url')
 
         then:
             1 * postRepository.findOneByUrl('url') >> new Post(id: 1, loadTime: 'load-time', source: new Source(name: 'source-name'), url: 'url')

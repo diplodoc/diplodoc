@@ -12,9 +12,9 @@ class ProcessDataClientSpec extends Specification {
     ProcessRepository processRepository = Mock(ProcessRepository)
     ProcessDataClient processDataClient = new ProcessDataClient(processRepository: processRepository)
 
-    def 'Iterable<Process> findAll()'() {
+    def 'Collection<Process> all()'() {
         when:
-            def actual = processDataClient.findAll()
+            def actual = processDataClient.all()
 
         then:
             1 * processRepository.findAll() >> [
@@ -28,23 +28,15 @@ class ProcessDataClientSpec extends Specification {
             actual[1] == new Process(id: 2, name: 'process-2', lastUpdate: 'time-2')
     }
 
-    def 'Process findOneByName(String name)'() {
+    def 'Process byName(String name)'() {
         when:
-            Process actual = processDataClient.findOneByName('process')
+            Process actual = processDataClient.byName('process')
 
         then:
             1 * processRepository.findOneByName('process') >> new Process(id: 1, name: 'process', lastUpdate: 'time')
 
         expect:
             actual == new Process(id: 1, name: 'process', lastUpdate: 'time')
-    }
-
-    def 'Process delete(Process process)'() {
-        when:
-            processDataClient.delete(new Process(id: 1, name: 'process', lastUpdate: 'time'))
-
-        then:
-            1 * processRepository.delete(new Process(id: 1, name: 'process', lastUpdate: 'time'))
     }
 
     def 'Process save(Process process)'() {

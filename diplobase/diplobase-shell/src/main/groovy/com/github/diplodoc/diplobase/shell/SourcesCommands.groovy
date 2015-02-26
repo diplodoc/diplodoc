@@ -20,7 +20,7 @@ class SourcesCommands implements CommandMarker {
 
     @CliCommand(value = 'sources list', help = 'list all sources')
     String list() {
-        sourceDataClient.findAll().collect(SourcesCommands.&toSingleLineDescription).join('\n')
+        sourceDataClient.all().collect(SourcesCommands.&toSingleLineDescription).join('\n')
     }
 
     @CliCommand(value = 'sources add', help = 'add new source')
@@ -39,7 +39,7 @@ class SourcesCommands implements CommandMarker {
     String update(@CliOption(key = '', mandatory = true, help = 'source name') final String name,
                   @CliOption(key = 'new-post-finder-module', mandatory = false, help = 'new posts finder module') final String newPostsFinderModule,
                   @CliOption(key = 'rss-url', mandatory = false, help = 'rss url') final String rssUrl) {
-        Source source = sourceDataClient.findOneByName(name)
+        Source source = sourceDataClient.byName(name)
         source.newPostsFinderModule = newPostsFinderModule?:source.newPostsFinderModule
         source.rssUrl = rssUrl?:source.rssUrl
 
@@ -50,7 +50,7 @@ class SourcesCommands implements CommandMarker {
     @CliCommand(value = 'sources get', help = 'get source parameters')
     String get(@CliOption(key = '', mandatory = true, help = 'source name') final String name,
                @CliOption(key = 'representation', mandatory = false, help = 'convert to json', unspecifiedDefaultValue = 'text') final String representation) {
-        Source source = sourceDataClient.findOneByName(name)
+        Source source = sourceDataClient.byName(name)
 
         switch (representation) {
             case 'text':

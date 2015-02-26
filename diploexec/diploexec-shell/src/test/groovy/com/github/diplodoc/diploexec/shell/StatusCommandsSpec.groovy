@@ -16,7 +16,7 @@ class StatusCommandsSpec extends Specification {
 
     def '`status` command'() {
         when:
-            processRunDataClient.findAllWithLimit(5) >> [
+            processRunDataClient.all(5) >> [
                 new ProcessRun(id: 1, process: new Process(name: 'process-1'), exitStatus: 'status', startTime: 'starttime-1', endTime: 'endtime-1', parameters: [ new ProcessRunParameter(key: 'key', type: 'type', value: 'value') ]),
                 new ProcessRun(id: 2, process: new Process(name: 'process-2'), exitStatus: 'status', startTime: 'starttime-2', endTime: 'endtime-2', parameters: [ ])
             ]
