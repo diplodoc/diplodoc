@@ -15,7 +15,7 @@ class PostsCommandsSpec extends Specification {
 
     def '`posts list`'() {
         when:
-            postDataClient.findAllWithLimit(5) >> [
+            postDataClient.all(5) >> [
                 new Post(id: 1, loadTime: 'load-time-1', source: new Source(name: 'source-name-1'), url: 'url-1'),
                 new Post(id: 2, loadTime: 'load-time-2', source: new Source(name: 'source-name-2'), url: 'url-2')
             ]
@@ -30,7 +30,7 @@ class PostsCommandsSpec extends Specification {
 
     def '`posts get` command'() {
         when:
-            postDataClient.findOneByUrl('url') >> new Post(
+            postDataClient.byUrl('url') >> new Post(
                                                         id: 1,
                                                         loadTime: 'load-time',
                                                         source: new Source(name: 'source-name'),

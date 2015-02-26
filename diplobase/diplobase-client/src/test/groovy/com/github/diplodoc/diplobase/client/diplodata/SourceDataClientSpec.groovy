@@ -15,7 +15,7 @@ class SourceDataClientSpec extends Specification {
 
     def 'Iterable<Source> findAll()'() {
         when:
-            def actual = sourceDataClient.findAll()
+            def actual = sourceDataClient.all()
 
         then:
             1 * sourceRepository.findAll() >> [
@@ -31,7 +31,7 @@ class SourceDataClientSpec extends Specification {
 
     def 'Source findOneByName(String name)'() {
         when:
-            Source actual = sourceDataClient.findOneByName('name')
+            Source actual = sourceDataClient.byName('name')
 
         then:
             1 * sourceRepository.findOneByName('name') >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module', rssUrl: 'rss-url')

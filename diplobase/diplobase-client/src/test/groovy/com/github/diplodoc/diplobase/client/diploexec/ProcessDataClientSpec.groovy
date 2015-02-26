@@ -14,7 +14,7 @@ class ProcessDataClientSpec extends Specification {
 
     def 'Iterable<Process> findAll()'() {
         when:
-            def actual = processDataClient.findAll()
+            def actual = processDataClient.all()
 
         then:
             1 * processRepository.findAll() >> [
@@ -30,7 +30,7 @@ class ProcessDataClientSpec extends Specification {
 
     def 'Process findOneByName(String name)'() {
         when:
-            Process actual = processDataClient.findOneByName('process')
+            Process actual = processDataClient.byName('process')
 
         then:
             1 * processRepository.findOneByName('process') >> new Process(id: 1, name: 'process', lastUpdate: 'time')

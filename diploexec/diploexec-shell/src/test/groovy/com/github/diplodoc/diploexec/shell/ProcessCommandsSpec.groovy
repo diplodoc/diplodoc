@@ -17,7 +17,7 @@ class ProcessCommandsSpec extends Specification {
 
     def 'process list'() {
         when:
-            processDataClient.findAll() >> [
+            processDataClient.all() >> [
                 new Process(id: 1, name: 'process-1', lastUpdate: 'time-1', active: true),
                 new Process(id: 2, name: 'process-2', lastUpdate: 'time-2', active: false)
             ]
@@ -40,7 +40,7 @@ class ProcessCommandsSpec extends Specification {
         when:
             processCommands.diploexecClient = diploexecClient
             processCommands.resourceLoader = new FileSystemResourceLoader()
-            processDataClient.findOneByName('process') >> new Process(name: 'process')
+            processDataClient.byName('process') >> new Process(name: 'process')
 
             String actual = processCommands.run('process', tempFile.absolutePath)
 
@@ -56,7 +56,7 @@ class ProcessCommandsSpec extends Specification {
 
     def '`process get` for active process'() {
         when:
-            processDataClient.findOneByName('process') >> new Process(id: 1, name: 'process', definition: 'definition', lastUpdate: 'time', active: true)
+            processDataClient.byName('process') >> new Process(id: 1, name: 'process', definition: 'definition', lastUpdate: 'time', active: true)
 
         then:
             String actual = processCommands.get('process')
@@ -72,7 +72,7 @@ class ProcessCommandsSpec extends Specification {
 
     def '`process get` for passive process'() {
         when:
-            processDataClient.findOneByName('process') >> new Process(id: 1, name: 'process', definition: 'definition', lastUpdate: 'time', active: false)
+            processDataClient.byName('process') >> new Process(id: 1, name: 'process', definition: 'definition', lastUpdate: 'time', active: false)
 
         then:
             String actual = processCommands.get('process')
@@ -88,7 +88,7 @@ class ProcessCommandsSpec extends Specification {
 
     def 'process disable'() {
         when:
-            processDataClient.findOneByName('process') >> new Process(name: 'process', active: true)
+            processDataClient.byName('process') >> new Process(name: 'process', active: true)
 
             String actual = processCommands.disable('process')
 
@@ -101,7 +101,7 @@ class ProcessCommandsSpec extends Specification {
 
     def 'process enable'() {
         when:
-            processDataClient.findOneByName('process') >> new Process(name: 'process', active: false)
+            processDataClient.byName('process') >> new Process(name: 'process', active: false)
 
             String actual = processCommands.enable('process')
 
@@ -119,7 +119,7 @@ class ProcessCommandsSpec extends Specification {
 
         when:
             processCommands.resourceLoader = new FileSystemResourceLoader()
-            processDataClient.findOneByName('process') >> new Process(id: 1, name: 'process')
+            processDataClient.byName('process') >> new Process(id: 1, name: 'process')
 
             String actual = processCommands.update('process', tempFile.absolutePath)
 
