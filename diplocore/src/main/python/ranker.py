@@ -12,3 +12,4 @@ def rank(article_dict_set, user_dict):
 
 def test():
     print rank([('a1', ['random', 'something']), ('a2', ['it', 'random']), ('a3', ['it', 'programming'])], ['it', 'programming'])
+test()

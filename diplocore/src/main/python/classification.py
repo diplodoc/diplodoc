@@ -18,3 +18,4 @@ def test():
     text_clf = text_clf.fit(twenty_train.data, twenty_train.target)
     predicted = text_clf.predict(twenty_test.data)
     print np.mean(predicted == twenty_test.target)
+test()
