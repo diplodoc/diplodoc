@@ -16,4 +16,9 @@ dependencies {
 
     compile dependency.jsoup
     compile dependency.rome
+
+    compile dependency.spring.web
+
+    compile dependency.jackson.core
+    compile dependency.jackson.databind
 }
