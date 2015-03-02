@@ -23,8 +23,7 @@ class PostTypeClassifier implements Bindable {
     @Autowired
     PostRepository postRepository
 
-    @Autowired
-    RestTemplate restTemplate
+    RestTemplate restTemplate = new RestTemplate()
 
     @Override
     void bindSelf(Binding binding) {
