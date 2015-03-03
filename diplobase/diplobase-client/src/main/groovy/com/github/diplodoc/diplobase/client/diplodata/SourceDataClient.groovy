@@ -14,11 +14,11 @@ class SourceDataClient {
     @Autowired
     SourceRepository sourceRepository
 
-    Collection<Source> findAll() {
+    Collection<Source> all() {
         sourceRepository.findAll()
     }
 
-    Source findOneByName(String name) {
+    Source byName(String name) {
         sourceRepository.findOneByName(name)
     }
 

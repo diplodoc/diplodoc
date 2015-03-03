@@ -5,6 +5,7 @@ import com.github.diplodoc.diplobase.repository.mongodb.PostRepository
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import org.springframework.web.client.RestTemplate
 
 /**
  * @author yaroslav.yermilov
@@ -16,6 +17,8 @@ class PostTypeClassifier implements Bindable {
     @Autowired
     PostRepository postRepository
 
+    RestTemplate restTemplate = new RestTemplate()
+
     @Override
     void bindSelf(Binding binding) {
         binding.classify = { Post post -> classify(post) }
@@ -24,16 +27,10 @@ class PostTypeClassifier implements Bindable {
     Post classify(Post post) {
         log.info('going to classify post from {}...', post.url)
 
-        post = postRepository.findOne(post.id)
+        def response = restTemplate.getForObject('http://localhost:5000/classify/{id}', String, [id: post.id])
 
-        if (post.meaningText.length() > 6000) {
-            post.type = 'ARTICLE'
-        } else {
-            post.type = 'NEWS'
-        }
+        log.info('response: {}' , response)
 
-        post = postRepository.save post
-        log.debug('post {} classified as {}', post.url, post.type)
-        return post
+        postRepository.findOne(post.id)
     }
 }

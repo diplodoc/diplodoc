@@ -14,7 +14,7 @@ class SourcesCommandsSpec extends Specification {
 
     def 'sources list'() {
         when:
-            sourceDataClient.findAll() >> [
+            sourceDataClient.all() >> [
                 new Source(id: 1, name: 'name-1', newPostsFinderModule: 'module-1', rssUrl: 'rss-url-1'),
                 new Source(id: 2, name: 'name-2', newPostsFinderModule: 'module-2', rssUrl: 'rss-url-2')
             ]
@@ -29,7 +29,7 @@ class SourcesCommandsSpec extends Specification {
 
     def 'sources get --representation text'() {
         when:
-            sourceDataClient.findOneByName('name') >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module', rssUrl: 'rss-url')
+            sourceDataClient.byName('name') >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module', rssUrl: 'rss-url')
 
         then:
             String actual = sourcesCommands.get('name', 'text')
@@ -43,7 +43,7 @@ class SourcesCommandsSpec extends Specification {
 
     def 'sources get --representation json'() {
         when:
-            sourceDataClient.findOneByName('name') >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module', rssUrl: 'rss-url')
+            sourceDataClient.byName('name') >> new Source(id: 1, name: 'name', newPostsFinderModule: 'module', rssUrl: 'rss-url')
 
         then:
             String actual = sourcesCommands.get('name', 'json')
@@ -68,7 +68,7 @@ class SourcesCommandsSpec extends Specification {
 
     def 'sources update name --new-post-finder-module module'() {
         when:
-            sourceDataClient.findOneByName('name') >> new Source(id: 1, name: 'name')
+            sourceDataClient.byName('name') >> new Source(id: 1, name: 'name')
 
             String actual = sourcesCommands.update('name', 'module', null)
 
@@ -84,7 +84,7 @@ class SourcesCommandsSpec extends Specification {
 
     def 'sources update name --rss-url rss-url'() {
         when:
-            sourceDataClient.findOneByName('name') >> new Source(id: 1, name: 'name')
+            sourceDataClient.byName('name') >> new Source(id: 1, name: 'name')
 
             String actual = sourcesCommands.update('name', null, 'rss-url')
 
@@ -100,7 +100,7 @@ class SourcesCommandsSpec extends Specification {
 
     def 'sources update name --new-post-finder-module module --rss-url rss-url'() {
         when:
-            sourceDataClient.findOneByName('name') >> new Source(id: 1, name: 'name')
+            sourceDataClient.byName('name') >> new Source(id: 1, name: 'name')
 
             String actual = sourcesCommands.update('name', 'module', 'rss-url')
 

@@ -31,13 +31,13 @@ class ProcessCommands implements CommandMarker {
 
     @CliCommand(value = 'process list', help = 'list all processes')
     String list() {
-        processDataClient.findAll().collect(ProcessCommands.&toSingleLineDescription).join('\n')
+        processDataClient.all().collect(ProcessCommands.&toSingleLineDescription).join('\n')
     }
 
     @CliCommand(value = 'process run', help = 'run process')
     String run(@CliOption(key = '', mandatory = true, help = 'process name') final String name,
                @CliOption(key = 'parameters', mandatory = false, help = 'path to paramters file') final String pathToParametersFile) {
-        Process process = processDataClient.findOneByName(name)
+        Process process = processDataClient.byName(name)
 
         Map<String, Object> parameters = [:]
         if (pathToParametersFile) {
@@ -55,12 +55,12 @@ class ProcessCommands implements CommandMarker {
 
     @CliCommand(value = 'process get', help = 'get full description of process')
     String get(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
-        toDescription(processDataClient.findOneByName(name))
+        toDescription(processDataClient.byName(name))
     }
 
     @CliCommand(value = 'process disable', help = 'disable process')
     String disable(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
-        Process process = processDataClient.findOneByName(name)
+        Process process = processDataClient.byName(name)
         process.active = false
         processDataClient.save(process)
         'Disabled'
@@ -68,7 +68,7 @@ class ProcessCommands implements CommandMarker {
 
     @CliCommand(value = 'process enable', help = 'enable process')
     String enable(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
-        Process process = processDataClient.findOneByName(name)
+        Process process = processDataClient.byName(name)
         process.active = true
         processDataClient.save(process)
         'Enabled'
@@ -77,10 +77,15 @@ class ProcessCommands implements CommandMarker {
     @CliCommand(value = 'process update', help = 'update process description')
     String update(@CliOption(key = 'name', mandatory = true, help = 'process name') final String name,
                   @CliOption(key = 'definition', mandatory = true, help = 'path to definition file') final String pathToDefinitionFile) {
-        Process process = processDataClient.findOneByName(name)
-        process.definition = resourceLoader.getResource("file:${pathToDefinitionFile}").file.text
-        process.lastUpdate = LocalDateTime.now()
-        process = processDataClient.save(process)
+        Process process = processDataClient.byName(name)
+
+        String definition = resourceLoader.getResource("file:${pathToDefinitionFile}").file.text
+        if (process.definition != definition) {
+            process.definition = definition
+            process.lastUpdate = LocalDateTime.now()
+            process = processDataClient.save(process)
+        }
+
         toDescription(process)
     }
 

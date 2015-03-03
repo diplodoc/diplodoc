@@ -1,0 +1,24 @@
+test 'find-new-posts-from-all-sources'
+
+mock module: 'data.sources', by: 'test.data.sources'
+
+verify {
+    assert it.listensTo.size == 0
+
+    assert it.required.size == 1
+    assert it.required[0] == 'data.sources'
+
+    assert it.output.size == 2
+
+    assert it.output[0].destination == 'find-new-posts-from-source'
+    assert it.output[0].source.id == '0'
+    assert it.output[0].source.name == 'name-0'
+    assert it.output[0].source.newPostsFinderModule == 'newPostsFinderModule-0'
+    assert it.output[0].source.rssUrl == 'rssUrl-0'
+
+    assert it.output[1].destination == 'find-new-posts-from-source'
+    assert it.output[1].source.id == '1'
+    assert it.output[1].source.name == 'name-1'
+    assert it.output[1].source.newPostsFinderModule == 'newPostsFinderModule-1'
+    assert it.output[1].source.rssUrl == 'rssUrl-1'
+}

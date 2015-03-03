@@ -16,11 +16,11 @@ class PostDataClient {
     @Autowired
     PostRepository postRepository
 
-    List<Post> findAllWithLimit(int limit) {
+    List<Post> all(int limit) {
         postRepository.findAll(new PageRequest(0, limit, Sort.Direction.DESC, 'loadTime'))
     }
 
-    Post findOneByUrl(String url) {
+    Post byUrl(String url) {
         postRepository.findOneByUrl(url)
     }
 }

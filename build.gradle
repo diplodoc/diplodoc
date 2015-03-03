@@ -2,7 +2,7 @@ apply from: 'repository.gradle'
 
 allprojects {
 	group = 'com.github.diplodoc'
-	version = '0.0.3'
+	version = '0.0.4'
 }
 
 buildscript {
@@ -73,6 +73,13 @@ project(':diploexec') {
 	}
 }
 
+project(':diploexec:diploexec-test') {
+    dependencies {
+        compile project(':diplobase:diplobase-client')
+        compile project(':diplocore')
+    }
+}
+
 project(':diploexec:diploexec-rest') {
 	dependencies {
 		compile project(':diploexec')
@@ -83,6 +90,7 @@ project(':diploexec:diploexec-shell') {
 	dependencies {
         compile project(':diplobase:diplobase-client')
 		compile project(':diploexec:diploexec-client')
+        compile project(':diploexec:diploexec-test')
 	}
 }
 

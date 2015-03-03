@@ -16,7 +16,7 @@ class ProcessRunDataClient {
     @Autowired
     ProcessRunRepository processRunRepository
 
-    List<ProcessRun> findAllWithLimit(int limit) {
+    List<ProcessRun> all(int limit) {
         processRunRepository.findAll(new PageRequest(0, limit, Sort.Direction.DESC, 'startTime'))
     }
 }

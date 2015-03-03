@@ -14,16 +14,16 @@ class ProcessDataClient {
     @Autowired
     ProcessRepository processRepository
 
-    Collection<Process> findAll() {
+    Collection<Process> all() {
         processRepository.findAll()
     }
 
-    Process findOneByName(String name) {
+    Process byName(String name) {
         processRepository.findOneByName(name)
     }
 
-    void delete(Process process) {
-        processRepository.delete(process)
+    Collection<Process> tests() {
+        processRepository.findByNameLike('test%')
     }
 
     Process save(Process process) {
