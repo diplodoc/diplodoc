@@ -1,0 +1,5 @@
+description 'Trains classifier'
+
+require 'classifier-trainer'
+
+trainClassifier()
