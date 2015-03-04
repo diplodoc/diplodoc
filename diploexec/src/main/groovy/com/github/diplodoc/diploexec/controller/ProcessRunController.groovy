@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.ResponseStatus
  * @author yaroslav.yermilov
  */
 @Controller
-@RequestMapping('/')
 @Slf4j
 class ProcessRunController {
 
@@ -30,23 +29,11 @@ class ProcessRunController {
 
     @RequestMapping(value='/process/run', method=RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody ResourceSupport run(@RequestBody ProcessRun processRun) {
+    void run(@RequestBody ProcessRun processRun) {
         log.info('receive process run call {}', processRun)
 
         processRun.parameters.each { ProcessRunParameter parameter -> parameter.processRun = processRun }
 
         diploexec.run(processRun)
-
-        ResourceSupport resource = new ResourceSupport()
-        resource.add(ControllerLinkBuilder.linkTo(ProcessRunController).slash('process').slash('run').withSelfRel())
-        return resource
-    }
-
-    @RequestMapping(value='', method=RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody ResourceSupport links() {
-        ResourceSupport resource = new ResourceSupport()
-        resource.add(ControllerLinkBuilder.linkTo(ProcessRunController).slash('process').slash('run').withRel('run'))
-        return resource
     }
 }

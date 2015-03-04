@@ -9,6 +9,5 @@ import org.springframework.context.annotation.Import
  * @author yaroslav.yermilov
  */
 @Configuration
-@Import(DiplobaseConfiguration)
 @ComponentScan('com.github.diplodoc.diplocore')
 class DiplocoreConfiguration { }
