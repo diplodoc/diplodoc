@@ -1,11 +1,5 @@
 listen to: 'extract-text'
 
-input 'post'
+input 'postId'
 
-description "Classify type of post '${post.url}'"
-
-require 'post-type-classifier'
-
-classify post
-
-output post: post
+get from: "http:/localhost:5000/post-type-classifier/post/${postId}/classify"

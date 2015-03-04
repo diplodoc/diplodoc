@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.ResponseStatus
 
 import java.time.LocalDateTime
@@ -36,7 +37,7 @@ class RssNewPostsFinder {
 
     @RequestMapping(value = '/source/{id}/new-posts', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    void newPosts(@PathVariable('id') String sourceId) {
+    @ResponseBody List<String> newPosts(@PathVariable('id') String sourceId) {
         Source source = sourceRepository.findOne sourceId
 
         log.info('looking for new posts from {}...', source.name)
@@ -54,5 +55,7 @@ class RssNewPostsFinder {
                                 }
 
         postRepository.save posts
+
+        return posts.collect { posts.id }
     }
 }

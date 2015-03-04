@@ -1,0 +1,10 @@
+def sources = get from: 'http:/localhost:8080/diplodata/sources'
+
+sources.each { source ->
+    def newPostsIds = post to: "http:/localhost:8080/rss-new-posts-finder/source/${source.id}/new-posts"
+
+    newPostsIds.each { postId ->
+        post to: "http:/localhost:8080/post-loader/post/${postId}/load"
+        output postId: postId
+    }
+}
