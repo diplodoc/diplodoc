@@ -17,6 +17,7 @@ buildscript {
 
 apply plugin: 'org.akhikhl.gretty'
 farm {
+    webapp ':diplocore'
 	webapp ':diploexec:diploexec-rest'
 }
 
