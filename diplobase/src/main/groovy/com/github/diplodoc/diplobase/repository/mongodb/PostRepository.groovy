@@ -8,5 +8,5 @@ import org.springframework.data.mongodb.repository.MongoRepository
  */
 interface PostRepository extends MongoRepository<Post, String> {
 
-    String findOneByUrl(String url)
+    Post findOneByUrl(String url)
 }
