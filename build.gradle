@@ -5,35 +5,9 @@ allprojects {
 	version = '0.0.5-SNAPSHOT'
 }
 
-buildscript {
-	repositories {
-		jcenter()
-	}
-
-	dependencies {
-		classpath 'org.akhikhl.gretty:gretty:+'
-	}
-}
-
-apply plugin: 'org.akhikhl.gretty'
-farm {
-    webapp ':diplocore'
-	webapp ':diploexec:diploexec-rest'
-}
-
 subprojects {
     apply plugin: 'java'
 	apply plugin: 'groovy'
-
-	buildscript {
-		repositories {
-			jcenter()
-		}
-
-		dependencies {
-			classpath 'org.akhikhl.gretty:gretty:+'
-		}
-	}
 
 	repositories {
 	    jcenter()

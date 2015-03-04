@@ -9,9 +9,3 @@ dependencies {
 }
 
 apply plugin: 'war'
-apply plugin: 'org.akhikhl.gretty'
-
-gretty {
-    port = 8080
-    contextPath = '/diploexec'
-}
