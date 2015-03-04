@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
  * @author yaroslav.yermilov
  */
 @Controller
-@RequestMapping('/data')
+@RequestMapping('/diplodata')
 class Sources {
 
     @Autowired

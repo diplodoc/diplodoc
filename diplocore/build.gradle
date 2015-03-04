@@ -12,8 +12,6 @@ sourceSets {
 }
 
 dependencies {
-    compile dependency.jython
-
     compile dependency.servlet
     compile dependency.spring.web
     compile dependency.spring.webmvc
