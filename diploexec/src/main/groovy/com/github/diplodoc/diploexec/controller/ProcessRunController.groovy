@@ -1,4 +1,4 @@
-package com.github.diplodoc.diploexec.rest.controller
+package com.github.diplodoc.diploexec.controller
 
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRunParameter
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
  * @author yaroslav.yermilov
  */
 @Controller
-@RequestMapping('/api/v1')
+@RequestMapping('/')
 @Slf4j
 class ProcessRunController {
 

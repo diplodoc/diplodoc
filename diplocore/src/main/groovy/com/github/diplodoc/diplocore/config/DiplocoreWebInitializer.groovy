@@ -20,9 +20,9 @@ class DiplocoreWebInitializer implements WebApplicationInitializer {
         servletContext.addListener(new ContextLoaderListener(rootContext))
 
         AnnotationConfigWebApplicationContext webContext = new AnnotationConfigWebApplicationContext()
-        webContext.register(WebConfiguration)
+        webContext.register(DiplocoreWebConfiguration)
 
-        ServletRegistration.Dynamic dispatcher = servletContext.addServlet('dispatcher', new DispatcherServlet(webContext))
+        ServletRegistration.Dynamic dispatcher = servletContext.addServlet('diplocore-dispatcher', new DispatcherServlet(webContext))
         dispatcher.setLoadOnStartup(1)
         dispatcher.addMapping('/*')
     }

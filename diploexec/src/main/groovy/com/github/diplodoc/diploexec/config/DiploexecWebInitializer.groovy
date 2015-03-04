@@ -1,6 +1,5 @@
-package com.github.diplodoc.diploexec.rest.config
+package com.github.diplodoc.diploexec.config
 
-import com.github.diplodoc.diploexec.config.DiploexecConfiguration
 import org.springframework.web.WebApplicationInitializer
 import org.springframework.web.context.ContextLoaderListener
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext
@@ -21,9 +20,9 @@ class DiploexecWebInitializer implements WebApplicationInitializer {
         servletContext.addListener(new ContextLoaderListener(rootContext))
 
         AnnotationConfigWebApplicationContext webContext = new AnnotationConfigWebApplicationContext()
-        webContext.register(WebConfiguration)
+        webContext.register(DiploexecWebConfiguration)
 
-        ServletRegistration.Dynamic dispatcher = servletContext.addServlet('dispatcher', new DispatcherServlet(webContext))
+        ServletRegistration.Dynamic dispatcher = servletContext.addServlet('diploexec-dispatcher', new DispatcherServlet(webContext))
         dispatcher.setLoadOnStartup(1)
         dispatcher.addMapping('/*')
     }

@@ -2,9 +2,9 @@ package com.github.diplodoc.diploexec
 
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRunParameter
-import com.github.diplodoc.diplocore.modules.Bindable
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
+import org.springframework.web.client.RestTemplate
 
 /**
  * @author yaroslav.yermilov
@@ -13,6 +13,7 @@ import groovy.util.logging.Slf4j
 class ProcessCall implements Runnable {
 
     JsonSlurper jsonSlurper = new JsonSlurper()
+    RestTemplate restTemplate = new RestTemplate()
 
     Diploexec diploexec
     ProcessRun processRun
@@ -49,8 +50,10 @@ class ProcessCall implements Runnable {
 
         bindInputParameters binding, parameters
         bindInput binding
-        bindDescription binding
-        bindRequire binding
+
+        bindGet binding
+        bindPost binding
+
         bindSend binding
         bindOutput binding
         bindNotify binding
@@ -67,19 +70,31 @@ class ProcessCall implements Runnable {
     }
 
     private void bindInput(Binding binding) {
-        binding.input = { String[] args -> /* do nothing */ }
-    }
-
-    private void bindDescription(Binding binding) {
-        binding.description = { String description -> /* do nothing */ }
-    }
-
-    private void bindRequire(Binding binding) {
-        binding.require = { String[] modulesNames ->
-            modulesNames.each { String moduleName ->
-                Bindable module = diploexec.getModule(moduleName)
-                module.bindSelf binding
+        binding.input = { String[] args ->
+            args.each { arg ->
+                if (binding."${arg}" == null) {
+                    throw new RuntimeException("Input parameter ${arg} is missing")
+                }
             }
+        }
+    }
+
+    private void bindGet(Binding binding) {
+        binding.get = { Map params ->
+            String url = params.from
+            Class responseType = params.expect ?: String
+
+            restTemplate.getForObject(url, responseType)
+        }
+    }
+
+    private void bindPost(Binding binding) {
+        binding.post = { Map params ->
+            String url = params.from
+            Object request = params.request
+            Class responseType = params.expect ?: String
+
+            restTemplate.postForObject(url, request, responseType)
         }
     }
 

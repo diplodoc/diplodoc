@@ -37,14 +37,9 @@ class DiploexecConfiguration {
     Diploexec diploexec(ThreadPoolTaskExecutor threadPool, ProcessRepository processRepository, ProcessRunRepository processRunRepository) {
         Diploexec diploexec = new Diploexec()
         diploexec.threadPool = threadPool
-        diploexec.modulesContext = modulesContext()
         diploexec.processRepository = processRepository
         diploexec.processRunRepository = processRunRepository
 
         return diploexec
-    }
-
-    ApplicationContext modulesContext() {
-        new AnnotationConfigApplicationContext(DiplocoreConfiguration)
     }
 }

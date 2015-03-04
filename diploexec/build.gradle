@@ -1,8 +1,16 @@
 dependencies {
-    compile dependency.jython
+    compile dependency.servlet
+    compile dependency.spring.web
+    compile dependency.spring.webmvc
+    compile dependency.spring.hateoas
+
+    compile dependency.jackson.core
+    compile dependency.jackson.databind
 
     compile dependency.postgresql
     compile dependency.commons.dbcp
 
     compile dependency.jsoup
 }
+
+apply plugin: 'war'

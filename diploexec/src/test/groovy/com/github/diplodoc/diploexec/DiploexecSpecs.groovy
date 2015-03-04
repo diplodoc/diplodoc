@@ -3,7 +3,6 @@ package com.github.diplodoc.diploexec
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRunRepository
-import com.github.diplodoc.diplocore.modules.Bindable
 import org.springframework.context.ApplicationContext
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import org.springframework.util.concurrent.ListenableFuture
@@ -16,7 +15,6 @@ import java.time.LocalDateTime
  */
 class DiploexecSpecs extends Specification {
 
-    ApplicationContext modulesContext = Mock(ApplicationContext)
     ThreadPoolTaskExecutor threadPool = Mock(ThreadPoolTaskExecutor)
     ProcessRunRepository processRunRepository = Mock(ProcessRunRepository)
     Diploexec diploexec = Spy(Diploexec)
@@ -96,21 +94,6 @@ class DiploexecSpecs extends Specification {
         expect:
             processCallEvent.processRun.exitStatus == 'FAILED'
             processCallEvent.processRun.endTime == processCallEvent.time.toString()
-    }
-
-    def 'get module'() {
-        setup:
-            Bindable module = Mock(Bindable)
-            diploexec.modulesContext = modulesContext
-
-        when:
-            Bindable actual = diploexec.getModule('module')
-
-        then:
-            1 * modulesContext.getBean('module') >> module
-
-        expect:
-            actual == module
     }
 
     def 'get process'() {

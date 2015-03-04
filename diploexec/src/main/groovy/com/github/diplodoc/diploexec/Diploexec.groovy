@@ -4,9 +4,7 @@ import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRepository
 import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRunRepository
-import com.github.diplodoc.diplocore.modules.Bindable
 import groovy.util.logging.Slf4j
-import org.springframework.context.ApplicationContext
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 
 import javax.annotation.PostConstruct
@@ -18,7 +16,6 @@ import javax.annotation.PostConstruct
 class Diploexec {
 
     ThreadPoolTaskExecutor threadPool
-    ApplicationContext modulesContext
     ProcessRepository processRepository
     ProcessRunRepository processRunRepository
 
@@ -77,10 +74,6 @@ class Diploexec {
             default:
                 assert false : "unknown ProcessCallEvent: ${event.type}"
         }
-    }
-
-    Bindable getModule(String name) {
-        modulesContext.getBean(name)
     }
 
     Process getProcess(String name) {
