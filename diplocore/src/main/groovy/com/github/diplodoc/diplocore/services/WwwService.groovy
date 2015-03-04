@@ -4,18 +4,19 @@ import com.github.diplodoc.diplobase.domain.mongodb.Post
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
 /**
  * @author yaroslav.yermilov
  */
-@Component
-class Web {
+@Service
+class WwwService {
 
     Document load(String url) {
         Jsoup.connect(url).get()
     }
 
-    Document document(Post post) {
-        Jsoup.parse(post.html)
+    Document parse(String html) {
+        Jsoup.parse(html)
     }
 }
