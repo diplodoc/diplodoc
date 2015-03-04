@@ -2,46 +2,50 @@ package com.github.diplodoc.diplocore.modules
 
 import com.github.diplodoc.diplobase.domain.mongodb.Post
 import com.github.diplodoc.diplobase.repository.mongodb.PostRepository
-import com.github.diplodoc.diplocore.services.Web
+import com.github.diplodoc.diplocore.services.WwwService
 import groovy.util.logging.Slf4j
 import org.jsoup.nodes.Element
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
+import org.springframework.http.HttpStatus
+import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.ResponseStatus
 
 /**
  * @author yaroslav.yermilov
  */
-@Component('text-extractor')
+@Controller
+@RequestMapping('/text-extractor')
 @Slf4j
-class TextExtractor implements Bindable {
+class TextExtractor {
 
     @Autowired
-    Web web
+    WwwService wwwService
 
     @Autowired
     PostRepository postRepository
 
-    @Override
-    void bindSelf(Binding binding) {
-        binding.extractText = { Map params -> extractText(params.from) }
-    }
+    @RequestMapping(value = '/post/{id}/extract-text', method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    void extractText(@PathVariable('id') String postId) {
+        Post post = postRepository.findOne postId
 
-    Post extractText(Post post) {
         log.info('going to extract text from {}...', post.url)
 
         Map<Element, Double> divElements = [:]
-        web.document(post).select('div').each { divElements[it] = 0.0 }
+        wwwService.parse(post.html).select('div').each { divElements[it] = 0.0 }
 
         decreaseByLinks divElements
         decreaseByChildren divElements
         increaseByPoints divElements
         increaseByTextSize divElements
 
-        post = postRepository.findOne(post.id)
-        post.meaningText = divElements.max { it.value }?.key?.text()?:web.document(post)
+        post.meaningText = divElements.max { it.value }?.key?.text()?:wwwService.parse(post.html)
         post = postRepository.save post
+
         log.debug('for post {} meaning text extracted: {}', post.url, post.meaningText)
-        return post
     }
 
     void decreaseByLinks(Map<Element, Double> divElements) {
