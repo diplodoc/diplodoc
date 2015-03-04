@@ -6,7 +6,4 @@ import org.springframework.data.mongodb.repository.MongoRepository
 /**
  * @author yaroslav.yermilov
  */
-interface PostRepository extends MongoRepository<Post, String> {
-
-    Post findOneByUrl(String url)
-}
+interface PostRepository extends MongoRepository<Post, String> { }
