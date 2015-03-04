@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.ResponseStatus
  * @author yaroslav.yermilov
  */
 @Controller
-@RequestMapping('/data/sources')
+@RequestMapping('/data')
 class Sources {
 
     @Autowired
     SourceRepository sourceRepository
 
-    @RequestMapping(value = '/', method = RequestMethod.GET)
+    @RequestMapping(value = '/sources', method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody Collection<Source> '/'() {
+    @ResponseBody Collection<Source> all() {
         sourceRepository.findAll()
     }
 }

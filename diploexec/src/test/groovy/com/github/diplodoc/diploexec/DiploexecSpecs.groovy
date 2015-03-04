@@ -9,6 +9,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import org.springframework.util.concurrent.ListenableFuture
 import spock.lang.Specification
 
+import java.time.LocalDateTime
+
 /**
  * @author yaroslav.yermilov
  */
@@ -41,6 +43,7 @@ class DiploexecSpecs extends Specification {
             ProcessCallEvent processCallEvent = new ProcessCallEvent()
             processCallEvent.type = ProcessCallEvent.Type.PROCESS_RUN_STARTED
             processCallEvent.processRun = new ProcessRun()
+            processCallEvent.time = LocalDateTime.now()
 
             diploexec.processRunRepository = processRunRepository
 
@@ -52,7 +55,7 @@ class DiploexecSpecs extends Specification {
 
         expect:
             processCallEvent.processRun.exitStatus == 'NOT FINISHED'
-            processCallEvent.processRun.startTime != null
+            processCallEvent.processRun.startTime == processCallEvent.time.toString()
     }
 
     def 'notify by process call events: process run succeed'() {
@@ -60,6 +63,7 @@ class DiploexecSpecs extends Specification {
             ProcessCallEvent processCallEvent = new ProcessCallEvent()
             processCallEvent.type = ProcessCallEvent.Type.PROCESS_RUN_SUCCEED
             processCallEvent.processRun = new ProcessRun()
+            processCallEvent.time = LocalDateTime.now()
 
             diploexec.processRunRepository = processRunRepository
 
@@ -71,7 +75,7 @@ class DiploexecSpecs extends Specification {
 
         expect:
             processCallEvent.processRun.exitStatus == 'SUCCEED'
-            processCallEvent.processRun.endTime != null
+            processCallEvent.processRun.endTime == processCallEvent.time.toString()
     }
 
     def 'notify by process call events: process run failed'() {
@@ -79,6 +83,7 @@ class DiploexecSpecs extends Specification {
             ProcessCallEvent processCallEvent = new ProcessCallEvent()
             processCallEvent.type = ProcessCallEvent.Type.PROCESS_RUN_FAILED
             processCallEvent.processRun = new ProcessRun()
+            processCallEvent.time = LocalDateTime.now()
 
             diploexec.processRunRepository = processRunRepository
 
@@ -90,7 +95,7 @@ class DiploexecSpecs extends Specification {
 
         expect:
             processCallEvent.processRun.exitStatus == 'FAILED'
-            processCallEvent.processRun.endTime != null
+            processCallEvent.processRun.endTime == processCallEvent.time.toString()
     }
 
     def 'get module'() {

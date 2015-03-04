@@ -36,7 +36,7 @@ class RssNewPostsFinder {
 
     @RequestMapping(value = '/source/{id}/new-posts', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    void '/source/{id}/new-posts'(@PathVariable('id') String sourceId) {
+    void newPosts(@PathVariable('id') String sourceId) {
         Source source = sourceRepository.findOne sourceId
 
         log.info('looking for new posts from {}...', source.name)
