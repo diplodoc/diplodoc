@@ -3,7 +3,7 @@ package com.github.diplodoc.diplocore.modules
 import com.github.diplodoc.diplobase.domain.mongodb.Post
 import com.github.diplodoc.diplobase.domain.mongodb.Source
 import com.github.diplodoc.diplobase.repository.mongodb.PostRepository
-import com.github.diplodoc.diplocore.services.Rss
+import com.github.diplodoc.diplocore.services.RssService
 import com.rometools.rome.feed.synd.SyndContentImpl
 import com.rometools.rome.feed.synd.SyndEntry
 import spock.lang.Specification
@@ -15,9 +15,9 @@ import java.time.LocalDateTime
  */
 class RssNewPostFinderSpecs extends Specification {
 
-    Rss rss = Mock(Rss)
+    RssService rss = Mock(RssService)
     PostRepository postRepository = Mock(PostRepository)
-    RssNewPostFinder rssNewPostFinder = new RssNewPostFinder(rss: rss, postRepository: postRepository)
+    RssNewPostsFinder rssNewPostFinder = new RssNewPostsFinder(rss: rss, postRepository: postRepository)
 
     def 'void findNewPosts(Source source, Closure action)'() {
         given:
