@@ -2,4 +2,4 @@ listen to: 'extract-text'
 
 input 'postId'
 
-get from: "http:/localhost:5000/post-type-classifier/post/${postId}/classify"
+get from: "http://localhost:5000/post-type-classifier/post/${postId}/classify"

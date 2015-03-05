@@ -3,13 +3,11 @@ package com.github.diplodoc.diploexec
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRunParameter
 import groovy.json.JsonSlurper
-import groovy.util.logging.Slf4j
 import org.springframework.web.client.RestTemplate
 
 /**
  * @author yaroslav.yermilov
  */
-@Slf4j
 class ProcessCall implements Runnable {
 
     JsonSlurper jsonSlurper = new JsonSlurper()
@@ -26,21 +24,22 @@ class ProcessCall implements Runnable {
     @Override
     void run() {
         try {
-            log.info('process started {}', processRun)
+            println "process started ${processRun}"
             diploexec.notify(ProcessCallEvent.started(processRun))
 
             String script = processRun.process.definition
             Map<String, Object> parameters = processRun.parameters.collectEntries { ProcessRunParameter parameter ->
                 [ parameter.key,  Class.forName(parameter.type).newInstance(jsonSlurper.parseText(parameter.value)) ]
             }
-            log.debug('process definition {}', script)
+            println "process definition\n${script}"
 
             new GroovyShell(binding(parameters)).evaluate(script)
 
-            log.info('process succeeded {}', processRun)
+            println "process succeeded ${processRun}"
             diploexec.notify(ProcessCallEvent.succeed(processRun))
         } catch (e) {
-            log.warn("process failed ${processRun}", e)
+            println "process failed ${processRun}"
+            e.printStackTrace()
             diploexec.notify(ProcessCallEvent.failed(processRun))
         }
     }
@@ -81,6 +80,7 @@ class ProcessCall implements Runnable {
 
     private void bindGet(Binding binding) {
         binding.get = { Map params ->
+            println "get with ${params}"
             String url = params.from
             Class responseType = params.expect ?: String
 
@@ -90,7 +90,8 @@ class ProcessCall implements Runnable {
 
     private void bindPost(Binding binding) {
         binding.post = { Map params ->
-            String url = params.from
+            println "post with ${params}"
+            String url = params.to
             Object request = params.request
             Class responseType = params.expect ?: String
 
