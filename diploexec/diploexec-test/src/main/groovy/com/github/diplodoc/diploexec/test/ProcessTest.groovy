@@ -1,7 +1,6 @@
 package com.github.diplodoc.diploexec.test
 
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
-import com.github.diplodoc.diplocore.modules.Bindable
 
 /**
  * @author yaroslav.yermilov
@@ -131,16 +130,6 @@ class ProcessTest {
 
     private void bindDescription(Binding binding) {
         binding.description = { String description -> /* do nothing */ }
-    }
-
-    private void bindRequire(Binding binding) {
-        binding.require = { String[] modulesNames ->
-            modulesNames.each { String moduleName ->
-                requiredModules << moduleName
-                Bindable module = diploexecTest.getModule(mockedModules[moduleName]?:moduleName)
-                module.bindSelf binding
-            }
-        }
     }
 
     private void bindSend(Binding binding) {

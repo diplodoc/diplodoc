@@ -15,13 +15,9 @@ from bson.objectid import ObjectId
 app = Flask(__name__)
 
 
-@app.route("/")
-def hello():
-    return "LET'S GO"
 
-
-@app.route("/classify/<text_id>")
-def classify(text_id):
+@app.route("/post-type-classifier/post/<post_id>/classify")
+def classify(post_id):
     client = MongoClient()
     db = client['diplodata']
 
@@ -29,7 +25,7 @@ def classify(text_id):
     decoded = base64.b64decode(depickled)
     text_clf = pickle.loads(decoded)
 
-    record = db.post.find_one({"_id": ObjectId(text_id)})
+    record = db.post.find_one({"_id": ObjectId(post_id)})
     predicted = text_clf.predict([record['meaningText']])
 
     db.post.update({"_id": record["_id"]}, {'meaningText': record['meaningText'], 'type': predicted[0]})
@@ -37,7 +33,7 @@ def classify(text_id):
     return 'PREDICTED: ' + str(predicted[0])
 
 
-@app.route("/train_model")
+@app.route("/post-type-classifier/train-from-all-posts")
 def train():
     client = MongoClient()
     db = client['diplodata']

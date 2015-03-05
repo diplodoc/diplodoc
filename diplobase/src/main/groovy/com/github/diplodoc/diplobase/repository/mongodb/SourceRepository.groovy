@@ -6,7 +6,4 @@ import org.springframework.data.mongodb.repository.MongoRepository
 /**
  * @author yaroslav.yermilov
  */
-interface SourceRepository extends MongoRepository<Source, String> {
-
-    Source findOneByName(String name)
-}
+interface SourceRepository extends MongoRepository<Source, String> { }

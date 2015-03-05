@@ -1,11 +1,7 @@
-listen to: 'load-post'
+listen to: 'load-new-posts-from-all-sources'
 
-input 'post'
+input 'postId'
 
-description "Extracts text from post '${post.url}'"
+post to: "http://localhost:8080/diplocore/text-extractor/post/${postId}/extract-text"
 
-require 'text-extractor'
-
-extractText from: post
-
-output post: post
+output postId: postId

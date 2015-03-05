@@ -2,17 +2,16 @@ package com.github.diplodoc.diploexec
 
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRunParameter
-import com.github.diplodoc.diplocore.modules.Bindable
 import groovy.json.JsonSlurper
-import groovy.util.logging.Slf4j
+import org.springframework.web.client.RestTemplate
 
 /**
  * @author yaroslav.yermilov
  */
-@Slf4j
 class ProcessCall implements Runnable {
 
     JsonSlurper jsonSlurper = new JsonSlurper()
+    RestTemplate restTemplate = new RestTemplate()
 
     Diploexec diploexec
     ProcessRun processRun
@@ -25,21 +24,22 @@ class ProcessCall implements Runnable {
     @Override
     void run() {
         try {
-            log.info('process started {}', processRun)
+            println "process started ${processRun}"
             diploexec.notify(ProcessCallEvent.started(processRun))
 
             String script = processRun.process.definition
             Map<String, Object> parameters = processRun.parameters.collectEntries { ProcessRunParameter parameter ->
                 [ parameter.key,  Class.forName(parameter.type).newInstance(jsonSlurper.parseText(parameter.value)) ]
             }
-            log.debug('process definition {}', script)
+            println "process definition\n${script}"
 
             new GroovyShell(binding(parameters)).evaluate(script)
 
-            log.info('process succeeded {}', processRun)
+            println "process succeeded ${processRun}"
             diploexec.notify(ProcessCallEvent.succeed(processRun))
         } catch (e) {
-            log.warn("process failed ${processRun}", e)
+            println "process failed ${processRun}"
+            e.printStackTrace()
             diploexec.notify(ProcessCallEvent.failed(processRun))
         }
     }
@@ -49,8 +49,10 @@ class ProcessCall implements Runnable {
 
         bindInputParameters binding, parameters
         bindInput binding
-        bindDescription binding
-        bindRequire binding
+
+        bindGet binding
+        bindPost binding
+
         bindSend binding
         bindOutput binding
         bindNotify binding
@@ -67,19 +69,33 @@ class ProcessCall implements Runnable {
     }
 
     private void bindInput(Binding binding) {
-        binding.input = { String[] args -> /* do nothing */ }
-    }
-
-    private void bindDescription(Binding binding) {
-        binding.description = { String description -> /* do nothing */ }
-    }
-
-    private void bindRequire(Binding binding) {
-        binding.require = { String[] modulesNames ->
-            modulesNames.each { String moduleName ->
-                Bindable module = diploexec.getModule(moduleName)
-                module.bindSelf binding
+        binding.input = { String[] args ->
+            args.each { arg ->
+                if (binding."${arg}" == null) {
+                    throw new RuntimeException("Input parameter ${arg} is missing")
+                }
             }
+        }
+    }
+
+    private void bindGet(Binding binding) {
+        binding.get = { Map params ->
+            println "get with ${params}"
+            String url = params.from
+            Class responseType = params.expect ?: String
+
+            restTemplate.getForObject(url, responseType)
+        }
+    }
+
+    private void bindPost(Binding binding) {
+        binding.post = { Map params ->
+            println "post with ${params}"
+            String url = params.to
+            Object request = params.request
+            Class responseType = params.expect ?: String
+
+            restTemplate.postForObject(url, request, responseType)
         }
     }
 

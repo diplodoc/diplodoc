@@ -27,7 +27,7 @@ class DiploexecClientSpec extends Specification {
 
         then:
             1 * hateoasTemplate.exchange(
-                { String it -> it.endsWith('/diploexec/api/v1/process/run') },
+                { String it -> it.endsWith('/diploexec/process/run') },
                 HttpMethod.POST,
                 { HttpEntity<ProcessRun> it ->
                     it.body.process == process &&

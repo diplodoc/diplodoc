@@ -12,13 +12,15 @@ sourceSets {
 }
 
 dependencies {
-    compile dependency.jython
-
-    compile dependency.jsoup
-    compile dependency.rome
-
+    compile dependency.servlet
     compile dependency.spring.web
+    compile dependency.spring.webmvc
 
     compile dependency.jackson.core
     compile dependency.jackson.databind
+
+    compile dependency.jsoup
+    compile dependency.rome
 }
+
+apply plugin: 'war'

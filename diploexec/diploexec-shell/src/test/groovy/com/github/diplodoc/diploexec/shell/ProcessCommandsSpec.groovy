@@ -26,8 +26,8 @@ class ProcessCommandsSpec extends Specification {
             String actual = processCommands.list()
 
         expect:
-            actual ==   '1                         process-1                        time-1    active\n' +
-                        '2                         process-2                        time-2  disabled'
+            actual ==   '1                                   process-1                        time-1    active\n' +
+                        '2                                   process-2                        time-2  disabled'
     }
 
     def 'process run'() {
