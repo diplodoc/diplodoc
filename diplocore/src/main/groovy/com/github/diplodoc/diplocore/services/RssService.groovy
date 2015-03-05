@@ -13,6 +13,10 @@ import org.springframework.stereotype.Service
 class RssService {
 
     List<SyndEntry> feed(String url) {
-        new SyndFeedInput().build(new XmlReader(new URL(url))).entries
+        try {
+            return new SyndFeedInput().build(new XmlReader(new URL(url))).entries
+        } catch (e) {
+            return []
+        }
     }
 }

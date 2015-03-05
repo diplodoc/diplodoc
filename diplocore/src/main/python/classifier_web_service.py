@@ -16,7 +16,7 @@ app = Flask(__name__)
 
 
 
-@app.route("/post-type-classifier/post/classify/<post_id>")
+@app.route("/post-type-classifier/post/<post_id>/classify")
 def classify(post_id):
     client = MongoClient()
     db = client['diplodata']

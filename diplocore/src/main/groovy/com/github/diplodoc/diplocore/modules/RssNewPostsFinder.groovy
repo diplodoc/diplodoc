@@ -56,6 +56,6 @@ class RssNewPostsFinder {
 
         postRepository.save posts
 
-        return posts.collect { posts.id }
+        return posts*.id
     }
 }
