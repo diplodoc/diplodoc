@@ -1,6 +1,6 @@
 ext {
     versions = [:]
-    versions.spring = '4.1.0.RELEASE'
+    versions.spring = '4.1.5.RELEASE'
     versions.jackson = '2.3.3'
 
     dependency = [:]
