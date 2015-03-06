@@ -56,6 +56,13 @@ class TagsDeducer {
     }
 
     private void deduceTagsFromFootbalUa(Post post) {
+        post.tags = [:]
+        post.tags['football.ua'] = 1.0
+        post.tags['футбол'] = 1.0
+
+        wwwService.parse(post.html).select('div.bottom-info a')*.text()*.each { String tag ->
+            post.tags[tag.trim()] = 1.0
+        }
 
     }
 
