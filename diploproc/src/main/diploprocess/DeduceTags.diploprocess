@@ -2,4 +2,4 @@ listen to: 'load-new-posts-from-all-sources'
 
 input 'postId'
 
-post to: "http://localhost:5000/tags-deducer/post/${postId}/deduce"
+post to: "http://localhost:8080/tags-deducer/post/${postId}/deduce"
