@@ -34,5 +34,5 @@ class Post {
 
     String meaningText
 
-    List<String> tags
+    Map<String, Double> tags
 }
