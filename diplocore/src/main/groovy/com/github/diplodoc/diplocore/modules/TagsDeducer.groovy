@@ -68,17 +68,37 @@ class TagsDeducer {
 
         wwwService.parse(post.html).select('div.bottom-info a')*.text()*.each { String tag ->
             println tag
-            
+
             post.tags[tag.trim()] = 1.0
         }
 
     }
 
     private void deduceTagsFromHabrahabrRu(Post post) {
+        post.tags = [:]
+        post.tags['habrahabr'] = 1.0
+        post.tags['технологии'] = 1.0
 
+        println (wwwService.parse(post.html).select('meta[name="keywords"]').attr('content'))
+
+        wwwService.parse(post.html).select('meta[name="keywords"]').attr('content').split(',').each { String tag ->
+            println tag
+
+            post.tags[tag.trim()] = 1.0
+        }
     }
 
     private void deduceTagsFromGeektimeRu(Post post) {
+        post.tags = [:]
+        post.tags['geektimes'] = 1.0
+        post.tags['технологии'] = 1.0
 
+        println (wwwService.parse(post.html).select('meta[name="keywords"]').attr('content'))
+
+        wwwService.parse(post.html).select('meta[name="keywords"]').attr('content').split(',').each { String tag ->
+            println tag
+
+            post.tags[tag.trim()] = 1.0
+        }
     }
 }
