@@ -50,7 +50,11 @@ class TagsDeducer {
         post.tags['pravda.com.ua'] = 1.0
         post.tags['новости'] = 1.0
 
+        println (wwwService.parse(post.html).select('meta[name="keywords"]').attr('content'))
+
         wwwService.parse(post.html).select('meta[name="keywords"]').attr('content').split(',').each { String tag ->
+            println tag
+
             post.tags[tag.trim()] = 1.0
         }
     }
@@ -60,7 +64,11 @@ class TagsDeducer {
         post.tags['football.ua'] = 1.0
         post.tags['футбол'] = 1.0
 
+        println (wwwService.parse(post.html).select('div.bottom-info a'))
+
         wwwService.parse(post.html).select('div.bottom-info a')*.text()*.each { String tag ->
+            println tag
+            
             post.tags[tag.trim()] = 1.0
         }
 
