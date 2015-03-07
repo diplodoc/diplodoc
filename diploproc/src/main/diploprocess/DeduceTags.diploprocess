@@ -1,5 +1,5 @@
-listen to: 'load-new-posts-from-all-sources'
+listen to: 'extract-text'
 
 input 'postId'
 
-post to: "http://localhost:8080/tags-deducer/post/${postId}/deduce"
+post to: "http://localhost:8080/diplocore/tags-deducer/post/${postId}/deduce"

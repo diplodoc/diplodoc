@@ -47,31 +47,22 @@ class TagsDeducer {
 
     private void deduceTagsFromPravdaComUa(Post post) {
         post.tags = [:]
-        post.tags['pravda.com.ua'] = 1.0
+        post.tags['pravda-com-ua'] = 1.0
         post.tags['новости'] = 1.0
 
-        println (wwwService.parse(post.html).select('meta[name="keywords"]').attr('content'))
-
-        wwwService.parse(post.html).select('meta[name="keywords"]').attr('content').split(',').each { String tag ->
-            println tag
-
-            post.tags[tag.trim()] = 1.0
+        wwwService.parse(post.html).select('meta[name=keywords]').attr('content').split(',').each { String tag ->
+            post.tags[tag.trim().replace('.', '-')] = 1.0
         }
     }
 
     private void deduceTagsFromFootbalUa(Post post) {
         post.tags = [:]
-        post.tags['football.ua'] = 1.0
+        post.tags['football-ua'] = 1.0
         post.tags['футбол'] = 1.0
 
-        println (wwwService.parse(post.html).select('div.bottom-info a'))
-
-        wwwService.parse(post.html).select('div.bottom-info a')*.text()*.each { String tag ->
-            println tag
-
-            post.tags[tag.trim()] = 1.0
+        wwwService.parse(post.html).select('div.bottom-info a')*.text().each { String tag ->
+            post.tags[tag.trim().replace('.', '-')] = 1.0
         }
-
     }
 
     private void deduceTagsFromHabrahabrRu(Post post) {
@@ -79,12 +70,8 @@ class TagsDeducer {
         post.tags['habrahabr'] = 1.0
         post.tags['технологии'] = 1.0
 
-        println (wwwService.parse(post.html).select('meta[name="keywords"]').attr('content'))
-
-        wwwService.parse(post.html).select('meta[name="keywords"]').attr('content').split(',').each { String tag ->
-            println tag
-
-            post.tags[tag.trim()] = 1.0
+        wwwService.parse(post.html).select('meta[name=keywords]').attr('content').split(',').each { String tag ->
+            post.tags[tag.trim().replace('.', '-')] = 1.0
         }
     }
 
@@ -93,12 +80,8 @@ class TagsDeducer {
         post.tags['geektimes'] = 1.0
         post.tags['технологии'] = 1.0
 
-        println (wwwService.parse(post.html).select('meta[name="keywords"]').attr('content'))
-
-        wwwService.parse(post.html).select('meta[name="keywords"]').attr('content').split(',').each { String tag ->
-            println tag
-
-            post.tags[tag.trim()] = 1.0
+        wwwService.parse(post.html).select('meta[name=keywords]').attr('content').split(',').each { String tag ->
+            post.tags[tag.trim().replace('.', '-')] = 1.0
         }
     }
 }
