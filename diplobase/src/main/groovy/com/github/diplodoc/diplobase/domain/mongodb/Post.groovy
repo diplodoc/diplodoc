@@ -34,5 +34,7 @@ class Post {
 
     String meaningText
 
-    Map<String, Double> tags
+
+    @DBRef
+    List<Topic> train_topics
 }
