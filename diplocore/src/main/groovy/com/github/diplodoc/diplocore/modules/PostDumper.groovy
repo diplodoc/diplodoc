@@ -2,6 +2,7 @@ package com.github.diplodoc.diplocore.modules
 
 import com.github.diplodoc.diplobase.domain.mongodb.Post
 import com.github.diplodoc.diplobase.repository.mongodb.PostRepository
+import org.codehaus.groovy.util.StringUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
@@ -29,8 +30,9 @@ class PostDumper {
         def postDump = []
         postDump << "${post.id}"
         postDump << "${post.url}"
+        postDump << "${post.title}"
         postDump << "${post.meaningText}"
 
-        new File(folder, "post-${id}.dump").text = postDump.join('\n')
+        new File(folder, "post-${post.id}.dump").text = postDump.join('\n')
     }
 }
