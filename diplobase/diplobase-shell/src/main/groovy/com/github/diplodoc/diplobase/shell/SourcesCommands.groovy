@@ -1,7 +1,7 @@
 package com.github.diplodoc.diplobase.shell
 
-import com.github.diplodoc.diplobase.client.diplodata.SourceDataClient
 import com.github.diplodoc.diplobase.domain.mongodb.Source
+import com.github.diplodoc.diplobase.repository.mongodb.SourceRepository
 import groovy.json.JsonOutput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.shell.core.CommandMarker
@@ -16,11 +16,11 @@ import org.springframework.stereotype.Component
 class SourcesCommands implements CommandMarker {
 
     @Autowired
-    SourceDataClient sourceDataClient
+    SourceRepository sourceRepository
 
     @CliCommand(value = 'sources list', help = 'list all sources')
     String list() {
-        sourceDataClient.all().collect(SourcesCommands.&toSingleLineDescription).join('\n')
+        sourceRepository.findAll().collect(SourcesCommands.&toSingleLineDescription).join('\n')
     }
 
     @CliCommand(value = 'sources add', help = 'add new source')
@@ -31,7 +31,7 @@ class SourcesCommands implements CommandMarker {
         source.newPostsFinderModule = newPostsFinderModule
         source.rssUrl = rssUrl
 
-        source = sourceDataClient.save(source)
+        source = sourceRepository.save(source)
         toDescription(source)
     }
 
@@ -39,18 +39,18 @@ class SourcesCommands implements CommandMarker {
     String update(@CliOption(key = '', mandatory = true, help = 'source name') final String name,
                   @CliOption(key = 'new-post-finder-module', mandatory = false, help = 'new posts finder module') final String newPostsFinderModule,
                   @CliOption(key = 'rss-url', mandatory = false, help = 'rss url') final String rssUrl) {
-        Source source = sourceDataClient.byName(name)
+        Source source = sourceRepository.findOneByName(name)
         source.newPostsFinderModule = newPostsFinderModule?:source.newPostsFinderModule
         source.rssUrl = rssUrl?:source.rssUrl
 
-        source = sourceDataClient.save(source)
+        source = sourceRepository.save(source)
         toDescription(source)
     }
 
     @CliCommand(value = 'sources get', help = 'get source parameters')
     String get(@CliOption(key = '', mandatory = true, help = 'source name') final String name,
                @CliOption(key = 'representation', mandatory = false, help = 'convert to json', unspecifiedDefaultValue = 'text') final String representation) {
-        Source source = sourceDataClient.byName(name)
+        Source source = sourceRepository.findOneByName(name)
 
         switch (representation) {
             case 'text':

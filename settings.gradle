@@ -1,5 +1,4 @@
 include 'diplobase'
-include 'diplobase:diplobase-client'
 include 'diplobase:diplobase-shell'
 
 include 'diplocore'

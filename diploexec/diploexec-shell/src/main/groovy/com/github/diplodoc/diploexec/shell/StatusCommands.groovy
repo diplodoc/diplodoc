@@ -1,9 +1,11 @@
 package com.github.diplodoc.diploexec.shell
 
-import com.github.diplodoc.diplobase.client.diploexec.ProcessRunDataClient
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRunParameter
+import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRunRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.shell.core.CommandMarker
 import org.springframework.shell.core.annotation.CliCommand
 import org.springframework.shell.core.annotation.CliOption
@@ -16,11 +18,11 @@ import org.springframework.stereotype.Component
 class StatusCommands implements CommandMarker {
 
     @Autowired
-    ProcessRunDataClient processRunDataClient
+    ProcessRunRepository processRunRepository
 
     @CliCommand(value = 'status', help = 'current diploexec runtime status')
     String status(@CliOption(key = 'count', mandatory = false, help = 'number of last runs to show', unspecifiedDefaultValue = '10') final Integer count) {
-        processRunDataClient.all(count).collect(StatusCommands.&toDescription).join('\n')
+        processRunRepository.findAll(new PageRequest(0, count, Sort.Direction.DESC, 'startTime')).collect(StatusCommands.&toDescription).join('\n')
     }
 
     private static toDescription(ProcessRun processRun) {

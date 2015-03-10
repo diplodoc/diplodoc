@@ -1,6 +1,5 @@
 package com.github.diplodoc.diplobase.shell
 
-import com.github.diplodoc.diplobase.client.diplodata.PostDataClient
 import com.github.diplodoc.diplobase.domain.mongodb.Post
 import com.github.diplodoc.diplobase.repository.mongodb.PostRepository
 import com.github.diplodoc.diplobase.repository.mongodb.TopicRepository

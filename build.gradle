@@ -27,16 +27,9 @@ subprojects {
 
 project(':diplobase:diplobase-shell') {
 	dependencies {
-		compile project(':diplobase:diplobase-client')
+		compile project(':diplobase')
 	}
 }
-
-project(':diplobase:diplobase-client') {
-    dependencies {
-        compile project(':diplobase')
-    }
-}
-
 project(':diplocore') {
 	dependencies {
 		compile project(':diplobase')
@@ -52,14 +45,14 @@ project(':diploexec') {
 
 project(':diploexec:diploexec-test') {
     dependencies {
-        compile project(':diplobase:diplobase-client')
+        compile project(':diplobase')
         compile project(':diplocore')
     }
 }
 
 project(':diploexec:diploexec-shell') {
 	dependencies {
-        compile project(':diplobase:diplobase-client')
+        compile project(':diplobase')
 		compile project(':diploexec:diploexec-client')
         compile project(':diploexec:diploexec-test')
 	}
