@@ -11,6 +11,10 @@ subprojects {
 
     apply plugin: 'jacoco'
 
+    test {
+        test.reports.html.enabled = false
+    }
+
 	repositories {
 	    jcenter()
 	}
@@ -23,6 +27,11 @@ subprojects {
         testCompile dependency.cglib
         testCompile dependency.objenesis
 	}
+}
+
+task testReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/allTests")
+    reportOn subprojects*.test
 }
 
 project(':diplobase:diplobase-shell') {
