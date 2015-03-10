@@ -24,17 +24,20 @@ def classify(post_id):
     post = db.post.find_one({"_id": ObjectId(post_id)})
 
     topic_map = {}
-    for record in  db.classifier.find():
+    for record in db.topic.find():
         depickled = record['classifier']
-        topic = record['topic']
+        topic = record['label']
         decoded = base64.b64decode(depickled)
         text_clf = pickle.loads(decoded)
         predicted = text_clf.predict_proba([post['meaningText']])[0]
-        topic_map[topic] = predicted
+        topic_map[topic] = predicted[0]
 
-    post["predicted_labels"] = topic_map
+    post['predicted_labels'] = topic_map
     db.post.update({"_id": post["_id"]}, post)
-    
+
+    for key, val in topic_map.items():
+        print key + ' ' + str(val)
+
     return 'RESULT: ' + str(topic_map)
 
 
@@ -42,7 +45,7 @@ def classify(post_id):
 def train():
     content = request.json
     partial_train = False
-    if 'partial_train' in content:
+    if content is not None and 'partial_train' in content:
         partial_train = True
 
     client = MongoClient()
@@ -50,17 +53,17 @@ def train():
 
     train_texts, train_labels = [], []
     for post in db.post.find():
-        if 'labels' in post.keys():
+        if 'train_topics' in post.keys():
             train_texts.append(post['meaningText'])
-            train_labels.append(post['labels'])
+            train_labels.append([db.dereference(x)['label'] for x in post['train_topics']])
     train_texts, train_labels = denormalize_data(train_texts, train_labels)
 
     topics = []
-    for record in db.classifier.find():
-        topic = record["topic"]
+    for record in db.topic.find():
+        topic = record['label']
         if not partial_train:
             topics.append(topic)
-        elif "classifier" not in record:
+        elif 'classifier' not in record:
             topics.append(topic)
 
     classifiers = build_classifiers(train_texts, train_labels, topics)
@@ -71,9 +74,9 @@ def train():
         pickled = pickle.dumps(classifier)
         encoded = base64.b64encode(pickled)
 
-        record = db.classifier.find_one({'topic': topic})
+        record = db.topic.find_one({'label': topic})
         record['classifier'] = encoded
-        db.classifier.update({"_id": record["_id"]}, record, upsert=True)
+        db.topic.update({"_id": record["_id"]}, record, upsert=True)
 
     return "YOUR CLASSIFIER IS READY TO USE"
 
@@ -84,7 +87,7 @@ def denormalize_data(train_texts, train_labels):
         for label in train_labels[i]:
             denormalized_texts.append(train_texts[i])
             denormalized_labels.append(label)
-    return [denormalized_texts, denormalized_labels]
+    return (denormalized_texts, denormalized_labels)
 
 
 def build_classifiers(train_texts, train_labels, topics):
@@ -98,12 +101,13 @@ def build_classifiers(train_texts, train_labels, topics):
 
 
 def adjust_labels(train_labels, topic):
+    adjusted_labels = [0]*len(train_labels)
     for i in range(len(train_labels)):
         if train_labels[i] == topic:
-            train_labels[i] = 0
+            adjusted_labels[i] = 0
         else:
-            train_labels[i] = 1
-    return train_labels
+            adjusted_labels[i] = 1
+    return adjusted_labels
 
 
 if __name__ == '__main__':
