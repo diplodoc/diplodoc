@@ -7,7 +7,7 @@ import spock.lang.Specification
 /**
  * @author yaroslav.yermilov
  */
-class SourcesSpecs extends Specification {
+class SourcesSpec extends Specification {
 
     SourceRepository sourceRepository = Mock(SourceRepository)
 
