@@ -81,7 +81,7 @@ class SourcesCommandsSpec extends Specification {
             String actual = sourcesCommands.update('name', 'new-module', 'new-rss-url')
 
         then:
-        1 * sourceRepository.save(new Source(id: 'id', name: 'name', newPostsFinderModule: 'new-module', rssUrl: 'new-rss-url')) >> new Source(id: 'id', name: 'name', newPostsFinderModule: 'new-module', rssUrl: 'new-rss-url')
+            1 * sourceRepository.save(new Source(id: 'id', name: 'name', newPostsFinderModule: 'new-module', rssUrl: 'new-rss-url')) >> new Source(id: 'id', name: 'name', newPostsFinderModule: 'new-module', rssUrl: 'new-rss-url')
 
         expect:
             actual ==   'id:                           id\n' +
