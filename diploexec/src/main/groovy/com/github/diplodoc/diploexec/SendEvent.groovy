@@ -20,7 +20,7 @@ class SendEvent implements DiploexecEvent {
     }
 
     @Override
-    Collection<ProcessRun> notifiedRuns(Diploexec diploexec) {
+    Collection<ProcessRun> shouldNotifyRuns(Diploexec diploexec) {
         ProcessRun processRun = new ProcessRun()
         processRun.process = diploexec.getProcess(destination)
         processRun.parameters = parameters.collect { String key, Object value ->

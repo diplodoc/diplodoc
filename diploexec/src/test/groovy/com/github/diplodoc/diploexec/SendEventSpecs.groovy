@@ -9,7 +9,7 @@ import spock.lang.Specification
  */
 class SendEventSpecs extends Specification {
 
-    def 'notifiedRuns'() {
+    def 'Collection<ProcessRun> shouldNotifyRuns(Diploexec diploexec)'() {
         setup:
             Process process0 = new Process(name: 'process-0')
 
@@ -19,7 +19,7 @@ class SendEventSpecs extends Specification {
             SendEvent sendEvent = new SendEvent('process-0', [ 'key' : 'value' ])
 
         when:
-            Collection<ProcessRun> actual = sendEvent.notifiedRuns(diploexec)
+            Collection<ProcessRun> actual = sendEvent.shouldNotifyRuns(diploexec)
 
         then:
             actual.size() == 1

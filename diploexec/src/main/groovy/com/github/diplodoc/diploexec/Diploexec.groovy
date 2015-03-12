@@ -44,7 +44,7 @@ class Diploexec {
 
     void notify(DiploexecEvent event) {
         println "event fired ${event}..."
-        event.notifiedRuns(this).each { ProcessRun processRun -> run(processRun) }
+        event.shouldNotifyRuns(this).each { ProcessRun processRun -> run(processRun) }
     }
 
     void notify(ProcessCallEvent event) {

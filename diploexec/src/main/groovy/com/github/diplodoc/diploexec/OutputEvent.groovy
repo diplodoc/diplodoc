@@ -21,7 +21,7 @@ class OutputEvent implements DiploexecEvent {
     }
 
     @Override
-    Collection<ProcessRun> notifiedRuns(Diploexec diploexec) {
+    Collection<ProcessRun> shouldNotifyRuns(Diploexec diploexec) {
         diploexec.getProcessesListeningTo(source.process).collect { Process process ->
             ProcessRun processRun = new ProcessRun()
             processRun.process = process

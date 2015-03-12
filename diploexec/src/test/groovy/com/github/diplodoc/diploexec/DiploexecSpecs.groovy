@@ -67,7 +67,7 @@ class DiploexecSpecs extends Specification {
             ProcessRun[] processRuns = [ new ProcessRun(), new ProcessRun() ]
             DiploexecEvent event = Mock(DiploexecEvent)
 
-            event.notifiedRuns(_) >> processRuns
+            event.shouldNotifyRuns(_) >> processRuns
             diploexec.threadPool = threadPool
 
         when:
