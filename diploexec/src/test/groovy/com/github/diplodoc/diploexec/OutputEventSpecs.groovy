@@ -14,7 +14,7 @@ class OutputEventSpecs extends Specification {
             Process process0 = new Process(name: 'process-0')
 
             Diploexec diploexec = Mock(Diploexec)
-            diploexec.getInputProcesses(process0) >> [ new Process(name: 'process-1'), new Process(name: 'process-2') ]
+            diploexec.getProcessesListeningTo(process0) >> [ new Process(name: 'process-1'), new Process(name: 'process-2') ]
 
             OutputEvent outputEvent = new OutputEvent(new ProcessRun(process: process0), [ 'key' : 'value' ])
 

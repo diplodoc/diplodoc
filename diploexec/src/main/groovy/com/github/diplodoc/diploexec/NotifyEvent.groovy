@@ -22,7 +22,7 @@ class NotifyEvent implements DiploexecEvent {
 
     @Override
     Collection<ProcessRun> notifiedRuns(Diploexec diploexec) {
-        diploexec.getWaitProcesses(eventName).collect { Process process ->
+        diploexec.getProcessesWaitingFor(eventName).collect { Process process ->
             ProcessRun processRun = new ProcessRun()
             processRun.process = process
             processRun.parameters = parameters.collect { String key, Object value ->

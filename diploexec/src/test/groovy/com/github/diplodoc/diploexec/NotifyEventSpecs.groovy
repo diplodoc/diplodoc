@@ -12,7 +12,7 @@ class NotifyEventSpecs extends Specification {
     def 'notifiedRuns'() {
         setup:
             Diploexec diploexec = Mock(Diploexec)
-            diploexec.getWaitProcesses('event-1') >> [ new Process(name: 'process-1'), new Process(name: 'process-2') ]
+            diploexec.getProcessesWaitingFor('event-1') >> [ new Process(name: 'process-1'), new Process(name: 'process-2') ]
 
             NotifyEvent notifyEvent = new NotifyEvent('event-1', [ 'key' : 'value' ])
 
