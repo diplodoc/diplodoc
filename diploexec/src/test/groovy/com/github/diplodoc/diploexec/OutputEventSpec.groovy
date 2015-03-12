@@ -7,7 +7,7 @@ import spock.lang.Specification
 /**
  * @author yaroslav.yermilov
  */
-class OutputEventSpecs extends Specification {
+class OutputEventSpec extends Specification {
 
     def 'Collection<ProcessRun> shouldNotifyRuns(Diploexec diploexec)'() {
         setup:

@@ -13,7 +13,7 @@ import java.time.LocalDateTime
  * @author yaroslav.yermilov
  * test
  */
-class DiploexecSpecs extends Specification {
+class DiploexecSpec extends Specification {
 
     ThreadPoolTaskExecutor threadPool = Mock(ThreadPoolTaskExecutor)
     ProcessRepository processRepository = Mock(ProcessRepository)

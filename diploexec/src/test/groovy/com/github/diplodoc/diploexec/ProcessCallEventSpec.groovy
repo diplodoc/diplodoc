@@ -6,7 +6,7 @@ import spock.lang.Specification
 /**
  * @author yaroslav.yermilov
  */
-class ProcessCallEventSpecs extends Specification {
+class ProcessCallEventSpec extends Specification {
 
     def 'static ProcessCallEvent started(ProcessRun processRun)'() {
         setup:
