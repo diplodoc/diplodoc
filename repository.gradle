@@ -33,6 +33,7 @@ ext {
 
     dependency.commons = [:]
     dependency.commons.dbcp = 'commons-dbcp:commons-dbcp:1.4'
+    dependency.commons.io = 'commons-io:commons-io:2.4'
 
     dependency.hibernate = 'org.hibernate:hibernate-entitymanager:4.3.6.Final'
 

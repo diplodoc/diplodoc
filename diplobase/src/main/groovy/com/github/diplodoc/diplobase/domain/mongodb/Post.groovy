@@ -34,7 +34,10 @@ class Post {
 
     String meaningText
 
+    @DBRef
+    List predicted_topics
+
 
     @DBRef
-    List<Topic> train_topics
+    Collection<Topic> train_topics
 }
