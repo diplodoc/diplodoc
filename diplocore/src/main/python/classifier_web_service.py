@@ -11,6 +11,7 @@ from flask import request
 
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+from bson.dbref import DBRef
 
 
 app = Flask(__name__)
@@ -24,24 +25,24 @@ def classify(post_id):
     post = db.post.find_one({"_id": ObjectId(post_id)})
 
     topic_map = {}
+    topic_ref_list = []
     for record in db.topic.find():
         depickled = record['classifier']
         topic = record['label']
+        reference = DBRef('topic', record['_id'])
         decoded = base64.b64decode(depickled)
         text_clf = pickle.loads(decoded)
         predicted = text_clf.predict_proba([post['meaningText']])[0]
         topic_map[topic] = predicted[0]
+        topic_ref_list.append((reference, predicted[0]))
 
-    post['predicted_labels'] = topic_map
+    post['predicted_labels'] = topic_ref_list
     db.post.update({"_id": post["_id"]}, post)
-
-    for key, val in topic_map.items():
-        print key + ' ' + str(val)
 
     return 'RESULT: ' + str(topic_map)
 
 
-@app.route("/post-type-classifier/train-from-all-posts", methods=['GET', 'POST'])
+@app.route("/post-type-classifier/train-from-all-posts", methods=['POST'])
 def train():
     content = request.json
     partial_train = False
