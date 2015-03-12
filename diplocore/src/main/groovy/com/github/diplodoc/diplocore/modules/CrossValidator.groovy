@@ -68,7 +68,7 @@ class CrossValidator {
                                                 .collect { prediction ->
                                                     Topic topic = topicRepository.findOne(prediction['topic_id'])
                                                     Double score = prediction['score']
-                                                    post.train_topics.contains(topic) ? 1 - score : score
+                                                    unrollTopics(post.train_topics).contains(topic) ? 1 - score : score
                                                 }
                                                 .sum()) / post.predicted_topics.size()
                                         collectionScore += postScore
@@ -88,7 +88,7 @@ class CrossValidator {
                                             'id': post.id,
                                             'url': post.url,
                                             'title': post.title,
-                                            'train-topics': post.train_topics*.label,
+                                            'train-topics': unrollTopics(post.train_topics)*.label,
                                             'predicted-topics': predictedTopics,
                                             'post-score': postScore,
                                             'classification-time': "${(classificationEnd - classificationStart)/1000}s"
@@ -105,5 +105,19 @@ class CrossValidator {
                 return ([ 'average_score': (collectionScore / collectionSize), 'average_time': "${(collectionTime / collectionSize)/1000}s", 'posts': postScores ].toMapString())
             }
         }
+    }
+
+    Collection<Topic> unrollTopics(Collection<Topic> original) {
+        Set<Topic> result = new HashSet<>()
+
+        original.each {
+            result.add(it)
+            while (it.parent != null) {
+                result.add(it.parent)
+                it = it.parent
+            }
+        }
+
+        return result
     }
 }
