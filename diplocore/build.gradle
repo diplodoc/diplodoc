@@ -21,8 +21,6 @@ dependencies {
 
     compile dependency.jsoup
     compile dependency.rome
-
-    compile dependency.commons.io
 }
 
 apply plugin: 'war'

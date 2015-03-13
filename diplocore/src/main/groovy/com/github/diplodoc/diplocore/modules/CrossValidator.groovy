@@ -4,8 +4,9 @@ import com.github.diplodoc.diplobase.domain.mongodb.Post
 import com.github.diplodoc.diplobase.domain.mongodb.Topic
 import com.github.diplodoc.diplobase.repository.mongodb.PostRepository
 import com.github.diplodoc.diplobase.repository.mongodb.TopicRepository
-import org.apache.commons.io.FileUtils
+import com.github.diplodoc.diplocore.services.RestService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.io.ResourceLoader
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.client.RestTemplate
+
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 /**
  * @author yaroslav.yermilov
@@ -29,82 +32,118 @@ class CrossValidator {
     @Autowired
     TopicRepository topicRepository
 
-    RestTemplate restTemplate = new RestTemplate()
+    @Autowired
+    ResourceLoader resourceLoader
+
+    @Autowired
+    RestService restService
 
     @RequestMapping(value = '/', method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody String validate() {
-        List postScores = []
+        List postsDumps = []
         double collectionScore = 0
-        long collectionTime = 0
+        long collectionClassificationTime = 0
         int collectionSize = 0
 
         Pageable pageable = new PageRequest(0, 5)
+        int totalPages = postRepository.findAll(pageable).totalPages
+        int totalElements = postRepository.findAll(pageable).totalElements
 
-        while (true) {
-            println "Loading page #${pageable.pageNumber}: from ${pageable.offset} to ${pageable.offset + pageable.pageSize - 1}..."
+        long validationStart = System.currentTimeMillis()
 
-            Collection<Post> posts = postRepository.findAll(pageable).content
-            pageable = pageable.next()
+        totalPages.times {
+            println "Loading page #${pageable.pageNumber + 1} (of ${totalPages}): from ${pageable.offset + 1} to ${pageable.offset + pageable.pageSize} (of ${totalElements})..."
 
-            if (!posts.isEmpty()) {
-                postScores << posts .findAll { Post post ->
-                                        println "Checking if [${post.id}] is in train set..."
-                                        post.train_topics != null && !post.train_topics.isEmpty()
-                                    }
-                                    .collect { Post post ->
-                                        println "[${post.id}] is in train set. Going to classify it..."
+            Collection<Post> validationPosts = postRepository.findAll(pageable).content.findAll(this.&isCrossValidation)
 
-                                        long classificationStart = System.currentTimeMillis()
-                                        restTemplate.getForObject("http://localhost:5000/post-type-classifier/post/${post.id}/classify", String)
-                                        long classificationEnd = System.currentTimeMillis()
-                                        collectionTime += (classificationEnd - classificationStart)
+            validationPosts.each { Post post ->
+                collectionSize++
+                println "[${post.id}] is #${collectionSize} in train set. Starting its validation..."
 
-                                        println "[${post.id}] is classified. Going to score it's quality..."
+                def classificationResult = classify(post)
+                post = classificationResult.post
+                collectionClassificationTime += classificationResult.time
 
-                                        post = postRepository.findOne(post.id)
+                double postScore = calculateScore(post)
+                collectionScore += postScore
 
-                                        double postScore = (post.predicted_topics
-                                                .collect { prediction ->
-                                                    Topic topic = topicRepository.findOne(prediction['topic_id'])
-                                                    Double score = prediction['score']
-                                                    unrollTopics(post.train_topics).contains(topic) ? 1 - score : score
-                                                }
-                                                .sum()) / post.predicted_topics.size()
-                                        collectionScore += postScore
-                                        collectionSize++
+                List predictedTopics = getPredictedTopics(post)
 
-                                        List predictedTopics = post.predicted_topics
-                                                                        .sort{ prediction1, prediction2 ->
-                                                                            Double.compare(prediction2['score'], prediction1['score'])
-                                                                        }
-                                                                        .collect{ prediction ->
-                                                                            Topic topic = topicRepository.findOne(prediction['topic_id'])
-                                                                            Double score = prediction['score']
-                                                                            "${topic.label} : ${score}"
-                                                                        }
-
-                                        def dump = [
-                                            'id': post.id,
-                                            'url': post.url,
-                                            'title': post.title,
-                                            'train-topics': unrollTopics(post.train_topics)*.label,
-                                            'predicted-topics': predictedTopics,
-                                            'post-score': postScore,
-                                            'classification-time': "${(classificationEnd - classificationStart)/1000}s"
-                                        ]
-
-                                        println ([ 'current_average_score': (collectionScore / collectionSize), 'current_average_time': "${(collectionTime / collectionSize)/1000}s", 'current_post': dump ].toMapString())
-                                        FileUtils.writeStringToFile(new File("F:\\Temp\\post-scores\\post-${post.id}.score"), ([ 'current_average_score': (collectionScore / collectionSize), 'current_average_time': "${(collectionTime / collectionSize)/1000}s", 'current_post': dump ].toMapString()))
-
-                                        return dump
-                                    }
-            } else {
-                FileUtils.writeStringToFile(new File("F:\\Temp\\post-scores\\total.score"), ([ 'average_score': (collectionScore / collectionSize), 'average_time': "${(collectionTime / collectionSize)/1000}s", 'posts': postScores ].toMapString()))
-                println ([ 'average_score': (collectionScore / collectionSize), 'average_time': "${(collectionTime / collectionSize)/1000}s", 'posts': postScores ].toMapString())
-                return ([ 'average_score': (collectionScore / collectionSize), 'average_time': "${(collectionTime / collectionSize)/1000}s", 'posts': postScores ].toMapString())
+                Map postsDump = getPostDump(post, predictedTopics, postScore, classificationResult.time)
+                log(post, postsDump, collectionSize, collectionScore, collectionClassificationTime)
+                postsDumps << postsDump
             }
+
+            LocalDateTime willBeDone = getWillBeDoneAt(pageable.pageNumber, totalPages, validationStart)
+            println "Predicting to be ready at ${willBeDone}"
+
+            pageable = pageable.next()
         }
+
+        def validationResult = [ 'average_score': (collectionScore / collectionSize), 'average_time': "${(collectionClassificationTime / collectionSize)/1000}s", 'posts': postsDumps ].toMapString()
+
+        resourceLoader.getResource('file://F:\\Temp\\post-scores').createRelative('total.score').file.withOutputStream {
+            it.write(validationResult.bytes)
+        }
+
+        return validationResult
+    }
+
+    boolean isCrossValidation(Post post) {
+        post.train_topics != null && !post.train_topics.isEmpty()
+    }
+
+    LocalDateTime getWillBeDoneAt(int pageNumber, int totalPages, long validationStart) {
+        long now = System.currentTimeMillis()
+        long pageDone = pageNumber + 1
+        long pageLeft = totalPages - pageNumber - 1
+        double needMoreTime = 1.0 * (now - validationStart) / pageDone * pageLeft
+
+        LocalDateTime.now().plus(Math.round(needMoreTime), ChronoUnit.MILLIS)
+    }
+
+    def classify(Post post) {
+        long classificationStart = System.currentTimeMillis()
+        restService.get(url: "http://localhost:5000/post-type-classifier/post/${post.id}/classify")
+        long classificationEnd = System.currentTimeMillis()
+        post = postRepository.findOne(post.id)
+
+        return [ post: post, time: (classificationEnd - classificationStart) ]
+    }
+
+    double calculateScore(Post post) {
+        (post.predicted_topics
+                .collect { prediction ->
+                    Topic topic = topicRepository.findOne(prediction['topic_id'])
+                    Double score = prediction['score']
+                    unrollTopics(post.train_topics).contains(topic) ? 1 - score : score
+                }
+                .sum()) / post.predicted_topics.size()
+    }
+
+    List getPredictedTopics(Post post) {
+        post.predicted_topics
+                .sort{ prediction1, prediction2 ->
+                    Double.compare(prediction2['score'], prediction1['score'])
+                }
+                .collect{ prediction ->
+                    Topic topic = topicRepository.findOne(prediction['topic_id'])
+                    Double score = prediction['score']
+                    "${topic.label}: ${score}"
+                }
+    }
+
+    Map getPostDump(Post post, List predictedTopics, double postScore, double classificationTime) {
+        [
+            'id': post.id,
+            'url': post.url,
+            'title': post.title,
+            'train-topics': unrollTopics(post.train_topics)*.label,
+            'predicted-topics': predictedTopics,
+            'post-score': postScore,
+            'classification-time': "${classificationTime/1000}s"
+        ]
     }
 
     Collection<Topic> unrollTopics(Collection<Topic> original) {
@@ -119,5 +158,18 @@ class CrossValidator {
         }
 
         return result
+    }
+
+    void log(Post post, Map postDump, int collectionSize, double collectionScore, long collectionClassificationTime) {
+        Map logInfo = [
+            'current_average_score': (collectionScore / collectionSize),
+            'current_average_time': "${(collectionClassificationTime / collectionSize)/1000}s",
+            'current_post': postDump
+        ]
+
+        println logInfo.toMapString()
+        resourceLoader.getResource('file://F:\\Temp\\post-scores\\').createRelative("post-${post.id}.score").file.withOutputStream {
+            it.write(logInfo.toMapString().bytes)
+        }
     }
 }
