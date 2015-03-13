@@ -4,6 +4,7 @@ import com.github.diplodoc.diplobase.domain.mongodb.Post
 import com.github.diplodoc.diplobase.domain.mongodb.Topic
 import com.github.diplodoc.diplobase.repository.mongodb.PostRepository
 import com.github.diplodoc.diplobase.repository.mongodb.TopicRepository
+import com.github.diplodoc.diplocore.services.ResourceService
 import com.github.diplodoc.diplocore.services.RestService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.ResourceLoader
@@ -33,7 +34,7 @@ class CrossValidator {
     TopicRepository topicRepository
 
     @Autowired
-    ResourceLoader resourceLoader
+    ResourceService resourceService
 
     @Autowired
     RestService restService
@@ -83,9 +84,7 @@ class CrossValidator {
 
         def validationResult = [ 'average_score': (collectionScore / collectionSize), 'average_time': "${(collectionClassificationTime / collectionSize)/1000}s", 'posts': postsDumps ].toMapString()
 
-        resourceLoader.getResource('file://F:\\Temp\\post-scores').createRelative('total.score').file.withOutputStream {
-            it.write(validationResult.bytes)
-        }
+        resourceService.writeToFile('F:\\Temp\\post-scores', 'total.score', validationResult)
 
         return validationResult
     }
@@ -168,8 +167,6 @@ class CrossValidator {
         ]
 
         println logInfo.toMapString()
-        resourceLoader.getResource('file://F:\\Temp\\post-scores\\').createRelative("post-${post.id}.score").file.withOutputStream {
-            it.write(logInfo.toMapString().bytes)
-        }
+        resourceService.writeToFile('F:\\Temp\\post-scores', "post-${post.id}.score", logInfo.toMapString())
     }
 }
