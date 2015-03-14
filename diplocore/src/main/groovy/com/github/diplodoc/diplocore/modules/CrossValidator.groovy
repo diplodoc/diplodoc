@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.ResponseStatus
 
@@ -40,7 +41,7 @@ class CrossValidator {
 
     @RequestMapping(value = '/', method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody String validate() {
+    @ResponseBody String validate(@RequestParam('dump-path') String dumpPath) {
         List postsDumps = []
         double collectionScore = 0
         long collectionClassificationTime = 0
@@ -71,7 +72,7 @@ class CrossValidator {
                 List predictedTopics = getPredictedTopics(post)
 
                 Map postsDump = getPostDump(post, predictedTopics, postScore, classificationResult.time)
-                log(post, postsDump, collectionSize, collectionScore, collectionClassificationTime)
+                log(post, postsDump, collectionSize, collectionScore, collectionClassificationTime, dumpPath)
                 postsDumps << postsDump
             }
 
@@ -83,7 +84,7 @@ class CrossValidator {
 
         def validationResult = [ 'average_score': (collectionScore / collectionSize), 'average_time': "${(collectionClassificationTime / collectionSize)/1000}s", 'posts': postsDumps ].toMapString()
 
-        resourceService.writeToFile('F:\\Temp\\post-scores', 'total.score', validationResult)
+        resourceService.writeToFile(dumpPath, 'total.score', validationResult)
 
         return validationResult
     }
@@ -157,7 +158,7 @@ class CrossValidator {
         return result
     }
 
-    void log(Post post, Map postDump, int collectionSize, double collectionScore, long collectionClassificationTime) {
+    void log(Post post, Map postDump, int collectionSize, double collectionScore, long collectionClassificationTime, String dumpPath) {
         Map logInfo = [
             'current_average_score': (collectionScore / collectionSize),
             'current_average_time': "${(collectionClassificationTime / collectionSize)/1000}s",
@@ -165,6 +166,6 @@ class CrossValidator {
         ]
 
         println logInfo.toMapString()
-        resourceService.writeToFile('F:\\Temp\\post-scores', "post-${post.id}.score", logInfo.toMapString())
+        resourceService.writeToFile(dumpPath, "post-${post.id}.score", logInfo.toMapString())
     }
 }
