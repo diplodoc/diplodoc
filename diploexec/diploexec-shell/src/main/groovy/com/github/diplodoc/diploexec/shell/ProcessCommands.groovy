@@ -43,8 +43,7 @@ class ProcessCommands implements CommandMarker {
         if (pathToParametersFile) {
             Map<String, Object> jsonParameters = jsonSlurper.parse(resourceLoader.getResource("file:${pathToParametersFile}").file)
             parameters = jsonParameters.collectEntries { String key, Map<String, Object> parameter ->
-                String type = parameter['type']
-                parameter.remove('type')
+                String type = parameter.remove('_type')
                 [ key,  Class.forName(type).newInstance(parameter) ]
             }
         }
