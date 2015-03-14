@@ -48,7 +48,7 @@ class ProcessCall implements Runnable {
         new GroovyShell(binding(parameters)).evaluate(script)
     }
 
-    private Binding binding(Map<String, Object> parameters) {
+    Binding binding(Map<String, Object> parameters) {
         Binding binding = new Binding()
 
         bindInputParameters binding, parameters
@@ -66,23 +66,23 @@ class ProcessCall implements Runnable {
         return binding
     }
 
-    private void bindInputParameters(Binding binding, Map<String, Object> parameters) {
+    void bindInputParameters(Binding binding, Map parameters) {
         parameters.each {
             binding."${it.key}" = it.value
         }
     }
 
-    private void bindInput(Binding binding) {
+    void bindInput(Binding binding) {
         binding.input = { String[] args ->
             args.each { arg ->
-                if (binding."${arg}" == null) {
+                if (!binding.hasVariable(arg)) {
                     throw new RuntimeException("Input parameter ${arg} is missing")
                 }
             }
         }
     }
 
-    private void bindGet(Binding binding) {
+    void bindGet(Binding binding) {
         binding.get = { Map params ->
             println "get with ${params}"
             String url = params.from
@@ -92,7 +92,7 @@ class ProcessCall implements Runnable {
         }
     }
 
-    private void bindPost(Binding binding) {
+    void bindPost(Binding binding) {
         binding.post = { Map params ->
             println "post with ${params}"
             String url = params.to
@@ -103,7 +103,7 @@ class ProcessCall implements Runnable {
         }
     }
 
-    private void bindSend(Binding binding) {
+    void bindSend(Binding binding) {
         binding.send = { Map<String, Object> parameters ->
             String destination = parameters.to
             parameters.remove 'to'
@@ -112,13 +112,13 @@ class ProcessCall implements Runnable {
         }
     }
 
-    private void bindOutput(Binding binding) {
+    void bindOutput(Binding binding) {
         binding.output = {Map<String, Object> parameters ->
             diploexec.notify(new OutputEvent(processRun, parameters))
         }
     }
 
-    private void bindNotify(Binding binding) {
+    void bindNotify(Binding binding) {
         binding.notify = { Map<String, Object> parameters ->
             String eventName = parameters.that
             parameters.remove 'that'
@@ -127,11 +127,11 @@ class ProcessCall implements Runnable {
         }
     }
 
-    private void bindListen(Binding binding) {
+    void bindListen(Binding binding) {
         binding.listen = { /* do nothing */ }
     }
 
-    private void bindWaiting(Binding binding) {
+    void bindWaiting(Binding binding) {
         binding.waiting = { /* do nothing */ }
     }
 }

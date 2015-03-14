@@ -46,4 +46,60 @@ class ProcessCallSpec extends Specification {
         expect:
             processCall.run()
     }
+
+    def 'void bindInputParameters(Binding binding, Map parameters)'() {
+        setup:
+            Diploexec diploexec = Mock(Diploexec)
+            ProcessRun processRun = new ProcessRun()
+            ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ diploexec, processRun ])
+
+            Binding binding = new Binding()
+            Map parameters = [ 'key1': 'value1', 'key2': 28 ]
+
+        when:
+            processCall.bindInputParameters(binding, parameters)
+
+        then:
+            binding.key1 == 'value1'
+            binding.key2 == 28
+    }
+
+    def 'void input(String[] args) - all parameters exists'() {
+        setup:
+            Diploexec diploexec = Mock(Diploexec)
+            ProcessRun processRun = new ProcessRun()
+            ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ diploexec, processRun ])
+
+            Binding binding = new Binding()
+            Map parameters = [ 'key1': 'value1', 'key2': 28 ]
+
+            processCall.bindInputParameters(binding, parameters)
+            processCall.bindInput(binding)
+
+        when:
+           binding.input.call([ 'key1', 'key2' ] as String[])
+
+        then:
+            notThrown(Exception)
+    }
+
+    def 'void input(String[] args) - missing parameter'() {
+        setup:
+            Diploexec diploexec = Mock(Diploexec)
+            ProcessRun processRun = new ProcessRun()
+            ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ diploexec, processRun ])
+
+            Binding binding = new Binding()
+            Map parameters = [ 'key1': 'value1', 'key2': 28 ]
+
+            processCall.bindInputParameters(binding, parameters)
+            processCall.bindInput(binding)
+
+        when:
+            binding.input.call([ 'key1', 'key2', 'key3' ] as String[])
+
+        then:
+            def e = thrown(RuntimeException)
+            e.message == 'Input parameter key3 is missing'
+    }
 }
