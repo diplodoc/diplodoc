@@ -25,7 +25,7 @@ class StatusCommands implements CommandMarker {
         processRunRepository.findAll(new PageRequest(0, count, Sort.Direction.DESC, 'startTime')).collect(StatusCommands.&toDescription).join('\n')
     }
 
-    private static toDescription(ProcessRun processRun) {
+    static toDescription(ProcessRun processRun) {
         'id:'.padRight(20) + processRun.id + '\n' +
         'process:'.padRight(20) + processRun.process.name + '\n' +
         'status:'.padRight(20) + processRun.exitStatus + '\n' +
@@ -34,7 +34,7 @@ class StatusCommands implements CommandMarker {
         ((!processRun.parameters.isEmpty()) ? 'parameters:\n' + processRun.parameters.collect(StatusCommands.&toDescription).join('\n') : '')
     }
 
-    private static toDescription(ProcessRunParameter processRunParameter) {
+    static toDescription(ProcessRunParameter processRunParameter) {
         '    key:'.padRight(20) + "${processRunParameter.key}\n" +
         '    type:'.padRight(20) + "${processRunParameter.type}\n" +
         '    value:'.padRight(20) + "${processRunParameter.value}"
