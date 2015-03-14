@@ -7,7 +7,6 @@ import com.github.diplodoc.diplobase.repository.mongodb.TopicRepository
 import com.github.diplodoc.diplocore.services.ResourceService
 import com.github.diplodoc.diplocore.services.RestService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.core.io.ResourceLoader
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
@@ -76,8 +75,8 @@ class CrossValidator {
                 postsDumps << postsDump
             }
 
-            LocalDateTime willBeDone = getWillBeDoneAt(pageable.pageNumber, totalPages, validationStart)
-            println "Predicting to be ready at ${willBeDone}"
+            long needMoreTime = calculateNeedMoreTime(pageable.pageNumber, totalPages, validationStart, System.currentTimeMillis())
+            println "Predicting to be ready at ${LocalDateTime.now().plus(needMoreTime, ChronoUnit.MILLIS)}"
 
             pageable = pageable.next()
         }
@@ -93,13 +92,12 @@ class CrossValidator {
         post.train_topics != null && !post.train_topics.isEmpty()
     }
 
-    LocalDateTime getWillBeDoneAt(int pageNumber, int totalPages, long validationStart) {
-        long now = System.currentTimeMillis()
+    long calculateNeedMoreTime(int pageNumber, int totalPages, long validationStart, long now) {
         long pageDone = pageNumber + 1
         long pageLeft = totalPages - pageNumber - 1
         double needMoreTime = 1.0 * (now - validationStart) / pageDone * pageLeft
 
-        LocalDateTime.now().plus(Math.round(needMoreTime), ChronoUnit.MILLIS)
+        Math.round(needMoreTime)
     }
 
     def classify(Post post) {
