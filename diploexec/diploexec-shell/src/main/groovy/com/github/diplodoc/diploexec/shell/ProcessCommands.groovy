@@ -1,7 +1,7 @@
 package com.github.diplodoc.diploexec.shell
 
-import com.github.diplodoc.diplobase.client.diploexec.ProcessDataClient
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
+import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRepository
 import com.github.diplodoc.diploexec.client.DiploexecClient
 import groovy.json.JsonSlurper
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,7 +23,7 @@ class ProcessCommands implements CommandMarker {
     ResourceLoader resourceLoader
 
     @Autowired
-    ProcessDataClient processDataClient
+    ProcessRepository processRepository
 
     DiploexecClient diploexecClient = new DiploexecClient('http://localhost:8080')
 
@@ -31,20 +31,19 @@ class ProcessCommands implements CommandMarker {
 
     @CliCommand(value = 'process list', help = 'list all processes')
     String list() {
-        processDataClient.all().collect(ProcessCommands.&toSingleLineDescription).join('\n')
+        processRepository.findAll().collect(ProcessCommands.&toSingleLineDescription).join('\n')
     }
 
     @CliCommand(value = 'process run', help = 'run process')
     String run(@CliOption(key = '', mandatory = true, help = 'process name') final String name,
                @CliOption(key = 'parameters', mandatory = false, help = 'path to paramters file') final String pathToParametersFile) {
-        Process process = processDataClient.byName(name)
+        Process process = processRepository.findOneByName(name)
 
         Map<String, Object> parameters = [:]
         if (pathToParametersFile) {
             Map<String, Object> jsonParameters = jsonSlurper.parse(resourceLoader.getResource("file:${pathToParametersFile}").file)
             parameters = jsonParameters.collectEntries { String key, Map<String, Object> parameter ->
-                String type = parameter['type']
-                parameter.remove('type')
+                String type = parameter.remove('_type')
                 [ key,  Class.forName(type).newInstance(parameter) ]
             }
         }
@@ -55,35 +54,35 @@ class ProcessCommands implements CommandMarker {
 
     @CliCommand(value = 'process get', help = 'get full description of process')
     String get(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
-        toDescription(processDataClient.byName(name))
+        toDescription(processRepository.findOneByName(name))
     }
 
     @CliCommand(value = 'process disable', help = 'disable process')
     String disable(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
-        Process process = processDataClient.byName(name)
+        Process process = processRepository.findOneByName(name)
         process.active = false
-        processDataClient.save(process)
+        processRepository.save(process)
         'Disabled'
     }
 
     @CliCommand(value = 'process enable', help = 'enable process')
     String enable(@CliOption(key = '', mandatory = true, help = 'process name') final String name) {
-        Process process = processDataClient.byName(name)
+        Process process = processRepository.findOneByName(name)
         process.active = true
-        processDataClient.save(process)
+        processRepository.save(process)
         'Enabled'
     }
 
     @CliCommand(value = 'process update', help = 'update process description')
     String update(@CliOption(key = 'name', mandatory = true, help = 'process name') final String name,
                   @CliOption(key = 'definition', mandatory = true, help = 'path to definition file') final String pathToDefinitionFile) {
-        Process process = processDataClient.byName(name)
+        Process process = processRepository.findOneByName(name)
 
         String definition = resourceLoader.getResource("file:${pathToDefinitionFile}").file.text
         if (process.definition != definition) {
             process.definition = definition
             process.lastUpdate = LocalDateTime.now()
-            process = processDataClient.save(process)
+            process = processRepository.save(process)
         }
 
         toDescription(process)
@@ -98,15 +97,15 @@ class ProcessCommands implements CommandMarker {
         process.lastUpdate = LocalDateTime.now()
         process.definition = resourceLoader.getResource("file:${pathToDefinitionFile}").file.text
 
-        process = processDataClient.save(process)
+        process = processRepository.save(process)
         toDescription(process)
     }
 
-    private static toSingleLineDescription(Process process) {
+    static toSingleLineDescription(Process process) {
         "${process.id}".padRight(5) + "${process.name}".padLeft(40) + "${process.lastUpdate}".padLeft(30) + "${process.active?'active':'disabled'}".padLeft(10)
     }
 
-    private static toDescription(Process process) {
+    static toDescription(Process process) {
         'id:'.padRight(20) + "${process.id}\n" +
         'name:'.padRight(20) + "${process.name}\n" +
         'last update:'.padRight(20) + "${process.lastUpdate}\n" +

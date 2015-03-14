@@ -7,5 +7,5 @@ import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
  */
 interface DiploexecEvent {
 
-    Collection<ProcessRun> notifiedRuns(Diploexec diploexec)
+    Collection<ProcessRun> shouldNotifyRuns(Diploexec diploexec)
 }

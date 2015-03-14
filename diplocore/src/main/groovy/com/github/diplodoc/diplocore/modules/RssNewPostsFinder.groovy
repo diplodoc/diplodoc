@@ -37,22 +37,22 @@ class RssNewPostsFinder {
 
     @RequestMapping(value = '/source/{id}/new-posts', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody List<String> newPosts(@PathVariable('id') String sourceId) {
+    @ResponseBody Collection<String> newPosts(@PathVariable('id') String sourceId) {
         Source source = sourceRepository.findOne sourceId
 
         log.info('looking for new posts from {}...', source.name)
 
-        List<Post> posts = rssService
-                                .feed(source.rssUrl)
-                                .findAll { rssEntry -> !postRepository.findOneByUrl(rssEntry.link) }
-                                .collect { rssEntry ->
-                                    new Post(   url: rssEntry.link,
-                                                source: source,
-                                                title: rssEntry.title,
-                                                description: rssEntry.description.value,
-                                                publishTime: LocalDateTime.ofInstant(rssEntry.publishedDate.toInstant(), ZoneId.systemDefault())
-                                    )
-                                }
+        Collection<Post> posts = rssService
+                                    .feed(source.rssUrl)
+                                    .findAll { rssEntry -> !postRepository.findOneByUrl(rssEntry.link) }
+                                    .collect { rssEntry ->
+                                        new Post(   url: rssEntry.link,
+                                                    source: source,
+                                                    title: rssEntry.title,
+                                                    description: rssEntry.description.value,
+                                                    publishTime: LocalDateTime.ofInstant(rssEntry.publishedDate.toInstant(), ZoneId.systemDefault())
+                                        )
+                                    }
 
         postRepository.save posts
 

@@ -3,6 +3,12 @@ apply from: 'repository.gradle'
 allprojects {
 	group = 'com.github.diplodoc'
 	version = '0.0.5-SNAPSHOT'
+
+    apply plugin: 'jacoco'
+
+    repositories {
+        jcenter()
+    }
 }
 
 subprojects {
@@ -21,20 +27,49 @@ subprojects {
         testCompile dependency.cglib
         testCompile dependency.objenesis
 	}
+
+    test {
+        test.reports.html.enabled = false
+    }
+}
+
+task testResultsReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/results")
+    reportOn subprojects*.test
+}
+
+task testCoverageReport(type: JacocoReport) {
+    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+
+    subprojects.each { sourceSets it.sourceSets.main }
+
+    reports {
+        xml.enabled false
+        html.enabled true
+        html.destination "${buildDir}/reports/coverage"
+        csv.enabled false
+    }
+
+    dependsOn {
+        subprojects*.test
+    }
+}
+
+task cleanReports(type: Delete) {
+    delete "$buildDir/reports"
+}
+
+task testReport(type: DefaultTask) {
+    dependsOn {
+        [ cleanReports, testResultsReport, testCoverageReport ]
+    }
 }
 
 project(':diplobase:diplobase-shell') {
 	dependencies {
-		compile project(':diplobase:diplobase-client')
+		compile project(':diplobase')
 	}
 }
-
-project(':diplobase:diplobase-client') {
-    dependencies {
-        compile project(':diplobase')
-    }
-}
-
 project(':diplocore') {
 	dependencies {
 		compile project(':diplobase')
@@ -48,18 +83,10 @@ project(':diploexec') {
 	}
 }
 
-project(':diploexec:diploexec-test') {
-    dependencies {
-        compile project(':diplobase:diplobase-client')
-        compile project(':diplocore')
-    }
-}
-
 project(':diploexec:diploexec-shell') {
 	dependencies {
-        compile project(':diplobase:diplobase-client')
+        compile project(':diplobase')
 		compile project(':diploexec:diploexec-client')
-        compile project(':diploexec:diploexec-test')
 	}
 }
 

@@ -4,7 +4,6 @@ import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRepository
 import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRunRepository
-import groovy.util.logging.Log4j
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 
 import javax.annotation.PostConstruct
@@ -19,8 +18,8 @@ class Diploexec {
     ProcessRunRepository processRunRepository
 
     Collection<Process> processes
-    Map<Process, Collection<String>> waitingMap
-    Map<Process, Collection<String>> outputMap
+    Map<Process, Collection<String>> waitsForEventsMap
+    Map<Process, Collection<String>> listenToProcessesMap
 
     @PostConstruct
     void init() {
@@ -28,13 +27,13 @@ class Diploexec {
 
         println 'loading processes...'
         processes = processRepository.findByActiveIsTrue()
-        waitingMap = new HashMap<>()
-        outputMap = new HashMap<>()
+        waitsForEventsMap = new HashMap<>()
+        listenToProcessesMap = new HashMap<>()
 
         println 'creating process interaction map...'
         processes.each { Process process ->
-            waitingMap[process] = waitsFor(process)
-            outputMap[process] = inputFor(process)
+            waitsForEventsMap[process] = findEventsOneWaitsFor(process)
+            listenToProcessesMap[process] = findProcessesOneListensTo(process)
         }
     }
 
@@ -45,7 +44,7 @@ class Diploexec {
 
     void notify(DiploexecEvent event) {
         println "event fired ${event}..."
-        event.notifiedRuns(this).each { ProcessRun processRun -> run(processRun) }
+        event.shouldNotifyRuns(this).each { ProcessRun processRun -> run(processRun) }
     }
 
     void notify(ProcessCallEvent event) {
@@ -79,15 +78,15 @@ class Diploexec {
         processes.find { Process process -> process.name == name }
     }
 
-    Collection<Process> getWaitProcesses(String eventName) {
-        waitingMap.findAll { Process process, Collection<String> waitsFor -> waitsFor.contains(eventName) }.keySet()
+    Collection<Process> getProcessesWaitingFor(String eventName) {
+        waitsForEventsMap.findAll { Process process, Collection<String> waitsFor -> waitsFor.contains(eventName) }.keySet()
     }
 
-    Collection<Process> getInputProcesses(Process outputProcess) {
-        outputMap.findAll { Process process, Collection<String> inputFor -> inputFor.contains(outputProcess.name) }.keySet()
+    Collection<Process> getProcessesListeningTo(Process outputProcess) {
+        listenToProcessesMap.findAll { Process process, Collection<String> inputFor -> inputFor.contains(outputProcess.name) }.keySet()
     }
 
-    Collection<String> waitsFor(Process process) {
+    Collection<String> findEventsOneWaitsFor(Process process) {
         Collection<String> waitsFor = []
 
         String processWaitingDefinition = process.definition.readLines().findAll({ String line -> line.startsWith('waiting') }).join('\n')
@@ -98,7 +97,7 @@ class Diploexec {
         return waitsFor
     }
 
-    Collection<String> inputFor(Process process) {
+    Collection<String> findProcessesOneListensTo(Process process) {
         Collection<String> inputFor = []
 
         String processListenDefinition = process.definition.readLines().findAll({ String line -> line.startsWith('listen') }).join('\n')

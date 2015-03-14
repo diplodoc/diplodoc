@@ -33,7 +33,7 @@ class ProcessCall implements Runnable {
             }
             println "process definition\n${script}"
 
-            new GroovyShell(binding(parameters)).evaluate(script)
+            evaluate(parameters, script)
 
             println "process succeeded ${processRun}"
             diploexec.notify(ProcessCallEvent.succeed(processRun))
@@ -44,90 +44,70 @@ class ProcessCall implements Runnable {
         }
     }
 
-    private Binding binding(Map<String, Object> parameters) {
+    void evaluate(Map parameters, String script) {
+        new GroovyShell(binding(parameters)).evaluate(script)
+    }
+
+    Binding binding(Map<String, Object> parameters) {
         Binding binding = new Binding()
 
         bindInputParameters binding, parameters
         bindInput binding
 
-        bindGet binding
-        bindPost binding
+        binding.get = this.&get
+        binding.post = this.&post
 
-        bindSend binding
-        bindOutput binding
-        bindNotify binding
-        bindListen binding
-        bindWaiting binding
+        binding.send = this.&send
+        binding.output = this.&output
+        binding.notify = this.&notify
+        binding.listen = { /* do nothing */ }
+        binding.waiting = { /* do nothing */ }
 
         return binding
     }
 
-    private void bindInputParameters(Binding binding, Map<String, Object> parameters) {
+    void bindInputParameters(Binding binding, Map parameters) {
         parameters.each {
             binding."${it.key}" = it.value
         }
     }
 
-    private void bindInput(Binding binding) {
+    void bindInput(Binding binding) {
         binding.input = { String[] args ->
             args.each { arg ->
-                if (binding."${arg}" == null) {
+                if (!binding.hasVariable(arg)) {
                     throw new RuntimeException("Input parameter ${arg} is missing")
                 }
             }
         }
     }
 
-    private void bindGet(Binding binding) {
-        binding.get = { Map params ->
-            println "get with ${params}"
-            String url = params.from
-            Class responseType = params.expect ?: String
+    void get(Map params) {
+        String url = params.from
+        Class responseType = params.expect ?: String
 
-            restTemplate.getForObject(url, responseType)
-        }
+        restTemplate.getForObject(url, responseType)
     }
 
-    private void bindPost(Binding binding) {
-        binding.post = { Map params ->
-            println "post with ${params}"
-            String url = params.to
-            Object request = params.request
-            Class responseType = params.expect ?: String
+    void post(Map params) {
+        String url = params.to
+        Object request = params.request
+        Class responseType = params.expect ?: String
 
-            restTemplate.postForObject(url, request, responseType)
-        }
+        restTemplate.postForObject(url, request, responseType)
     }
 
-    private void bindSend(Binding binding) {
-        binding.send = { Map<String, Object> parameters ->
-            String destination = parameters.to
-            parameters.remove 'to'
-
-            diploexec.notify(new SendEvent(destination, parameters))
-        }
+    void send(Map params) {
+        String destination = params.remove 'to'
+        diploexec.notify(new SendEvent(destination, params))
     }
 
-    private void bindOutput(Binding binding) {
-        binding.output = {Map<String, Object> parameters ->
-            diploexec.notify(new OutputEvent(processRun, parameters))
-        }
+    void output(Map params) {
+        diploexec.notify(new OutputEvent(processRun, params))
     }
 
-    private void bindNotify(Binding binding) {
-        binding.notify = { Map<String, Object> parameters ->
-            String eventName = parameters.that
-            parameters.remove 'that'
-
-            diploexec.notify(new NotifyEvent(eventName, parameters))
-        }
-    }
-
-    private void bindListen(Binding binding) {
-        binding.listen = { /* do nothing */ }
-    }
-
-    private void bindWaiting(Binding binding) {
-        binding.waiting = { /* do nothing */ }
+    void notify(Map params) {
+        String eventName = params.remove 'that'
+        diploexec.notify(new NotifyEvent(eventName, params))
     }
 }

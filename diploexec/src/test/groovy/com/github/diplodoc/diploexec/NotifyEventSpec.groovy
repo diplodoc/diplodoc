@@ -7,19 +7,17 @@ import spock.lang.Specification
 /**
  * @author yaroslav.yermilov
  */
-class OutputEventSpecs extends Specification {
+class NotifyEventSpec extends Specification {
 
-    def 'notifiedRuns'() {
+    def 'Collection<ProcessRun> shouldNotifyRuns(Diploexec diploexec)'() {
         setup:
-            Process process0 = new Process(name: 'process-0')
-
             Diploexec diploexec = Mock(Diploexec)
-            diploexec.getInputProcesses(process0) >> [ new Process(name: 'process-1'), new Process(name: 'process-2') ]
+            diploexec.getProcessesWaitingFor('event-1') >> [ new Process(name: 'process-1'), new Process(name: 'process-2') ]
 
-            OutputEvent outputEvent = new OutputEvent(new ProcessRun(process: process0), [ 'key' : 'value' ])
+            NotifyEvent notifyEvent = new NotifyEvent('event-1', [ 'key' : 'value' ])
 
         when:
-            Collection<ProcessRun> actual = outputEvent.notifiedRuns(diploexec)
+            Collection<ProcessRun> actual = notifyEvent.shouldNotifyRuns(diploexec)
 
         then:
             actual.size() == 2
