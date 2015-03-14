@@ -101,11 +101,11 @@ class ProcessCommands implements CommandMarker {
         toDescription(process)
     }
 
-    private static toSingleLineDescription(Process process) {
+    static toSingleLineDescription(Process process) {
         "${process.id}".padRight(5) + "${process.name}".padLeft(40) + "${process.lastUpdate}".padLeft(30) + "${process.active?'active':'disabled'}".padLeft(10)
     }
 
-    private static toDescription(Process process) {
+    static toDescription(Process process) {
         'id:'.padRight(20) + "${process.id}\n" +
         'name:'.padRight(20) + "${process.name}\n" +
         'last update:'.padRight(20) + "${process.lastUpdate}\n" +
