@@ -4,6 +4,7 @@ import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRunParameter
 import groovy.json.JsonOutput
+import org.springframework.web.client.RestTemplate
 import spock.lang.Specification
 
 /**
@@ -101,5 +102,37 @@ class ProcessCallSpec extends Specification {
         then:
             def e = thrown(RuntimeException)
             e.message == 'Input parameter key3 is missing'
+    }
+
+    def 'void get(Map params)'() {
+        setup:
+            Diploexec diploexec = Mock(Diploexec)
+            ProcessRun processRun = new ProcessRun()
+            ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ diploexec, processRun ])
+
+            RestTemplate restTemplate = Mock(RestTemplate)
+            processCall.restTemplate = restTemplate
+
+        when:
+            processCall.get(from: 'url', expect: Integer)
+
+        then:
+            1 * restTemplate.getForObject('url', Integer)
+    }
+
+    def 'void get(Map params) - default response type'() {
+        setup:
+            Diploexec diploexec = Mock(Diploexec)
+            ProcessRun processRun = new ProcessRun()
+            ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ diploexec, processRun ])
+
+            RestTemplate restTemplate = Mock(RestTemplate)
+            processCall.restTemplate = restTemplate
+
+        when:
+            processCall.get(from: 'url')
+
+        then:
+            1 * restTemplate.getForObject('url', String)
     }
 }
