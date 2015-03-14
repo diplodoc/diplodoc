@@ -48,6 +48,30 @@ class ProcessCallSpec extends Specification {
             processCall.run()
     }
 
+    def 'Binding binding(Map<String, Object> parameters)'() {
+        setup:
+            Diploexec diploexec = Mock(Diploexec)
+            ProcessRun processRun = new ProcessRun()
+            ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ diploexec, processRun ])
+
+            Map parameters = [ 'key1': 'value1', 'key2': 28 ]
+
+        when:
+            Binding binding = processCall.binding(parameters)
+
+        then:
+            binding.hasVariable('key1')
+            binding.hasVariable('key2')
+            binding.hasVariable('input')
+            binding.hasVariable('get')
+            binding.hasVariable('post')
+            binding.hasVariable('send')
+            binding.hasVariable('output')
+            binding.hasVariable('notify')
+            binding.hasVariable('listen')
+            binding.hasVariable('waiting')
+    }
+
     def 'void bindInputParameters(Binding binding, Map parameters)'() {
         setup:
             Diploexec diploexec = Mock(Diploexec)
