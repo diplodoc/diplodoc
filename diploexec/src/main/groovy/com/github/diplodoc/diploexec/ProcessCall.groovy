@@ -55,7 +55,7 @@ class ProcessCall implements Runnable {
         bindInput binding
 
         binding.get = this.&get
-        bindPost binding
+        binding.post = this.&post
 
         bindSend binding
         bindOutput binding
@@ -89,15 +89,12 @@ class ProcessCall implements Runnable {
         restTemplate.getForObject(url, responseType)
     }
 
-    void bindPost(Binding binding) {
-        binding.post = { Map params ->
-            println "post with ${params}"
-            String url = params.to
-            Object request = params.request
-            Class responseType = params.expect ?: String
+    void post(Map params) {
+        String url = params.to
+        Object request = params.request
+        Class responseType = params.expect ?: String
 
-            restTemplate.postForObject(url, request, responseType)
-        }
+        restTemplate.postForObject(url, request, responseType)
     }
 
     void bindSend(Binding binding) {

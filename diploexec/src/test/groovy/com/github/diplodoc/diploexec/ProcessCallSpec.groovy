@@ -135,4 +135,36 @@ class ProcessCallSpec extends Specification {
         then:
             1 * restTemplate.getForObject('url', String)
     }
+
+    def 'void post(Map params)'() {
+        setup:
+            Diploexec diploexec = Mock(Diploexec)
+            ProcessRun processRun = new ProcessRun()
+            ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ diploexec, processRun ])
+
+            RestTemplate restTemplate = Mock(RestTemplate)
+            processCall.restTemplate = restTemplate
+
+        when:
+            processCall.post(to: 'url', request: 'request', expect: Integer)
+
+        then:
+            1 * restTemplate.postForObject('url', 'request', Integer)
+    }
+
+    def 'void post(Map params) - default response type'() {
+        setup:
+            Diploexec diploexec = Mock(Diploexec)
+            ProcessRun processRun = new ProcessRun()
+            ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ diploexec, processRun ])
+
+            RestTemplate restTemplate = Mock(RestTemplate)
+            processCall.restTemplate = restTemplate
+
+        when:
+            processCall.post(to: 'url', request: 'request')
+
+        then:
+            1 * restTemplate.postForObject('url', 'request', String)
+    }
 }
