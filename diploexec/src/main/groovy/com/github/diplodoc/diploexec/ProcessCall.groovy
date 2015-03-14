@@ -33,7 +33,7 @@ class ProcessCall implements Runnable {
             }
             println "process definition\n${script}"
 
-            new GroovyShell(binding(parameters)).evaluate(script)
+            evaluate(parameters, script)
 
             println "process succeeded ${processRun}"
             diploexec.notify(ProcessCallEvent.succeed(processRun))
@@ -42,6 +42,10 @@ class ProcessCall implements Runnable {
             e.printStackTrace()
             diploexec.notify(ProcessCallEvent.failed(processRun))
         }
+    }
+
+    void evaluate(Map parameters, String script) {
+        new GroovyShell(binding(parameters)).evaluate(script)
     }
 
     private Binding binding(Map<String, Object> parameters) {
