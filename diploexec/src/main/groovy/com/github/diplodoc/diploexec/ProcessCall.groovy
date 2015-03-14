@@ -57,11 +57,11 @@ class ProcessCall implements Runnable {
         binding.get = this.&get
         binding.post = this.&post
 
-        bindSend binding
-        bindOutput binding
-        bindNotify binding
-        bindListen binding
-        bindWaiting binding
+        binding.send = this.&send
+        binding.output = this.&output
+        binding.notify = this.&notify
+        binding.listen = { /* do nothing */ }
+        binding.waiting = { /* do nothing */ }
 
         return binding
     }
@@ -97,35 +97,17 @@ class ProcessCall implements Runnable {
         restTemplate.postForObject(url, request, responseType)
     }
 
-    void bindSend(Binding binding) {
-        binding.send = { Map<String, Object> parameters ->
-            String destination = parameters.to
-            parameters.remove 'to'
-
-            diploexec.notify(new SendEvent(destination, parameters))
-        }
+    void send(Map params) {
+        String destination = params.remove 'to'
+        diploexec.notify(new SendEvent(destination, params))
     }
 
-    void bindOutput(Binding binding) {
-        binding.output = {Map<String, Object> parameters ->
-            diploexec.notify(new OutputEvent(processRun, parameters))
-        }
+    void output(Map params) {
+        diploexec.notify(new OutputEvent(processRun, params))
     }
 
-    void bindNotify(Binding binding) {
-        binding.notify = { Map<String, Object> parameters ->
-            String eventName = parameters.that
-            parameters.remove 'that'
-
-            diploexec.notify(new NotifyEvent(eventName, parameters))
-        }
-    }
-
-    void bindListen(Binding binding) {
-        binding.listen = { /* do nothing */ }
-    }
-
-    void bindWaiting(Binding binding) {
-        binding.waiting = { /* do nothing */ }
+    void notify(Map params) {
+        String eventName = params.remove 'that'
+        diploexec.notify(new NotifyEvent(eventName, params))
     }
 }

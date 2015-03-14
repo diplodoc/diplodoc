@@ -167,4 +167,43 @@ class ProcessCallSpec extends Specification {
         then:
             1 * restTemplate.postForObject('url', 'request', String)
     }
+
+    def 'void send(Map params)'() {
+        setup:
+            Diploexec diploexec = Mock(Diploexec)
+            ProcessRun processRun = new ProcessRun()
+            ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ diploexec, processRun ])
+
+        when:
+            processCall.send('to': 'destination', 'key': 'value')
+
+        then:
+            1 * diploexec.notify(new SendEvent('destination', [ 'key': 'value' ]))
+    }
+
+    def 'void output(Map params)'() {
+        setup:
+            Diploexec diploexec = Mock(Diploexec)
+            ProcessRun processRun = new ProcessRun(id: 28)
+            ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ diploexec, processRun ])
+
+        when:
+            processCall.output('key': 'value')
+
+        then:
+            1 * diploexec.notify(new OutputEvent(processRun, [ 'key': 'value' ]))
+    }
+
+    def 'void notify(Map params)'() {
+        setup:
+            Diploexec diploexec = Mock(Diploexec)
+            ProcessRun processRun = new ProcessRun()
+            ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ diploexec, processRun ])
+
+        when:
+            processCall.notify('that': 'event', 'key': 'value')
+
+        then:
+            1 * diploexec.notify(new NotifyEvent('event', [ 'key': 'value' ]))
+    }
 }
