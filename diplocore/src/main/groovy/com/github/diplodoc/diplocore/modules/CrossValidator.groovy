@@ -41,7 +41,7 @@ class CrossValidator {
 
     @RequestMapping(value = '/', method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody String validate(@RequestParam('dump-path') String dumpPath) {
+    @ResponseBody Map validate(@RequestParam('dump-path') String dumpPath) {
         List postsDumps = []
         double collectionScore = 0
         long collectionClassificationTime = 0
@@ -82,9 +82,11 @@ class CrossValidator {
             pageable = pageable.next()
         }
 
-        def validationResult = [ 'average_score': (collectionScore / collectionSize), 'average_time': "${(collectionClassificationTime / collectionSize)/1000}s", 'posts': postsDumps ].toMapString()
+        Map validationResult = [ 'average_score': (collectionScore / collectionSize), 'average_time': "${(collectionClassificationTime / collectionSize)/1000}s", 'posts': postsDumps ]
 
-        resourceService.writeToFile(dumpPath, 'total.score', validationResult)
+        if (dumpPath != null) {
+            resourceService.writeToFile(dumpPath, 'total.score', validationResult.toMapString())
+        }
 
         return validationResult
     }
@@ -166,6 +168,9 @@ class CrossValidator {
         ]
 
         println logInfo.toMapString()
-        resourceService.writeToFile(dumpPath, "post-${post.id}.score", logInfo.toMapString())
+
+        if (dumpPath != null) {
+            resourceService.writeToFile(dumpPath, "post-${post.id}.score", logInfo.toMapString())
+        }
     }
 }

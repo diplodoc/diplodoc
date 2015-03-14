@@ -1,7 +1,10 @@
 package com.github.diplodoc.diplocore.modules
 
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+
 import static spock.util.matcher.HamcrestMatchers.*
-import static spock.util.matcher.HamcrestSupport.that
+import static spock.util.matcher.HamcrestSupport.*
 
 import com.github.diplodoc.diplobase.domain.mongodb.Post
 import com.github.diplodoc.diplobase.domain.mongodb.Topic
@@ -20,6 +23,85 @@ class CrossValidatorSpec extends Specification {
     TopicRepository topicRepository = Mock(TopicRepository)
 
     CrossValidator crossValidator = new CrossValidator(restService: restService, postRepository: postRepository, topicRepository: topicRepository)
+
+    def 'String validate(String dumpPath)'() {
+        setup:
+            Topic topic1 = new Topic(id: 'topic-1', label: 'label-1')
+            Topic topic2 = new Topic(id: 'topic-2', label: 'label-2', parent: topic1)
+            Topic topic3 = new Topic(id: 'topic-3', label: 'label-3', parent: topic1)
+
+            List posts1 = [
+                new Post(id: 'id-1', train_topics: [ topic1 ]),
+                new Post(id: 'id-2', train_topics: []),
+                new Post(id: 'id-3', train_topics: [ topic2 ])
+            ]
+            List posts2 = [
+                new Post(id: 'id-4', train_topics: [ topic3 ]),
+                new Post(id: 'id-5', train_topics: null)
+            ]
+
+            postRepository.findAll(new PageRequest(0, 5)) >> new PageImpl<Post>(posts1, new PageRequest(0, 5), 7)
+            postRepository.findAll(new PageRequest(1, 5)) >> new PageImpl<Post>(posts2, new PageRequest(1, 5), 7)
+
+            postRepository.findOne('id-1') >> new Post(
+                                                    id: 'id-1',
+                                                    url: 'url-1',
+                                                    title: 'title-1',
+                                                    train_topics: [ topic1 ],
+                                                    predicted_topics: [[topic_id: 'topic-1', score: 0.1], [topic_id: 'topic-2', score: 0.2], [topic_id: 'topic-3', score: 0.3]]
+                                                )
+            postRepository.findOne('id-3') >> new Post(
+                                                    id: 'id-3',
+                                                    url: 'url-3',
+                                                    title: 'title-3',
+                                                    train_topics: [ topic2 ],
+                                                    predicted_topics: [[topic_id: 'topic-1', score: 0.8], [topic_id: 'topic-2', score: 0.3], [topic_id: 'topic-3', score: 0.4]]
+                                                )
+            postRepository.findOne('id-4') >> new Post(
+                                                    id: 'id-4',
+                                                    url: 'url-4',
+                                                    title: 'title-4',
+                                                    train_topics: [ topic3 ],
+                                                    predicted_topics: [[topic_id: 'topic-1', score: 0.7], [topic_id: 'topic-2', score: 0.1], [topic_id: 'topic-3', score: 0.9]]
+                                                )
+
+            topicRepository.findOne('topic-1') >> topic1
+            topicRepository.findOne('topic-2') >> topic2
+            topicRepository.findOne('topic-3') >> topic3
+
+        when:
+            Map actual = crossValidator.validate(null)
+
+        then:
+            actual.keySet().size() == 3
+
+            expect actual.average_score, closeTo(0.3556, 1e-4)
+
+            actual.average_time != null
+
+            actual.posts.size() == 3
+
+            actual.posts.find({ it.id == 'id-1'})['url'] == 'url-1'
+            actual.posts.find({ it.id == 'id-1'})['title'] == 'title-1'
+            actual.posts.find({ it.id == 'id-1'})['train-topics'] == [ 'label-1' ]
+            actual.posts.find({ it.id == 'id-1'})['predicted-topics'] == [ 'label-3: 0.3', 'label-2: 0.2', 'label-1: 0.1' ]
+            expect actual.posts.find({ it.id == 'id-1'})['post-score'], closeTo(0.4667, 1e-4)
+            actual.posts.find({ it.id == 'id-1'})['classification-time'] != null
+
+            actual.posts.find({ it.id == 'id-3'})['url'] == 'url-3'
+            actual.posts.find({ it.id == 'id-3'})['title'] == 'title-3'
+            actual.posts.find({ it.id == 'id-3'})['train-topics'] as Set == [ 'label-1', 'label-2' ] as Set
+            actual.posts.find({ it.id == 'id-3'})['predicted-topics'] == [ 'label-1: 0.8', 'label-3: 0.4', 'label-2: 0.3' ]
+            expect actual.posts.find({ it.id == 'id-3'})['post-score'], closeTo(0.4333, 1e-4)
+            actual.posts.find({ it.id == 'id-3'})['classification-time'] != null
+
+            actual.posts.find({ it.id == 'id-4'})['url'] == 'url-4'
+            actual.posts.find({ it.id == 'id-4'})['title'] == 'title-4'
+            actual.posts.find({ it.id == 'id-4'})['train-topics'] as Set == [ 'label-1', 'label-3' ] as Set
+            actual.posts.find({ it.id == 'id-4'})['predicted-topics'] == [ 'label-3: 0.9', 'label-1: 0.7', 'label-2: 0.1' ]
+            expect actual.posts.find({ it.id == 'id-4'})['post-score'], closeTo(0.1667, 1e-4)
+            actual.posts.find({ it.id == 'id-4'})['classification-time'] != null
+    }
 
     def 'boolean isCrossValidation(Post post)'() {
         expect:
