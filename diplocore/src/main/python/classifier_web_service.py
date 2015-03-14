@@ -30,7 +30,6 @@ def classify(post_id):
     for record in db.topic.find():
         depickled = record['classifier']
         topic = record['label']
-        reference = DBRef('topic', record['_id'])
         decoded = base64.b64decode(depickled)
         text_clf = pickle.loads(decoded)
         predicted = text_clf.predict_proba([post['meaningText']])[0]
