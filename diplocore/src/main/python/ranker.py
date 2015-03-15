@@ -1,15 +1,42 @@
-def similarity_score(article_dict, user_dict):
-    article_dict = set(article_dict)
-    user_dict = set(user_dict)
-    return 1.0 * len(article_dict.intersection(user_dict)) / len(article_dict.union(user_dict))
+from pymongo import MongoClient
+from bson.objectid import ObjectId
+from bson.dbref import DBRef
 
 
-# article_dict_set - list of pairs (article, set of tags)
-# user_dict - list of tags preferred by user
-def rank(article_dict_set, user_dict):
-    return sorted(article_dict_set, key=lambda x: similarity_score(x[1], user_dict), reverse=True)
+def dot_product(map1, map2):
+    res = 0.0
+    for key in map1.keys():
+        if key in map2:
+            res += map1[key] * map2[key]
+
+    return res
 
 
-def test():
-    print rank([('a1', ['random', 'something']), ('a2', ['it', 'random']), ('a3', ['it', 'programming'])], ['it', 'programming'])
-test()
+def similarity_score(user, post):
+    client = MongoClient()
+    db = client['diplodata']
+
+    user_preferences = [(db.dereference(ref)['_id'], score) for (ref, score) in user['preferences']]
+    user_preferences_map = dict(user_preferences)
+    post_topics = [(db.dereference(ref)['_id'], score) for (ref, score) in post['predicted_labels']]
+    post_topics_map = dict(post_topics)
+
+    return dot_product(user_preferences_map, post_topics_map)
+
+
+def rank(user_id):
+    client = MongoClient()
+    db = client['diplodata']
+    user = db.user.find_one({'_id': ObjectId(user_id)})
+    if 'preferences' not in user.keys():
+        # use global ranking
+        return
+    posts = []
+    for post in db.post.find():
+        reference = DBRef('post', post['_id'])
+        score = similarity_score(user, post)
+        posts.append((reference, score))
+
+    posts.sort(key=lambda pair: pair[1], reverse=True)
+    user['ranked_articles'] = posts
+    db.user.update({'_id': user['_id']}, user)
