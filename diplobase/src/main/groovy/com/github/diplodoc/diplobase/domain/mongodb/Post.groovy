@@ -34,5 +34,7 @@ class Post {
 
     String meaningText
 
-    String type
+
+    @DBRef
+    Collection<Topic> train_topics
 }

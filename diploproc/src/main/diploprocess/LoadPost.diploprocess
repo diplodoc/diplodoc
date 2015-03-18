@@ -1,9 +1,0 @@
-input 'post'
-
-description "Loads post from '${post.url}' (${post.source.name})"
-
-require 'post-loader'
-
-post = loadPost post: post
-
-output post: post

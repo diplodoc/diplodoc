@@ -2,37 +2,18 @@ apply from: 'repository.gradle'
 
 allprojects {
 	group = 'com.github.diplodoc'
-	version = '0.0.4'
-}
+	version = '0.0.5'
 
-buildscript {
-	repositories {
-		jcenter()
-	}
+    apply plugin: 'jacoco'
 
-	dependencies {
-		classpath 'org.akhikhl.gretty:gretty:+'
-	}
-}
-
-apply plugin: 'org.akhikhl.gretty'
-farm {
-	webapp ':diploexec:diploexec-rest'
+    repositories {
+        jcenter()
+    }
 }
 
 subprojects {
     apply plugin: 'java'
 	apply plugin: 'groovy'
-
-	buildscript {
-		repositories {
-			jcenter()
-		}
-
-		dependencies {
-			classpath 'org.akhikhl.gretty:gretty:+'
-		}
-	}
 
 	repositories {
 	    jcenter()
@@ -46,20 +27,54 @@ subprojects {
         testCompile dependency.cglib
         testCompile dependency.objenesis
 	}
+
+    test {
+        test.reports.html.enabled = true
+    }
+}
+
+task testFailReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/results")
+    reportOn subprojects*.test*.binResultsDir
+}
+
+task testResultsReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/results")
+    reportOn subprojects*.test
+}
+
+task testCoverageReport(type: JacocoReport) {
+    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+
+    subprojects.each { sourceSets it.sourceSets.main }
+
+    reports {
+        xml.enabled false
+        html.enabled true
+        html.destination "${buildDir}/reports/coverage"
+        csv.enabled false
+    }
+
+    dependsOn {
+        subprojects*.test
+    }
+}
+
+task clean(type: Delete) {
+    delete "$buildDir/reports"
+}
+
+task testReport(type: DefaultTask) {
+    dependsOn {
+        [ testResultsReport, testCoverageReport ]
+    }
 }
 
 project(':diplobase:diplobase-shell') {
 	dependencies {
-		compile project(':diplobase:diplobase-client')
+		compile project(':diplobase')
 	}
 }
-
-project(':diplobase:diplobase-client') {
-    dependencies {
-        compile project(':diplobase')
-    }
-}
-
 project(':diplocore') {
 	dependencies {
 		compile project(':diplobase')
@@ -73,24 +88,10 @@ project(':diploexec') {
 	}
 }
 
-project(':diploexec:diploexec-test') {
-    dependencies {
-        compile project(':diplobase:diplobase-client')
-        compile project(':diplocore')
-    }
-}
-
-project(':diploexec:diploexec-rest') {
-	dependencies {
-		compile project(':diploexec')
-	}
-}
-
 project(':diploexec:diploexec-shell') {
 	dependencies {
-        compile project(':diplobase:diplobase-client')
+        compile project(':diplobase')
 		compile project(':diploexec:diploexec-client')
-        compile project(':diploexec:diploexec-test')
 	}
 }
 

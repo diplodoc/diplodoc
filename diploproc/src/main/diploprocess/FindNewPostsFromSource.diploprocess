@@ -1,9 +1,0 @@
-input 'source'
-
-description "Finds new posts from '${source.name}'"
-
-require source.newPostsFinderModule
-
-findNewPosts source: source, action: {
-    post -> send to: 'load-post', post: post
-}

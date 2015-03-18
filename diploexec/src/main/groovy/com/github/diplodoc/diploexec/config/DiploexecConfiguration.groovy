@@ -13,13 +13,13 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.context.annotation.Lazy
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
+import org.springframework.web.servlet.config.annotation.EnableWebMvc
 
 /**
  * @author yaroslav.yermilov
  */
 @Configuration
 @Import(DiplocoreConfiguration)
-@ComponentScan('com.github.diplodoc.diploexec')
 class DiploexecConfiguration {
 
     @Bean
@@ -37,14 +37,9 @@ class DiploexecConfiguration {
     Diploexec diploexec(ThreadPoolTaskExecutor threadPool, ProcessRepository processRepository, ProcessRunRepository processRunRepository) {
         Diploexec diploexec = new Diploexec()
         diploexec.threadPool = threadPool
-        diploexec.modulesContext = modulesContext()
         diploexec.processRepository = processRepository
         diploexec.processRunRepository = processRunRepository
 
         return diploexec
-    }
-
-    ApplicationContext modulesContext() {
-        new AnnotationConfigApplicationContext(DiplocoreConfiguration)
     }
 }

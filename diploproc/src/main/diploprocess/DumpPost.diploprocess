@@ -1,0 +1,5 @@
+listen to: 'extract-text'
+
+input 'postId'
+
+post to: "http://localhost:8080/diplocore/post-dumper/post/${postId}/dump", request: 'F:\\Temp\\diplodoc'

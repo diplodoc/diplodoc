@@ -37,7 +37,7 @@ class DiploexecClient {
             new ProcessRunParameter(key: key, value: JsonOutput.toJson(value), type: value.class.name)
         }
 
-        hateoasTemplate.exchange("${rootUrl}/diploexec/api/v1/process/run", HttpMethod.POST, new HttpEntity<ProcessRun>(processRun), PROCESS_RUN)
+        hateoasTemplate.exchange("${rootUrl}/diploexec/process/run", HttpMethod.POST, new HttpEntity<ProcessRun>(processRun), PROCESS_RUN)
     }
 
     private static RestTemplate newHateoasTemplate() {

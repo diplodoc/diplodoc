@@ -3,12 +3,14 @@ package com.github.diplodoc.diploexec
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRunParameter
 import groovy.json.JsonOutput
+import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
 /**
  * @author yaroslav.yermilov
  */
 @ToString
+@EqualsAndHashCode
 class SendEvent implements DiploexecEvent {
 
     String destination
@@ -20,7 +22,7 @@ class SendEvent implements DiploexecEvent {
     }
 
     @Override
-    Collection<ProcessRun> notifiedRuns(Diploexec diploexec) {
+    Collection<ProcessRun> shouldNotifyRuns(Diploexec diploexec) {
         ProcessRun processRun = new ProcessRun()
         processRun.process = diploexec.getProcess(destination)
         processRun.parameters = parameters.collect { String key, Object value ->
