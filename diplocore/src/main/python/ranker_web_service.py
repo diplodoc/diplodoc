@@ -2,6 +2,10 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 from bson.dbref import DBRef
 
+from flask import Flask
+
+app = Flask(__name__)
+
 
 def dot_product(map1, map2):
     res = 0.0
@@ -27,7 +31,7 @@ def similarity_score(user, post):
 
     return dot_product(user_preferences_map, post_topics_map)
 
-
+@app.route("/post-ranker/<user_id>/rank")
 def rank(user_id):
     client = MongoClient()
     db = client['diplodata']
@@ -45,4 +49,7 @@ def rank(user_id):
     user['ranked_articles'] = posts
     db.user.update({'_id': user['_id']}, user)
 
-rank('5509242eed2a690b0fe734bf')
+    return 'RANKED POSTS: ' + str(posts)
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5001)
