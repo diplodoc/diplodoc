@@ -13,7 +13,7 @@ class DiplobaseShellSpec extends Specification {
 
         then:
             banner.banner == ''
-            banner.version == '0.0.5-SNAPSHOT'
+            banner.version == '0.0.5'
             banner.welcomeMessage == ''
     }
 
