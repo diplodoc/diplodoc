@@ -8,14 +8,16 @@ import spock.lang.Specification
  */
 class PostDumperSpec extends Specification {
 
+    PostDumper postDumper = new PostDumper()
+
     def 'String toDump(Post post)'() {
         when:
             Post post = new Post(id: 'id', url: 'url', title: 'title', meaningText: 'meaning-text')
 
         then:
-            String actual = PostDumper.toDump(post)
+            List<String> actual = postDumper.toDump(post)
 
         expect:
-            actual == 'id\nurl\ntitle\nmeaning-text'
+            actual == [ 'id', 'url', 'title', 'meaning-text' ]
     }
 }

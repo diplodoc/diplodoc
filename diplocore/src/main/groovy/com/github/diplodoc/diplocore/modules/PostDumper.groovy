@@ -2,6 +2,7 @@ package com.github.diplodoc.diplocore.modules
 
 import com.github.diplodoc.diplobase.domain.mongodb.Post
 import com.github.diplodoc.diplobase.repository.mongodb.PostRepository
+import com.github.diplodoc.diplocore.services.ResourceService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.ResourceLoader
 import org.springframework.http.HttpStatus
@@ -23,23 +24,23 @@ class PostDumper {
     PostRepository postRepository
 
     @Autowired
-    ResourceLoader resourceLoader
+    ResourceService resourceService
 
     @RequestMapping(value = '/post/{id}/dump', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     void dumpPost(@PathVariable('id') String postId, @RequestBody String folder) {
         Post post = postRepository.findOne(postId)
         String postDump = toDump(post)
-        resourceLoader.getResource("${folder}/post-${post.id}.dump").file.text = postDump
+        resourceService.writeToFile(folder, "post-${post.id}.dump", postDump.join('\n'))
     }
 
-    static String toDump(Post post) {
+    List<String> toDump(Post post) {
         List<String> postDump = []
         postDump << post.id
         postDump << post.url
         postDump << post.title
         postDump << post.meaningText
 
-        postDump.join('\n')
+        return postDump
     }
 }

@@ -36,5 +36,5 @@ class Post {
 
 
     @DBRef
-    List<Topic> train_topics
+    Collection<Topic> train_topics
 }
