@@ -2,7 +2,7 @@ apply from: 'repository.gradle'
 
 allprojects {
 	group = 'com.github.diplodoc'
-	version = '0.0.5'
+	version = '0.0.6-SNAPSHOT'
 
     apply plugin: 'jacoco'
 

@@ -19,7 +19,7 @@ class Banner extends DefaultBannerProvider {
 
     @Override
     String getVersion() {
-        '0.0.5'
+        '0.0.6-SNAPSHOT'
     }
 
     @Override
