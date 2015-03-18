@@ -29,8 +29,13 @@ subprojects {
 	}
 
     test {
-        test.reports.html.enabled = false
+        test.reports.html.enabled = true
     }
+}
+
+task testFailReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/results")
+    reportOn subprojects*.test*.binResultsDir
 }
 
 task testResultsReport(type: TestReport) {
@@ -55,13 +60,13 @@ task testCoverageReport(type: JacocoReport) {
     }
 }
 
-task cleanReports(type: Delete) {
+task clean(type: Delete) {
     delete "$buildDir/reports"
 }
 
 task testReport(type: DefaultTask) {
     dependsOn {
-        [ cleanReports, testResultsReport, testCoverageReport ]
+        [ testResultsReport, testCoverageReport ]
     }
 }
 
