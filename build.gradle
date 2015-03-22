@@ -11,13 +11,8 @@ allprojects {
     }
 }
 
-subprojects {
-    apply plugin: 'java'
+configure(subprojects.findAll {it.name != 'diploweb'}) {
 	apply plugin: 'groovy'
-
-	repositories {
-	    jcenter()
-	}
 
 	dependencies {
 		compile dependency.groovy
@@ -35,18 +30,18 @@ subprojects {
 
 task testFailReport(type: TestReport) {
     destinationDir = file("$buildDir/reports/results")
-    reportOn subprojects*.test*.binResultsDir
+    reportOn subprojects.findAll({it.name != 'diploweb'})*.test*.binResultsDir
 }
 
 task testResultsReport(type: TestReport) {
     destinationDir = file("$buildDir/reports/results")
-    reportOn subprojects*.test
+    reportOn subprojects.findAll({it.name != 'diploweb'})*.test
 }
 
 task testCoverageReport(type: JacocoReport) {
     executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
 
-    subprojects.each { sourceSets it.sourceSets.main }
+    subprojects.findAll({it.name != 'diploweb'}).each { sourceSets it.sourceSets.main }
 
     reports {
         xml.enabled false
@@ -56,7 +51,7 @@ task testCoverageReport(type: JacocoReport) {
     }
 
     dependsOn {
-        subprojects*.test
+        subprojects.findAll({it.name != 'diploweb'})*.test
     }
 }
 

@@ -1,0 +1,34 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath dependency.grails.gradle
+    }
+}
+
+apply plugin: 'grails'
+
+grails {
+    grailsVersion = versions.grails
+    groovyVersion = versions.groovy
+}
+
+repositories {
+    grails.central()
+}
+
+dependencies {
+    bootstrap dependency.grails.tomcat
+
+    compile "org.grails.plugins:scaffolding:2.1.2"
+    compile 'org.grails.plugins:cache:1.1.7'
+    compile "org.grails.plugins:asset-pipeline:1.9.6"
+
+    runtime("org.grails.plugins:hibernate4:4.3.5.5") {
+        exclude module: 'xml-apis'
+    }
+    runtime "org.grails.plugins:database-migration:1.4.0"
+    runtime "org.grails.plugins:jquery:1.11.1"
+}

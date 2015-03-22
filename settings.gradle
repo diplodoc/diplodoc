@@ -8,3 +8,5 @@ include 'diploexec:diploexec-client'
 include 'diploexec:diploexec-shell'
 
 include 'diploproc'
+
+include 'diploweb'
