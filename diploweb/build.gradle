@@ -22,7 +22,13 @@ repositories {
 dependencies {
     bootstrap dependency.grails.tomcat
 
-    compile "org.grails.plugins:asset-pipeline:1.9.6"
+    compile dependency.grails.scaffolding
+    compile dependency.grails.asset
+    compile dependency.grails.mongodb
+    compile(dependency.grails.hibernate) {
+        exclude module: 'xml-apis'
+    }
 
-    runtime "org.grails.plugins:jquery:1.11.1"
+    runtime dependency.postgresql
+    runtime dependency.grails.jquery
 }

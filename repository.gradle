@@ -32,6 +32,11 @@ ext {
     dependency.grails = [:]
     dependency.grails.gradle = 'org.grails:grails-gradle-plugin:2.1.2'
     dependency.grails.tomcat = 'org.grails.plugins:tomcat:7.0.50'
+    dependency.grails.scaffolding = 'org.grails.plugins:scaffolding:2.1.2'
+    dependency.grails.asset = 'org.grails.plugins:asset-pipeline:1.9.6'
+    dependency.grails.jquery = 'org.grails.plugins:jquery:1.11.1'
+    dependency.grails.mongodb = 'org.grails.plugins:mongodb:3.0.3'
+    dependency.grails.hibernate = 'org.grails.plugins:hibernate4:4.3.8.1'
 
     dependency.postgresql = 'org.postgresql:postgresql:9.3-1101-jdbc41'
 
@@ -49,5 +54,4 @@ ext {
     dependency.jackson.databind = "com.fasterxml.jackson.core:jackson-databind:${versions.jackson}"
 
     dependency.rome = 'com.rometools:rome:1.5.0'
-
 }
