@@ -1,0 +1,34 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath dependency.grails.gradle
+    }
+}
+
+apply plugin: 'grails'
+
+grails {
+    grailsVersion = versions.grails
+    groovyVersion = versions.groovy
+}
+
+repositories {
+    grails.central()
+}
+
+dependencies {
+    bootstrap dependency.grails.tomcat
+
+    compile dependency.grails.scaffolding
+    compile dependency.grails.asset
+    compile dependency.grails.mongodb
+    compile(dependency.grails.hibernate) {
+        exclude module: 'xml-apis'
+    }
+
+    runtime dependency.postgresql
+    runtime dependency.grails.jquery
+}
