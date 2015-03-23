@@ -20,4 +20,6 @@ class Post {
     String publishTime
 
     static belongsTo = [ source: Source ]
+
+    static hasMany = [ train_topics: Topic ]
 }
