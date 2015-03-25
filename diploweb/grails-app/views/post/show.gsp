@@ -5,7 +5,7 @@
 	<head>
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'post.label', default: 'Post')}" />
-		<title><g:message code="default.show.label" args="[entityName]" /></title>
+		<title><g:message code="default.show.label" args='[ "Post id=${postInstance.id}" ]' /></title>
 	</head>
 
 	<body>
@@ -79,9 +79,7 @@
                 <g:if test="${postInstance?.train_topics}">
                     <li class="fieldcontain">
                         <span id="train_topics-label" class="property-label"><g:message code="post.train_topics.label" default="Train topics" /></span>
-                        <g:each in="${postInstance.train_topics}" var="p">
-                            <span class="property-value" aria-labelledby="train_topics-label"><g:link controller="topic" action="show" id="${p.id}"><g:fieldValue bean="${p}" field="label"/></g:link></span>
-                        </g:each>
+                        <diplo:topics topics="${postInstance.train_topics}" />
                     </li>
                 </g:if>
 
@@ -112,7 +110,6 @@
 
 			<g:form url="[resource:postInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">
-					<g:link class="edit" action="edit" resource="${postInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
 					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
 				</fieldset>
 			</g:form>
