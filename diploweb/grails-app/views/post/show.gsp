@@ -30,7 +30,7 @@
                 <g:if test="${postInstance?.url}">
                     <li class="fieldcontain">
                         <span id="url-label" class="property-label"><g:message code="post.url.label" default="Url" /></span>
-                        <span class="property-value" aria-labelledby="url-label"><a href="${postInstance.url}"><g:fieldValue bean="${postInstance}" field="url"/></a></span>
+                        <span class="property-value" aria-labelledby="url-label"><a href="${postInstance.url}" target="_blank"><g:fieldValue bean="${postInstance}" field="url"/></a></span>
                     </li>
                 </g:if>
 			
