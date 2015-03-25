@@ -64,14 +64,14 @@
 
                 <g:if test="${postInstance?.publishTime}">
                     <li class="fieldcontain">
-                        <span id="publishTime-label" class="property-label"><g:message code="post.publishTime.label" default="Publish Time" /></span>
+                        <span id="publishTime-label" class="property-label"><g:message code="post.publishTime.label" default="Publish time" /></span>
                         <span class="property-value" aria-labelledby="publishTime-label"><g:fieldValue bean="${postInstance}" field="publishTime"/></span>
                     </li>
                 </g:if>
 
                 <g:if test="${postInstance?.loadTime}">
                     <li class="fieldcontain">
-                        <span id="loadTime-label" class="property-label"><g:message code="post.loadTime.label" default="Load Time" /></span>
+                        <span id="loadTime-label" class="property-label"><g:message code="post.loadTime.label" default="Load time" /></span>
                         <span class="property-value" aria-labelledby="loadTime-label"><g:fieldValue bean="${postInstance}" field="loadTime"/></span>
                     </li>
                 </g:if>
