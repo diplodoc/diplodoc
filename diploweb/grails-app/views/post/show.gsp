@@ -13,13 +13,13 @@
 
 		<div class="nav" role="navigation">
 			<ul>
-				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
+                <li><a href="${createLink(uri: '/diplodata')}"><g:message code="default.diplodata.label" default="diplodata" /></a></li>
 				<li><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
 			</ul>
 		</div>
 
 		<div id="show-post" class="content scaffold-show" role="main">
-            <h1><g:fieldValue bean="${postInstance}" field="title"/></h1>
+            <h1>Post id=${postInstance.id}</h1>
 
 			<g:if test="${flash.message}">
 			    <div class="message" role="status">${flash.message}</div>
@@ -27,19 +27,26 @@
 
 			<ol class="property-list post">
 
+                <g:if test="${postInstance?.id}">
+                    <li class="fieldcontain">
+                        <span id="id-label" class="property-label"><g:message code="post.id.label" default="id" /></span>
+                        <span class="property-value" aria-labelledby="id-label"><g:fieldValue bean="${postInstance}" field="id"/></span>
+                    </li>
+                </g:if>
+
                 <g:if test="${postInstance?.url}">
                     <li class="fieldcontain">
                         <span id="url-label" class="property-label"><g:message code="post.url.label" default="Url" /></span>
                         <span class="property-value" aria-labelledby="url-label"><a href="${postInstance.url}" target="_blank"><g:fieldValue bean="${postInstance}" field="url"/></a></span>
                     </li>
                 </g:if>
-			
-				<g:if test="${postInstance?.id}">
+
+                <g:if test="${postInstance?.title}">
                     <li class="fieldcontain">
-                        <span id="id-label" class="property-label"><g:message code="post.id.label" default="id" /></span>
-                        <span class="property-value" aria-labelledby="id-label"><g:fieldValue bean="${postInstance}" field="id"/></span>
+                        <span id="title-label" class="property-label"><g:message code="post.title.label" default="Title" /></span>
+                        <span class="property-value" aria-labelledby="title-label"><g:fieldValue bean="${postInstance}" field="title"/></span>
                     </li>
-				</g:if>
+                </g:if>
 
                 <g:if test="${postInstance?.source}">
                     <li class="fieldcontain">
@@ -71,9 +78,18 @@
 
                 <g:if test="${postInstance?.train_topics}">
                     <li class="fieldcontain">
-                        <span id="trainTopics-label" class="property-label"><g:message code="post.trainTopics.label" default="Train topics" /></span>
+                        <span id="train_topics-label" class="property-label"><g:message code="post.train_topics.label" default="Train topics" /></span>
                         <g:each in="${postInstance.train_topics}" var="p">
-                            <span class="property-value" aria-labelledby="trainTopics-label"><g:link controller="topic" action="show" id="${p.id}"><g:fieldValue bean="${p}" field="label"/></g:link></span>
+                            <span class="property-value" aria-labelledby="train_topics-label"><g:link controller="topic" action="show" id="${p.id}"><g:fieldValue bean="${p}" field="label"/></g:link></span>
+                        </g:each>
+                    </li>
+                </g:if>
+
+                <g:if test="${postInstance?.predicted_topics}">
+                    <li class="fieldcontain">
+                        <span id="predicted_topics-label" class="property-label"><g:message code="post.predicted_topics.label" default="Predicted topics" /></span>
+                        <g:each in="${postInstance.predicted_topics}" var="p">
+                            <span class="property-value" aria-labelledby="predicted_topics-label">${p.encodeAsHTML()}</span>
                         </g:each>
                     </li>
                 </g:if>
@@ -82,6 +98,13 @@
                     <li class="fieldcontain">
                         <span id="meaningText-label" class="property-label"><g:message code="post.meaningText.label" default="Meaning text" /></span>
                         <span class="property-value" aria-labelledby="meaningText-label"><g:fieldValue bean="${postInstance}" field="meaningText"/></span>
+                    </li>
+                </g:if>
+
+                <g:if test="${postInstance?.html}">
+                    <li class="fieldcontain">
+                        <span id="html-label" class="property-label"><g:message code="post.html.label" default="HTML" /></span>
+                        <span class="property-value" aria-labelledby="html-label"><g:fieldValue bean="${postInstance}" field="html"/></span>
                     </li>
                 </g:if>
                 

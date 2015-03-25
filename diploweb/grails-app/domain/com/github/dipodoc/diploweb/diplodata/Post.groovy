@@ -19,6 +19,8 @@ class Post {
 
     String publishTime
 
+    List predicted_topics
+
     static belongsTo = [ source: Source ]
 
     static hasMany = [ train_topics: Topic ]
