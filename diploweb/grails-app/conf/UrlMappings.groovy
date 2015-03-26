@@ -3,9 +3,8 @@ class UrlMappings {
 	static mappings = {
         "/$controller/$action?/$id?(.$format)?"{ }
 
-        '/'(controller: 'post', action: 'list')
-
-        '/diplodata'(controller: 'post', action: 'list')
+        '/'(view: 'diplodata')
+        '/diplodata'(view: 'diplodata')
 
         '500'(view: '/error')
 	}
