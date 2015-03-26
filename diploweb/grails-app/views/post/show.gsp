@@ -86,9 +86,7 @@
                 <g:if test="${postInstance?.predicted_topics}">
                     <li class="fieldcontain">
                         <span id="predicted_topics-label" class="property-label"><g:message code="post.predicted_topics.label" default="Predicted topics" /></span>
-                        <g:each in="${postInstance.predicted_topics}" var="p">
-                            <span class="property-value" aria-labelledby="predicted_topics-label">${p.encodeAsHTML()}</span>
-                        </g:each>
+                        <diplo:topics topics="${postInstance.predicted_topics}" hierarchy="all" />
                     </li>
                 </g:if>
 
