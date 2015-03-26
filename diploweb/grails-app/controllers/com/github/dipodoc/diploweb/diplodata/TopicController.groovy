@@ -6,7 +6,7 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class TopicController {
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [ save: "POST", update: "PUT", delete: "DELETE" ]
 
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
