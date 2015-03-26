@@ -13,6 +13,7 @@
             <ul>
                 <li><a href="${createLink(controller: 'post', action: 'list')}"><g:message code="default.post.label" default="posts" /></a></li>
                 <li><a href="${createLink(controller: 'topic', action: 'list')}"><g:message code="default.topic.label" default="topics" /></a></li>
+                <li><a href="${createLink(controller: 'source', action: 'list')}"><g:message code="default.source.label" default="sources" /></a></li>
             </ul>
         </div>
 
