@@ -43,7 +43,7 @@
 
                             <td><g:link action="show" id="${postInstance.id}">${fieldValue(bean: postInstance, field: 'id')}</g:link></td>
 
-							<td>${fieldValue(bean: postInstance, field: 'url')}</td>
+							<td><a href="${postInstance.url}" target="_blank"><g:fieldValue bean="${postInstance}" field="url"/></a></td>
 
                             <td>${fieldValue(bean: postInstance, field: 'title')}</td>
 
