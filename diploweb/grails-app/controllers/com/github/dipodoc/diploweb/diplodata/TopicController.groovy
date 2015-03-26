@@ -1,7 +1,5 @@
 package com.github.dipodoc.diploweb.diplodata
 
-
-
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 

@@ -11,10 +11,13 @@ class TopicTagLib {
     def topics = { attrs, body ->
         def topicsAttr = attrs['topics']
         String hierarchy = attrs['hierarchy']?:'single'
+        String spanClass = attrs['spanClass']
 
         Map topicsMap = [:]
 
-        if (topicsAttr[0] instanceof Topic) {
+        if (topicsAttr instanceof Topic) {
+            unroll(topicsAttr).each { Topic topic -> topicsMap[topic] = NIL }
+        } else if (topicsAttr[0] instanceof Topic) {
             topicsAttr.collectMany(this.&unroll).each { Topic topic -> topicsMap[topic] = NIL }
         } else {
             Collection allTopics = Topic.list()
@@ -44,7 +47,9 @@ class TopicTagLib {
             Topic root = leaf.key
             Topic iter = root
 
-            out << '<span class="property-value">'
+            if (spanClass) {
+                out << """<span class="${spanClass}">"""
+            }
 
             while (iter != null) {
                 def score = originalMap[iter]
@@ -61,7 +66,9 @@ class TopicTagLib {
             }
             topicsMap.remove(root)
 
-            out << '</span>'
+            if (spanClass) {
+                out << '</span>'
+            }
         }
     }
 
