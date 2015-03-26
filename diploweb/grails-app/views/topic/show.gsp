@@ -1,47 +1,59 @@
-
 <%@ page import="com.github.dipodoc.diploweb.diplodata.Topic" %>
+
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'topic.label', default: 'Topic')}" />
-		<title><g:message code="default.show.label" args="[entityName]" /></title>
+		<title><g:message code="default.show.label" args='[ "Topic id=${topicInstance.id}" ]' /></title>
 	</head>
+
 	<body>
 		<a href="#show-topic" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
+
 		<div class="nav" role="navigation">
 			<ul>
-				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-				<li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
+				<li><a href="${createLink(uri: '/diplodata')}"><g:message code="default.diplodata.label" default="diplodata" /></a></li>
+				<li><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
 			</ul>
 		</div>
+
 		<div id="show-topic" class="content scaffold-show" role="main">
-			<h1><g:message code="default.show.label" args="[entityName]" /></h1>
+			<h1>Topic id=${topicInstance.id}</h1>
+
 			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
+				<div class="message" role="status">${flash.message}</div>
 			</g:if>
+
 			<ol class="property-list topic">
-			
+
+				<g:if test="${topicInstance?.id}">
+					<li class="fieldcontain">
+						<span id="id-label" class="property-label"><g:message code="topic.id.label" default="id" /></span>
+
+						<span class="property-value" aria-idledby="id-label"><g:fieldValue bean="${topicInstance}" field="id"/></span>
+					</li>
+				</g:if>
+
 				<g:if test="${topicInstance?.label}">
-				<li class="fieldcontain">
-					<span id="label-label" class="property-label"><g:message code="topic.label.label" default="Label" /></span>
-					
+					<li class="fieldcontain">
+						<span id="label-label" class="property-label"><g:message code="topic.label.label" default="label" /></span>
+
 						<span class="property-value" aria-labelledby="label-label"><g:fieldValue bean="${topicInstance}" field="label"/></span>
-					
-				</li>
+					</li>
 				</g:if>
 			
 				<g:if test="${topicInstance?.parent}">
-				<li class="fieldcontain">
-					<span id="parent-label" class="property-label"><g:message code="topic.parent.label" default="Parent" /></span>
-					
-						<span class="property-value" aria-labelledby="parent-label"><g:link controller="topic" action="show" id="${topicInstance?.parent?.id}">${topicInstance?.parent?.encodeAsHTML()}</g:link></span>
-					
-				</li>
+					<li class="fieldcontain">
+						<span id="parent-label" class="property-label"><g:message code="topic.hierarchy.label" default="hierarchy" /></span>
+
+						<diplo:topics topics="${topicInstance}" spanClass="property-value" />
+					</li>
 				</g:if>
 			
 			</ol>
+
 			<g:form url="[resource:topicInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">
 					<g:link class="edit" action="edit" resource="${topicInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
@@ -49,5 +61,6 @@
 				</fieldset>
 			</g:form>
 		</div>
+
 	</body>
 </html>

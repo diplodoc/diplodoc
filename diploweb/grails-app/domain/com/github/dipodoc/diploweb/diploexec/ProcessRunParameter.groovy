@@ -1,5 +1,8 @@
 package com.github.dipodoc.diploweb.diploexec
 
+import groovy.transform.EqualsAndHashCode
+
+@EqualsAndHashCode
 class ProcessRunParameter {
 
     Long id

@@ -9,11 +9,11 @@
 	</head>
 
 	<body>
-		<a href="#list-post" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
+		<a href="#list-post" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;" /></a>
 
 		<div class="nav" role="navigation">
 			<ul>
-				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
+				<li><a href="${createLink(uri: '/diplodata')}"><g:message code="default.diplodata.label" default="diplodata" /></a></li>
 			</ul>
 		</div>
 
@@ -28,11 +28,11 @@
 			    <thead>
 					<tr>
 
-                        <g:sortableColumn property="url" title="${message(code: 'post.url.label', default: 'Url')}" />
-					
-						<g:sortableColumn property="title" title="${message(code: 'post.title.label', default: 'Title')}" />
+						<g:sortableColumn property="id" title="${message(code: 'post.id.label', default: 'id')}" />
 
-                        <g:sortableColumn property="loadTime" title="${message(code: 'post.loadTime.label', default: 'Load Time')}" />
+                        <g:sortableColumn property="url" title="${message(code: 'post.url.label', default: 'url')}" />
+					
+						<g:sortableColumn property="title" title="${message(code: 'post.title.label', default: 'title')}" />
 
 					</tr>
 				</thead>
@@ -41,11 +41,11 @@
 				    <g:each in="${postInstanceList}" status="i" var="postInstance">
                         <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 
-                            <td><g:link action="show" id="${postInstance.id}">${fieldValue(bean: postInstance, field: 'url')}</g:link></td>
+                            <td><g:link action="show" id="${postInstance.id}">${fieldValue(bean: postInstance, field: 'id')}</g:link></td>
 
-                            <td>${fieldValue(bean: postInstance, field: "title")}</td>
+							<td><a href="${postInstance.url}" target="_blank"><g:fieldValue bean="${postInstance}" field="url"/></a></td>
 
-                            <td>${fieldValue(bean: postInstance, field: "loadTime")}</td>
+                            <td>${fieldValue(bean: postInstance, field: 'title')}</td>
 
                         </tr>
                     </g:each>
