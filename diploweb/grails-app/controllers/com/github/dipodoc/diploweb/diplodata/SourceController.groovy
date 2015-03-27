@@ -84,7 +84,7 @@ class SourceController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'Source.label', default: 'Source'), sourceInstance.id])
-                redirect action:"index", method:"GET"
+                redirect action:"list", method:"GET"
             }
             '*'{ render status: NO_CONTENT }
         }
@@ -94,7 +94,7 @@ class SourceController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: 'source.label', default: 'Source'), params.id])
-                redirect action: "index", method: "GET"
+                redirect action: "list", method: "GET"
             }
             '*'{ render status: NOT_FOUND }
         }

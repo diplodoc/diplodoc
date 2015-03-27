@@ -84,7 +84,7 @@ class TopicController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'Topic.label', default: 'Topic'), topicInstance.id])
-                redirect action:"index", method:"GET"
+                redirect action:"list", method:"GET"
             }
             '*'{ render status: NO_CONTENT }
         }
@@ -94,7 +94,7 @@ class TopicController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: 'topic.label', default: 'Topic'), params.id])
-                redirect action: "index", method: "GET"
+                redirect action: "list", method: "GET"
             }
             '*'{ render status: NOT_FOUND }
         }

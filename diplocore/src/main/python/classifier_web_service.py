@@ -35,9 +35,9 @@ def classify(post_id):
         text_clf = pickle.loads(decoded)
         predicted = text_clf.predict_proba([post['meaningText']])[0]
         topic_map[topic] = predicted[0]
-        topic_ref_list.append((reference, predicted[0]))
+        topic_ref_list.append({ 'topic_id': record['_id'], 'score': predicted[0] })
 
-    post['predicted_labels'] = topic_ref_list
+    post['predicted_topics'] = topic_ref_list
     db.post.update({"_id": post["_id"]}, post)
 
     return 'RESULT: ' + str(topic_map)
