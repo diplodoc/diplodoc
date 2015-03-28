@@ -4,7 +4,6 @@
 <html>
     <head>
         <meta name="layout" content="main">
-        <g:set var="entityName" value="${message(code: 'post.label', default: 'Post')}" />
         <title><g:message code="default.diploclient.label" default="diploclient" /></title>
     </head>
 
@@ -18,10 +17,6 @@
         </div>
 
         <div id="list-post" class="content scaffold-list" role="main">
-            <g:if test="${flash.message}">
-                <div class="message" role="status">${flash.message}</div>
-            </g:if>
-
             <table>
                 <tbody>
                     <g:each in="${postInstanceList}" status="i" var="postInstance">
