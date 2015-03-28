@@ -11,7 +11,8 @@ class TopicTagLib {
     def topics = { attrs, body ->
         def topicsAttr = attrs['topics']
         String hierarchy = attrs['hierarchy']?:'single'
-        String spanClass = attrs['spanClass']
+        String divClass = attrs['divClass']
+        Integer maxTopicsCount = Integer.parseInt(attrs['maxTopicsCount']?:'0')
 
         Map topicsMap = [:]
 
@@ -32,8 +33,9 @@ class TopicTagLib {
         }
 
         Map originalMap = new HashMap(topicsMap)
+        int topicsCount = 0
 
-        while (!topicsMap.isEmpty()) {
+        while ((!topicsMap.isEmpty()) && (maxTopicsCount == 0 || topicsCount < maxTopicsCount)) {
             def leaf
             if (hierarchy == 'single') {
                 leaf = topicsMap    .findAll { Topic leafCandidate, def leafScore ->
@@ -47,8 +49,10 @@ class TopicTagLib {
             Topic root = leaf.key
             Topic iter = root
 
-            if (spanClass) {
-                out << """<span class="${spanClass}">"""
+            if (divClass) {
+                out << """<div class="${divClass}">"""
+            } else {
+                out << '<div>'
             }
 
             while (iter != null) {
@@ -66,9 +70,9 @@ class TopicTagLib {
             }
             topicsMap.remove(root)
 
-            if (spanClass) {
-                out << '</span>'
-            }
+            out << '</div>'
+
+            topicsCount++
         }
     }
 

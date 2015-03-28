@@ -79,14 +79,14 @@
                 <g:if test="${postInstance?.train_topics}">
                     <li class="fieldcontain">
                         <span id="train_topics-label" class="property-label"><g:message code="post.train_topics.label" default="Train topics" /></span>
-                        <diplo:topics topics="${postInstance.train_topics}" spanClass="property-value" />
+                        <diplo:topics topics="${postInstance.train_topics}" divClass="property-value" />
                     </li>
                 </g:if>
 
                 <g:if test="${postInstance?.predicted_topics}">
                     <li class="fieldcontain">
                         <span id="predicted_topics-label" class="property-label"><g:message code="post.predicted_topics.label" default="Predicted topics" /></span>
-                        <diplo:topics topics="${postInstance.predicted_topics}" hierarchy="all" spanClass="property-value" />
+                        <diplo:topics topics="${postInstance.predicted_topics}" hierarchy="all" divClass="property-value" />
                     </li>
                 </g:if>
 

@@ -48,7 +48,7 @@
 					<li class="fieldcontain">
 						<span id="parent-label" class="property-label"><g:message code="topic.hierarchy.label" default="hierarchy" /></span>
 
-						<diplo:topics topics="${topicInstance}" spanClass="property-value" />
+						<diplo:topics topics="${topicInstance}" divClass="property-value" />
 					</li>
 				</g:if>
 			
