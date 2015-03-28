@@ -27,7 +27,7 @@
                     <g:each in="${postInstanceList}" status="i" var="postInstance">
                         <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
                             <td>
-                                <h3><g:link action="show" id="${postInstance.id}">${fieldValue(bean: postInstance, field: 'title')}</g:link></h3>
+                                <h3><g:link action="postShow" id="${postInstance.id}">${fieldValue(bean: postInstance, field: 'title')}</g:link></h3>
 
                                 <div><a href="${postInstance.url}" target="_blank"><g:fieldValue bean="${postInstance}" field="url"/></a> at ${fieldValue(bean: postInstance, field: 'publishTime')}</div>
 

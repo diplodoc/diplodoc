@@ -10,4 +10,8 @@ class DiploclientController {
         params.order = 'desc'
         respond Post.list(params), model:[postInstanceCount: Post.count()]
     }
+
+    def postShow(Post postInstance) {
+        respond postInstance
+    }
 }
