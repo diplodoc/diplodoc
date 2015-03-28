@@ -5,6 +5,7 @@ class UrlMappings {
 
         '/'(view: 'diplodata')
         '/diplodata'(view: 'diplodata')
+        '/diploexec'(view: 'diploexec')
 
         '500'(view: '/error')
 	}
