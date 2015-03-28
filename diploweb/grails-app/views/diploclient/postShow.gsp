@@ -13,7 +13,7 @@
         <div class="nav" role="navigation">
             <ul>
                 <g:render template="/base-navigation"/>
-                <li><g:link class="list" action="list"><g:message message="Back to posts list" /></g:link></li>
+                <li><g:link action="postList"><g:message message="back to posts list" /></g:link></li>
             </ul>
         </div>
 
