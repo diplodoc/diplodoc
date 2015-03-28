@@ -5,7 +5,7 @@
     <head>
         <meta name="layout" content="main">
         <g:set var="entityName" value="${message(code: 'post.label', default: 'Post')}" />
-        <title><g:message code="default.list.label" args="[entityName]" /></title>
+        <title><g:message code="default.diploclient.label" default="diploclient" /></title>
     </head>
 
     <body>
@@ -18,8 +18,6 @@
         </div>
 
         <div id="list-post" class="content scaffold-list" role="main">
-            <h1><g:message code="default.list.label" args="[entityName]" /></h1>
-
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
@@ -28,11 +26,11 @@
                 <thead>
                 <tr>
 
-                    <g:sortableColumn property="id" title="${message(code: 'post.id.label', default: 'id')}" />
+                    <g:sortableColumn property="title" title="${message(code: 'post.title.label', default: 'title')}" />
 
                     <g:sortableColumn property="url" title="${message(code: 'post.url.label', default: 'url')}" />
 
-                    <g:sortableColumn property="title" title="${message(code: 'post.title.label', default: 'title')}" />
+                    <g:sortableColumn property="publishTime" title="${message(code: 'post.publishTime.label', default: 'publishTime')}" />
 
                 </tr>
                 </thead>
@@ -41,11 +39,11 @@
                 <g:each in="${postInstanceList}" status="i" var="postInstance">
                     <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 
-                        <td><g:link action="show" id="${postInstance.id}">${fieldValue(bean: postInstance, field: 'id')}</g:link></td>
+                        <td><g:link action="show" id="${postInstance.id}">${fieldValue(bean: postInstance, field: 'title')}</g:link></td>
 
                         <td><a href="${postInstance.url}" target="_blank"><g:fieldValue bean="${postInstance}" field="url"/></a></td>
 
-                        <td>${fieldValue(bean: postInstance, field: 'title')}</td>
+                        <td>${fieldValue(bean: postInstance, field: 'publishTime')}</td>
 
                     </tr>
                 </g:each>

@@ -2,4 +2,4 @@
 
 <li><a href="${createLink(uri: '/diploexec')}"><g:message code="default.diploexec.label" default="diploexec" /></a></li>
 
-<li><a href="${createLink(controller: 'diploclient', action: 'postList')}"><g:message code="default.client.label" default="diploclient" /></a></li>
+<li><a href="${createLink(controller: 'diploclient', action: 'postList')}"><g:message code="default.diploclient.label" default="diploclient" /></a></li>

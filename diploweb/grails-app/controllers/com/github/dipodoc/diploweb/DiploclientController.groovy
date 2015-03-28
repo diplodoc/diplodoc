@@ -4,8 +4,7 @@ import com.github.dipodoc.diploweb.diplodata.Post
 
 class DiploclientController {
 
-    def postList(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
-        respond Post.list(params), model:[postInstanceCount: Post.count()]
+    def postList() {
+        respond Post.list(max: 10, sort: 'publishTime', order: 'desc'), model:[postInstanceCount: Post.count()]
     }
 }
