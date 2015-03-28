@@ -1,7 +1,5 @@
 package com.github.dipodoc.diploweb.diploexec
 
-
-
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
@@ -10,7 +8,7 @@ class ProcessController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
-    def index(Integer max) {
+    def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
         respond Process.list(params), model:[processInstanceCount: Process.count()]
     }
@@ -86,7 +84,7 @@ class ProcessController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'Process.label', default: 'Process'), processInstance.id])
-                redirect action:"index", method:"GET"
+                redirect action:"list", method:"GET"
             }
             '*'{ render status: NO_CONTENT }
         }
@@ -96,7 +94,7 @@ class ProcessController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: 'process.label', default: 'Process'), params.id])
-                redirect action: "index", method: "GET"
+                redirect action: "list", method: "GET"
             }
             '*'{ render status: NOT_FOUND }
         }

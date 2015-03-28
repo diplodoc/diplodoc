@@ -13,7 +13,7 @@
 
 		<div class="nav" role="navigation">
 			<ul>
-				<li><a href="${createLink(uri: '/diplodata')}"><g:message code="default.diplodata.label" default="diplodata" /></a></li>
+				<g:render template="/base-navigation"/>
 			</ul>
 		</div>
 
