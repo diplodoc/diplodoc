@@ -2,6 +2,8 @@ package com.github.dipodoc.diploweb.diploexec
 
 import groovy.transform.EqualsAndHashCode
 
+import java.time.LocalDateTime
+
 @EqualsAndHashCode
 class Process {
 
@@ -22,5 +24,17 @@ class Process {
 
         id generator: 'sequence', params: [sequence:'diploexec.process_id_seq']
         lastUpdate column: 'lastupdate'
+    }
+
+    def beforeInsert() {
+        updatelastUpdateTime()
+    }
+
+    def beforeUpdate() {
+        updatelastUpdateTime()
+    }
+
+    def updatelastUpdateTime() {
+        lastUpdate = LocalDateTime.now().toString()
     }
 }
