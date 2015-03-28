@@ -5,6 +5,9 @@ import com.github.dipodoc.diploweb.diplodata.Post
 class DiploclientController {
 
     def postList() {
-        respond Post.list(max: 10, sort: 'publishTime', order: 'desc'), model:[postInstanceCount: Post.count()]
+        params.max = 20
+        params.sort = 'publishTime'
+        params.order = 'desc'
+        respond Post.list(params), model:[postInstanceCount: Post.count()]
     }
 }

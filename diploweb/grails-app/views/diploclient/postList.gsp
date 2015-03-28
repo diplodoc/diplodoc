@@ -23,30 +23,22 @@
             </g:if>
 
             <table>
-                <thead>
-                <tr>
-
-                    <g:sortableColumn property="title" title="${message(code: 'post.title.label', default: 'title')}" />
-
-                    <g:sortableColumn property="url" title="${message(code: 'post.url.label', default: 'url')}" />
-
-                    <g:sortableColumn property="publishTime" title="${message(code: 'post.publishTime.label', default: 'publishTime')}" />
-
-                </tr>
-                </thead>
-
                 <tbody>
-                <g:each in="${postInstanceList}" status="i" var="postInstance">
-                    <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+                    <g:each in="${postInstanceList}" status="i" var="postInstance">
+                        <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+                            <td>
+                                <h3><g:link action="show" id="${postInstance.id}">${fieldValue(bean: postInstance, field: 'title')}</g:link></h3>
 
-                        <td><g:link action="show" id="${postInstance.id}">${fieldValue(bean: postInstance, field: 'title')}</g:link></td>
+                                <div><a href="${postInstance.url}" target="_blank"><g:fieldValue bean="${postInstance}" field="url"/></a> at ${fieldValue(bean: postInstance, field: 'publishTime')}</div>
 
-                        <td><a href="${postInstance.url}" target="_blank"><g:fieldValue bean="${postInstance}" field="url"/></a></td>
+                                <g:if test="${postInstance?.predicted_topics}">
+                                    <div><diplo:topics topics="${postInstance.predicted_topics}" hierarchy="all" maxTopicsCount="3" /></div>
+                                </g:if>
 
-                        <td>${fieldValue(bean: postInstance, field: 'publishTime')}</td>
-
-                    </tr>
-                </g:each>
+                                <div>${fieldValue(bean: postInstance, field: 'description')}</div>
+                            </td>
+                        </tr>
+                    </g:each>
                 </tbody>
             </table>
 
