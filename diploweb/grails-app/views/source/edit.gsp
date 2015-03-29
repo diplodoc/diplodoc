@@ -36,7 +36,6 @@
 			</g:hasErrors>
 
 			<g:form url="[resource:sourceInstance, action:'update']" method="PUT" >
-				<g:hiddenField name="version" value="${sourceInstance?.version}" />
 				<fieldset class="form">
 					<g:render template="form"/>
 				</fieldset>

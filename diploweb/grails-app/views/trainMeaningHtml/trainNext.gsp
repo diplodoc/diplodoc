@@ -24,6 +24,14 @@
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
 
+            <g:hasErrors bean="${postToTrain}">
+                <ul class="errors" role="alert">
+                    <g:eachError bean="${postToTrain}" var="error">
+                        <li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
+                    </g:eachError>
+                </ul>
+            </g:hasErrors>
+
             <ol class="property-list post">
 
                 <g:if test="${postToTrain?.id}">
@@ -37,6 +45,13 @@
                     <li class="fieldcontain">
                         <span id="url-label" class="property-label"><g:message code="post.url.label" default="Url" /></span>
                         <span class="property-value" aria-labelledby="url-label"><a href="${postToTrain.url}" target="_blank"><g:fieldValue bean="${postToTrain}" field="url"/></a></span>
+                    </li>
+                </g:if>
+
+                <g:if test="${postToTrain?.url}">
+                    <li class="fieldcontain">
+                        <span id="htmlSource-label" class="property-label"><g:message code="post.htmlSource.label" default="html source" /></span>
+                        <span class="property-value" aria-labelledby="htmlSource-label"><a href="view-source:${postToTrain.url}" target="_blank"><g:fieldValue bean="${postToTrain}" field="url"/></a></span>
                     </li>
                 </g:if>
 
@@ -54,27 +69,23 @@
                     </li>
                 </g:if>
 
-                <g:if test="${postToTrain?.description}">
-                    <li class="fieldcontain">
-                        <span id="description-label" class="property-label"><g:message code="post.description.label" default="Description" /></span>
-                        <span class="property-value" aria-labelledby="description-label"><g:fieldValue bean="${postToTrain}" field="description"/></span>
-                    </li>
-                </g:if>
-
-                <g:if test="${postToTrain?.meaningText}">
-                    <li class="fieldcontain">
-                        <span id="meaningText-label" class="property-label"><g:message code="post.meaningText.label" default="Meaning text" /></span>
-                        <span class="property-value" aria-labelledby="meaningText-label"><g:fieldValue bean="${postToTrain}" field="meaningText"/></span>
-                    </li>
-                </g:if>
+                <g:form controller="trainMeaningHtml" action="saveAndNext" method="PUT">
+                    <g:hiddenField name="id" value="${postToTrain?.id}" />
+                    <fieldset class="form">
+                        <div class="fieldcontain ${hasErrors(bean: postToTrain, field: 'train_meaningHtml', 'error')} required">
+                            <label for="train_meaningHtml">
+                                <g:message code="process.train_meaningHtml.label" default="train meaning html" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <g:textArea name="train_meaningHtml" required="" value="${postToTrain?.train_meaningHtml}"/>
+                        </div>
+                    </fieldset>
+                    <fieldset class="buttons">
+                        <g:actionSubmit class="save" action="saveAndNext" value="${message(code: 'default.button.saveAndNext.label', default: 'Save and next')}"  />
+                    </fieldset>
+                </g:form>
 
             </ol>
-
-            <g:form url="[ resource: postToTrain, action: 'saveAndNext' ]" method="POST">
-                <fieldset class="buttons">
-                    <g:actionSubmit class="save" action="saveAndNext" value="${message(code: 'default.button.saveAndNext.label', default: 'Save and next')}"  />
-                </fieldset>
-            </g:form>
 
         </div>
     </body>
