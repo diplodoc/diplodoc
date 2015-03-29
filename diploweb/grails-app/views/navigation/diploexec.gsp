@@ -1,5 +1,3 @@
-<%@ page import="com.github.dipodoc.diploweb.diplodata.Post" %>
-
 <!DOCTYPE html>
 <html>
     <head>
