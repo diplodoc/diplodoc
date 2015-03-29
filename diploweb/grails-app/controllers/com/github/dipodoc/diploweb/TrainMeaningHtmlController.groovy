@@ -18,6 +18,7 @@ class TrainMeaningHtmlController {
         def params = [ offset: index, max: 1 ]
 
         def postToTrain = Post.findByTrain_meaningHtmlIsNull(params)
-        respond postToTrain
+
+        [ postToTrain: postToTrain ]
     }
 }
