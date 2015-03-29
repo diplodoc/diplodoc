@@ -12,7 +12,7 @@
 
         <div class="nav" role="navigation">
             <ul>
-                <g:render template="/base-navigation"/>
+                <g:render template="/navigation/base-navigation"/>
             </ul>
         </div>
 
