@@ -123,7 +123,7 @@ def build_classifiers(train_texts, train_labels, topics):
         print 'classifier for topic %s created' % topic
 
         for i, test_text in enumerate(cv_test_texts):
-            score = text_clf.predict_proba(test_text)[0]
+            score = text_clf.predict_proba(test_text)[0][0]
             if scores[i] is None:
                 scores[i] = {topic: score}
             else:
