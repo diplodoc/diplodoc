@@ -6,6 +6,8 @@ class TrainMeaningHtmlController {
 
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond Post.list(params), model: [ postInstanceCount: Post.count() ]
+        def trainSet = Post.findAllByTrain_meaningHtmlIsNotNull(params)
+
+        respond trainSet, model: [ postInstanceCount: Post.countByTrain_meaningHtmlIsNotNull() ]
     }
 }

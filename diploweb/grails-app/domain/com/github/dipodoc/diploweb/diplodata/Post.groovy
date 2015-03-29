@@ -13,7 +13,10 @@ class Post {
 
     String url
 
+    static belongsTo = [ source: Source ]
+
     String loadTime
+
 
     String title
 
@@ -21,9 +24,15 @@ class Post {
 
     String publishTime
 
-    List predicted_topics
+    String html
 
-    static belongsTo = [ source: Source ]
+
+    String train_meaningHtml
+
+    String meaningText
+
 
     static hasMany = [ train_topics: Topic ]
+
+    List predicted_topics
 }
