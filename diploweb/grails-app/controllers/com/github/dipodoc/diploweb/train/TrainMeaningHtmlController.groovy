@@ -1,4 +1,4 @@
-package com.github.dipodoc.diploweb
+package com.github.dipodoc.diploweb.train
 
 import com.github.dipodoc.diploweb.diplodata.Post
 import grails.transaction.Transactional
@@ -8,7 +8,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND
 @Transactional(readOnly = true)
 class TrainMeaningHtmlController {
 
-    static allowedMethods = [ saveAndNext: 'PUT' ]
+    static allowedMethods = [ save: 'PUT', saveAndNext: 'PUT', removeFromTrain: 'DELETE' ]
 
     Random random = new Random()
 
@@ -27,7 +27,7 @@ class TrainMeaningHtmlController {
         [ postToTrain: randomUntrainedPost ]
     }
 
-    def show(Post postInstance) {
+    def edit(Post postInstance) {
         respond postInstance
     }
 
@@ -49,6 +49,26 @@ class TrainMeaningHtmlController {
         postToTrain.save flush:true
 
         redirect action: 'trainNext'
+    }
+
+    @Transactional
+    def save() {
+        Post postToTrain = Post.get(params.id)
+        postToTrain.train_meaningHtml = params.train_meaningHtml
+
+        if (postToTrain == null) {
+            notFound()
+            return
+        }
+
+        if (postToTrain.hasErrors()) {
+            respond postToTrain.errors, view: 'trainNext'
+            return
+        }
+
+        postToTrain.save flush:true
+
+        redirect action: 'list'
     }
 
     @Transactional

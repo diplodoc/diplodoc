@@ -1,5 +1,6 @@
 package com.github.dipodoc.diploweb
 
+import com.github.dipodoc.diploweb.train.TrainMeaningHtmlController
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 

@@ -55,14 +55,23 @@
                     </li>
                 </g:if>
 
-                <g:if test="${postInstance?.train_meaningHtml}">
-                    <li class="fieldcontain">
-                        <span id="train_meaningHtml-label" class="property-label"><g:message code="post.train_meaningHtml.label" default="Train meaning HTML" /></span>
-                        <span class="property-value" aria-labelledby="train_meaningHtml-label"><g:fieldValue bean="${postInstance}" field="train_meaningHtml"/></span>
-                    </li>
-                </g:if>
-
             </ol>
+
+            <g:form controller="trainMeaningHtml" action="save" method="PUT">
+                <g:hiddenField name="id" value="${postInstance?.id}" />
+                <fieldset class="form">
+                    <div class="fieldcontain ${hasErrors(bean: postInstance, field: 'train_meaningHtml', 'error')} required">
+                        <label for="train_meaningHtml">
+                            <g:message code="process.train_meaningHtml.label" default="train meaning html" />
+                            <span class="required-indicator">*</span>
+                        </label>
+                        <g:textArea name="train_meaningHtml" required="" value="${postInstance?.train_meaningHtml}"/>
+                    </div>
+                </fieldset>
+                <fieldset class="buttons">
+                    <g:actionSubmit class="save" action="save" value="${message(code: 'default.button.saveAndNext.label', default: 'Save')}"  />
+                </fieldset>
+            </g:form>
 
             <g:form controller="trainMeaningHtml" action="removeFromTrain" method="DELETE">
                 <g:hiddenField name="id" value="${postInstance?.id}" />
