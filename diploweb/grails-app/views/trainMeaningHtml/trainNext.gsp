@@ -46,9 +46,7 @@
                         <span id="url-label" class="property-label"><g:message code="post.url.label" default="Url" /></span>
                         <span class="property-value" aria-labelledby="url-label"><a href="${postToTrain.url}" target="_blank"><g:fieldValue bean="${postToTrain}" field="url"/></a></span>
                     </li>
-                </g:if>
 
-                <g:if test="${postToTrain?.url}">
                     <li class="fieldcontain">
                         <span id="htmlSource-label" class="property-label"><g:message code="post.htmlSource.label" default="html source" /></span>
                         <span class="property-value" aria-labelledby="htmlSource-label"><a href="view-source:${postToTrain.url}" target="_blank"><g:fieldValue bean="${postToTrain}" field="url"/></a></span>
