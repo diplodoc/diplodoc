@@ -1,4 +1,4 @@
-<%@ page import="com.github.dipodoc.diploweb.diplodata.Post" %>
+<%@ page import="com.github.dipodoc.diploweb.diplodata.Topic; com.github.dipodoc.diploweb.diplodata.Post" %>
 
 <!DOCTYPE html>
 <html>
@@ -55,25 +55,40 @@
                     </li>
                 </g:if>
 
+                <g:if test="${postInstance?.train_topics}">
+                    <li class="fieldcontain">
+                        <span id="train_topics-label" class="property-label"><g:message code="post.train_topics.label" default="Train topics" /></span>
+                        <diplo:topics topics="${postInstance.train_topics}" divClass="property-value" />
+                    </li>
+
+                    <li class="fieldcontain">
+                        <span id="train_topics-remove-label" class="property-label"><g:message code="processRun.train_topics-remove.label" default="Click to remove from train set" /></span>
+
+                        <g:each in="${postInstance.train_topics}" var="t">
+                            <div class="property-value" aria-labelledby="topic-label">
+                                <g:link controller="trainTopics" action="removeTopicFromTrainingSet" params="[ postId: postInstance.id, topicId: t.id, redirectTo: 'edit' ]">
+                                    ${t.label}
+                                </g:link>
+                            </div>
+                        </g:each>
+                    </li>
+                </g:if>
+
+                <li class="fieldcontain">
+                    <span id="train_topics-add-label" class="property-label"><g:message code="processRun.train_topics-add.label" default="Click to add to train set" /></span>
+
+                    <g:each in="${(Topic.list() - postInstance.train_topics).sort { it.label }}" var="t">
+                        <div class="property-value" aria-labelledby="topic-label">
+                            <g:link controller="trainTopics" action="addTopicToTrainingSet" params="[ postId: postInstance.id, topicId: t.id, redirectTo: 'edit' ]">
+                                ${t.label}
+                            </g:link>
+                        </div>
+                    </g:each>
+                </li>
+
             </ol>
 
-            <g:form controller="trainMeaningHtml" action="save" method="PUT">
-                <g:hiddenField name="id" value="${postInstance?.id}" />
-                <fieldset class="form">
-                    <div class="fieldcontain ${hasErrors(bean: postInstance, field: 'train_meaningHtml', 'error')} required">
-                        <label for="train_meaningHtml">
-                            <g:message code="process.train_meaningHtml.label" default="train meaning html" />
-                            <span class="required-indicator">*</span>
-                        </label>
-                        <g:textArea name="train_meaningHtml" required="" value="${postInstance?.train_meaningHtml}"/>
-                    </div>
-                </fieldset>
-                <fieldset class="buttons">
-                    <g:actionSubmit class="save" action="save" value="${message(code: 'default.button.saveAndNext.label', default: 'Save')}"  />
-                </fieldset>
-            </g:form>
-
-            <g:form controller="trainMeaningHtml" action="removeFromTrain" method="DELETE">
+            <g:form controller="trainTopics" action="removeFromTrain" method="DELETE">
                 <g:hiddenField name="id" value="${postInstance?.id}" />
                 <fieldset class="buttons">
                     <g:actionSubmit class="delete" action="removeFromTrain" value="${message(code: 'default.button.removeFromTrain.label', default: 'Remove from train set')}"  />

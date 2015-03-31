@@ -1,4 +1,4 @@
-<%@ page import="com.github.dipodoc.diploweb.diplodata.Post" %>
+<%@ page import="com.github.dipodoc.diploweb.diplodata.Topic; com.github.dipodoc.diploweb.diplodata.Post" %>
 
 <!DOCTYPE html>
 <html>
@@ -13,6 +13,7 @@
         <div class="nav" role="navigation">
             <ul>
                 <g:render template="/navigation/base-navigation"/>
+                <li><g:link class="list" action="list"><g:message code="default.list.label" args="['Post']" /></g:link></li>
                 <li><g:link action="trainNext"><g:message message="train next post" /></g:link></li>
             </ul>
         </div>
@@ -48,13 +49,6 @@
                     </li>
                 </g:if>
 
-                <g:if test="${postToTrain?.url}">
-                    <li class="fieldcontain">
-                        <span id="htmlSource-label" class="property-label"><g:message code="post.htmlSource.label" default="html source" /></span>
-                        <span class="property-value" aria-labelledby="htmlSource-label"><a href="view-source:${postToTrain.url}" target="_blank"><g:fieldValue bean="${postToTrain}" field="url"/></a></span>
-                    </li>
-                </g:if>
-
                 <g:if test="${postToTrain?.title}">
                     <li class="fieldcontain">
                         <span id="title-label" class="property-label"><g:message code="post.title.label" default="Title" /></span>
@@ -69,21 +63,36 @@
                     </li>
                 </g:if>
 
-                <g:form controller="trainMeaningHtml" action="saveAndNext" method="PUT">
-                    <g:hiddenField name="id" value="${postToTrain?.id}" />
-                    <fieldset class="form">
-                        <div class="fieldcontain ${hasErrors(bean: postToTrain, field: 'train_meaningHtml', 'error')} required">
-                            <label for="train_meaningHtml">
-                                <g:message code="process.train_meaningHtml.label" default="train meaning html" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <g:textArea name="train_meaningHtml" required="" value="${postToTrain?.train_meaningHtml}"/>
+                <g:if test="${postToTrain?.train_topics}">
+                    <li class="fieldcontain">
+                        <span id="train_topics-label" class="property-label"><g:message code="post.train_topics.label" default="Train topics" /></span>
+                        <diplo:topics topics="${postToTrain.train_topics}" divClass="property-value" />
+                    </li>
+
+                    <li class="fieldcontain">
+                        <span id="train_topics-remove-label" class="property-label"><g:message code="processRun.train_topics-remove.label" default="Click to remove from train set" /></span>
+
+                        <g:each in="${postToTrain.train_topics}" var="t">
+                            <div class="property-value" aria-labelledby="topic-label">
+                                <g:link controller="trainTopics" action="removeTopicFromTrainingSet" params="[ postId: postToTrain.id, topicId: t.id, redirectTo: 'trainNext' ]">
+                                    ${t.label}
+                                </g:link>
+                            </div>
+                        </g:each>
+                    </li>
+                </g:if>
+
+                <li class="fieldcontain">
+                    <span id="train_topics-add-label" class="property-label"><g:message code="processRun.train_topics-add.label" default="Click to add to train set" /></span>
+
+                    <g:each in="${(Topic.list() - postToTrain.train_topics).sort { it.label }}" var="t">
+                        <div class="property-value" aria-labelledby="topic-label">
+                            <g:link controller="trainTopics" action="addTopicToTrainingSet" params="[ postId: postToTrain.id, topicId: t.id, redirectTo: 'trainNext' ]">
+                                ${t.label}
+                            </g:link>
                         </div>
-                    </fieldset>
-                    <fieldset class="buttons">
-                        <g:actionSubmit class="save" action="saveAndNext" value="${message(code: 'default.button.saveAndNext.label', default: 'Save and next')}"  />
-                    </fieldset>
-                </g:form>
+                    </g:each>
+                </li>
 
             </ol>
 

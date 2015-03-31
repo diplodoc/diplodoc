@@ -1,6 +1,7 @@
 package com.github.dipodoc.diploweb.train
 
 import com.github.dipodoc.diploweb.diplodata.Post
+import com.github.dipodoc.diploweb.diplodata.Topic
 import grails.transaction.Transactional
 
 import static org.springframework.http.HttpStatus.NOT_FOUND
@@ -20,56 +21,20 @@ class TrainTopicsController {
     }
 
     def trainNext() {
-        int untrainedCount = Post.where({ train_topics == null || train_topics.isEmpty() }).count()
-        int index = random.nextInt(untrainedCount)
-        def params = [ offset: index, max: 1 ]
+        if (params.id == null) {
+            int untrainedCount = Post.where({ train_topics == null || train_topics.isEmpty() }).count()
+            int index = random.nextInt(untrainedCount)
+            def params = [ offset: index, max: 1 ]
 
-        Post randomUntrainedPost = Post.where({ train_topics == null || train_topics.isEmpty() }).list(params)[0]
-        [ postToTrain: randomUntrainedPost ]
+            Post randomUntrainedPost = Post.where({ train_topics == null || train_topics.isEmpty() }).list(params)[0]
+            [ postToTrain: randomUntrainedPost ]
+        } else {
+            [ postToTrain: Post.get(params.id) ]
+        }
     }
 
     def edit(Post postInstance) {
         respond postInstance
-    }
-
-    @Transactional
-    def saveAndNext() {
-        Post postToTrain = Post.get(params.id)
-        //postToTrain.train_topics =
-
-        if (postToTrain == null) {
-            notFound()
-            return
-        }
-
-        if (postToTrain.hasErrors()) {
-            respond postToTrain.errors, view: 'trainNext'
-            return
-        }
-
-        postToTrain.save flush:true
-
-        redirect action: 'trainNext'
-    }
-
-    @Transactional
-    def save() {
-        Post postToTrain = Post.get(params.id)
-        //postToTrain.train_topics =
-
-        if (postToTrain == null) {
-            notFound()
-            return
-        }
-
-        if (postToTrain.hasErrors()) {
-            respond postToTrain.errors, view: 'trainNext'
-            return
-        }
-
-        postToTrain.save flush:true
-
-        redirect action: 'list'
     }
 
     @Transactional
@@ -85,6 +50,38 @@ class TrainTopicsController {
         postInstance.save flush:true
 
         redirect action: 'list'
+    }
+
+    @Transactional
+    def removeTopicFromTrainingSet() {
+        Post postInstance = Post.get(params.postId)
+        Topic topicInstance = Topic.get(params.topicId)
+
+        if (postInstance == null || topicInstance == null) {
+            notFound()
+            return
+        }
+
+        postInstance.train_topics.remove(topicInstance)
+        postInstance.save flush:true
+
+        redirect action: params.redirectTo, id: postInstance.id, params: [ id: postInstance.id ]
+    }
+
+    @Transactional
+    def addTopicToTrainingSet() {
+        Post postInstance = Post.get(params.postId)
+        Topic topicInstance = Topic.get(params.topicId)
+
+        if (postInstance == null || topicInstance == null) {
+            notFound()
+            return
+        }
+
+        postInstance.train_topics.add(topicInstance)
+        postInstance.save flush:true
+
+        redirect action: params.redirectTo, id: postInstance.id, params: [ id: postInstance.id ]
     }
 
     protected void notFound() {
