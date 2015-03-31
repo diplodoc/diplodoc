@@ -24,7 +24,7 @@ class TrainTopicsController {
         int index = random.nextInt(untrainedCount)
         def params = [ offset: index, max: 1 ]
 
-        Post randomUntrainedPost = Post.where({ train_topics == null || train_topics.isEmpty() }).find()
+        Post randomUntrainedPost = Post.where({ train_topics == null || train_topics.isEmpty() }).list(params)[0]
         [ postToTrain: randomUntrainedPost ]
     }
 
