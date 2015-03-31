@@ -4,7 +4,6 @@ import com.github.dipodoc.diploweb.diplodata.Post
 import grails.transaction.Transactional
 
 import static org.springframework.http.HttpStatus.NOT_FOUND
-import static org.springframework.http.HttpStatus.OK
 
 @Transactional(readOnly = true)
 class TrainMeaningHtmlController {
@@ -28,6 +27,10 @@ class TrainMeaningHtmlController {
         [ postToTrain: randomUntrainedPost ]
     }
 
+    def show(Post postInstance) {
+        respond postInstance
+    }
+
     @Transactional
     def saveAndNext() {
         Post postToTrain = Post.get(params.id)
@@ -46,6 +49,21 @@ class TrainMeaningHtmlController {
         postToTrain.save flush:true
 
         redirect action: 'trainNext'
+    }
+
+    @Transactional
+    def removeFromTrain() {
+        Post postInstance = Post.get(params.id)
+
+        if (postInstance == null) {
+            notFound()
+            return
+        }
+
+        postInstance.train_meaningHtml = null
+        postInstance.save flush:true
+
+        redirect action: 'list'
     }
 
     protected void notFound() {

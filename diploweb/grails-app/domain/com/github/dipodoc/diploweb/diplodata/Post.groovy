@@ -35,4 +35,8 @@ class Post {
     static hasMany = [ train_topics: Topic ]
 
     List predicted_topics
+
+    static constraints = {
+        train_meaningHtml nullable: true
+    }
 }

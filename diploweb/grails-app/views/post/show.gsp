@@ -90,6 +90,13 @@
                     </li>
                 </g:if>
 
+                <g:if test="${postInstance?.train_meaningHtml}">
+                    <li class="fieldcontain">
+                        <span id="train_meaningHtml-label" class="property-label"><g:message code="post.train_meaningHtml.label" default="Train meaning HTML" /></span>
+                        <span class="property-value" aria-labelledby="train_meaningHtml-label"><g:fieldValue bean="${postInstance}" field="train_meaningHtml"/></span>
+                    </li>
+                </g:if>
+
                 <g:if test="${postInstance?.meaningText}">
                     <li class="fieldcontain">
                         <span id="meaningText-label" class="property-label"><g:message code="post.meaningText.label" default="Meaning text" /></span>
