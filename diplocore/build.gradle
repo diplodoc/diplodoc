@@ -21,6 +21,9 @@ dependencies {
 
     compile dependency.jsoup
     compile dependency.rome
+
+    compile dependency.spark.core
+    compile dependency.spark.mllib
 }
 
 apply plugin: 'war'

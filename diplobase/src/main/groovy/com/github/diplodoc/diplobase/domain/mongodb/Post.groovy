@@ -2,9 +2,9 @@ package com.github.diplodoc.diplobase.domain.mongodb
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.DBRef
-
-import java.time.LocalDateTime
+import org.springframework.data.mongodb.core.mapping.Field
 
 /**
  * @author yaroslav.yermilov
@@ -13,7 +13,9 @@ import java.time.LocalDateTime
 @ToString(excludes = [ 'meaningText', 'html' ])
 class Post {
 
+    @Id
     String id
+
 
     String url
 
@@ -23,14 +25,17 @@ class Post {
     String loadTime
 
 
-    String html
-
     String title
 
     String description
 
     String publishTime
 
+    String html
+
+
+    @Field('train_meaningHtml')
+    String trainMeaningHtml
 
     String meaningText
 
