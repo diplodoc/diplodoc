@@ -20,7 +20,7 @@ class TrainMeaningHtmlController {
     }
 
     def trainNext() {
-        int index = random.nextInt(Post.countByTrain_meaningHtmlIsNotNull())
+        int index = random.nextInt(Post.countByTrain_meaningHtmlIsNull())
         def params = [ offset: index, max: 1 ]
 
         Post randomUntrainedPost = Post.findByTrain_meaningHtmlIsNull(params)

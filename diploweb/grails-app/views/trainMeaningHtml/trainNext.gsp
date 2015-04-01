@@ -13,6 +13,7 @@
         <div class="nav" role="navigation">
             <ul>
                 <g:render template="/navigation/base-navigation"/>
+                <li><g:link class="list" action="list"><g:message code="default.list.label" args="['Post']" /></g:link></li>
                 <li><g:link action="trainNext"><g:message message="train next post" /></g:link></li>
             </ul>
         </div>
