@@ -75,7 +75,7 @@ def train():
     (classifiers, quality_score) = build_classifiers(train_texts, train_labels, topics)
 
     print 'save perf data...'
-    db.stats.insert({'aggregated_score': quality_score})
+    db.stats.insert({'aggregated_score': quality_score, 'num_topics': len(topics)})
 
     print 'save classifiers'
     for i in range(len(classifiers)):
