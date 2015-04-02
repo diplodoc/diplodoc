@@ -48,29 +48,11 @@ class MeaningExtractor {
     @RequestMapping(value = '/train-model', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody String trainModel() {
-        boolean first = true
         Collection<LabeledPoint> data = postRepository.findByTrainMeaningHtmlIsNotNull().collectMany { Post post ->
             Document document = wwwService.parse(post.html)
 
-            if (first) {
-                println "POST: ${post.trainMeaningHtml.replaceAll('\\s+','')}"
-            }
-
-            def result = document.select('div').collect { Element element ->
-                double label
-
-                if (sameHtml(post.trainMeaningHtml, element.outerHtml())) {
-                    label = 1.0
-                } else {
-                    label = 0.0
-                }
-
-                if (first) {
-                    String str1 = post.trainMeaningHtml.replaceAll('\\s+','')
-                    String str2 = element.outerHtml().replaceAll('\\s+','')
-                    int distance = StringUtils.getLevenshteinDistance(str1, str2)
-                    println "ELEMENT ${label} (distandce ${distance}): ${element.outerHtml().replaceAll('\\s+','')}"
-                }
+            document.select('div').collect { Element element ->
+                double label = sameHtml(post.trainMeaningHtml, element.outerHtml()) ? 1.0 : 0.0
 
                 double linksCount = element.select('a').size()
                 double childrenCount = element.children().size()
@@ -82,12 +64,6 @@ class MeaningExtractor {
 
                 new LabeledPoint(label, features)
             }
-
-            if (result.size() > 0) {
-                first = false
-            }
-
-            return result
         }
 
         SparkConf sparkConf = new SparkConf().setAppName('/diplocore/meaning-extractor/train-model').setMaster('local')
@@ -104,18 +80,13 @@ class MeaningExtractor {
         def scores = testSet.toArray().collect{ LabeledPoint point ->
             double prediction = model.predict(point.features())
             println "TEST: ${point} predicted as ${prediction}"
-            if (point.label() > THRESHOLD) {
-                return 1 - prediction
-            } else {
-                return prediction
-            }
+
+            point.label() * (1 - prediction) + (1 - point.label()) * prediction
         }
 
         double score = scores.sum() / scores.size()
 
-        String result = "${model.toString()}\nSCORE: ${score}"
-        println result
-        return result
+        return "${model.toString()}\nSCORE: ${score}"
     }
 
     boolean sameHtml(String html1, String html2) {
@@ -123,7 +94,6 @@ class MeaningExtractor {
         String cleaned2 = html2.replaceAll('\\s+','')
         int threshold = cleaned1.length() / 50
 
-        int dist = StringUtils.getLevenshteinDistance(cleaned1, cleaned2, threshold)
-        return dist > 0
+        StringUtils.getLevenshteinDistance(cleaned1, cleaned2, threshold) > 0
     }
 }
