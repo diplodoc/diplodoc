@@ -3,6 +3,7 @@ package com.github.diplodoc.diplocore.modules
 import com.github.diplodoc.diplobase.domain.mongodb.Post
 import com.github.diplodoc.diplobase.repository.mongodb.PostRepository
 import com.github.diplodoc.diplocore.services.WwwService
+import groovy.json.JsonOutput
 import org.apache.commons.lang3.StringUtils
 import org.apache.spark.SparkConf
 import org.apache.spark.api.java.JavaRDD
@@ -12,7 +13,6 @@ import org.apache.spark.mllib.classification.LogisticRegressionWithLBFGS
 import org.apache.spark.mllib.linalg.Vector
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.regression.LabeledPoint
-import org.apache.spark.rdd.DoubleRDDFunctions
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,8 +31,6 @@ import org.springframework.web.bind.annotation.ResponseStatus
 @RequestMapping('/meaning-extractor')
 class MeaningExtractor {
 
-    private static final double THRESHOLD = 0.5
-
     @Autowired
     WwwService wwwService
 
@@ -50,17 +48,18 @@ class MeaningExtractor {
     @ResponseBody String trainModel() {
         Collection<LabeledPoint> data = postRepository.findByTrainMeaningHtmlIsNotNull().collectMany { Post post ->
             Document document = wwwService.parse(post.html)
+            Collection<Element> positives = allSubelements(wwwService.parseFragment(post.trainMeaningHtml))
 
-            document.select('div').collect { Element element ->
-                double label = sameHtml(post.trainMeaningHtml, element.outerHtml()) ? 1.0 : 0.0
+            allSubelements(document.body()).collect { Element element ->
+                double label = ( (positives.find({ sameHtml(it, element) })) && (!element.text().isEmpty()) ) ? 1.0 : 0.0
 
+                double size = element.outerHtml().length()
                 double linksCount = element.select('a').size()
                 double childrenCount = element.children().size()
-                double textSize = element.text().length()
-                double textSize2 = textSize * textSize
+                double ownTextLength = element.ownText().length()
                 double pointsCount = element.text().toCharArray().findAll({ '.,:;?!'.contains(Character.toString(it)) }).size()
 
-                Vector features = Vectors.dense(linksCount, childrenCount, textSize, textSize2, pointsCount)
+                Vector features = Vectors.dense(size, linksCount, childrenCount, ownTextLength, pointsCount)
 
                 new LabeledPoint(label, features)
             }
@@ -77,23 +76,49 @@ class MeaningExtractor {
 
         LogisticRegressionModel model = new LogisticRegressionWithLBFGS().run(trainSet.rdd())
 
-        def scores = testSet.toArray().collect{ LabeledPoint point ->
-            double prediction = model.predict(point.features())
-            println "TEST: ${point} predicted as ${prediction}"
+        int testSetSize = testSet.toArray().size()
+        double accuracySum = 0
+        int truePositives = 0
+        int trueNegatives = 0
+        int falsePositives = 0
+        int falseNegatives = 0
 
-            point.label() * (1 - prediction) + (1 - point.label()) * prediction
+        testSet.toArray().each{ LabeledPoint point ->
+            double prediction = model.predict(point.features())
+
+            accuracySum += point.label() * (1 - prediction) + (1 - point.label()) * prediction
+            if (point.label() == 1.0 && prediction == 1.0) truePositives++
+            if (point.label() == 0.0 && prediction == 0.0) trueNegatives++
+            if (point.label() == 0.0 && prediction == 1.0) falsePositives++
+            if (point.label() == 1.0 && prediction == 0.0) falseNegatives++
         }
 
-        double score = scores.sum() / scores.size()
+        Map metrics = [:]
+        metrics.model = model.toString()
+        metrics.accuracy = 1 - accuracySum / testSetSize
+        metrics.truePositives = truePositives
+        metrics.trueNegatives = trueNegatives
+        metrics.falsePositives = falsePositives
+        metrics.falseNegatives = falseNegatives
+        metrics.precision = 1.0 * truePositives / (truePositives + falsePositives)
+        metrics.recall = 1.0 * truePositives / (truePositives + falseNegatives)
 
-        return "${model.toString()}\nSCORE: ${score}"
+        return JsonOutput.prettyPrint(JsonOutput.toJson(metrics))
     }
 
-    boolean sameHtml(String html1, String html2) {
-        String cleaned1 = html1.replaceAll('\\s+','')
-        String cleaned2 = html2.replaceAll('\\s+','')
-        int threshold = cleaned1.length() / 50
+    Collection<Element> allSubelements(Element element) {
+        Collection result = []
+        result.addAll(element.children())
+        result.addAll(element.children().collectMany({ allSubelements(it) }))
 
-        StringUtils.getLevenshteinDistance(cleaned1, cleaned2, threshold) > 0
+        return result
+    }
+
+    boolean sameHtml(Element element1, Element element2) {
+        String cleanedHtml1 = element1.outerHtml().replaceAll('\\s+','')
+        String cleanedHtml2 = element2.outerHtml().replaceAll('\\s+','')
+        int threshold = cleanedHtml1.length() / 50
+
+        StringUtils.getLevenshteinDistance(cleanedHtml1, cleanedHtml2, threshold) != -1
     }
 }

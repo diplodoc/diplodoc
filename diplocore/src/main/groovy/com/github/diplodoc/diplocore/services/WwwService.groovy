@@ -2,6 +2,7 @@ package com.github.diplodoc.diplocore.services
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import org.springframework.stereotype.Service
 
 /**
@@ -16,5 +17,9 @@ class WwwService {
 
     Document parse(String html) {
         Jsoup.parse(html)
+    }
+
+    Element parseFragment(String html) {
+        Jsoup.parseBodyFragment(html).body()
     }
 }
