@@ -1,9 +1,9 @@
 package com.github.diplodoc.diplobase.domain.mongodb
 
+import com.mongodb.DBRef
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import org.springframework.data.annotation.Id
-import org.springframework.data.mongodb.core.mapping.DBRef
 import org.springframework.data.mongodb.core.mapping.Field
 
 /**
@@ -19,8 +19,7 @@ class Post {
 
     String url
 
-    @DBRef
-    Source source
+    DBRef sourceId
 
     String loadTime
 
@@ -38,8 +37,4 @@ class Post {
     String trainMeaningHtml
 
     String meaningText
-
-
-    @DBRef
-    Collection<Topic> train_topics
 }
