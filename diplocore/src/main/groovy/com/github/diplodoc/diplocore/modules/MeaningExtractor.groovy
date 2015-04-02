@@ -3,6 +3,7 @@ package com.github.diplodoc.diplocore.modules
 import com.github.diplodoc.diplobase.domain.mongodb.Post
 import com.github.diplodoc.diplobase.repository.mongodb.PostRepository
 import com.github.diplodoc.diplocore.services.WwwService
+import org.apache.commons.lang3.StringUtils
 import org.apache.spark.SparkConf
 import org.apache.spark.api.java.JavaRDD
 import org.apache.spark.api.java.JavaSparkContext
@@ -47,11 +48,29 @@ class MeaningExtractor {
     @RequestMapping(value = '/train-model', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody String trainModel() {
+        boolean first = true
         Collection<LabeledPoint> data = postRepository.findByTrainMeaningHtmlIsNotNull().collectMany { Post post ->
             Document document = wwwService.parse(post.html)
 
-            document.select('div').collect { Element element ->
-                double label = sameHtml(post.trainMeaningHtml, element.outerHtml()) ? 1.0 : 0.0
+            if (first) {
+                println "POST: ${post.trainMeaningHtml.replaceAll('\\s+','')}"
+            }
+
+            def result = document.select('div').collect { Element element ->
+                double label
+
+                if (sameHtml(post.trainMeaningHtml, element.outerHtml())) {
+                    label = 1.0
+                } else {
+                    label = 0.0
+                }
+
+                if (first) {
+                    String str1 = post.trainMeaningHtml.replaceAll('\\s+','')
+                    String str2 = element.outerHtml().replaceAll('\\s+','')
+                    int distance = StringUtils.getLevenshteinDistance(str1, str2)
+                    println "ELEMENT ${label} (distandce ${distance}): ${element.outerHtml().replaceAll('\\s+','')}"
+                }
 
                 double linksCount = element.select('a').size()
                 double childrenCount = element.children().size()
@@ -63,6 +82,12 @@ class MeaningExtractor {
 
                 new LabeledPoint(label, features)
             }
+
+            if (result.size() > 0) {
+                first = false
+            }
+
+            return result
         }
 
         SparkConf sparkConf = new SparkConf().setAppName('/diplocore/meaning-extractor/train-model').setMaster('local')
@@ -79,7 +104,7 @@ class MeaningExtractor {
         def scores = testSet.toArray().collect{ LabeledPoint point ->
             double prediction = model.predict(point.features())
             println "TEST: ${point} predicted as ${prediction}"
-            if (prediction > THRESHOLD) {
+            if (point.label() > THRESHOLD) {
                 return 1 - prediction
             } else {
                 return prediction
@@ -94,6 +119,11 @@ class MeaningExtractor {
     }
 
     boolean sameHtml(String html1, String html2) {
-        html1.replaceAll('\\s+','') == html2.replaceAll('\\s+','')
+        String cleaned1 = html1.replaceAll('\\s+','')
+        String cleaned2 = html2.replaceAll('\\s+','')
+        int threshold = cleaned1.length() / 50
+
+        int dist = StringUtils.getLevenshteinDistance(cleaned1, cleaned2, threshold)
+        return dist > 0
     }
 }

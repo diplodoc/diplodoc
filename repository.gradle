@@ -49,6 +49,7 @@ ext {
     dependency.mongodb = 'org.mongodb:mongo-java-driver:2.13.0'
 
     dependency.commons = [:]
+    dependency.commons.lang = 'org.apache.commons:commons-lang3:3.3.2'
     dependency.commons.dbcp = 'commons-dbcp:commons-dbcp:1.4'
 
     dependency.hibernate = 'org.hibernate:hibernate-entitymanager:4.3.6.Final'

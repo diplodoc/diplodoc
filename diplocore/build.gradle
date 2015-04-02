@@ -12,6 +12,8 @@ sourceSets {
 }
 
 dependencies {
+    compile dependency.commons.lang
+
     compile dependency.servlet
     compile dependency.spring.web
     compile dependency.spring.webmvc
