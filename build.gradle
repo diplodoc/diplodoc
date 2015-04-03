@@ -65,11 +65,6 @@ task testReport(type: DefaultTask) {
     }
 }
 
-project(':diplobase:diplobase-shell') {
-	dependencies {
-		compile project(':diplobase')
-	}
-}
 project(':diplocore') {
 	dependencies {
 		compile project(':diplobase')
