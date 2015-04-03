@@ -5,6 +5,7 @@ import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Source
 import com.github.diplodoc.diplobase.repository.mongodb.diplodata.PostRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diplodata.SourceRepository
 import com.github.diplodoc.diplocore.services.RssService
+import com.mongodb.DBRef
 import com.rometools.rome.feed.synd.SyndContentImpl
 import com.rometools.rome.feed.synd.SyndEntry
 import spock.lang.Specification
@@ -55,8 +56,8 @@ class RssNewPostsFinderSpec extends Specification {
                 posts.find { it.url == 'link-3' }.id = 'id-3'
 
                 posts == [
-                    new Post(id: 'id-2', url: 'link-2', source: new Source(id: 'source-id', rssUrl: 'rss-url'), title: 'title-2', description: 'description-2', publishTime: LocalDateTime.parse('1970-01-01T02:33:20')),
-                    new Post(id: 'id-3', url: 'link-3', source: new Source(id: 'source-id', rssUrl: 'rss-url'), title: 'title-3', description: 'description-3', publishTime: LocalDateTime.parse('1970-01-01T02:50'))
+                    new Post(id: 'id-2', url: 'link-2', sourceId: new DBRef('source', 'source-id'), title: 'title-2', description: 'description-2', publishTime: LocalDateTime.parse('1970-01-01T02:33:20')),
+                    new Post(id: 'id-3', url: 'link-3', sourceId: new DBRef('source', 'source-id'), title: 'title-3', description: 'description-3', publishTime: LocalDateTime.parse('1970-01-01T02:50'))
                 ]
             })
 

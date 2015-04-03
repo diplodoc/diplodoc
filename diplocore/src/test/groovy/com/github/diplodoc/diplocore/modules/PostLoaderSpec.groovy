@@ -12,9 +12,9 @@ import spock.lang.Specification
 class PostLoaderSpec extends Specification {
 
     PostRepository postRepository = Mock(PostRepository)
-    HtmlService wwwService = Mock(HtmlService)
+    HtmlService htmlService = Mock(HtmlService)
 
-    PostLoader postLoader = new PostLoader(postRepository: postRepository, wwwService: wwwService)
+    PostLoader postLoader = new PostLoader(postRepository: postRepository, htmlService: htmlService)
 
     def 'void loadPost(String postId)'() {
         when:
@@ -22,7 +22,7 @@ class PostLoaderSpec extends Specification {
             document.html() >> 'html'
 
             postRepository.findOne('id') >> new Post(id: 'id', url: 'url')
-            wwwService.load('url') >> document
+            htmlService.load('url') >> document
 
             postLoader.loadPost('id')
 

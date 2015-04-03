@@ -34,7 +34,7 @@ class ProcessCommandsSpec extends Specification {
     def '`process run`'() {
         given:
             File tempFile = File.createTempFile('diploexec-shell-test', null)
-            tempFile.text = '{"source": {"_type":"com.github.diplodoc.diplobase.domain.mongodb.Source","id":1,"newPostsFinderModule":"football.ua-new-posts-finder","name":"football.ua"}}'
+            tempFile.text = '{"source": {"_type":"com.github.diplodoc.diplobase.domain.mongodb.diplodata.Source","id":1,"newPostsFinderModule":"football.ua-new-posts-finder","name":"football.ua"}}'
 
             DiploexecClient diploexecClient = Mock(DiploexecClient)
 

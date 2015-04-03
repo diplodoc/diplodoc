@@ -5,6 +5,7 @@ import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Source
 import com.github.diplodoc.diplobase.repository.mongodb.diplodata.PostRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diplodata.SourceRepository
 import com.github.diplodoc.diplocore.services.RssService
+import com.mongodb.DBRef
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -47,7 +48,7 @@ class RssNewPostsFinder {
                                     .findAll { rssEntry -> !postRepository.findOneByUrl(rssEntry.link) }
                                     .collect { rssEntry ->
                                         new Post(   url: rssEntry.link,
-                                                    source: source,
+                                                    sourceId: new DBRef('source', sourceId),
                                                     title: rssEntry.title,
                                                     description: rssEntry.description.value,
                                                     publishTime: LocalDateTime.ofInstant(rssEntry.publishedDate.toInstant(), ZoneId.systemDefault())
