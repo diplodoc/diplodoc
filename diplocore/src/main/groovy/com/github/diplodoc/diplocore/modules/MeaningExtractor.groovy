@@ -101,7 +101,7 @@ class MeaningExtractor {
         Vectors.dense(size, linksCount, childrenCount, ownTextLength, pointsCount)
     }
 
-    JavaRDD<LabeledPoint>[] dataSplits() {
+    def dataSplits() {
         Collection<LabeledPoint> data = postRepository.findByTrainMeaningHtmlIsNotNull().collectMany { Post post ->
             Document document = htmlService.parse(post.html)
             Collection<Element> positives = allSubelements(htmlService.parseFragment(post.trainMeaningHtml))
