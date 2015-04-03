@@ -9,5 +9,5 @@ import org.springframework.data.mongodb.repository.MongoRepository
  */
 interface ModuleMethodRepository extends MongoRepository<ModuleMethod, String> {
 
-    ModuleMethod findOneByModuleAndName(Module module, String name)
+    Collection<ModuleMethod> findByName(String name)
 }

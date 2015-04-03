@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta name="layout" content="main">
-		<g:set var="entityName" value="${message(code: 'moduleMethodRun.label', default: 'ModuleMethodRun')}" />
+		<g:set var="entityName" value="${message(code: 'moduleMethodRun.label', default: 'Module method run')}" />
 		<title><g:message code="default.show.label" args='[ "Module method run id=${moduleMethodRunInstance.id}" ]' /></title>
 	</head>
 
@@ -14,7 +14,7 @@
 		<div class="nav" role="navigation">
 			<ul>
 				<g:render template="/navigation/base-navigation"/>
-				<li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
+				<li><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
 			</ul>
 		</div>
 
@@ -39,7 +39,7 @@
 					<li class="fieldcontain">
 						<span id="moduleMethod-label" class="property-label"><g:message code="moduleMethodRun.moduleMethod.label" default="Module Method" /></span>
 
-						<span class="property-value" aria-labelledby="moduleMethod-label">${moduleMethodRunInstance?.moduleMethod?.name}</span>
+						<span class="property-value" aria-labelledby="moduleMethod-label">${moduleMethodRunInstance?.moduleMethod?.module?.name}::${moduleMethodRunInstance?.moduleMethod?.name}</span>
 					</li>
 				</g:if>
 

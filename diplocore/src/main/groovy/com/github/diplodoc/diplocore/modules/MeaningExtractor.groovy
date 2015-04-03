@@ -83,13 +83,13 @@ class MeaningExtractor {
         JavaRDD<LabeledPoint> testSet = dataSplits['testSet']
 
         LogisticRegressionModel model = model(trainSet)
-        Map metrics = metrics(model, testSet)
+        Map metrics = metrics(model, trainSet, testSet)
 
         moduleMethodRun.endTime = LocalDateTime.now().toString()
         moduleMethodRun.metrics = metrics
 
         Module module = moduleRepository.findOneByName(this.class.name)
-        moduleMethodRun.moduleMethod = moduleMethodRepository.findOneByModuleAndName(module, 'trainModel')
+        moduleMethodRun.moduleMethod = moduleMethodRepository.findByName('trainModel').find { it.moduleId.toString() == module.id }
         moduleMethodRunRepository.save moduleMethodRun
 
         if (!module.data) module.data = [:]
@@ -142,9 +142,8 @@ class MeaningExtractor {
         new LogisticRegressionWithLBFGS().run(trainSet.rdd())
     }
 
-    Map metrics(LogisticRegressionModel model, JavaRDD<LabeledPoint> testSet) {
+    Map metrics(LogisticRegressionModel model, JavaRDD<LabeledPoint> trainSet, JavaRDD<LabeledPoint> testSet) {
         int testSetSize = testSet.toArray().size()
-        double errorSum = 0
         int truePositives = 0
         int trueNegatives = 0
         int falsePositives = 0
@@ -153,7 +152,6 @@ class MeaningExtractor {
         testSet.toArray().each{ LabeledPoint point ->
             double prediction = model.predict(point.features())
 
-            errorSum += point.label() * (1 - prediction) + (1 - point.label()) * prediction
             if (point.label() == 1.0 && prediction == 1.0) truePositives++
             if (point.label() == 0.0 && prediction == 0.0) trueNegatives++
             if (point.label() == 0.0 && prediction == 1.0) falsePositives++
@@ -161,9 +159,9 @@ class MeaningExtractor {
         }
 
         Map metrics = [:]
-        metrics.model = model.toString()
+        metrics.model = Arrays.toString(model.weights().toArray())
+        metrics.trainSetSize = trainSet.toArray().size()
         metrics.testSetSize = testSetSize
-        metrics.error = errorSum / testSetSize
         metrics.truePositives = truePositives
         metrics.trueNegatives = trueNegatives
         metrics.falsePositives = falsePositives

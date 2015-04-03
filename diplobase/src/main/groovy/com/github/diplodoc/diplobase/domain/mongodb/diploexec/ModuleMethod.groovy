@@ -2,8 +2,9 @@ package com.github.diplodoc.diplobase.domain.mongodb.diploexec
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
-import org.springframework.data.mongodb.core.mapping.DBRef
+import org.springframework.data.mongodb.core.mapping.Field
 
 /**
  * @author yaroslav.yermilov
@@ -18,6 +19,6 @@ class ModuleMethod {
 
     String name
 
-    @DBRef
-    Module module
+    @Field('module')
+    ObjectId moduleId
 }

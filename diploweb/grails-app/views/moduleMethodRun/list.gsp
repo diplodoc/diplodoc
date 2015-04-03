@@ -43,7 +43,7 @@
 
 							<td><g:link action="show" id="${moduleMethodRunInstance.id}">${fieldValue(bean: moduleMethodRunInstance, field: "id")}</g:link></td>
 
-							<td>${moduleMethodRunInstance?.moduleMethod?.module} :: ${moduleMethodRunInstance?.moduleMethod}</td>
+							<td>${moduleMethodRunInstance?.moduleMethod?.module?.name}::${moduleMethodRunInstance?.moduleMethod?.name}</td>
 
 							<td>${fieldValue(bean: moduleMethodRunInstance, field: "startTime")}</td>
 
