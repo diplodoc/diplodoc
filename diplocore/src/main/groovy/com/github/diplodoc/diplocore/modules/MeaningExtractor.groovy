@@ -1,6 +1,7 @@
 package com.github.diplodoc.diplocore.modules
 
 import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Post
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Module
 import com.github.diplodoc.diplobase.repository.mongodb.diplodata.PostRepository
 import com.github.diplodoc.diplocore.services.SerializationService
 import com.github.diplodoc.diplocore.services.WwwService
@@ -50,6 +51,18 @@ class MeaningExtractor {
     @RequestMapping(value = '/train-model', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody String trainModel() {
+        JavaRDD<LabeledPoint>[] dataSplits = dataSplits()
+        JavaRDD<LabeledPoint> trainSet = dataSplits[0]
+        JavaRDD<LabeledPoint> testSet = dataSplits[1]
+
+        LogisticRegressionModel model = new LogisticRegressionWithLBFGS().run(trainSet.rdd())
+        Map metrics = metrics(model, testSet)
+        byte[] serializedModel = serializationService.serialize(model)
+
+        return JsonOutput.prettyPrint(JsonOutput.toJson(metrics))
+    }
+
+    JavaRDD<LabeledPoint>[] dataSplits() {
         Collection<LabeledPoint> data = postRepository.findByTrainMeaningHtmlIsNotNull().collectMany { Post post ->
             Document document = wwwService.parse(post.html)
             Collection<Element> positives = allSubelements(wwwService.parseFragment(post.trainMeaningHtml))
@@ -74,14 +87,10 @@ class MeaningExtractor {
 
         JavaRDD<LabeledPoint> rdd = sparkContext.parallelize(data)
 
-        JavaRDD<LabeledPoint>[] splits = rdd.randomSplit([ 0.7, 0.3 ] as double[])
-        JavaRDD<LabeledPoint> trainSet = splits[0]
-        JavaRDD<LabeledPoint> testSet = splits[1]
+        rdd.randomSplit([ 0.7, 0.3 ] as double[])
+    }
 
-        LogisticRegressionModel model = new LogisticRegressionWithLBFGS().run(trainSet.rdd())
-
-        byte[] serializedModel = serializationService.serialize(model)
-
+    Map metrics(LogisticRegressionModel model, JavaRDD<LabeledPoint> testSet) {
         int testSetSize = testSet.toArray().size()
         double accuracySum = 0
         int truePositives = 0
@@ -109,7 +118,7 @@ class MeaningExtractor {
         metrics.precision = 1.0 * truePositives / (truePositives + falsePositives)
         metrics.recall = 1.0 * truePositives / (truePositives + falseNegatives)
 
-        return JsonOutput.prettyPrint(JsonOutput.toJson(metrics))
+        metrics
     }
 
     Collection<Element> allSubelements(Element element) {
