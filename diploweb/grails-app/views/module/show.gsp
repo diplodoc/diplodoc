@@ -1,4 +1,5 @@
 <%@ page import="com.github.dipodoc.diploweb.diploexec.Module" %>
+<%@ page import="com.github.dipodoc.diploweb.diploexec.ModuleMethod" %>
 
 <!DOCTYPE html>
 <html>
@@ -40,15 +41,27 @@
 					<li class="fieldcontain">
 						<span id="data-label" class="property-label"><g:message code="module.data.label" default="data items" /></span>
 
-						<span class="property-value" aria-labelledby="data-label"><g:fieldValue bean="${moduleInstance}" field="data"/></span>
-
-						<g:each in="${moduleInstance.data.keySet()}" var="dataItem">
-							<div class="property-value" aria-labelledby="dataItem-label">
-								${dataItem}
-							</div>
-						</g:each>
+						<div class="property-value" aria-labelledby="data-label">
+							<g:each in="${moduleInstance.data.entrySet()}" var="dataItem">
+								<div class="property-value" aria-labelledby="dataItem-label">
+									${dataItem.key} = ${dataItem.value}
+								</div>
+							</g:each>
+						</div>
 					</li>
 				</g:if>
+
+				<li class="fieldcontain">
+					<span id="methods-label" class="property-label"><g:message code="module.methods.label" default="methods" /></span>
+
+					<div class="property-value" aria-labelledby="methods-label">
+						<g:each in="${ModuleMethod.findByModule(moduleInstance)}" var="moduleMethod">
+							<div class="property-value" aria-labelledby="moduleMethod-label">
+								${moduleMethod.name}
+							</div>
+						</g:each>
+					</div>
+				</li>
 			
 			</ol>
 

@@ -2,7 +2,11 @@ package com.github.diplodoc.diplocore.modules
 
 import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Post
 import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Module
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ModuleMethod
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ModuleMethodRun
 import com.github.diplodoc.diplobase.repository.mongodb.diplodata.PostRepository
+import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleMethodRepository
+import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleMethodRunRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleRepository
 import com.github.diplodoc.diplocore.services.HtmlService
 import groovy.json.JsonOutput
@@ -27,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.ResponseStatus
 
+import java.time.LocalDateTime
+
 /**
  * @author yaroslav.yermilov
  */
@@ -39,6 +45,12 @@ class MeaningExtractor {
 
     @Autowired
     ModuleRepository moduleRepository
+
+    @Autowired
+    ModuleMethodRepository moduleMethodRepository
+
+    @Autowired
+    ModuleMethodRunRepository moduleMethodRunRepository
 
     @Autowired
     HtmlService htmlService
@@ -66,6 +78,8 @@ class MeaningExtractor {
     @RequestMapping(value = '/train-model', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody String trainModel() {
+        ModuleMethodRun moduleMethodRun = new ModuleMethodRun(startTime: LocalDateTime.now().toString())
+
         def dataSplits = dataSplits()
         JavaRDD<LabeledPoint> trainSet = dataSplits['trainSet']
         JavaRDD<LabeledPoint> testSet = dataSplits['testSet']
@@ -73,8 +87,13 @@ class MeaningExtractor {
         LogisticRegressionModel model = model(trainSet)
         Map metrics = metrics(model, testSet)
 
+        moduleMethodRun.endTime = LocalDateTime.now().toString()
+        moduleMethodRun.metrics = metrics
 
         Module module = moduleRepository.findOneByName(this.class.name)
+        moduleMethodRun.moduleMethod = moduleMethodRepository.findOneByModuleAndName(module, 'trainModel')
+        moduleMethodRunRepository.save moduleMethodRun
+
         if (!module.data) module.data = [:]
         module.data['model'] = SerializationUtils.serialize(model)
         moduleRepository.save module

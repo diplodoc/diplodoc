@@ -3,19 +3,25 @@ package com.github.diplodoc.diplobase.domain.mongodb.diploexec
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.mapping.DBRef
 
 /**
  * @author yaroslav.yermilov
  */
 @EqualsAndHashCode
 @ToString
-class Module {
+class ModuleMethodRun {
 
     @Id
     String id
 
 
-    String name
+    String startTime
 
-    Map data
+    String endTime
+
+    Map metrics
+
+    @DBRef
+    ModuleMethod moduleMethod
 }
