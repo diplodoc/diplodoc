@@ -75,6 +75,7 @@ class MeaningExtractor {
 
 
         Module module = moduleRepository.findOneByName(this.class.name)
+        if (!module.data) module.data = [:]
         module.data['model'] = SerializationUtils.serialize(model)
         moduleRepository.save module
 
