@@ -57,7 +57,7 @@ class MeaningExtractor {
 
     @RequestMapping(value = '/post/{id}/extract-meaning', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody String extractMeaning(@PathVariable('id') String postId) {
+    void extractMeaning(@PathVariable('id') String postId) {
         Post post = postRepository.findOne postId
 
         Module module = moduleRepository.findOneByName(this.class.name)
@@ -71,13 +71,11 @@ class MeaningExtractor {
         post.meaningText = meaningElements.collect({ it.text() }).join(' ')
 
         postRepository.save post
-
-        return JsonOutput.prettyPrint(JsonOutput.toJson([ 'meaningHtml': post.meaningHtml, 'meaningText': post.meaningText ]))
     }
 
     @RequestMapping(value = '/train-model', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody String trainModel() {
+    void trainModel() {
         ModuleMethodRun moduleMethodRun = new ModuleMethodRun(startTime: LocalDateTime.now().toString())
 
         def dataSplits = dataSplits()
@@ -97,8 +95,6 @@ class MeaningExtractor {
         if (!module.data) module.data = [:]
         module.data['model'] = SerializationUtils.serialize(model)
         moduleRepository.save module
-
-        return JsonOutput.prettyPrint(JsonOutput.toJson(metrics))
     }
 
     List<Element> predictMeaningElements(LogisticRegressionModel model, Element element) {
@@ -127,7 +123,7 @@ class MeaningExtractor {
             Collection<Element> positives = allSubelements(htmlService.parseFragment(post.trainMeaningHtml))
 
             allSubelements(document.body()).collect { Element element ->
-                double label = ( (positives.find({ sameHtml(it, element) })) && (!element.text().isEmpty()) ) ? 1.0 : 0.0
+                double label = positives.find({ sameHtml(it, element) }) ? 1.0 : 0.0
                 new LabeledPoint(label, elementFeatures(element))
             }
         }
@@ -148,7 +144,7 @@ class MeaningExtractor {
 
     Map metrics(LogisticRegressionModel model, JavaRDD<LabeledPoint> testSet) {
         int testSetSize = testSet.toArray().size()
-        double accuracySum = 0
+        double errorSum = 0
         int truePositives = 0
         int trueNegatives = 0
         int falsePositives = 0
@@ -157,7 +153,7 @@ class MeaningExtractor {
         testSet.toArray().each{ LabeledPoint point ->
             double prediction = model.predict(point.features())
 
-            accuracySum += point.label() * (1 - prediction) + (1 - point.label()) * prediction
+            errorSum += point.label() * (1 - prediction) + (1 - point.label()) * prediction
             if (point.label() == 1.0 && prediction == 1.0) truePositives++
             if (point.label() == 0.0 && prediction == 0.0) trueNegatives++
             if (point.label() == 0.0 && prediction == 1.0) falsePositives++
@@ -166,11 +162,13 @@ class MeaningExtractor {
 
         Map metrics = [:]
         metrics.model = model.toString()
-        metrics.accuracy = 1 - accuracySum / testSetSize
+        metrics.testSetSize = testSetSize
+        metrics.error = errorSum / testSetSize
         metrics.truePositives = truePositives
         metrics.trueNegatives = trueNegatives
         metrics.falsePositives = falsePositives
         metrics.falseNegatives = falseNegatives
+        metrics.accuracy = 1.0 * (truePositives + trueNegatives) / testSetSize
         metrics.precision = 1.0 * truePositives / (truePositives + falsePositives)
         metrics.recall = 1.0 * truePositives / (truePositives + falseNegatives)
 
