@@ -104,6 +104,13 @@
                     </li>
                 </g:if>
 
+                <g:if test="${postInstance?.meaningHtml}">
+                    <li class="fieldcontain">
+                        <span id="meaningHtml-label" class="property-label"><g:message code="post.meaningHtml.label" default="Meaning HTML" /></span>
+                        <span class="property-value" aria-labelledby="meaningHtml-label"><g:fieldValue bean="${postInstance}" field="meaningHtml"/></span>
+                    </li>
+                </g:if>
+
                 <g:if test="${postInstance?.html}">
                     <li class="fieldcontain">
                         <span id="html-label" class="property-label"><g:message code="post.html.label" default="HTML" /></span>

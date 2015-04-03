@@ -29,6 +29,8 @@ class Post {
 
     String train_meaningHtml
 
+    String meaningHtml
+
     String meaningText
 
 
