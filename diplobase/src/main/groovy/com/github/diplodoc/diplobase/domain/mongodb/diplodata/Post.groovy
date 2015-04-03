@@ -36,5 +36,7 @@ class Post {
     @Field('train_meaningHtml')
     String trainMeaningHtml
 
+    String meaningHtml
+
     String meaningText
 }

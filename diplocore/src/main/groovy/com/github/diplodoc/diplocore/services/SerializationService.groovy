@@ -11,4 +11,8 @@ class SerializationService {
     byte[] serialize(def object) {
         assert false : 'not implemented yet'
     }
+
+    def deserialize(byte[] serializedObject) {
+        assert false : 'not implemented yet'
+    }
 }

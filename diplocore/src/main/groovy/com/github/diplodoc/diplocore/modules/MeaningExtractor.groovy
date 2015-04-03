@@ -5,7 +5,7 @@ import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Module
 import com.github.diplodoc.diplobase.repository.mongodb.diplodata.PostRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleRepository
 import com.github.diplodoc.diplocore.services.SerializationService
-import com.github.diplodoc.diplocore.services.WwwService
+import com.github.diplodoc.diplocore.services.HtmlService
 import groovy.json.JsonOutput
 import org.apache.commons.lang3.StringUtils
 import org.apache.spark.SparkConf
@@ -41,15 +41,29 @@ class MeaningExtractor {
     ModuleRepository moduleRepository
 
     @Autowired
-    WwwService wwwService
+    HtmlService htmlService
 
     @Autowired
     SerializationService serializationService
 
-    @RequestMapping(value = '/post/{id}/extract-text', method = RequestMethod.POST)
+    @RequestMapping(value = '/post/{id}/extract-meaning', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    void extractText(@PathVariable('id') String postId) {
-        assert false : 'not implemented yet'
+    @ResponseBody String extractMeaning(@PathVariable('id') String postId) {
+        Post post = postRepository.findOne postId
+
+        Module module = moduleRepository.findOneByName(this.class.name)
+        LogisticRegressionModel model = serializationService.deserialize(module.data['model'])
+
+        Document document = htmlService.parse(post.html)
+
+        List<Element> meaningElements = predictMeaningElements(model, document.body())
+
+        post.meaningHtml = meaningElements.collect({ it.outerHtml() }).join()
+        post.meaningText = meaningElements.collect({ it.text() }).join(' ')
+
+        postRepository.save post
+
+        return [ 'meaningHtml': post.meaningHtml, 'meaningText': post.meaningText ]
     }
 
     @RequestMapping(value = '/train-model', method = RequestMethod.POST)
@@ -62,6 +76,7 @@ class MeaningExtractor {
         LogisticRegressionModel model = model(trainSet)
         Map metrics = metrics(model, testSet)
 
+
         Module module = moduleRepository.findOneByName(this.class.name)
         module.data['model'] = serializationService.serialize(model)
         moduleRepository.save module
@@ -69,10 +84,14 @@ class MeaningExtractor {
         return JsonOutput.prettyPrint(JsonOutput.toJson(metrics))
     }
 
+    List<Element> predictMeaningElements(LogisticRegressionModel model, Element element) {
+        assert false : 'not implemented yet'
+    }
+
     JavaRDD<LabeledPoint>[] dataSplits() {
         Collection<LabeledPoint> data = postRepository.findByTrainMeaningHtmlIsNotNull().collectMany { Post post ->
-            Document document = wwwService.parse(post.html)
-            Collection<Element> positives = allSubelements(wwwService.parseFragment(post.trainMeaningHtml))
+            Document document = htmlService.parse(post.html)
+            Collection<Element> positives = allSubelements(htmlService.parseFragment(post.trainMeaningHtml))
 
             allSubelements(document.body()).collect { Element element ->
                 double label = ( (positives.find({ sameHtml(it, element) })) && (!element.text().isEmpty()) ) ? 1.0 : 0.0

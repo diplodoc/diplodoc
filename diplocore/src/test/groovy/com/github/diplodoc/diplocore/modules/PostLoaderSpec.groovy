@@ -2,7 +2,7 @@ package com.github.diplodoc.diplocore.modules
 
 import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Post
 import com.github.diplodoc.diplobase.repository.mongodb.diplodata.PostRepository
-import com.github.diplodoc.diplocore.services.WwwService
+import com.github.diplodoc.diplocore.services.HtmlService
 import org.jsoup.nodes.Document
 import spock.lang.Specification
 
@@ -12,7 +12,7 @@ import spock.lang.Specification
 class PostLoaderSpec extends Specification {
 
     PostRepository postRepository = Mock(PostRepository)
-    WwwService wwwService = Mock(WwwService)
+    HtmlService wwwService = Mock(HtmlService)
 
     PostLoader postLoader = new PostLoader(postRepository: postRepository, wwwService: wwwService)
 

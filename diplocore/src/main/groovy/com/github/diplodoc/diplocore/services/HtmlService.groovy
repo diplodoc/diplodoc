@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
  * @author yaroslav.yermilov
  */
 @Service
-class WwwService {
+class HtmlService {
 
     Document load(String url) {
         Jsoup.connect(url).get()
