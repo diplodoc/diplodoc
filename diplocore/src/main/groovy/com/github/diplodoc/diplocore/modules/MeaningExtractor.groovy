@@ -3,6 +3,7 @@ package com.github.diplodoc.diplocore.modules
 import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Post
 import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Module
 import com.github.diplodoc.diplobase.repository.mongodb.diplodata.PostRepository
+import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleRepository
 import com.github.diplodoc.diplocore.services.SerializationService
 import com.github.diplodoc.diplocore.services.WwwService
 import groovy.json.JsonOutput
@@ -37,6 +38,9 @@ class MeaningExtractor {
     PostRepository postRepository
 
     @Autowired
+    ModuleRepository moduleRepository
+
+    @Autowired
     WwwService wwwService
 
     @Autowired
@@ -51,13 +55,16 @@ class MeaningExtractor {
     @RequestMapping(value = '/train-model', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody String trainModel() {
-        JavaRDD<LabeledPoint>[] dataSplits = dataSplits()
-        JavaRDD<LabeledPoint> trainSet = dataSplits[0]
-        JavaRDD<LabeledPoint> testSet = dataSplits[1]
+        def dataSplits = dataSplits()
+        JavaRDD<LabeledPoint> trainSet = dataSplits['trainSet']
+        JavaRDD<LabeledPoint> testSet = dataSplits['testSet']
 
-        LogisticRegressionModel model = new LogisticRegressionWithLBFGS().run(trainSet.rdd())
+        LogisticRegressionModel model = model(trainSet)
         Map metrics = metrics(model, testSet)
-        byte[] serializedModel = serializationService.serialize(model)
+
+        Module module = moduleRepository.findOneByName(this.class.name)
+        module.data['model'] = serializationService.serialize(model)
+        moduleRepository.save module
 
         return JsonOutput.prettyPrint(JsonOutput.toJson(metrics))
     }
@@ -87,7 +94,13 @@ class MeaningExtractor {
 
         JavaRDD<LabeledPoint> rdd = sparkContext.parallelize(data)
 
-        rdd.randomSplit([ 0.7, 0.3 ] as double[])
+        JavaRDD<LabeledPoint>[] splits = rdd.randomSplit([ 0.7, 0.3 ] as double[])
+
+        [ 'trainSet': splits[0], 'testSet': splits[1] ]
+    }
+
+    LogisticRegressionModel model(JavaRDD<LabeledPoint> trainSet) {
+        new LogisticRegressionWithLBFGS().run(trainSet.rdd())
     }
 
     Map metrics(LogisticRegressionModel model, JavaRDD<LabeledPoint> testSet) {
