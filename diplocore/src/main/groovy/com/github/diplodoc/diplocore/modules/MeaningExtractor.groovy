@@ -82,7 +82,23 @@ class MeaningExtractor {
     }
 
     List<Element> predictMeaningElements(LogisticRegressionModel model, Element element) {
-        assert false : 'not implemented yet'
+        double selfLabel = model.predict(elementFeatures(element))
+
+        if (selfLabel == 1.0) {
+            [ element ]
+        } else {
+            element.children().collectMany { predictMeaningElements(model, it) }
+        }
+    }
+
+    Vector elementFeatures(Element element) {
+        double size = element.outerHtml().length()
+        double linksCount = element.select('a').size()
+        double childrenCount = element.children().size()
+        double ownTextLength = element.ownText().length()
+        double pointsCount = element.text().toCharArray().findAll({ '.,:;?!'.contains(Character.toString(it)) }).size()
+
+        Vectors.dense(size, linksCount, childrenCount, ownTextLength, pointsCount)
     }
 
     JavaRDD<LabeledPoint>[] dataSplits() {
@@ -92,16 +108,7 @@ class MeaningExtractor {
 
             allSubelements(document.body()).collect { Element element ->
                 double label = ( (positives.find({ sameHtml(it, element) })) && (!element.text().isEmpty()) ) ? 1.0 : 0.0
-
-                double size = element.outerHtml().length()
-                double linksCount = element.select('a').size()
-                double childrenCount = element.children().size()
-                double ownTextLength = element.ownText().length()
-                double pointsCount = element.text().toCharArray().findAll({ '.,:;?!'.contains(Character.toString(it)) }).size()
-
-                Vector features = Vectors.dense(size, linksCount, childrenCount, ownTextLength, pointsCount)
-
-                new LabeledPoint(label, features)
+                new LabeledPoint(label, elementFeatures(element))
             }
         }
 
