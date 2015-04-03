@@ -1,11 +1,10 @@
 package com.github.diplodoc.diplocore.modules
 
-import com.github.diplodoc.diplobase.domain.mongodb.Post
-import com.github.diplodoc.diplobase.domain.mongodb.Source
-import com.github.diplodoc.diplobase.repository.mongodb.PostRepository
-import com.github.diplodoc.diplobase.repository.mongodb.SourceRepository
+import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Post
+import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Source
+import com.github.diplodoc.diplobase.repository.mongodb.diplodata.PostRepository
+import com.github.diplodoc.diplobase.repository.mongodb.diplodata.SourceRepository
 import com.github.diplodoc.diplocore.services.RssService
-import com.rometools.rome.feed.synd.SyndContent
 import com.rometools.rome.feed.synd.SyndContentImpl
 import com.rometools.rome.feed.synd.SyndEntry
 import spock.lang.Specification

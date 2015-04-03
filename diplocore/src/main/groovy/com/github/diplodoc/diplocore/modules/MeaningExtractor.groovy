@@ -1,7 +1,7 @@
 package com.github.diplodoc.diplocore.modules
 
-import com.github.diplodoc.diplobase.domain.mongodb.Post
-import com.github.diplodoc.diplobase.repository.mongodb.PostRepository
+import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Post
+import com.github.diplodoc.diplobase.repository.mongodb.diplodata.PostRepository
 import com.github.diplodoc.diplocore.services.SerializationService
 import com.github.diplodoc.diplocore.services.WwwService
 import groovy.json.JsonOutput

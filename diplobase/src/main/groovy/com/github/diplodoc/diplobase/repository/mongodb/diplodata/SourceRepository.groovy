@@ -1,6 +1,6 @@
-package com.github.diplodoc.diplobase.repository.mongodb
+package com.github.diplodoc.diplobase.repository.mongodb.diplodata
 
-import com.github.diplodoc.diplobase.domain.mongodb.Source
+import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Source
 import org.springframework.data.mongodb.repository.MongoRepository
 
 /**

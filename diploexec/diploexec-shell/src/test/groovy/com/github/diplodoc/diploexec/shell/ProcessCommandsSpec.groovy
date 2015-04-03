@@ -1,6 +1,6 @@
 package com.github.diplodoc.diploexec.shell
 
-import com.github.diplodoc.diplobase.domain.mongodb.Source
+import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Source
 import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
 import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRepository
 import com.github.diplodoc.diploexec.client.DiploexecClient

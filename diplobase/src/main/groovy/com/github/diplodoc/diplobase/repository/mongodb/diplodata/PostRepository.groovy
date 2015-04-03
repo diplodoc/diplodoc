@@ -1,8 +1,7 @@
-package com.github.diplodoc.diplobase.repository.mongodb
+package com.github.diplodoc.diplobase.repository.mongodb.diplodata
 
-import com.github.diplodoc.diplobase.domain.mongodb.Post
+import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Post
 import org.springframework.data.mongodb.repository.MongoRepository
-import org.springframework.data.mongodb.repository.Query
 
 /**
  * @author yaroslav.yermilov

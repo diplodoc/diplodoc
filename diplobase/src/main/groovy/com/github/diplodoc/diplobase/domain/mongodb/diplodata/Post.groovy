@@ -1,4 +1,4 @@
-package com.github.diplodoc.diplobase.domain.mongodb
+package com.github.diplodoc.diplobase.domain.mongodb.diplodata
 
 import com.mongodb.DBRef
 import groovy.transform.EqualsAndHashCode
