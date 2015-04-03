@@ -2,6 +2,7 @@ package com.github.diplodoc.diplocore.modules
 
 import com.github.diplodoc.diplobase.domain.mongodb.Post
 import com.github.diplodoc.diplobase.repository.mongodb.PostRepository
+import com.github.diplodoc.diplocore.services.SerializationService
 import com.github.diplodoc.diplocore.services.WwwService
 import groovy.json.JsonOutput
 import org.apache.commons.lang3.StringUtils
@@ -32,10 +33,13 @@ import org.springframework.web.bind.annotation.ResponseStatus
 class MeaningExtractor {
 
     @Autowired
+    PostRepository postRepository
+
+    @Autowired
     WwwService wwwService
 
     @Autowired
-    PostRepository postRepository
+    SerializationService serializationService
 
     @RequestMapping(value = '/post/{id}/extract-text', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
@@ -75,6 +79,8 @@ class MeaningExtractor {
         JavaRDD<LabeledPoint> testSet = splits[1]
 
         LogisticRegressionModel model = new LogisticRegressionWithLBFGS().run(trainSet.rdd())
+
+        byte[] serializedModel = serializationService.serialize(model)
 
         int testSetSize = testSet.toArray().size()
         double accuracySum = 0
