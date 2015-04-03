@@ -4,9 +4,9 @@ import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Post
 import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Module
 import com.github.diplodoc.diplobase.repository.mongodb.diplodata.PostRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleRepository
-import com.github.diplodoc.diplocore.services.SerializationService
 import com.github.diplodoc.diplocore.services.HtmlService
 import groovy.json.JsonOutput
+import org.apache.commons.lang3.SerializationUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.spark.SparkConf
 import org.apache.spark.api.java.JavaRDD
@@ -43,16 +43,13 @@ class MeaningExtractor {
     @Autowired
     HtmlService htmlService
 
-    @Autowired
-    SerializationService serializationService
-
     @RequestMapping(value = '/post/{id}/extract-meaning', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody String extractMeaning(@PathVariable('id') String postId) {
         Post post = postRepository.findOne postId
 
         Module module = moduleRepository.findOneByName(this.class.name)
-        LogisticRegressionModel model = serializationService.deserialize(module.data['model'])
+        LogisticRegressionModel model = SerializationUtils.deserialize(module.data['model'])
 
         Document document = htmlService.parse(post.html)
 
@@ -63,7 +60,7 @@ class MeaningExtractor {
 
         postRepository.save post
 
-        return [ 'meaningHtml': post.meaningHtml, 'meaningText': post.meaningText ]
+        return JsonOutput.prettyPrint(JsonOutput.toJson([ 'meaningHtml': post.meaningHtml, 'meaningText': post.meaningText ]))
     }
 
     @RequestMapping(value = '/train-model', method = RequestMethod.POST)
@@ -78,7 +75,7 @@ class MeaningExtractor {
 
 
         Module module = moduleRepository.findOneByName(this.class.name)
-        module.data['model'] = serializationService.serialize(model)
+        module.data['model'] = SerializationUtils.serialize(model)
         moduleRepository.save module
 
         return JsonOutput.prettyPrint(JsonOutput.toJson(metrics))
