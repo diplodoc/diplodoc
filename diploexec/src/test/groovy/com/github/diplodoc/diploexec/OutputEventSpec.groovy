@@ -36,4 +36,19 @@ class OutputEventSpec extends Specification {
             actual[1].parameters[0].type == 'java.lang.String'
             actual[1].parameters[0].processRun == actual[1]
     }
+
+    def 'boolean equals(Object other)'() {
+        expect:
+            new OutputEvent(new ProcessRun(id: 1), [ 'key' : 'value' ]).equals(other) == expected
+
+        where:
+            other                                                                            | expected
+            new OutputEvent(new ProcessRun(id: 1), [ 'key' : 'value' ])                      | true
+            new OutputEvent(new ProcessRun(id: 2), [ 'key' : 'value' ])                      | false
+            new OutputEvent(new ProcessRun(id: 1), [ 'key-2' : 'value-2' ])                  | false
+            new OutputEvent(new ProcessRun(id: 1), [:])                                      | false
+            new OutputEvent(new ProcessRun(id: 1), [ 'key' : 'value', 'key-2' : 'value-2' ]) | false
+            new OutputEvent(null, [:])                                                       | false
+            new OutputEvent(new ProcessRun(id: 1), null)                                     | false
+    }
 }

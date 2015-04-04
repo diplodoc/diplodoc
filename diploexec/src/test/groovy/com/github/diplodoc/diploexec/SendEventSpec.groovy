@@ -30,4 +30,19 @@ class SendEventSpec extends Specification {
             actual[0].parameters[0].type == 'java.lang.String'
             actual[0].parameters[0].processRun == actual[0]
     }
+
+    def 'boolean equals(Object other)'() {
+        expect:
+            new SendEvent('process-0', [ 'key' : 'value' ]).equals(other) == expected
+
+        where:
+            other                                                                | expected
+            new SendEvent('process-0', [ 'key' : 'value' ])                      | true
+            new SendEvent('process-1', [ 'key' : 'value' ])                      | false
+            new SendEvent('process-0', [ 'key-2' : 'value-2' ])                  | false
+            new SendEvent('process-0', [:])                                      | false
+            new SendEvent('process-0', [ 'key' : 'value', 'key-2' : 'value-2' ]) | false
+            new SendEvent(null, [:])                                             | false
+            new SendEvent('process-0', null)                                     | false
+    }
 }
