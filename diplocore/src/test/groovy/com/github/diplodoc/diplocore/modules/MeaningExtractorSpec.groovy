@@ -19,7 +19,6 @@ import org.bson.types.ObjectId
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import spock.lang.Ignore
 import spock.lang.Specification
 
 /**
@@ -117,7 +116,7 @@ class MeaningExtractorSpec extends Specification {
                 moduleMethodRunToSave.startTime != null &&
                 moduleMethodRunToSave.endTime != null &&
                 moduleMethodRunToSave.metrics == [ 'metric': 'value' ] &&
-                moduleMethodRunToSave.moduleMethod == new ModuleMethod(id: 'method-1')
+                moduleMethodRunToSave.moduleMethod == new ModuleMethod(id: 'method-1', name: 'trainModel', moduleId: new ObjectId('111111111111111111111111'))
             })
     }
 

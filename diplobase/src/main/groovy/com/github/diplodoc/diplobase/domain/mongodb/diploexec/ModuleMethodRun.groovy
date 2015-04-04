@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef
 /**
  * @author yaroslav.yermilov
  */
-@EqualsAndHashCode(includes = 'id')
+@EqualsAndHashCode
 @ToString
 class ModuleMethodRun {
 

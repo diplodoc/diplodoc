@@ -7,7 +7,7 @@ import org.springframework.data.annotation.Id
 /**
  * @author yaroslav.yermilov
  */
-@EqualsAndHashCode(includes = 'id')
+@EqualsAndHashCode
 @ToString
 class Source {
 

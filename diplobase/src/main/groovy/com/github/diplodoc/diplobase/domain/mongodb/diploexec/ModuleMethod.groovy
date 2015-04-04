@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Field
 /**
  * @author yaroslav.yermilov
  */
-@EqualsAndHashCode(includes = 'id')
+@EqualsAndHashCode
 @ToString
 class ModuleMethod {
 

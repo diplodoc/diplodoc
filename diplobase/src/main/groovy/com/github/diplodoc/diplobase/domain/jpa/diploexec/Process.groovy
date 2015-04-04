@@ -15,7 +15,7 @@ import java.time.LocalDateTime
  */
 @Entity
 @Table(schema = 'diploexec')
-@EqualsAndHashCode(includes = 'id')
+@EqualsAndHashCode
 @ToString(excludes = 'definition')
 class Process {
 
