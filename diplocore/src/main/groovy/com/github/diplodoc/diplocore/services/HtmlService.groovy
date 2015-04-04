@@ -20,6 +20,6 @@ class HtmlService {
     }
 
     Element parseFragment(String html) {
-        Jsoup.parseBodyFragment(html).body()
+        Jsoup.parseBodyFragment(html).body().child(0)
     }
 }

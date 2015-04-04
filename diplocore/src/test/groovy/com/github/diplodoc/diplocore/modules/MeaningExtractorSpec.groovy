@@ -19,6 +19,7 @@ import org.bson.types.ObjectId
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import spock.lang.Ignore
 import spock.lang.Specification
 
 /**
@@ -148,8 +149,8 @@ class MeaningExtractorSpec extends Specification {
 
         then:
             actual.size() == 2
-            actual[0].html() == element1.html()
-            actual[1].html() == element2.html()
+            actual[0].outerHtml() == element1.outerHtml()
+            actual[1].outerHtml() == element2.outerHtml()
     }
 
     def 'Vector elementFeatures(Element element)'() {
@@ -161,5 +162,120 @@ class MeaningExtractorSpec extends Specification {
 
         then:
             actual == Vectors.dense(80.0, 1.0, 3.0, 8.0, 2.0)
+    }
+
+    def 'Collection<LabeledPoint> postToLabeledPoints(Post post)'() {
+        setup:
+            meaningExtractor.htmlService = htmlService
+
+            Post post = new Post(html: 'post-html', trainMeaningHtml: 'post-trainMeaningHtml')
+
+            Document document = Mock(Document)
+            document.body() >> Jsoup.parseBodyFragment('<div><div>text 1</div><div>text</div></div>').body().child(0)
+            htmlService.parse('post-html') >> document
+
+            htmlService.parseFragment('post-trainMeaningHtml') >> Jsoup.parseBodyFragment('<div>text 1</div>').body().child(0)
+
+        when:
+            Collection<LabeledPoint> actual = meaningExtractor.postToLabeledPoints(post)
+
+        then:
+            actual == [
+                new LabeledPoint(0.0, Vectors.dense(58.0, 0.0, 2.0, 0.0, 0.0)),
+                new LabeledPoint(1.0, Vectors.dense(20.0, 0.0, 0.0, 6.0, 0.0)),
+                new LabeledPoint(0.0, Vectors.dense(18.0, 0.0, 0.0, 4.0, 0.0))
+            ]
+    }
+
+    def 'Map metrics(LogisticRegressionModel model, JavaRDD<LabeledPoint> trainSet, JavaRDD<LabeledPoint> testSet)'() {
+        setup:
+            LogisticRegressionModel model = Mock(LogisticRegressionModel)
+            model.weights() >> Vectors.dense(1.0, 2.0, 3.0)
+            model.predict(Vectors.dense(4.0)) >> 1.0
+            model.predict(Vectors.dense(5.0)) >> 0.0
+
+            JavaRDD<LabeledPoint> trainSet = Mock(JavaRDD)
+            trainSet.toArray() >> [ new LabeledPoint(0.0, Vectors.dense(1.0)), new LabeledPoint(0.0, Vectors.dense(2.0)), new LabeledPoint(0.0, Vectors.dense(3.0)) ]
+
+            JavaRDD<LabeledPoint> testSet = Mock(JavaRDD)
+            testSet.toArray() >> [ new LabeledPoint(1.0, Vectors.dense(4.0)), new LabeledPoint(1.0, Vectors.dense(5.0)) ]
+
+        when:
+            Map actual = meaningExtractor.metrics(model, trainSet, testSet)
+
+        then:
+            actual.keySet().size() == 10
+            actual.model == [ 1.0, 2.0, 3.0 ]
+            actual.trainSetSize == 3
+            actual.testSetSize == 2
+            actual.truePositives == 1
+            actual.trueNegatives == 0
+            actual.falsePositives == 0
+            actual.falseNegatives == 1
+            actual.accuracy == 0.5
+            actual.precision == 1
+            actual.recall == 0.5
+    }
+
+    def 'Collection allSubelements(Element element) - no children'() {
+        setup:
+            Element element = Jsoup.parseBodyFragment('<div>text</div>').body().child(0)
+
+        when:
+            Collection<Element> actual = meaningExtractor.allSubelements(element)
+
+        then:
+            actual.size() == 1
+            actual[0].outerHtml().replaceAll('\\s+','') == '<div>text</div>'
+    }
+
+    def 'Collection allSubelements(Element element) - with children'() {
+        setup:
+            Element element = Jsoup.parseBodyFragment('<div><div>text1</div><div>text2</div></div>').body().child(0)
+
+        when:
+            Collection<Element> actual = meaningExtractor.allSubelements(element)
+
+        then:
+            actual.size() == 3
+            actual[0].outerHtml().replaceAll('\\s+','') == '<div><div>text1</div><div>text2</div></div>'
+            actual[1].outerHtml().replaceAll('\\s+','') == '<div>text1</div>'
+            actual[2].outerHtml().replaceAll('\\s+','') == '<div>text2</div>'
+    }
+
+    def 'boolean sameHtml(Element element1, Element element2) - same elements'() {
+        setup:
+            Element element1 = Jsoup.parseBodyFragment('<div>text</div>').body().child(0)
+            Element element2 = Jsoup.parseBodyFragment('<div> text </div>').body().child(0)
+
+        when:
+            boolean actual = meaningExtractor.sameHtml(element1, element2)
+
+        then:
+            actual == true
+    }
+
+    def 'boolean sameHtml(Element element1, Element element2) - similar elements'() {
+        setup:
+            Element element1 = Jsoup.parseBodyFragment('<div>012345678901234567890123456789012345678901234567890123456789</div>').body().child(0)
+            Element element2 = Jsoup.parseBodyFragment('<div>12345678901234567890123456789012345678901234567890123456789</div>').body().child(0)
+
+        when:
+            boolean actual = meaningExtractor.sameHtml(element1, element2)
+
+        then:
+            actual == true
+    }
+
+    def 'boolean sameHtml(Element element1, Element element2) - different elements'() {
+        setup:
+            Element element1 = Jsoup.parseBodyFragment('<div>text</div>').body().child(0)
+            Element element2 = Jsoup.parseBodyFragment('<div> other text </div>').body().child(0)
+
+        when:
+            boolean actual = meaningExtractor.sameHtml(element1, element2)
+
+        then:
+            actual == false
     }
 }

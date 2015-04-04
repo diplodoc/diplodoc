@@ -119,24 +119,24 @@ class MeaningExtractor {
     }
 
     def dataSplits() {
-        Collection<LabeledPoint> data = postRepository.findByTrainMeaningHtmlIsNotNull().collectMany { Post post ->
-            Document document = htmlService.parse(post.html)
-            Collection<Element> positives = allSubelements(htmlService.parseFragment(post.trainMeaningHtml))
-
-            allSubelements(document.body()).collect { Element element ->
-                double label = positives.find({ sameHtml(it, element) }) ? 1.0 : 0.0
-                new LabeledPoint(label, elementFeatures(element))
-            }
-        }
-
         SparkConf sparkConf = new SparkConf().setAppName('/diplocore/meaning-extractor/train-model').setMaster('local')
         JavaSparkContext sparkContext = new JavaSparkContext(sparkConf)
 
-        JavaRDD<LabeledPoint> rdd = sparkContext.parallelize(data)
+        Collection<LabeledPoint> data = postRepository.findByTrainMeaningHtmlIsNotNull().collectMany(this.&postToLabeledPoints)
 
-        JavaRDD<LabeledPoint>[] splits = rdd.randomSplit([ 0.7, 0.3 ] as double[])
+        JavaRDD<LabeledPoint>[] splits = sparkContext.parallelize(data).randomSplit([ 0.7, 0.3 ] as double[])
 
         [ 'trainSet': splits[0], 'testSet': splits[1] ]
+    }
+
+    Collection<LabeledPoint> postToLabeledPoints(Post post) {
+        Document document = htmlService.parse(post.html)
+        Collection<Element> positives = allSubelements(htmlService.parseFragment(post.trainMeaningHtml))
+
+        allSubelements(document.body()).collect { Element element ->
+            double label = positives.find({ sameHtml(it, element) }) ? 1.0 : 0.0
+            new LabeledPoint(label, elementFeatures(element))
+        }
     }
 
     LogisticRegressionModel model(JavaRDD<LabeledPoint> trainSet) {
@@ -160,7 +160,7 @@ class MeaningExtractor {
         }
 
         Map metrics = [:]
-        metrics.model = Arrays.toString(model.weights().toArray())
+        metrics.model = model.weights().toArray()
         metrics.trainSetSize = trainSet.toArray().size()
         metrics.testSetSize = testSetSize
         metrics.truePositives = truePositives
@@ -175,8 +175,7 @@ class MeaningExtractor {
     }
 
     Collection<Element> allSubelements(Element element) {
-        Collection result = []
-        result.addAll(element.children())
+        Collection result = [ element ]
         result.addAll(element.children().collectMany({ allSubelements(it) }))
 
         return result
