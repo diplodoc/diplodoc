@@ -89,7 +89,7 @@ class MeaningExtractor {
         moduleMethodRun.endTime = LocalDateTime.now().toString()
         moduleMethodRun.metrics = metrics
 
-        Module module = moduleRepository.findOneByName(this.class.name)
+        Module module = moduleRepository.findOneByName('com.github.diplodoc.diplocore.modules.MeaningExtractor')
         moduleMethodRun.moduleMethod = moduleMethodRepository.findByName('trainModel').find { it.moduleId.toString() == module.id }
         moduleMethodRunRepository.save moduleMethodRun
 
