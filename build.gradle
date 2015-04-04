@@ -38,6 +38,13 @@ task testResultsReport(type: TestReport) {
     reportOn subprojects.findAll({it.name != 'diploweb'})*.test
 }
 
+task grailsTestResultReport(type: Copy) {
+    from fileTree("${project(':diploweb').buildDir}/test-results/html").include('**/*.html')
+    into "$buildDir/reports/grails-results"
+
+    dependsOn task(':diploweb:test')
+}
+
 task testCoverageReport(type: JacocoReport) {
     executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
 
@@ -61,7 +68,7 @@ task clean(type: Delete) {
 
 task testReport(type: DefaultTask) {
     dependsOn {
-        [ testResultsReport, testCoverageReport ]
+        [ testResultsReport, grailsTestResultReport, testCoverageReport ]
     }
 }
 
