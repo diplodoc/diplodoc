@@ -12,6 +12,8 @@ import com.github.diplodoc.diplocore.services.HtmlService
 import com.github.diplodoc.diplocore.services.SerializationService
 import org.apache.spark.api.java.JavaRDD
 import org.apache.spark.mllib.classification.LogisticRegressionModel
+import org.apache.spark.mllib.linalg.Vector
+import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.regression.LabeledPoint
 import org.bson.types.ObjectId
 import org.jsoup.Jsoup
@@ -55,10 +57,10 @@ class MeaningExtractorSpec extends Specification {
             1 * serializationService.deserialize([ 1, 2 ,3 ] as byte[]) >> model
 
             1 * meaningExtractor.predictMeaningElements(model, body) >> [
-                    Jsoup.parseBodyFragment('<div>text 1</div>').body().child(0),
-                    Jsoup.parseBodyFragment('<div>text 2</div>').body().child(0),
-                    Jsoup.parseBodyFragment('<div/>').body().child(0),
-                    Jsoup.parseBodyFragment('<div>text 4</div>').body().child(0),
+                Jsoup.parseBodyFragment('<div>text 1</div>').body().child(0),
+                Jsoup.parseBodyFragment('<div>text 2</div>').body().child(0),
+                Jsoup.parseBodyFragment('<div/>').body().child(0),
+                Jsoup.parseBodyFragment('<div>text 4</div>').body().child(0),
             ]
 
         when:
@@ -116,5 +118,48 @@ class MeaningExtractorSpec extends Specification {
                 moduleMethodRunToSave.metrics == [ 'metric': 'value' ] &&
                 moduleMethodRunToSave.moduleMethod == new ModuleMethod(id: 'method-1')
             })
+    }
+
+    def 'List<Element> predictMeaningElements(LogisticRegressionModel model, Element element) - predict 1.0 for element'() {
+        setup:
+            LogisticRegressionModel model = Mock(LogisticRegressionModel)
+            Element element = Jsoup.parseBodyFragment('<div>text</div>').body().child(0)
+            model.predict(_) >> 1.0
+
+        when:
+            List<Element> actual = meaningExtractor.predictMeaningElements(model, element)
+
+        then:
+            actual == [ element ]
+    }
+
+    def 'List<Element> predictMeaningElements(LogisticRegressionModel model, Element element) - predict 0.0 for element'() {
+        setup:
+            LogisticRegressionModel model = Mock(LogisticRegressionModel)
+            Element rootElement = Jsoup.parseBodyFragment('<div><div>text 1</div><div>text 2</div></div>').body().child(0)
+            Element element1 = Jsoup.parseBodyFragment('<div>text 1</div>').body().child(0)
+            Element element2 = Jsoup.parseBodyFragment('<div>text 2</div>').body().child(0)
+            model.predict(meaningExtractor.elementFeatures(rootElement)) >> 0.0
+            model.predict(meaningExtractor.elementFeatures(element1)) >> 1.0
+            model.predict(meaningExtractor.elementFeatures(element2)) >> 1.0
+
+        when:
+            List<Element> actual = meaningExtractor.predictMeaningElements(model, rootElement)
+
+        then:
+            actual.size() == 2
+            actual[0].html() == element1.html()
+            actual[1].html() == element2.html()
+    }
+
+    def 'Vector elementFeatures(Element element)'() {
+        setup:
+            Element element = Jsoup.parseBodyFragment('<div>own text<div>text:1</div><a></a><div>text 2.</div></div>').body().child(0)
+
+        when:
+            Vector actual = meaningExtractor.elementFeatures(element)
+
+        then:
+            actual == Vectors.dense(80.0, 1.0, 3.0, 8.0, 2.0)
     }
 }
