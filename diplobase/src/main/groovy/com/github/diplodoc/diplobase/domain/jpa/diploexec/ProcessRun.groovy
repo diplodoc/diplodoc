@@ -19,7 +19,7 @@ import java.time.LocalDateTime
  */
 @Entity
 @Table(schema = 'diploexec')
-@EqualsAndHashCode(excludes = 'parameters')
+@EqualsAndHashCode(includes = 'id')
 @ToString
 class ProcessRun {
 

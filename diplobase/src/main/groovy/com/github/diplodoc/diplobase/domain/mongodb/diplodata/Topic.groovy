@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef
 /**
  * @author yaroslav.yermilov
  */
-@EqualsAndHashCode
+@EqualsAndHashCode(includes = 'id')
 @ToString(includes = 'label')
 class Topic {
 
