@@ -22,7 +22,7 @@ class ProcessRun {
 
         version false
 
-        id generator: 'sequence', params: [sequence:'diploexec.processrun_id_seq']
+        id generator: 'sequence', params: [ sequence:'diploexec.processrun_id_seq' ]
         startTime column: 'starttime'
         endTime column: 'endtime'
         exitStatus column: 'exitstatus'
