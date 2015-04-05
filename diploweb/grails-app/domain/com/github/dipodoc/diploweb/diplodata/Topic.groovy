@@ -14,4 +14,8 @@ class Topic {
     String label
 
     static belongsTo = [ parent: Topic ]
+
+    static constraints = {
+        parent nullable: true
+    }
 }

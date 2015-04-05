@@ -13,7 +13,7 @@
 
 		<div class="nav" role="navigation">
 			<ul>
-                <g:render template="/base-navigation"/>
+                <g:render template="/navigation/base-navigation"/>
 				<li><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
 			</ul>
 		</div>
@@ -90,10 +90,24 @@
                     </li>
                 </g:if>
 
+                <g:if test="${postInstance?.train_meaningHtml}">
+                    <li class="fieldcontain">
+                        <span id="train_meaningHtml-label" class="property-label"><g:message code="post.train_meaningHtml.label" default="Train meaning HTML" /></span>
+                        <span class="property-value" aria-labelledby="train_meaningHtml-label"><g:fieldValue bean="${postInstance}" field="train_meaningHtml"/></span>
+                    </li>
+                </g:if>
+
                 <g:if test="${postInstance?.meaningText}">
                     <li class="fieldcontain">
                         <span id="meaningText-label" class="property-label"><g:message code="post.meaningText.label" default="Meaning text" /></span>
                         <span class="property-value" aria-labelledby="meaningText-label"><g:fieldValue bean="${postInstance}" field="meaningText"/></span>
+                    </li>
+                </g:if>
+
+                <g:if test="${postInstance?.meaningHtml}">
+                    <li class="fieldcontain">
+                        <span id="meaningHtml-label" class="property-label"><g:message code="post.meaningHtml.label" default="Meaning HTML" /></span>
+                        <span class="property-value" aria-labelledby="meaningHtml-label"><g:fieldValue bean="${postInstance}" field="meaningHtml"/></span>
                     </li>
                 </g:if>
 

@@ -12,6 +12,8 @@ sourceSets {
 }
 
 dependencies {
+    compile dependency.commons.lang
+
     compile dependency.servlet
     compile dependency.spring.web
     compile dependency.spring.webmvc
@@ -21,6 +23,9 @@ dependencies {
 
     compile dependency.jsoup
     compile dependency.rome
+
+    compile dependency.spark.core
+    compile dependency.spark.mllib
 }
 
 apply plugin: 'war'

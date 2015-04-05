@@ -14,7 +14,7 @@
 
 		<div class="nav" role="navigation">
 			<ul>
-				<g:render template="/base-navigation"/>
+				<g:render template="/navigation/base-navigation"/>
 				<li><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
 			</ul>
@@ -36,7 +36,6 @@
 			</g:hasErrors>
 
 			<g:form url="[resource:sourceInstance, action:'update']" method="PUT" >
-				<g:hiddenField name="version" value="${sourceInstance?.version}" />
 				<fieldset class="form">
 					<g:render template="form"/>
 				</fieldset>

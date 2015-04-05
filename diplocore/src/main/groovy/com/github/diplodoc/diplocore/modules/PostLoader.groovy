@@ -1,8 +1,8 @@
 package com.github.diplodoc.diplocore.modules
 
-import com.github.diplodoc.diplobase.domain.mongodb.Post
-import com.github.diplodoc.diplobase.repository.mongodb.PostRepository
-import com.github.diplodoc.diplocore.services.WwwService
+import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Post
+import com.github.diplodoc.diplobase.repository.mongodb.diplodata.PostRepository
+import com.github.diplodoc.diplocore.services.HtmlService
 import groovy.util.logging.Slf4j
 import org.jsoup.nodes.Document
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,7 +24,7 @@ import java.time.LocalDateTime
 class PostLoader {
 
     @Autowired
-    WwwService wwwService
+    HtmlService htmlService
 
     @Autowired
     PostRepository postRepository
@@ -36,7 +36,7 @@ class PostLoader {
 
         log.info('loading post from {}...', post.url)
 
-        Document document = wwwService.load post.url
+        Document document = htmlService.load post.url
         post.html = document.html()
         post.loadTime = LocalDateTime.now()
 

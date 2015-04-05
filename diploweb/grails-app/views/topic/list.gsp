@@ -13,7 +13,7 @@
 
 		<div class="nav" role="navigation">
 			<ul>
-				<g:render template="/base-navigation"/>
+				<g:render template="/navigation/base-navigation"/>
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
 			</ul>
 		</div>

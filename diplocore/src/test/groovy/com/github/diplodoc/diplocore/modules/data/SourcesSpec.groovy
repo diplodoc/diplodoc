@@ -1,7 +1,7 @@
 package com.github.diplodoc.diplocore.modules.data
 
-import com.github.diplodoc.diplobase.domain.mongodb.Source
-import com.github.diplodoc.diplobase.repository.mongodb.SourceRepository
+import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Source
+import com.github.diplodoc.diplobase.repository.mongodb.diplodata.SourceRepository
 import spock.lang.Specification
 
 /**

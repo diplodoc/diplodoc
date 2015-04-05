@@ -34,4 +34,19 @@ class NotifyEventSpec extends Specification {
             actual[1].parameters[0].type == 'java.lang.String'
             actual[1].parameters[0].processRun == actual[1]
     }
+
+    def 'boolean equals(Object other)'() {
+        expect:
+            new NotifyEvent('process-0', [ 'key' : 'value' ]).equals(other) == expected
+
+        where:
+            other                                                                  | expected
+            new NotifyEvent('process-0', [ 'key' : 'value' ])                      | true
+            new NotifyEvent('process-1', [ 'key' : 'value' ])                      | false
+            new NotifyEvent('process-0', [ 'key-2' : 'value-2' ])                  | false
+            new NotifyEvent('process-0', [:])                                      | false
+            new NotifyEvent('process-0', [ 'key' : 'value', 'key-2' : 'value-2' ]) | false
+            new NotifyEvent(null, [:])                                             | false
+            new NotifyEvent('process-0', null)                                     | false
+    }
 }

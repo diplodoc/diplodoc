@@ -1,152 +1,58 @@
 package com.github.dipodoc.diploweb.diploexec
 
-
-
-import grails.test.mixin.*
-import spock.lang.*
+import grails.test.mixin.Mock
+import grails.test.mixin.TestFor
+import spock.lang.Ignore
+import spock.lang.Specification
 
 @TestFor(ProcessRunController)
-@Mock(ProcessRun)
+@Mock([ Process, ProcessRun ])
 class ProcessRunControllerSpec extends Specification {
 
-    def populateValidParams(params) {
-        assert params != null
-        // TODO: Populate valid properties like...
-        //params["name"] = 'someValidName'
+    @Ignore
+    def "'list' action"() {
+        given: 'single domain instance'
+            Process process = new Process(name: 'name', definition: 'definition', active: true).save flush:true
+            ProcessRun processRun = new ProcessRun(process: process, parameters: [], startTime: '1', endTime: '2', exitStatus: 0).save flush:true
+
+        when: 'action is executed'
+            controller.list()
+
+        then: 'model contains this single instance'
+            model.processRunInstanceCount == 1
+            model.processRunInstanceList == [ processRun ]
     }
 
-    void "Test the index action returns the correct model"() {
+    @Ignore
+    def "'list' action with pagination"() {
+        given: 'two domain instances'
+            Process process = new Process(name: 'name', definition: 'definition', active: true).save flush:true
+            ProcessRun processRun1 = new ProcessRun(process: process, parameters: [], startTime: '1', endTime: '2', exitStatus: 0).save flush:true
+            ProcessRun processRun2 = new ProcessRun(process: process, parameters: [], startTime: '1', endTime: '2', exitStatus: 0).save flush:true
 
-        when:"The index action is executed"
-            controller.index()
+        when: 'action is executed with max=1 parameter'
+            controller.list(1)
 
-        then:"The model is correct"
-            !model.processRunInstanceList
-            model.processRunInstanceCount == 0
+        then: 'model contains one of instances, total instances count is 2'
+            model.processRunInstanceCount == 2
+            model.processRunInstanceList == [ processRun1 ] || model.processRunInstanceList == [ processRun2 ]
     }
 
-    void "Test the create action returns the correct model"() {
-        when:"The create action is executed"
-            controller.create()
-
-        then:"The model is correctly created"
-            model.processRunInstance!= null
-    }
-
-    void "Test the save action correctly persists an instance"() {
-
-        when:"The save action is executed with an invalid instance"
-            request.contentType = FORM_CONTENT_TYPE
-            request.method = 'POST'
-            def processRun = new ProcessRun()
-            processRun.validate()
-            controller.save(processRun)
-
-        then:"The create view is rendered again with the correct model"
-            model.processRunInstance!= null
-            view == 'create'
-
-        when:"The save action is executed with a valid instance"
-            response.reset()
-            populateValidParams(params)
-            processRun = new ProcessRun(params)
-
-            controller.save(processRun)
-
-        then:"A redirect is issued to the show action"
-            response.redirectedUrl == '/processRun/show/1'
-            controller.flash.message != null
-            ProcessRun.count() == 1
-    }
-
-    void "Test that the show action returns the correct model"() {
-        when:"The show action is executed with a null domain"
-            controller.show(null)
-
-        then:"A 404 error is returned"
-            response.status == 404
-
-        when:"A domain instance is passed to the show action"
-            populateValidParams(params)
-            def processRun = new ProcessRun(params)
+    def "'show' action"() {
+        when: 'domain instance is passed to the action'
+            Process process = new Process(name: 'name', definition: 'definition', active: true).save flush:true
+            ProcessRun processRun = new ProcessRun(process: process, parameters: [], startTime: '1', endTime: '2', exitStatus: 0)
             controller.show(processRun)
 
-        then:"A model is populated containing the domain instance"
+        then: 'model contains this instance'
             model.processRunInstance == processRun
     }
 
-    void "Test that the edit action returns the correct model"() {
-        when:"The edit action is executed with a null domain"
-            controller.edit(null)
+    def "'show' action with null domain"() {
+        when: 'action is executed with a null domain'
+            controller.show(null)
 
-        then:"A 404 error is returned"
+        then: '404 error is returned'
             response.status == 404
-
-        when:"A domain instance is passed to the edit action"
-            populateValidParams(params)
-            def processRun = new ProcessRun(params)
-            controller.edit(processRun)
-
-        then:"A model is populated containing the domain instance"
-            model.processRunInstance == processRun
-    }
-
-    void "Test the update action performs an update on a valid domain instance"() {
-        when:"Update is called for a domain instance that doesn't exist"
-            request.contentType = FORM_CONTENT_TYPE
-            request.method = 'PUT'
-            controller.update(null)
-
-        then:"A 404 error is returned"
-            response.redirectedUrl == '/processRun/index'
-            flash.message != null
-
-
-        when:"An invalid domain instance is passed to the update action"
-            response.reset()
-            def processRun = new ProcessRun()
-            processRun.validate()
-            controller.update(processRun)
-
-        then:"The edit view is rendered again with the invalid instance"
-            view == 'edit'
-            model.processRunInstance == processRun
-
-        when:"A valid domain instance is passed to the update action"
-            response.reset()
-            populateValidParams(params)
-            processRun = new ProcessRun(params).save(flush: true)
-            controller.update(processRun)
-
-        then:"A redirect is issues to the show action"
-            response.redirectedUrl == "/processRun/show/$processRun.id"
-            flash.message != null
-    }
-
-    void "Test that the delete action deletes an instance if it exists"() {
-        when:"The delete action is called for a null instance"
-            request.contentType = FORM_CONTENT_TYPE
-            request.method = 'DELETE'
-            controller.delete(null)
-
-        then:"A 404 is returned"
-            response.redirectedUrl == '/processRun/index'
-            flash.message != null
-
-        when:"A domain instance is created"
-            response.reset()
-            populateValidParams(params)
-            def processRun = new ProcessRun(params).save(flush: true)
-
-        then:"It exists"
-            ProcessRun.count() == 1
-
-        when:"The domain instance is passed to the delete action"
-            controller.delete(processRun)
-
-        then:"The instance is deleted"
-            ProcessRun.count() == 0
-            response.redirectedUrl == '/processRun/index'
-            flash.message != null
     }
 }

@@ -13,7 +13,7 @@
 
 		<div class="nav" role="navigation">
 			<ul>
-				<g:render template="/base-navigation"/>
+				<g:render template="/navigation/base-navigation"/>
 				<li><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
 			</ul>
 		</div>
@@ -72,11 +72,11 @@
 						<span id="parameters-label" class="property-label"><g:message code="processRun.parameters.label" default="parameters" /></span>
 
 						<g:each in="${processRunInstance.parameters}" var="p">
-							<span class="property-value" aria-labelledby="parameters-label">
+							<div class="property-value" aria-labelledby="parameters-label">
 								<g:link controller="processRunParameter" action="show" id="${p.id}">
 									id=${p?.id}: ${p?.key} = ${p?.value} (of type ${p?.type})
 								</g:link>
-							</span>
+							</div>
 						</g:each>
 					</li>
 				</g:if>
