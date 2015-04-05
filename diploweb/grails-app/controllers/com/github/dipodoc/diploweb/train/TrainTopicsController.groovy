@@ -9,7 +9,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND
 @Transactional(readOnly = true)
 class TrainTopicsController {
 
-    static allowedMethods = [ save: 'PUT', saveAndNext: 'PUT', removeFromTrain: 'DELETE' ]
+    static allowedMethods = [ save: 'PUT', saveAndNext: 'PUT', addTopicToTrainingSet: 'PUT', removeFromTrain: 'DELETE', removeTopicFromTrainingSet: 'DELETE' ]
 
     Random random = new Random()
 
@@ -87,10 +87,10 @@ class TrainTopicsController {
     protected void notFound() {
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'post.label', default: 'Post'), params.id])
+                flash.message = message(code: 'default.not.found.message', args: [ message(code: 'post.label', default: 'Post'), params.id ])
                 redirect action: 'list', method: 'GET'
             }
-            '*'{ render status: NOT_FOUND }
+            '*' { render status: NOT_FOUND }
         }
     }
 }
