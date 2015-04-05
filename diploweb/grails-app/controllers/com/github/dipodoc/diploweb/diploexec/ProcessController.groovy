@@ -83,7 +83,7 @@ class ProcessController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [ message(code: 'Process.label', default: 'Process'), processInstance.id ])
-                redirect action:'list', method:'GET'
+                redirect action: 'list', method:'GET'
             }
             '*' { render status: NO_CONTENT }
         }

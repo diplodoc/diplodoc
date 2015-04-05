@@ -5,9 +5,9 @@ import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Source
 import com.github.diplodoc.diplobase.repository.mongodb.diplodata.PostRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diplodata.SourceRepository
 import com.github.diplodoc.diplocore.services.RssService
-import com.mongodb.DBRef
 import com.rometools.rome.feed.synd.SyndContentImpl
 import com.rometools.rome.feed.synd.SyndEntry
+import org.bson.types.ObjectId
 import spock.lang.Specification
 
 import java.time.LocalDateTime
@@ -40,7 +40,7 @@ class RssNewPostsFinderSpec extends Specification {
             rssEntry3.description >> new SyndContentImpl(value: 'description-3')
             rssEntry3.publishedDate >> new Date(3000000)
 
-            sourceRepository.findOne('source-id') >> new Source(id: 'source-id', rssUrl: 'rss-url')
+            sourceRepository.findOne('111111111111111111111111') >> new Source(id: '111111111111111111111111', rssUrl: 'rss-url')
 
             postRepository.findOneByUrl('link-1') >> new Post()
             postRepository.findOneByUrl('link-2') >> null
@@ -48,7 +48,7 @@ class RssNewPostsFinderSpec extends Specification {
 
             rssService.feed('rss-url') >> [ rssEntry1, rssEntry2, rssEntry3 ]
 
-            Collection<String> actual = rssNewPostsFinder.newPosts('source-id')
+            Collection<String> actual = rssNewPostsFinder.newPosts('111111111111111111111111')
 
         then:
             1 * postRepository.save({ posts ->
@@ -56,8 +56,8 @@ class RssNewPostsFinderSpec extends Specification {
                 posts.find { it.url == 'link-3' }.id = 'id-3'
 
                 posts == [
-                    new Post(id: 'id-2', url: 'link-2', sourceId: new DBRef('source', 'source-id'), title: 'title-2', description: 'description-2', publishTime: LocalDateTime.parse('1970-01-01T02:33:20')),
-                    new Post(id: 'id-3', url: 'link-3', sourceId: new DBRef('source', 'source-id'), title: 'title-3', description: 'description-3', publishTime: LocalDateTime.parse('1970-01-01T02:50'))
+                    new Post(id: 'id-2', url: 'link-2', sourceId: new ObjectId('111111111111111111111111'), title: 'title-2', description: 'description-2', publishTime: LocalDateTime.parse('1970-01-01T02:33:20')),
+                    new Post(id: 'id-3', url: 'link-3', sourceId: new ObjectId('111111111111111111111111'), title: 'title-3', description: 'description-3', publishTime: LocalDateTime.parse('1970-01-01T02:50'))
                 ]
             })
 

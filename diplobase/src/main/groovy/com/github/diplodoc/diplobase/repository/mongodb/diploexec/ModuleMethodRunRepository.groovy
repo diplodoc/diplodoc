@@ -6,5 +6,4 @@ import org.springframework.data.mongodb.repository.MongoRepository
 /**
  * @author yaroslav.yermilov
  */
-interface ModuleMethodRunRepository extends MongoRepository<ModuleMethodRun, String> {
-}
+interface ModuleMethodRunRepository extends MongoRepository<ModuleMethodRun, String> {}
