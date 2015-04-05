@@ -1,152 +1,59 @@
 package com.github.dipodoc.diploweb.diploexec
 
-
-
-import grails.test.mixin.*
-import spock.lang.*
+import grails.test.mixin.Mock
+import grails.test.mixin.TestFor
+import spock.lang.Specification
 
 @TestFor(ModuleMethodRunController)
-@Mock(ModuleMethodRun)
+@Mock([ Module, ModuleMethod, ModuleMethodRun])
 class ModuleMethodRunControllerSpec extends Specification {
 
-    def populateValidParams(params) {
-        assert params != null
-        // TODO: Populate valid properties like...
-        //params["name"] = 'someValidName'
+    def "'list' action"() {
+        given: 'two domain instances'
+            Module module = new Module(name: 'name', data: [:]).save flush:true
+            ModuleMethod moduleMethod = new ModuleMethod(name: 'name', module: module).save flush:true
+            ModuleMethodRun moduleMethodRun1 = new ModuleMethodRun(startTime: '1', endTime: '2', metrics: [], moduleMethod: moduleMethod).save flush:true
+            ModuleMethodRun moduleMethodRun2 = new ModuleMethodRun(startTime: '3', endTime: '4', metrics: [], moduleMethod: moduleMethod).save flush:true
+
+        when: 'action is executed'
+            controller.list()
+
+        then: 'model contains both instances sorted by startTime desc'
+            model.moduleMethodRunInstanceCount == 2
+            model.moduleMethodRunInstanceList == [ moduleMethodRun2, moduleMethodRun1 ]
     }
 
-    void "Test the index action returns the correct model"() {
+    def "'list' action with pagination"() {
+        given: 'two domain instances'
+            Module module = new Module(name: 'name', data: [:]).save flush:true
+            ModuleMethod moduleMethod = new ModuleMethod(name: 'name', module: module).save flush:true
+            ModuleMethodRun moduleMethodRun1 = new ModuleMethodRun(startTime: '1', endTime: '2', metrics: [], moduleMethod: moduleMethod).save flush:true
+            ModuleMethodRun moduleMethodRun2 = new ModuleMethodRun(startTime: '3', endTime: '4', metrics: [], moduleMethod: moduleMethod).save flush:true
 
-        when:"The index action is executed"
-            controller.index()
+        when: 'action is executed with max=1 parameter'
+            controller.list(1)
 
-        then:"The model is correct"
-            !model.moduleMethodRunInstanceList
-            model.moduleMethodRunInstanceCount == 0
+        then: 'model contains one of instances, total instances count is 2'
+            model.moduleMethodRunInstanceCount == 2
+            model.moduleMethodRunInstanceList == [ moduleMethodRun1 ] || model.moduleMethodRunInstanceList == [ moduleMethodRun2 ]
     }
 
-    void "Test the create action returns the correct model"() {
-        when:"The create action is executed"
-            controller.create()
-
-        then:"The model is correctly created"
-            model.moduleMethodRunInstance!= null
-    }
-
-    void "Test the save action correctly persists an instance"() {
-
-        when:"The save action is executed with an invalid instance"
-            request.contentType = FORM_CONTENT_TYPE
-            request.method = 'POST'
-            def moduleMethodRun = new ModuleMethodRun()
-            moduleMethodRun.validate()
-            controller.save(moduleMethodRun)
-
-        then:"The create view is rendered again with the correct model"
-            model.moduleMethodRunInstance!= null
-            view == 'create'
-
-        when:"The save action is executed with a valid instance"
-            response.reset()
-            populateValidParams(params)
-            moduleMethodRun = new ModuleMethodRun(params)
-
-            controller.save(moduleMethodRun)
-
-        then:"A redirect is issued to the show action"
-            response.redirectedUrl == '/moduleMethodRun/show/1'
-            controller.flash.message != null
-            ModuleMethodRun.count() == 1
-    }
-
-    void "Test that the show action returns the correct model"() {
-        when:"The show action is executed with a null domain"
-            controller.show(null)
-
-        then:"A 404 error is returned"
-            response.status == 404
-
-        when:"A domain instance is passed to the show action"
-            populateValidParams(params)
-            def moduleMethodRun = new ModuleMethodRun(params)
+    def "'show' action"() {
+        when: 'domain instance is passed to the action'
+            Module module = new Module(name: 'name', data: [:]).save flush:true
+            ModuleMethod moduleMethod = new ModuleMethod(name: 'name', module: module).save flush:true
+            ModuleMethodRun moduleMethodRun = new ModuleMethodRun(startTime: '1', endTime: '2', metrics: [], moduleMethod: moduleMethod).save flush:true
             controller.show(moduleMethodRun)
 
-        then:"A model is populated containing the domain instance"
+        then: 'model contains this instance'
             model.moduleMethodRunInstance == moduleMethodRun
     }
 
-    void "Test that the edit action returns the correct model"() {
-        when:"The edit action is executed with a null domain"
-            controller.edit(null)
+    def "'show' action with null domain"() {
+        when: 'action is executed with a null domain'
+            controller.show(null)
 
-        then:"A 404 error is returned"
+        then: 'A 404 error is returned'
             response.status == 404
-
-        when:"A domain instance is passed to the edit action"
-            populateValidParams(params)
-            def moduleMethodRun = new ModuleMethodRun(params)
-            controller.edit(moduleMethodRun)
-
-        then:"A model is populated containing the domain instance"
-            model.moduleMethodRunInstance == moduleMethodRun
-    }
-
-    void "Test the update action performs an update on a valid domain instance"() {
-        when:"Update is called for a domain instance that doesn't exist"
-            request.contentType = FORM_CONTENT_TYPE
-            request.method = 'PUT'
-            controller.update(null)
-
-        then:"A 404 error is returned"
-            response.redirectedUrl == '/moduleMethodRun/index'
-            flash.message != null
-
-
-        when:"An invalid domain instance is passed to the update action"
-            response.reset()
-            def moduleMethodRun = new ModuleMethodRun()
-            moduleMethodRun.validate()
-            controller.update(moduleMethodRun)
-
-        then:"The edit view is rendered again with the invalid instance"
-            view == 'edit'
-            model.moduleMethodRunInstance == moduleMethodRun
-
-        when:"A valid domain instance is passed to the update action"
-            response.reset()
-            populateValidParams(params)
-            moduleMethodRun = new ModuleMethodRun(params).save(flush: true)
-            controller.update(moduleMethodRun)
-
-        then:"A redirect is issues to the show action"
-            response.redirectedUrl == "/moduleMethodRun/show/$moduleMethodRun.id"
-            flash.message != null
-    }
-
-    void "Test that the delete action deletes an instance if it exists"() {
-        when:"The delete action is called for a null instance"
-            request.contentType = FORM_CONTENT_TYPE
-            request.method = 'DELETE'
-            controller.delete(null)
-
-        then:"A 404 is returned"
-            response.redirectedUrl == '/moduleMethodRun/index'
-            flash.message != null
-
-        when:"A domain instance is created"
-            response.reset()
-            populateValidParams(params)
-            def moduleMethodRun = new ModuleMethodRun(params).save(flush: true)
-
-        then:"It exists"
-            ModuleMethodRun.count() == 1
-
-        when:"The domain instance is passed to the delete action"
-            controller.delete(moduleMethodRun)
-
-        then:"The instance is deleted"
-            ModuleMethodRun.count() == 0
-            response.redirectedUrl == '/moduleMethodRun/index'
-            flash.message != null
     }
 }
