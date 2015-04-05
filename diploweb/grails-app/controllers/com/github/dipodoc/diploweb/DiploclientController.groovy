@@ -8,7 +8,7 @@ class DiploclientController {
         params.max = 20
         params.sort = 'publishTime'
         params.order = 'desc'
-        respond Post.list(params), model:[postInstanceCount: Post.count()]
+        respond Post.list(params), model: [ postInstanceCount: Post.count() ]
     }
 
     def postShow(Post postInstance) {
