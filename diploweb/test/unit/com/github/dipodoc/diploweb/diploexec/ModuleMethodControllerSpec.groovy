@@ -1,152 +1,132 @@
 package com.github.dipodoc.diploweb.diploexec
 
-
-
-import grails.test.mixin.*
-import spock.lang.*
+import grails.test.mixin.Mock
+import grails.test.mixin.TestFor
+import spock.lang.Specification
 
 @TestFor(ModuleMethodController)
-@Mock(ModuleMethod)
+@Mock([ Module, ModuleMethod ])
 class ModuleMethodControllerSpec extends Specification {
 
-    def populateValidParams(params) {
-        assert params != null
-        // TODO: Populate valid properties like...
-        //params["name"] = 'someValidName'
-    }
+    def "'create' action"() {
+        when: 'action is executed'
+            Module module = new Module(name: 'name', data: [:]).save flush:true
+            params.moduleId = module.id
 
-    void "Test the index action returns the correct model"() {
-
-        when:"The index action is executed"
-            controller.index()
-
-        then:"The model is correct"
-            !model.moduleMethodInstanceList
-            model.moduleMethodInstanceCount == 0
-    }
-
-    void "Test the create action returns the correct model"() {
-        when:"The create action is executed"
             controller.create()
 
-        then:"The model is correctly created"
-            model.moduleMethodInstance!= null
+        then: 'model is correctly created, module is populated'
+            model.moduleMethodInstance != null
+            model.moduleMethodInstance.module == module
     }
 
-    void "Test the save action correctly persists an instance"() {
+    def "'save' action with valid domain instance"() {
+        when: 'action is executed with a valid instance'
+            request.contentType = FORM_CONTENT_TYPE
+            request.method = 'POST'
+            Module module = new Module(name: 'name', data: [:]).save flush:true
+            ModuleMethod moduleMethod = new ModuleMethod(name: 'name', module: module)
 
-        when:"The save action is executed with an invalid instance"
+            controller.save(moduleMethod)
+
+        then: "redirect is issued to the 'module/show' action"
+            response.redirectedUrl == "/module/show/$module.id"
+            ModuleMethod.count() == 1
+    }
+
+    def "'save' action with invalid domain instance"() {
+        when: 'action is executed with an invalid instance'
             request.contentType = FORM_CONTENT_TYPE
             request.method = 'POST'
             def moduleMethod = new ModuleMethod()
             moduleMethod.validate()
             controller.save(moduleMethod)
 
-        then:"The create view is rendered again with the correct model"
-            model.moduleMethodInstance!= null
+        then: "'create' view is rendered again with the correct model"
+            model.moduleMethodInstance != null
             view == 'create'
-
-        when:"The save action is executed with a valid instance"
-            response.reset()
-            populateValidParams(params)
-            moduleMethod = new ModuleMethod(params)
-
-            controller.save(moduleMethod)
-
-        then:"A redirect is issued to the show action"
-            response.redirectedUrl == '/moduleMethod/show/1'
-            controller.flash.message != null
-            ModuleMethod.count() == 1
     }
 
-    void "Test that the show action returns the correct model"() {
-        when:"The show action is executed with a null domain"
-            controller.show(null)
-
-        then:"A 404 error is returned"
-            response.status == 404
-
-        when:"A domain instance is passed to the show action"
-            populateValidParams(params)
-            def moduleMethod = new ModuleMethod(params)
-            controller.show(moduleMethod)
-
-        then:"A model is populated containing the domain instance"
-            model.moduleMethodInstance == moduleMethod
-    }
-
-    void "Test that the edit action returns the correct model"() {
-        when:"The edit action is executed with a null domain"
-            controller.edit(null)
-
-        then:"A 404 error is returned"
-            response.status == 404
-
-        when:"A domain instance is passed to the edit action"
-            populateValidParams(params)
-            def moduleMethod = new ModuleMethod(params)
+    def "'edit' action"() {
+        when: 'action is executed'
+            Module module = new Module(name: 'name', data: [:]).save flush:true
+            ModuleMethod moduleMethod = new ModuleMethod(name: 'name', module: module)
             controller.edit(moduleMethod)
 
-        then:"A model is populated containing the domain instance"
+        then: 'model is populated with domain instance'
             model.moduleMethodInstance == moduleMethod
     }
 
-    void "Test the update action performs an update on a valid domain instance"() {
-        when:"Update is called for a domain instance that doesn't exist"
+    def "'edit' action with null domain"() {
+        when: 'action is executed with a null domain'
+            controller.edit(null)
+
+        then: '404 error is returned'
+            response.status == 404
+    }
+
+    def "'update' action with valid domain instance"() {
+        when: 'valid domain instance is passed to the action'
+            request.contentType = FORM_CONTENT_TYPE
+            request.method = 'PUT'
+            Module module = new Module(name: 'name', data: [:]).save flush:true
+            ModuleMethod moduleMethod = new ModuleMethod(name: 'name', module: module)
+            controller.update(moduleMethod)
+
+        then: "redirect is issues to the 'show' action"
+            response.redirectedUrl == "/module/show/$module.id"
+    }
+
+    def "'update' action with null domain"() {
+        when: 'action is called for null'
             request.contentType = FORM_CONTENT_TYPE
             request.method = 'PUT'
             controller.update(null)
 
-        then:"A 404 error is returned"
-            response.redirectedUrl == '/moduleMethod/index'
+        then: '404 error is returned'
+            response.redirectedUrl == '/module/list'
             flash.message != null
+    }
 
-
-        when:"An invalid domain instance is passed to the update action"
-            response.reset()
+    def "'update' action with invalid domain instance"() {
+        when: 'invalid domain instance is passed to the action'
+            request.contentType = FORM_CONTENT_TYPE
+            request.method = 'PUT'
             def moduleMethod = new ModuleMethod()
             moduleMethod.validate()
             controller.update(moduleMethod)
 
-        then:"The edit view is rendered again with the invalid instance"
+        then: "'edit' view is rendered again with the invalid instance"
             view == 'edit'
             model.moduleMethodInstance == moduleMethod
-
-        when:"A valid domain instance is passed to the update action"
-            response.reset()
-            populateValidParams(params)
-            moduleMethod = new ModuleMethod(params).save(flush: true)
-            controller.update(moduleMethod)
-
-        then:"A redirect is issues to the show action"
-            response.redirectedUrl == "/moduleMethod/show/$moduleMethod.id"
-            flash.message != null
     }
 
-    void "Test that the delete action deletes an instance if it exists"() {
-        when:"The delete action is called for a null instance"
+    void "'delete' action"() {
+        when: 'domain instance is created'
+            Module module = new Module(name: 'name', data: [:]).save flush:true
+            ModuleMethod moduleMethod = new ModuleMethod(name: 'name', module: module).save flush:true
+
+        then: 'it exists'
+            ModuleMethod.count() == 1
+
+        when: 'action is called'
+            request.contentType = FORM_CONTENT_TYPE
+            request.method = 'DELETE'
+            controller.delete(moduleMethod)
+
+        then: 'instance is deleted, correct response is returned'
+            ModuleMethod.count() == 0
+            response.redirectedUrl == "/module/show/$module.id"
+    }
+
+    void "'delete' action with null domain"() {
+        when: 'action is called for a null instance'
             request.contentType = FORM_CONTENT_TYPE
             request.method = 'DELETE'
             controller.delete(null)
 
-        then:"A 404 is returned"
-            response.redirectedUrl == '/moduleMethod/index'
-            flash.message != null
-
-        when:"A domain instance is created"
-            response.reset()
-            populateValidParams(params)
-            def moduleMethod = new ModuleMethod(params).save(flush: true)
-
-        then:"It exists"
-            ModuleMethod.count() == 1
-
-        when:"The domain instance is passed to the delete action"
-            controller.delete(moduleMethod)
-
-        then:"The instance is deleted"
-            ModuleMethod.count() == 0
-            response.redirectedUrl == '/moduleMethod/index'
+        then: "redirect to 'list' action"
+            response.redirectedUrl == '/module/list'
             flash.message != null
     }
 }
