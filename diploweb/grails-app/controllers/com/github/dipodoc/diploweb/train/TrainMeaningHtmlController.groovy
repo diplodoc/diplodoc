@@ -34,12 +34,14 @@ class TrainMeaningHtmlController {
     @Transactional
     def saveAndNext() {
         Post postToTrain = Post.get(params.id)
-        postToTrain.train_meaningHtml = params.train_meaningHtml
 
         if (postToTrain == null) {
             notFound()
             return
         }
+
+        postToTrain.train_meaningHtml = params.train_meaningHtml
+        postToTrain.validate()
 
         if (postToTrain.hasErrors()) {
             respond postToTrain.errors, view: 'trainNext'
@@ -54,12 +56,14 @@ class TrainMeaningHtmlController {
     @Transactional
     def save() {
         Post postToTrain = Post.get(params.id)
-        postToTrain.train_meaningHtml = params.train_meaningHtml
 
         if (postToTrain == null) {
             notFound()
             return
         }
+
+        postToTrain.train_meaningHtml = params.train_meaningHtml
+        postToTrain.validate()
 
         if (postToTrain.hasErrors()) {
             respond postToTrain.errors, view: 'trainNext'
@@ -89,10 +93,10 @@ class TrainMeaningHtmlController {
     protected void notFound() {
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'post.label', default: 'Post'), params.id])
+                flash.message = message(code: 'default.not.found.message', args: [ message(code: 'post.label', default: 'Post'), params.id ])
                 redirect action: 'list', method: 'GET'
             }
-            '*'{ render status: NOT_FOUND }
+            '*' { render status: NOT_FOUND }
         }
     }
 }
