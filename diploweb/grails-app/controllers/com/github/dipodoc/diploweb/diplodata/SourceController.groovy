@@ -6,11 +6,11 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class SourceController {
 
-    static allowedMethods = [ save: "POST", update: "PUT", delete: "DELETE" ]
+    static allowedMethods = [ save: 'POST', update: 'PUT', delete: 'DELETE' ]
 
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond Source.list(params), model:[sourceInstanceCount: Source.count()]
+        respond Source.list(params), model: [ sourceInstanceCount: Source.count() ]
     }
 
     def show(Source sourceInstance) {
@@ -29,7 +29,7 @@ class SourceController {
         }
 
         if (sourceInstance.hasErrors()) {
-            respond sourceInstance.errors, view:'create'
+            respond sourceInstance.errors, view: 'create'
             return
         }
 
@@ -37,10 +37,10 @@ class SourceController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'source.label', default: 'Source'), sourceInstance.id])
+                flash.message = message(code: 'default.created.message', args: [ message(code: 'source.label', default: 'Source'), sourceInstance.id ])
                 redirect sourceInstance
             }
-            '*' { respond sourceInstance, [status: CREATED] }
+            '*' { respond sourceInstance, [ status: CREATED ] }
         }
     }
 
@@ -56,7 +56,7 @@ class SourceController {
         }
 
         if (sourceInstance.hasErrors()) {
-            respond sourceInstance.errors, view:'edit'
+            respond sourceInstance.errors, view: 'edit'
             return
         }
 
@@ -64,16 +64,15 @@ class SourceController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'Source.label', default: 'Source'), sourceInstance.id])
+                flash.message = message(code: 'default.updated.message', args: [ message(code: 'Source.label', default: 'Source'), sourceInstance.id ])
                 redirect sourceInstance
             }
-            '*'{ respond sourceInstance, [status: OK] }
+            '*' { respond sourceInstance, [status: OK] }
         }
     }
 
     @Transactional
     def delete(Source sourceInstance) {
-
         if (sourceInstance == null) {
             notFound()
             return
@@ -83,20 +82,20 @@ class SourceController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'Source.label', default: 'Source'), sourceInstance.id])
-                redirect action:"list", method:"GET"
+                flash.message = message(code: 'default.deleted.message', args: [ message(code: 'Source.label', default: 'Source'), sourceInstance.id ])
+                redirect action:'list', method:'GET'
             }
-            '*'{ render status: NO_CONTENT }
+            '*' { render status: NO_CONTENT }
         }
     }
 
     protected void notFound() {
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'source.label', default: 'Source'), params.id])
-                redirect action: "list", method: "GET"
+                flash.message = message(code: 'default.not.found.message', args: [ message(code: 'source.label', default: 'Source'), params.id ])
+                redirect action: 'list', method: 'GET'
             }
-            '*'{ render status: NOT_FOUND }
+            '*' { render status: NOT_FOUND }
         }
     }
 }

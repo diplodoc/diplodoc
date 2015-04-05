@@ -1,152 +1,170 @@
 package com.github.dipodoc.diploweb.diplodata
 
-
-
-import grails.test.mixin.*
-import spock.lang.*
+import grails.test.mixin.Mock
+import grails.test.mixin.TestFor
+import org.bson.types.ObjectId
+import spock.lang.Specification
 
 @TestFor(SourceController)
 @Mock(Source)
 class SourceControllerSpec extends Specification {
 
-    def populateValidParams(params) {
-        assert params != null
-        // TODO: Populate valid properties like...
-        //params["name"] = 'someValidName'
+    def "'list' action"() {
+        given: 'single domain instance'
+            Source source = new Source(id: new ObjectId('111111111111111111111111'), name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module').save flush:true
+
+        when: 'action is executed'
+            controller.list()
+
+        then: 'model contains this single instance'
+            model.sourceInstanceCount == 1
+            model.sourceInstanceList == [ source ]
     }
 
-    void "Test the index action returns the correct model"() {
+    def "'list' action with pagination"() {
+        given: 'two Post instances'
+            Source source1 = new Source(id: new ObjectId('111111111111111111111111'), name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module').save flush:true
+            Source source2 = new Source(id: new ObjectId('222222222222222222222222'), name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module').save flush:true
 
-        when:"The index action is executed"
-            controller.index()
+        when: 'action is executed with max=1 parameter'
+            controller.list(1)
 
-        then:"The model is correct"
-            !model.sourceInstanceList
-            model.sourceInstanceCount == 0
+        then: 'model contains one of instances, total instances count is 2'
+            model.sourceInstanceCount == 2
+            model.sourceInstanceList == [ source1 ] || model.sourceInstanceList == [ source2 ]
     }
 
-    void "Test the create action returns the correct model"() {
-        when:"The create action is executed"
+    def "'show' action"() {
+        when: 'domain instance is passed to the action'
+            Source source = new Source(id: new ObjectId('111111111111111111111111'), name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module')
+            controller.show(source)
+
+        then: 'model contains this instance'
+            model.sourceInstance == source
+    }
+
+    def "'show' action with null domain"() {
+        when: 'action is executed with a null domain'
+            controller.show(null)
+
+        then: 'A 404 error is returned'
+            response.status == 404
+    }
+
+    def "'create' action"() {
+        when: 'action is executed'
             controller.create()
 
-        then:"The model is correctly created"
-            model.sourceInstance!= null
+        then: 'model is correctly created'
+            model.sourceInstance != null
     }
 
-    void "Test the save action correctly persists an instance"() {
+    def "'save' action with valid domain instance"() {
+        when: 'action is executed with a valid instance'
+            request.contentType = FORM_CONTENT_TYPE
+            request.method = 'POST'
+            Source source = new Source(id: new ObjectId('111111111111111111111111'), name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module')
 
-        when:"The save action is executed with an invalid instance"
+            controller.save(source)
+
+        then: "redirect is issued to the 'show' action"
+            response.redirectedUrl == '/source/show/111111111111111111111111'
+            controller.flash.message != null
+            Source.count() == 1
+    }
+
+    def "'save' action with invalid domain instance"() {
+        when: 'action is executed with an invalid instance'
             request.contentType = FORM_CONTENT_TYPE
             request.method = 'POST'
             def source = new Source()
             source.validate()
             controller.save(source)
 
-        then:"The create view is rendered again with the correct model"
-            model.sourceInstance!= null
+        then: "'create' view is rendered again with the correct model"
+            model.sourceInstance != null
             view == 'create'
-
-        when:"The save action is executed with a valid instance"
-            response.reset()
-            populateValidParams(params)
-            source = new Source(params)
-
-            controller.save(source)
-
-        then:"A redirect is issued to the show action"
-            response.redirectedUrl == '/source/show/1'
-            controller.flash.message != null
-            Source.count() == 1
     }
 
-    void "Test that the show action returns the correct model"() {
-        when:"The show action is executed with a null domain"
-            controller.show(null)
-
-        then:"A 404 error is returned"
-            response.status == 404
-
-        when:"A domain instance is passed to the show action"
-            populateValidParams(params)
-            def source = new Source(params)
-            controller.show(source)
-
-        then:"A model is populated containing the domain instance"
-            model.sourceInstance == source
-    }
-
-    void "Test that the edit action returns the correct model"() {
-        when:"The edit action is executed with a null domain"
-            controller.edit(null)
-
-        then:"A 404 error is returned"
-            response.status == 404
-
-        when:"A domain instance is passed to the edit action"
-            populateValidParams(params)
-            def source = new Source(params)
+    def "'edit' action"() {
+        when: 'action is executed'
+            Source source = new Source(id: new ObjectId('111111111111111111111111'), name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module')
             controller.edit(source)
 
-        then:"A model is populated containing the domain instance"
+        then: 'model is populated with domain instance'
             model.sourceInstance == source
     }
 
-    void "Test the update action performs an update on a valid domain instance"() {
-        when:"Update is called for a domain instance that doesn't exist"
+    def "'edit' action with null domain"() {
+        when: 'action is executed with a null domain'
+            controller.edit(null)
+
+        then: '404 error is returned'
+            response.status == 404
+    }
+
+    def "'update' action with valid domain instance"() {
+        when: 'valid domain instance is passed to the action'
+            request.contentType = FORM_CONTENT_TYPE
+            request.method = 'PUT'
+            Source source = new Source(id: new ObjectId('111111111111111111111111'), name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module').save(flush: true)
+            controller.update(source)
+
+        then: "redirect is issues to the 'show' action"
+            response.redirectedUrl == '/source/show/111111111111111111111111'
+            flash.message != null
+    }
+
+    def "'update' action with null domain"() {
+        when: 'action is called for null'
             request.contentType = FORM_CONTENT_TYPE
             request.method = 'PUT'
             controller.update(null)
 
-        then:"A 404 error is returned"
-            response.redirectedUrl == '/source/index'
+        then: '404 error is returned'
+            response.redirectedUrl == '/source/list'
             flash.message != null
+    }
 
-
-        when:"An invalid domain instance is passed to the update action"
-            response.reset()
+    def "'update' action with invalid domain instance"() {
+        when: 'invalid domain instance is passed to the action'
+            request.contentType = FORM_CONTENT_TYPE
+            request.method = 'PUT'
             def source = new Source()
             source.validate()
             controller.update(source)
 
-        then:"The edit view is rendered again with the invalid instance"
+        then: "'edit' view is rendered again with the invalid instance"
             view == 'edit'
             model.sourceInstance == source
+    }
 
-        when:"A valid domain instance is passed to the update action"
-            response.reset()
-            populateValidParams(params)
-            source = new Source(params).save(flush: true)
-            controller.update(source)
+    void "'delete' action"() {
+        when: 'domain instance is created'
+            Source source = new Source(id: new ObjectId('111111111111111111111111'), name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module').save(flush: true)
 
-        then:"A redirect is issues to the show action"
-            response.redirectedUrl == "/source/show/$source.id"
+        then: 'it exists'
+            Source.count() == 1
+
+        when: 'action is called'
+            request.contentType = FORM_CONTENT_TYPE
+            request.method = 'DELETE'
+            controller.delete(source)
+
+        then: 'instance is deleted, correct response is returned'
+            Source.count() == 0
+            response.redirectedUrl == '/source/list'
             flash.message != null
     }
 
-    void "Test that the delete action deletes an instance if it exists"() {
-        when:"The delete action is called for a null instance"
+    void "'delete' action with null domain"() {
+        when: 'action is called for a null instance'
             request.contentType = FORM_CONTENT_TYPE
             request.method = 'DELETE'
             controller.delete(null)
 
-        then:"A 404 is returned"
-            response.redirectedUrl == '/source/index'
-            flash.message != null
-
-        when:"A domain instance is created"
-            response.reset()
-            populateValidParams(params)
-            def source = new Source(params).save(flush: true)
-
-        then:"It exists"
-            Source.count() == 1
-
-        when:"The domain instance is passed to the delete action"
-            controller.delete(source)
-
-        then:"The instance is deleted"
-            Source.count() == 0
-            response.redirectedUrl == '/source/index'
+        then: 'A 404 is returned'
+            response.redirectedUrl == '/source/list'
             flash.message != null
     }
 }
