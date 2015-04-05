@@ -10,7 +10,7 @@ class ModuleController {
 
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond Module.list(params), model: [moduleInstanceCount: Module.count()]
+        respond Module.list(params), model: [ moduleInstanceCount: Module.count() ]
     }
 
     def show(Module moduleInstance) {
@@ -37,7 +37,7 @@ class ModuleController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'module.label', default: 'Module'), moduleInstance.id])
+                flash.message = message(code: 'default.created.message', args: [ message(code: 'module.label', default: 'Module'), moduleInstance.id ])
                 redirect moduleInstance
             }
             '*' { respond moduleInstance, [status: CREATED] }
@@ -56,7 +56,7 @@ class ModuleController {
         }
 
         if (moduleInstance.hasErrors()) {
-            respond moduleInstance.errors, view:'edit'
+            respond moduleInstance.errors, view: 'edit'
             return
         }
 
@@ -64,10 +64,10 @@ class ModuleController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'Module.label', default: 'Module'), moduleInstance.id])
+                flash.message = message(code: 'default.updated.message', args: [ message(code: 'Module.label', default: 'Module'), moduleInstance.id ])
                 redirect moduleInstance
             }
-            '*'{ respond moduleInstance, [status: OK] }
+            '*' { respond moduleInstance, [status: OK] }
         }
     }
 
@@ -82,20 +82,20 @@ class ModuleController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'Module.label', default: 'Module'), moduleInstance.id])
-                redirect action:"list", method:"GET"
+                flash.message = message(code: 'default.deleted.message', args: [ message(code: 'Module.label', default: 'Module'), moduleInstance.id ])
+                redirect action: 'list', method: 'GET'
             }
-            '*'{ render status: NO_CONTENT }
+            '*' { render status: NO_CONTENT }
         }
     }
 
     protected void notFound() {
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'module.label', default: 'Module'), params.id])
-                redirect action: "list", method: "GET"
+                flash.message = message(code: 'default.not.found.message', args: [ message(code: 'module.label', default: 'Module'), params.id ])
+                redirect action: 'list', method: 'GET'
             }
-            '*'{ render status: NOT_FOUND }
+            '*' { render status: NOT_FOUND }
         }
     }
 }
