@@ -22,7 +22,7 @@ class Process {
 
         version false
 
-        id generator: 'sequence', params: [sequence:'diploexec.process_id_seq']
+        id generator: 'sequence', params: [ sequence:'diploexec.process_id_seq' ]
         lastUpdate column: 'lastupdate'
     }
 
