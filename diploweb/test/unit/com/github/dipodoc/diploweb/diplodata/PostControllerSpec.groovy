@@ -11,7 +11,7 @@ class PostControllerSpec extends Specification {
 
     def "'list' action"() {
         given: 'single Post instance'
-            Post post = new Post(id: new ObjectId('111111111111111111111111')).save flush:true
+            Post post = new Post().save flush:true
 
         when: 'action is executed'
             controller.list()
@@ -23,8 +23,8 @@ class PostControllerSpec extends Specification {
 
     def "'list' action with pagination"() {
         given: 'two Post instances'
-            Post post1 = new Post(id: new ObjectId('111111111111111111111111')).save flush:true
-            Post post2 = new Post(id: new ObjectId('222222222222222222222222')).save flush:true
+            Post post1 = new Post().save flush:true
+            Post post2 = new Post().save flush:true
 
         when: 'action is executed with max=1 parameter'
             controller.list(1)
@@ -53,7 +53,7 @@ class PostControllerSpec extends Specification {
 
     void "'delete' action"() {
         when: 'domain instance is created'
-            Post post = new Post(id: new ObjectId('111111111111111111111111')).save flush:true
+            Post post = new Post().save flush:true
 
         then: 'it exists'
             Post.count() == 1
@@ -75,7 +75,7 @@ class PostControllerSpec extends Specification {
             request.method = 'DELETE'
             controller.delete(null)
 
-        then: 'A 404 is returned'
+        then: "redirect to 'list' action"
             response.redirectedUrl == '/post/list'
             flash.message != null
     }

@@ -11,7 +11,7 @@ class SourceControllerSpec extends Specification {
 
     def "'list' action"() {
         given: 'single domain instance'
-            Source source = new Source(id: new ObjectId('111111111111111111111111'), name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module').save flush:true
+            Source source = new Source(name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module').save flush:true
 
         when: 'action is executed'
             controller.list()
@@ -22,9 +22,9 @@ class SourceControllerSpec extends Specification {
     }
 
     def "'list' action with pagination"() {
-        given: 'two Post instances'
-            Source source1 = new Source(id: new ObjectId('111111111111111111111111'), name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module').save flush:true
-            Source source2 = new Source(id: new ObjectId('222222222222222222222222'), name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module').save flush:true
+        given: 'two domain instances'
+            Source source1 = new Source(name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module').save flush:true
+            Source source2 = new Source(name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module').save flush:true
 
         when: 'action is executed with max=1 parameter'
             controller.list(1)
@@ -68,7 +68,7 @@ class SourceControllerSpec extends Specification {
             controller.save(source)
 
         then: "redirect is issued to the 'show' action"
-            response.redirectedUrl == '/source/show/111111111111111111111111'
+            response.redirectedUrl == "/source/show/$source.id"
             controller.flash.message != null
             Source.count() == 1
     }
@@ -107,11 +107,11 @@ class SourceControllerSpec extends Specification {
         when: 'valid domain instance is passed to the action'
             request.contentType = FORM_CONTENT_TYPE
             request.method = 'PUT'
-            Source source = new Source(id: new ObjectId('111111111111111111111111'), name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module').save(flush: true)
+            Source source = new Source(name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module').save(flush: true)
             controller.update(source)
 
         then: "redirect is issues to the 'show' action"
-            response.redirectedUrl == '/source/show/111111111111111111111111'
+            response.redirectedUrl == "/source/show/$source.id"
             flash.message != null
     }
 
@@ -141,7 +141,7 @@ class SourceControllerSpec extends Specification {
 
     void "'delete' action"() {
         when: 'domain instance is created'
-            Source source = new Source(id: new ObjectId('111111111111111111111111'), name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module').save(flush: true)
+            Source source = new Source(name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module').save(flush: true)
 
         then: 'it exists'
             Source.count() == 1
@@ -163,7 +163,7 @@ class SourceControllerSpec extends Specification {
             request.method = 'DELETE'
             controller.delete(null)
 
-        then: 'A 404 is returned'
+        then: "redirect to 'list' action"
             response.redirectedUrl == '/source/list'
             flash.message != null
     }
