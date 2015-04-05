@@ -39,10 +39,10 @@ task testResultsReport(type: TestReport) {
 }
 
 task grailsTestResultReport(type: Copy) {
-    from fileTree("${project(':diploweb').buildDir}/test-results/html").include('**/*.html')
+    from fileTree("${project(':diploweb').buildDir}/test-results/html").include('**/*.html').include('**/*.css')
     into "$buildDir/reports/grails-results"
 
-    dependsOn task(':diploweb:test')
+    dependsOn ':diploweb:grails-test-app'
 }
 
 task testCoverageReport(type: JacocoReport) {
