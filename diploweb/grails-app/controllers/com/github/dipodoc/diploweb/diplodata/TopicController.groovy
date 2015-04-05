@@ -6,11 +6,11 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class TopicController {
 
-    static allowedMethods = [ save: "POST", update: "PUT", delete: "DELETE" ]
+    static allowedMethods = [ save: 'POST', update: 'PUT', delete: 'DELETE' ]
 
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond Topic.list(params), model:[topicInstanceCount: Topic.count()]
+        respond Topic.list(params), model: [ topicInstanceCount: Topic.count() ]
     }
 
     def show(Topic topicInstance) {
@@ -29,7 +29,7 @@ class TopicController {
         }
 
         if (topicInstance.hasErrors()) {
-            respond topicInstance.errors, view:'create'
+            respond topicInstance.errors, view: 'create'
             return
         }
 
@@ -37,7 +37,7 @@ class TopicController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'topic.label', default: 'Topic'), topicInstance.id])
+                flash.message = message(code: 'default.created.message', args: [ message(code: 'topic.label', default: 'Topic'), topicInstance.id ])
                 redirect topicInstance
             }
             '*' { respond topicInstance, [status: CREATED] }
@@ -56,7 +56,7 @@ class TopicController {
         }
 
         if (topicInstance.hasErrors()) {
-            respond topicInstance.errors, view:'edit'
+            respond topicInstance.errors, view: 'edit'
             return
         }
 
@@ -64,16 +64,15 @@ class TopicController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'Topic.label', default: 'Topic'), topicInstance.id])
+                flash.message = message(code: 'default.updated.message', args: [ message(code: 'Topic.label', default: 'Topic'), topicInstance.id ])
                 redirect topicInstance
             }
-            '*'{ respond topicInstance, [status: OK] }
+            '*' { respond topicInstance, [status: OK] }
         }
     }
 
     @Transactional
     def delete(Topic topicInstance) {
-
         if (topicInstance == null) {
             notFound()
             return
@@ -83,20 +82,20 @@ class TopicController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'Topic.label', default: 'Topic'), topicInstance.id])
-                redirect action:"list", method:"GET"
+                flash.message = message(code: 'default.deleted.message', args: [ message(code: 'Topic.label', default: 'Topic'), topicInstance.id ])
+                redirect action:'list', method:'GET'
             }
-            '*'{ render status: NO_CONTENT }
+            '*' { render status: NO_CONTENT }
         }
     }
 
     protected void notFound() {
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'topic.label', default: 'Topic'), params.id])
-                redirect action: "list", method: "GET"
+                flash.message = message(code: 'default.not.found.message', args: [ message(code: 'topic.label', default: 'Topic'), params.id ])
+                redirect action: 'list', method: 'GET'
             }
-            '*'{ render status: NOT_FOUND }
+            '*' { render status: NOT_FOUND }
         }
     }
 }
