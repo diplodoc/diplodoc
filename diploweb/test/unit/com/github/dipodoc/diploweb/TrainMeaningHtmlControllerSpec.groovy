@@ -130,7 +130,7 @@ class TrainMeaningHtmlControllerSpec extends Specification {
 
     def "'removeFromTrain' action with valid domain instance"() {
         given: 'domain instance'
-            Post post = new Post(train_meaningHtml: '<html/>').save()
+            Post post = new Post(train_meaningHtml: '<html/>').save flush:true
 
         when: 'action is executed with a valid instance'
             request.contentType = FORM_CONTENT_TYPE
