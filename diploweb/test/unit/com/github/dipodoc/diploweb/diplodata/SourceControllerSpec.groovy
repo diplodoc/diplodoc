@@ -63,7 +63,7 @@ class SourceControllerSpec extends Specification {
         when: 'action is executed with a valid instance'
             request.contentType = FORM_CONTENT_TYPE
             request.method = 'POST'
-            Source source = new Source(id: new ObjectId('111111111111111111111111'), name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module')
+            Source source = new Source(name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module')
 
             controller.save(source)
 
