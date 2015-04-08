@@ -1,4 +1,4 @@
-<%@ page import="com.github.dipodoc.diploweb.diplodata.Source" %>
+<%@ page import="com.github.dipodoc.diploweb.domain.diplodata.Source" %>
 
 <div class="fieldcontain ${hasErrors(bean: sourceInstance, field: 'name', 'error')} required">
 	<label for="name">
