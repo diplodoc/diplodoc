@@ -2,10 +2,12 @@ package com.github.dipodoc.diploweb.controller.train
 
 import com.github.dipodoc.diploweb.domain.diplodata.Post
 import grails.transaction.Transactional
+import org.springframework.security.access.annotation.Secured
 
 import static org.springframework.http.HttpStatus.NOT_FOUND
 
 @Transactional(readOnly = true)
+@Secured([ 'ROLE_ADMIN' ])
 class TrainMeaningHtmlController {
 
     static allowedMethods = [ save: 'PUT', saveAndNext: 'PUT', removeFromTrain: 'DELETE' ]

@@ -1,7 +1,9 @@
 package com.github.dipodoc.diploweb.controller
 
 import com.github.dipodoc.diploweb.domain.diplodata.Post
+import org.springframework.security.access.annotation.Secured
 
+@Secured([ 'ROLE_USER' ])
 class DiploclientController {
 
     def postList() {

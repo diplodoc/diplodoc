@@ -1,11 +1,13 @@
 package com.github.dipodoc.diploweb.controller.diploexec
 
 import com.github.dipodoc.diploweb.domain.diploexec.Process
+import org.springframework.security.access.annotation.Secured
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
+@Secured([ 'ROLE_ADMIN' ])
 class ProcessController {
 
     static allowedMethods = [ save: 'POST', update: 'PUT', delete: 'DELETE' ]
