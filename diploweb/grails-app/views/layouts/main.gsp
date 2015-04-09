@@ -16,7 +16,15 @@
 	</head>
 	<body>
 		<div id="diplodocLogo" role="banner"><asset:image src="diplodocus.gif" alt="diplodoc" /></div>
+		<sec:ifLoggedIn>
+			<div id="userInfo" class="userInfo">
+				<div> You are logged as <sec:username/> </div>
+				<g:remoteLink class="logout" controller="logout" method="post" asynchronous="false" onSuccess="location.reload()">Logout</g:remoteLink>
+			</div>
+		</sec:ifLoggedIn>
+
 		<g:layoutBody/>
+
 		<div class="footer" role="contentinfo"></div>
 		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>
 	</body>
