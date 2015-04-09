@@ -14,6 +14,7 @@ class Role {
 	String authority
 
 	static mapping = {
+		version false
 		cache true
 	}
 

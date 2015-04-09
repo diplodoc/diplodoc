@@ -24,6 +24,8 @@ class User {
 	}
 
 	static mapping = {
+		version false
+
 		password column: '`password`'
 	}
 
@@ -33,7 +35,7 @@ class User {
 	static transients = [ 'springSecurityService' ]
 
 	Set<Role> getAuthorities() {
-		UserRole.findAllByUser(this).collect { it.role }
+		UserRole.findAllByUserId(id).collect { Role.get(it.roleId) }
 	}
 
 	def beforeInsert() {

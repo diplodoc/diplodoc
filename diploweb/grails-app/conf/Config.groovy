@@ -122,11 +122,13 @@ grails.plugin.springsecurity.userLookup.userDomainClassName = 'com.github.dipodo
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.github.dipodoc.diploweb.domain.user.UserRole'
 grails.plugin.springsecurity.authority.className = 'com.github.dipodoc.diploweb.domain.user.Role'
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
-	'/':                              ['permitAll'],
-	'/assets/**':                     ['permitAll'],
-	'/**/js/**':                      ['permitAll'],
-	'/**/css/**':                     ['permitAll'],
-	'/**/images/**':                  ['permitAll'],
-	'/**/favicon.ico':                ['permitAll']
+    '/**/*':                          [ 'permitAll' ],
+
+	'/':                              [ 'permitAll' ],
+	'/assets/**':                     [ 'permitAll' ],
+	'/**/js/**':                      [ 'permitAll' ],
+	'/**/css/**':                     [ 'permitAll' ],
+	'/**/images/**':                  [ 'permitAll' ],
+	'/**/favicon.ico':                [ 'permitAll' ]
 ]
 

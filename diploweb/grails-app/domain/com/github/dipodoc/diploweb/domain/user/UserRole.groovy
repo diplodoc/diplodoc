@@ -1,99 +1,46 @@
 package com.github.dipodoc.diploweb.domain.user
 
-import org.apache.commons.lang.builder.HashCodeBuilder
+import groovy.transform.EqualsAndHashCode
 import org.bson.types.ObjectId
 
-class UserRole implements Serializable {
+@EqualsAndHashCode
+class UserRole {
 
 	static mapWith = 'mongo'
 
 	ObjectId id
 
 
-	User user
-	Role role
+	ObjectId userId
 
+	ObjectId roleId
 
-	boolean equals(other) {
-		if (!(other instanceof UserRole)) {
-			return false
-		}
-
-		other.user?.id == user?.id &&
-		other.role?.id == role?.id
-	}
-
-	int hashCode() {
-		def builder = new HashCodeBuilder()
-		if (user) builder.append(user.id)
-		if (role) builder.append(role.id)
-		builder.toHashCode()
-	}
-
-
-	static UserRole get(long userId, long roleId) {
-		UserRole.where {
-			user == User.load(userId) &&
-			role == Role.load(roleId)
-		}.get()
-	}
-
-	static boolean exists(long userId, long roleId) {
-		UserRole.where {
-			user == User.load(userId) &&
-			role == Role.load(roleId)
-		}.count() > 0
-	}
-
-	static UserRole create(User user, Role role, boolean flush = false) {
-		def instance = new UserRole(user: user, role: role)
-		instance.save(flush: flush, insert: true)
-		instance
-	}
-
-	static boolean remove(User u, Role r, boolean flush = false) {
-		if (u == null || r == null) return false
-
-		int rowCount = UserRole.where {
-			user == User.load(u.id) &&
-			role == Role.load(r.id)
-		}.deleteAll()
-
-		if (flush) { UserRole.withSession { it.flush() } }
-
-		rowCount > 0
-	}
-
-	static void removeAll(User u, boolean flush = false) {
-		if (u == null) return
-
-		UserRole.where {
-			user == User.load(u.id)
-		}.deleteAll()
-
-		if (flush) { UserRole.withSession { it.flush() } }
-	}
-
-	static void removeAll(Role r, boolean flush = false) {
-		if (r == null) return
-
-		UserRole.where {
-			role == Role.load(r.id)
-		}.deleteAll()
-
-		if (flush) { UserRole.withSession { it.flush() } }
-	}
 
 	static constraints = {
-		role validator: { Role r, UserRole ur ->
-			if (ur.user == null) return
+		roleId validator: { ObjectId roleId, UserRole userRole ->
+			if (userRole.userId == null) return
 			boolean existing = false
 			UserRole.withNewSession {
-				existing = UserRole.exists(ur.user.id, r.id)
+				existing = UserRole.exists(userRole.userId, roleId)
 			}
 			if (existing) {
 				return 'userRole.exists'
 			}
 		}
+	}
+
+
+	static boolean exists(User user, Role role) {
+		exists(user.id, role.id)
+	}
+
+	static boolean exists(ObjectId _userId, ObjectId _roleId) {
+		UserRole.where {
+			userId == _userId && roleId == _roleId
+		}.count() > 0
+	}
+
+	static UserRole create(User user, Role role, boolean flush = false) {
+		new UserRole(userId: user.id, roleId: role.id).save flush: flush, insert: true
 	}
 }
