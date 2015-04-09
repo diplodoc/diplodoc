@@ -25,6 +25,7 @@ dependencies {
     compile dependency.grails.scaffolding
     compile dependency.grails.asset
     compile dependency.grails.mongodb
+    compile dependency.grails.security
     compile(dependency.grails.hibernate) {
         exclude module: 'xml-apis'
     }

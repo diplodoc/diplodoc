@@ -1,4 +1,4 @@
-<%@ page import="com.github.dipodoc.diploweb.diplodata.Topic; com.github.dipodoc.diploweb.diplodata.Post" %>
+<%@ page import="com.github.dipodoc.diploweb.domain.diplodata.Topic; com.github.dipodoc.diploweb.diplodata.Topic; com.github.dipodoc.diploweb.domain.diplodata.Post" %>
 
 <!DOCTYPE html>
 <html>
@@ -77,7 +77,7 @@
                 <li class="fieldcontain">
                     <span id="train_topics-add-label" class="property-label"><g:message code="processRun.train_topics-add.label" default="Click to add to train set" /></span>
 
-                    <g:each in="${(Topic.list() - postInstance.train_topics).sort { it.label }}" var="t">
+                    <g:each in="${(com.github.dipodoc.diploweb.domain.diplodata.Topic.list() - postInstance.train_topics).sort { it.label }}" var="t">
                         <div class="property-value" aria-labelledby="topic-label">
                             <g:link controller="trainTopics" action="addTopicToTrainingSet" params="[ postId: postInstance.id, topicId: t.id, redirectTo: 'edit' ]">
                                 ${t.label}

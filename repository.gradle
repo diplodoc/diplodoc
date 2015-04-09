@@ -39,6 +39,7 @@ ext {
     dependency.grails.jquery = 'org.grails.plugins:jquery:1.11.1'
     dependency.grails.mongodb = 'org.grails.plugins:mongodb:3.0.3'
     dependency.grails.hibernate = 'org.grails.plugins:hibernate4:4.3.8.1'
+    dependency.grails.security = 'org.grails.plugins:spring-security-core:2.0-RC4'
 
     dependency.spark = [:]
     dependency.spark.core = "org.apache.spark:spark-core_${versions.scala}:${versions.spark}"
