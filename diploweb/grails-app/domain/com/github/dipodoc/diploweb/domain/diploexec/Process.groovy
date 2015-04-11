@@ -1,40 +1,36 @@
 package com.github.dipodoc.diploweb.domain.diploexec
 
 import groovy.transform.EqualsAndHashCode
+import org.bson.types.ObjectId
 
 import java.time.LocalDateTime
 
 @EqualsAndHashCode
 class Process {
 
-    Long id
+    static mapWith = 'mongo'
+
+    ObjectId id
+
 
     String name
 
     String definition
 
-    String lastUpdate
+    LocalDateTime lastUpdate
 
     boolean active
 
-    static mapping = {
-        table schema: 'diploexec'
-
-        version false
-
-        id generator: 'sequence', params: [ sequence:'diploexec.process_id_seq' ]
-        lastUpdate column: 'lastupdate'
-    }
 
     def beforeInsert() {
-        updatelastUpdateTime()
+        updateLastUpdateTime()
     }
 
     def beforeUpdate() {
-        updatelastUpdateTime()
+        updateLastUpdateTime()
     }
 
-    def updatelastUpdateTime() {
-        lastUpdate = LocalDateTime.now().toString()
+    def updateLastUpdateTime() {
+        lastUpdate = LocalDateTime.now()
     }
 }

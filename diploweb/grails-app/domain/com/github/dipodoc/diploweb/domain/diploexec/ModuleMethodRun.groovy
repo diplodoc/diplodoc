@@ -3,6 +3,8 @@ package com.github.dipodoc.diploweb.domain.diploexec
 import groovy.transform.EqualsAndHashCode
 import org.bson.types.ObjectId
 
+import java.time.LocalDateTime
+
 @EqualsAndHashCode
 class ModuleMethodRun {
 
@@ -11,9 +13,9 @@ class ModuleMethodRun {
     ObjectId id
 
 
-    String startTime
+    LocalDateTime startTime
 
-    String endTime
+    LocalDateTime endTime
 
     Map metrics
 
