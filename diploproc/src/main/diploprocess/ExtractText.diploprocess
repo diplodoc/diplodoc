@@ -1,7 +1,0 @@
-listen to: 'load-new-posts-from-all-sources'
-
-input 'postId'
-
-post to: "http://localhost:8080/diplocore/text-extractor/post/${postId}/extract-text"
-
-output postId: postId

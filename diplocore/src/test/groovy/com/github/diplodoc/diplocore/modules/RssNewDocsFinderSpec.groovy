@@ -1,8 +1,8 @@
 package com.github.diplodoc.diplocore.modules
 
-import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Post
+import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Doc
 import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Source
-import com.github.diplodoc.diplobase.repository.mongodb.diplodata.PostRepository
+import com.github.diplodoc.diplobase.repository.mongodb.diplodata.DocRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diplodata.SourceRepository
 import com.github.diplodoc.diplocore.services.RssService
 import com.rometools.rome.feed.synd.SyndContentImpl
@@ -15,15 +15,15 @@ import java.time.LocalDateTime
 /**
  * @author yaroslav.yermilov
  */
-class RssNewPostsFinderSpec extends Specification {
+class RssNewDocsFinderSpec extends Specification {
 
     SourceRepository sourceRepository = Mock(SourceRepository)
-    PostRepository postRepository = Mock(PostRepository)
+    DocRepository docRepository = Mock(DocRepository)
     RssService rssService = Mock(RssService)
 
-    RssNewPostsFinder rssNewPostsFinder = new RssNewPostsFinder(sourceRepository: sourceRepository, postRepository: postRepository, rssService: rssService)
+    RssNewDocsFinder rssNewDocsFinder = new RssNewDocsFinder(sourceRepository: sourceRepository, docRepository: docRepository, rssService: rssService)
 
-    def 'List<String> newPosts(String sourceId)'() {
+    def 'List<String> newDocs(String sourceId)'() {
         when:
             SyndEntry rssEntry1 = Mock(SyndEntry)
             rssEntry1.link >> 'link-1'
@@ -42,22 +42,22 @@ class RssNewPostsFinderSpec extends Specification {
 
             sourceRepository.findOne('111111111111111111111111') >> new Source(id: '111111111111111111111111', rssUrl: 'rss-url')
 
-            postRepository.findOneByUrl('link-1') >> new Post()
-            postRepository.findOneByUrl('link-2') >> null
-            postRepository.findOneByUrl('link-3') >> null
+            docRepository.findOneByUrl('link-1') >> new Doc()
+            docRepository.findOneByUrl('link-2') >> null
+            docRepository.findOneByUrl('link-3') >> null
 
             rssService.feed('rss-url') >> [ rssEntry1, rssEntry2, rssEntry3 ]
 
-            Collection<String> actual = rssNewPostsFinder.newPosts('111111111111111111111111')
+            Collection<String> actual = rssNewDocsFinder.newDocs('111111111111111111111111')
 
         then:
-            1 * postRepository.save({ posts ->
-                posts.find { it.url == 'link-2' }.id = 'id-2'
-                posts.find { it.url == 'link-3' }.id = 'id-3'
+            1 * docRepository.save({ docs ->
+                docs.find { it.url == 'link-2' }.id = 'id-2'
+                docs.find { it.url == 'link-3' }.id = 'id-3'
 
-                posts == [
-                    new Post(id: 'id-2', url: 'link-2', sourceId: new ObjectId('111111111111111111111111'), title: 'title-2', description: 'description-2', publishTime: LocalDateTime.parse('1970-01-01T02:33:20')),
-                    new Post(id: 'id-3', url: 'link-3', sourceId: new ObjectId('111111111111111111111111'), title: 'title-3', description: 'description-3', publishTime: LocalDateTime.parse('1970-01-01T02:50'))
+                docs == [
+                    new Doc(id: 'id-2', url: 'link-2', sourceId: new ObjectId('111111111111111111111111'), title: 'title-2', description: 'description-2', publishTime: LocalDateTime.parse('1970-01-01T02:33:20')),
+                    new Doc(id: 'id-3', url: 'link-3', sourceId: new ObjectId('111111111111111111111111'), title: 'title-3', description: 'description-3', publishTime: LocalDateTime.parse('1970-01-01T02:50'))
                 ]
             })
 

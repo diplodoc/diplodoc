@@ -8,12 +8,12 @@
 	<g:textField name="name" required="" value="${sourceInstance?.name}"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: sourceInstance, field: 'newPostsFinderModule', 'error')} required">
-	<label for="newPostsFinderModule">
-		<g:message code="source.newPostsFinderModule.label" default="New Posts Finder Module" />
+<div class="fieldcontain ${hasErrors(bean: sourceInstance, field: 'newDocsFinderModule', 'error')} required">
+	<label for="newDocsFinderModule">
+		<g:message code="source.newDocsFinderModule.label" default="New Docs Finder Module" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:textField name="newPostsFinderModule" required="" value="${sourceInstance?.newPostsFinderModule}"/>
+	<g:textField name="newDocsFinderModule" required="" value="${sourceInstance?.newDocsFinderModule}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: sourceInstance, field: 'rssUrl', 'error')} required">

@@ -1,8 +1,8 @@
 package com.github.diplodoc.diplocore.modules
 
-import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Post
+import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Doc
 import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Source
-import com.github.diplodoc.diplobase.repository.mongodb.diplodata.PostRepository
+import com.github.diplodoc.diplobase.repository.mongodb.diplodata.DocRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diplodata.SourceRepository
 import com.github.diplodoc.diplocore.services.RssService
 import groovy.util.logging.Slf4j
@@ -23,12 +23,12 @@ import java.time.ZoneId
  * @author yaroslav.yermilov
  */
 @Controller
-@RequestMapping('/rss-new-posts-finder')
+@RequestMapping('/rss-new-docs-finder')
 @Slf4j
-class RssNewPostsFinder {
+class RssNewDocsFinder {
 
     @Autowired
-    PostRepository postRepository
+    DocRepository docRepository
 
     @Autowired
     SourceRepository sourceRepository
@@ -36,18 +36,18 @@ class RssNewPostsFinder {
     @Autowired
     RssService rssService
 
-    @RequestMapping(value = '/source/{id}/new-posts', method = RequestMethod.POST)
+    @RequestMapping(value = '/source/{id}/new-docs', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody Collection<String> newPosts(@PathVariable('id') String sourceId) {
+    @ResponseBody Collection<String> newDocs(@PathVariable('id') String sourceId) {
         Source source = sourceRepository.findOne sourceId
 
-        log.info('looking for new posts from {}...', source.name)
+        log.info('looking for new docs from {}...', source.name)
 
-        Collection<Post> posts = rssService
+        Collection<Doc> docs = rssService
                                     .feed(source.rssUrl)
-                                    .findAll { rssEntry -> !postRepository.findOneByUrl(rssEntry.link) }
+                                    .findAll { rssEntry -> !docRepository.findOneByUrl(rssEntry.link) }
                                     .collect { rssEntry ->
-                                        new Post(   url: rssEntry.link,
+                                        new Doc(   url: rssEntry.link,
                                                     sourceId: new ObjectId(sourceId),
                                                     title: rssEntry.title,
                                                     description: rssEntry.description.value,
@@ -55,8 +55,8 @@ class RssNewPostsFinder {
                                         )
                                     }
 
-        postRepository.save posts
+        docRepository.save docs
 
-        return posts*.id
+        return docs*.id
     }
 }

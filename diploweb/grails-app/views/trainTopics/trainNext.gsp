@@ -1,80 +1,80 @@
-<%@ page import="com.github.dipodoc.diploweb.domain.diplodata.Topic; com.github.dipodoc.diploweb.diplodata.Topic; com.github.dipodoc.diploweb.domain.diplodata.Post" %>
+<%@ page import="com.github.dipodoc.diploweb.domain.diplodata.Topic; com.github.dipodoc.diploweb.diplodata.Topic; com.github.dipodoc.diploweb.domain.diplodata.Doc" %>
 
 <!DOCTYPE html>
 <html>
     <head>
         <meta name="layout" content="main">
-        <title><g:message message="Train post id=${postToTrain.id}" /></title>
+        <title><g:message message="Train doc id=${docToTrain.id}" /></title>
     </head>
 
     <body>
-        <a href="#show-post" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
+        <a href="#show-doc" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 
         <div class="nav" role="navigation">
             <ul>
                 <g:render template="/navigation/base-navigation"/>
-                <li><g:link class="list" action="list"><g:message code="default.list.label" args="['Post']" /></g:link></li>
-                <li><g:link action="trainNext"><g:message message="train next post" /></g:link></li>
+                <li><g:link class="list" action="list"><g:message code="default.list.label" args="['Doc']" /></g:link></li>
+                <li><g:link action="trainNext"><g:message message="train next doc" /></g:link></li>
             </ul>
         </div>
 
-        <div id="show-post" class="content scaffold-show" role="main">
-            <h1>Train post id=${postToTrain.id}</h1>
+        <div id="show-doc" class="content scaffold-show" role="main">
+            <h1>Train doc id=${docToTrain.id}</h1>
 
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
 
-            <g:hasErrors bean="${postToTrain}">
+            <g:hasErrors bean="${docToTrain}">
                 <ul class="errors" role="alert">
-                    <g:eachError bean="${postToTrain}" var="error">
+                    <g:eachError bean="${docToTrain}" var="error">
                         <li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
                     </g:eachError>
                 </ul>
             </g:hasErrors>
 
-            <ol class="property-list post">
+            <ol class="property-list doc">
 
-                <g:if test="${postToTrain?.id}">
+                <g:if test="${docToTrain?.id}">
                     <li class="fieldcontain">
-                        <span id="id-label" class="property-label"><g:message code="post.id.label" default="id" /></span>
-                        <span class="property-value" aria-labelledby="id-label"><g:fieldValue bean="${postToTrain}" field="id"/></span>
+                        <span id="id-label" class="property-label"><g:message code="doc.id.label" default="id" /></span>
+                        <span class="property-value" aria-labelledby="id-label"><g:fieldValue bean="${docToTrain}" field="id"/></span>
                     </li>
                 </g:if>
 
-                <g:if test="${postToTrain?.url}">
+                <g:if test="${docToTrain?.url}">
                     <li class="fieldcontain">
-                        <span id="url-label" class="property-label"><g:message code="post.url.label" default="Url" /></span>
-                        <span class="property-value" aria-labelledby="url-label"><a href="${postToTrain.url}" target="_blank"><g:fieldValue bean="${postToTrain}" field="url"/></a></span>
+                        <span id="url-label" class="property-label"><g:message code="doc.url.label" default="Url" /></span>
+                        <span class="property-value" aria-labelledby="url-label"><a href="${docToTrain.url}" target="_blank"><g:fieldValue bean="${docToTrain}" field="url"/></a></span>
                     </li>
                 </g:if>
 
-                <g:if test="${postToTrain?.title}">
+                <g:if test="${docToTrain?.title}">
                     <li class="fieldcontain">
-                        <span id="title-label" class="property-label"><g:message code="post.title.label" default="Title" /></span>
-                        <span class="property-value" aria-labelledby="title-label"><g:fieldValue bean="${postToTrain}" field="title"/></span>
+                        <span id="title-label" class="property-label"><g:message code="doc.title.label" default="Title" /></span>
+                        <span class="property-value" aria-labelledby="title-label"><g:fieldValue bean="${docToTrain}" field="title"/></span>
                     </li>
                 </g:if>
 
-                <g:if test="${postToTrain?.source}">
+                <g:if test="${docToTrain?.source}">
                     <li class="fieldcontain">
-                        <span id="source-label" class="property-label"><g:message code="post.source.label" default="Source" /></span>
-                        <span class="property-value" aria-labelledby="source-label"><g:link controller="source" action="show" id="${postToTrain?.source?.id}">${postToTrain?.source?.name}</g:link></span>
+                        <span id="source-label" class="property-label"><g:message code="doc.source.label" default="Source" /></span>
+                        <span class="property-value" aria-labelledby="source-label"><g:link controller="source" action="show" id="${docToTrain?.source?.id}">${docToTrain?.source?.name}</g:link></span>
                     </li>
                 </g:if>
 
-                <g:if test="${postToTrain?.train_topics}">
+                <g:if test="${docToTrain?.train_topics}">
                     <li class="fieldcontain">
-                        <span id="train_topics-label" class="property-label"><g:message code="post.train_topics.label" default="Train topics" /></span>
-                        <diplo:topics topics="${postToTrain.train_topics}" divClass="property-value" />
+                        <span id="train_topics-label" class="property-label"><g:message code="doc.train_topics.label" default="Train topics" /></span>
+                        <diplo:topics topics="${docToTrain.train_topics}" divClass="property-value" />
                     </li>
 
                     <li class="fieldcontain">
                         <span id="train_topics-remove-label" class="property-label"><g:message code="processRun.train_topics-remove.label" default="Click to remove from train set" /></span>
 
-                        <g:each in="${postToTrain.train_topics}" var="t">
+                        <g:each in="${docToTrain.train_topics}" var="t">
                             <div class="property-value" aria-labelledby="topic-label">
-                                <g:link controller="trainTopics" action="removeTopicFromTrainingSet" params="[ postId: postToTrain.id, topicId: t.id, redirectTo: 'trainNext' ]">
+                                <g:link controller="trainTopics" action="removeTopicFromTrainingSet" params="[ docId: docToTrain.id, topicId: t.id, redirectTo: 'trainNext' ]">
                                     ${t.label}
                                 </g:link>
                             </div>
@@ -85,9 +85,9 @@
                 <li class="fieldcontain">
                     <span id="train_topics-add-label" class="property-label"><g:message code="processRun.train_topics-add.label" default="Click to add to train set" /></span>
 
-                    <g:each in="${(com.github.dipodoc.diploweb.domain.diplodata.Topic.list() - postToTrain.train_topics).sort { it.label }}" var="t">
+                    <g:each in="${(com.github.dipodoc.diploweb.domain.diplodata.Topic.list() - docToTrain.train_topics).sort { it.label }}" var="t">
                         <div class="property-value" aria-labelledby="topic-label">
-                            <g:link controller="trainTopics" action="addTopicToTrainingSet" params="[ postId: postToTrain.id, topicId: t.id, redirectTo: 'trainNext' ]">
+                            <g:link controller="trainTopics" action="addTopicToTrainingSet" params="[ docId: docToTrain.id, topicId: t.id, redirectTo: 'trainNext' ]">
                                 ${t.label}
                             </g:link>
                         </div>

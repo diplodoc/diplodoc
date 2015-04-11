@@ -1,7 +1,7 @@
 package com.github.diplodoc.diplocore.modules
 
-import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Post
-import com.github.diplodoc.diplobase.repository.mongodb.diplodata.PostRepository
+import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Doc
+import com.github.diplodoc.diplobase.repository.mongodb.diplodata.DocRepository
 import com.github.diplodoc.diplocore.services.HtmlService
 import groovy.util.logging.Slf4j
 import org.jsoup.nodes.Document
@@ -19,27 +19,27 @@ import java.time.LocalDateTime
  * @author yaroslav.yermilov
  */
 @Controller
-@RequestMapping('/post-loader')
+@RequestMapping('/doc-loader')
 @Slf4j
-class PostLoader {
+class DocLoader {
 
     @Autowired
     HtmlService htmlService
 
     @Autowired
-    PostRepository postRepository
+    DocRepository docRepository
 
-    @RequestMapping(value = '/post/{id}/load', method = RequestMethod.POST)
+    @RequestMapping(value = '/doc/{id}/load', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    void loadPost(@PathVariable('id') String postId) {
-        Post post = postRepository.findOne postId
+    void loadDoc(@PathVariable('id') String docId) {
+        Doc doc = docRepository.findOne docId
 
-        log.info('loading post from {}...', post.url)
+        log.info('loading doc from {}...', doc.url)
 
-        Document document = htmlService.load post.url
-        post.html = document.html()
-        post.loadTime = LocalDateTime.now()
+        Document document = htmlService.load doc.url
+        doc.html = document.html()
+        doc.loadTime = LocalDateTime.now()
 
-        postRepository.save post
+        docRepository.save doc
     }
 }

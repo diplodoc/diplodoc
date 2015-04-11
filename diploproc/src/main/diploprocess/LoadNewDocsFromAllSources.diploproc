@@ -1,0 +1,10 @@
+def sources = get from: 'http://localhost:8080/diplocore/diplodata/sources', expect: List
+
+sources.each { source ->
+    def newDocsIds = post to: "http://localhost:8080/diplocore/rss-new-docs-finder/source/${source.id}/new-docs", expect: List
+
+    newDocsIds.each { docId ->
+        post to: "http://localhost:8080/diplocore/doc-loader/doc/${docId}/load"
+        output docId: docId
+    }
+}

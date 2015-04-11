@@ -1,10 +1,10 @@
 package com.github.diplodoc.diplocore.modules
 
-import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Post
+import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Doc
 import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Module
 import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ModuleMethod
 import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ModuleMethodRun
-import com.github.diplodoc.diplobase.repository.mongodb.diplodata.PostRepository
+import com.github.diplodoc.diplobase.repository.mongodb.diplodata.DocRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleMethodRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleMethodRunRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleRepository
@@ -26,7 +26,7 @@ import spock.lang.Specification
  */
 class MeaningExtractorSpec extends Specification {
 
-    PostRepository postRepository = Mock(PostRepository)
+    DocRepository docRepository = Mock(DocRepository)
     ModuleRepository moduleRepository = Mock(ModuleRepository)
     ModuleMethodRepository moduleMethodRepository = Mock(ModuleMethodRepository)
     ModuleMethodRunRepository moduleMethodRunRepository = Mock(ModuleMethodRunRepository)
@@ -35,25 +35,25 @@ class MeaningExtractorSpec extends Specification {
 
     MeaningExtractor meaningExtractor = Spy(MeaningExtractor)
 
-    def 'void extractMeaning(String postId)'() {
+    def 'void extractMeaning(String docId)'() {
         setup:
-            meaningExtractor.postRepository = postRepository
+            meaningExtractor.docRepository = docRepository
             meaningExtractor.moduleRepository = moduleRepository
             meaningExtractor.htmlService = htmlService
             meaningExtractor.serializationService = serializationService
 
             LogisticRegressionModel model = Mock(LogisticRegressionModel)
 
-            Post post = new Post(id: 'post-id', html: 'post-html')
+            Doc doc = new Doc(id: 'doc-id', html: 'doc-html')
             Module module = new Module(name: 'com.github.diplodoc.diplocore.modules.MeaningExtractor', data: [ 'model': ([ 1, 2 ,3 ] as byte[]) ])
 
             Document document = Mock(Document)
             Element body = Mock(Element)
             document.body() >> body
 
-            1 * postRepository.findOne('post-id') >> post
+            1 * docRepository.findOne('doc-id') >> doc
             1 * moduleRepository.findOneByName('com.github.diplodoc.diplocore.modules.MeaningExtractor') >> module
-            1 * htmlService.parse('post-html') >> document
+            1 * htmlService.parse('doc-html') >> document
             1 * serializationService.deserialize([ 1, 2 ,3 ] as byte[]) >> model
 
             1 * meaningExtractor.predictMeaningElements(model, body) >> [
@@ -64,14 +64,14 @@ class MeaningExtractorSpec extends Specification {
             ]
 
         when:
-            meaningExtractor.extractMeaning('post-id')
+            meaningExtractor.extractMeaning('doc-id')
 
         then:
-            1 * postRepository.save({ Post postToSave ->
-                postToSave.id == 'post-id' &&
-                postToSave.html == 'post-html' &&
-                postToSave.meaningHtml.replaceAll('\\s+','') == '<div>text1</div><div>text2</div><div></div><div>text4</div>' &&
-                postToSave.meaningText.replaceAll('\\s+','') == 'text1text2text4'
+            1 * docRepository.save({ Doc docToSave ->
+                docToSave.id == 'doc-id' &&
+                docToSave.html == 'doc-html' &&
+                docToSave.meaningHtml.replaceAll('\\s+','') == '<div>text1</div><div>text2</div><div></div><div>text4</div>' &&
+                docToSave.meaningText.replaceAll('\\s+','') == 'text1text2text4'
             })
     }
 
@@ -163,20 +163,20 @@ class MeaningExtractorSpec extends Specification {
             actual == Vectors.dense(80.0, 1.0, 3.0, 8.0, 2.0)
     }
 
-    def 'Collection<LabeledPoint> postToLabeledPoints(Post post)'() {
+    def 'Collection<LabeledPoint> docToLabeledPoints(Doc doc)'() {
         setup:
             meaningExtractor.htmlService = htmlService
 
-            Post post = new Post(html: 'post-html', trainMeaningHtml: 'post-trainMeaningHtml')
+            Doc doc = new Doc(html: 'doc-html', trainMeaningHtml: 'doc-trainMeaningHtml')
 
             Document document = Mock(Document)
             document.body() >> Jsoup.parseBodyFragment('<div><div>text 1</div><div>text</div></div>').body().child(0)
-            htmlService.parse('post-html') >> document
+            htmlService.parse('doc-html') >> document
 
-            htmlService.parseFragment('post-trainMeaningHtml') >> Jsoup.parseBodyFragment('<div>text 1</div>').body().child(0)
+            htmlService.parseFragment('doc-trainMeaningHtml') >> Jsoup.parseBodyFragment('<div>text 1</div>').body().child(0)
 
         when:
-            Collection<LabeledPoint> actual = meaningExtractor.postToLabeledPoints(post)
+            Collection<LabeledPoint> actual = meaningExtractor.docToLabeledPoints(doc)
 
         then:
             actual == [

@@ -4,7 +4,7 @@ import groovy.transform.EqualsAndHashCode
 import org.bson.types.ObjectId
 
 @EqualsAndHashCode
-class Post {
+class Doc {
 
     static mapWith = 'mongo'
 

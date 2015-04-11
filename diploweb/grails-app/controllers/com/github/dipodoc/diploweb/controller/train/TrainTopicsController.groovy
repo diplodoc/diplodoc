@@ -1,6 +1,6 @@
 package com.github.dipodoc.diploweb.controller.train
 
-import com.github.dipodoc.diploweb.domain.diplodata.Post
+import com.github.dipodoc.diploweb.domain.diplodata.Doc
 import com.github.dipodoc.diploweb.domain.diplodata.Topic
 import grails.transaction.Transactional
 import org.springframework.security.access.annotation.Secured
@@ -17,79 +17,79 @@ class TrainTopicsController {
 
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        def trainSet = Post.where { train_topics != null && train_topics.size() > 0 }
+        def trainSet = Doc.where { train_topics != null && train_topics.size() > 0 }
 
-        respond trainSet.list(params), model: [ postInstanceCount: trainSet.count() ]
+        respond trainSet.list(params), model: [ docInstanceCount: trainSet.count() ]
     }
 
     def trainNext() {
         if (params.id == null) {
-            int untrainedCount = Post.where({ train_topics == null || train_topics.isEmpty() }).count()
+            int untrainedCount = Doc.where({ train_topics == null || train_topics.isEmpty() }).count()
             int index = random.nextInt(untrainedCount)
             def params = [ offset: index, max: 1 ]
 
-            Post randomUntrainedPost = Post.where({ train_topics == null || train_topics.isEmpty() }).list(params)[0]
-            [ postToTrain: randomUntrainedPost ]
+            Doc randomUntrainedDoc = Doc.where({ train_topics == null || train_topics.isEmpty() }).list(params)[0]
+            [ docToTrain: randomUntrainedDoc ]
         } else {
-            [ postToTrain: Post.get(params.id) ]
+            [ docToTrain: Doc.get(params.id) ]
         }
     }
 
-    def edit(Post postInstance) {
-        respond postInstance
+    def edit(Doc docInstance) {
+        respond docInstance
     }
 
     @Transactional
     def removeFromTrain() {
-        Post postInstance = Post.get(params.id)
+        Doc docInstance = Doc.get(params.id)
 
-        if (postInstance == null) {
+        if (docInstance == null) {
             notFound()
             return
         }
 
-        postInstance.train_topics = []
-        postInstance.save flush:true
+        docInstance.train_topics = []
+        docInstance.save flush:true
 
         redirect action: 'list'
     }
 
     @Transactional
     def removeTopicFromTrainingSet() {
-        Post postInstance = Post.get(params.postId)
+        Doc docInstance = Doc.get(params.docId)
         Topic topicInstance = Topic.get(params.topicId)
 
-        if (postInstance == null || topicInstance == null) {
+        if (docInstance == null || topicInstance == null) {
             notFound()
             return
         }
 
-        postInstance.train_topics.remove(topicInstance)
-        postInstance.save flush:true
+        docInstance.train_topics.remove(topicInstance)
+        docInstance.save flush:true
 
-        redirect action: params.redirectTo, id: postInstance.id, params: [ id: postInstance.id ]
+        redirect action: params.redirectTo, id: docInstance.id, params: [ id: docInstance.id ]
     }
 
     @Transactional
     def addTopicToTrainingSet() {
-        Post postInstance = Post.get(params.postId)
+        Doc docInstance = Doc.get(params.docId)
         Topic topicInstance = Topic.get(params.topicId)
 
-        if (postInstance == null || topicInstance == null) {
+        if (docInstance == null || topicInstance == null) {
             notFound()
             return
         }
 
-        postInstance.train_topics.add(topicInstance)
-        postInstance.save flush:true
+        docInstance.train_topics.add(topicInstance)
+        docInstance.save flush:true
 
-        redirect action: params.redirectTo, id: postInstance.id, params: [ id: postInstance.id ]
+        redirect action: params.redirectTo, id: docInstance.id, params: [ id: docInstance.id ]
     }
 
     protected void notFound() {
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.not.found.message', args: [ message(code: 'post.label', default: 'Post'), params.id ])
+                flash.message = message(code: 'default.not.found.message', args: [ message(code: 'doc.label', default: 'Doc'), params.id ])
                 redirect action: 'list', method: 'GET'
             }
             '*' { render status: NOT_FOUND }

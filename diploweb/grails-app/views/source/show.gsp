@@ -44,11 +44,11 @@
 					</li>
 				</g:if>
 			
-				<g:if test="${sourceInstance?.newPostsFinderModule}">
+				<g:if test="${sourceInstance?.newDocsFinderModule}">
 					<li class="fieldcontain">
-						<span id="newPostsFinderModule-label" class="property-label"><g:message code="source.newPostsFinderModule.label" default="new posts finder module" /></span>
+						<span id="newDocsFinderModule-label" class="property-label"><g:message code="source.newDocsFinderModule.label" default="new docs finder module" /></span>
 
-						<span class="property-value" aria-labelledby="newPostsFinderModule-label"><g:fieldValue bean="${sourceInstance}" field="newPostsFinderModule"/></span>
+						<span class="property-value" aria-labelledby="newDocsFinderModule-label"><g:fieldValue bean="${sourceInstance}" field="newDocsFinderModule"/></span>
 					</li>
 				</g:if>
 			

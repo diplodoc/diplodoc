@@ -18,12 +18,12 @@ from bson.dbref import DBRef
 app = Flask(__name__)
 
 
-@app.route("/post-type-classifier/post/<post_id>/classify")
-def classify(post_id):
+@app.route("/doc-type-classifier/doc/<doc_id>/classify")
+def classify(doc_id):
     client = MongoClient()
     db = client['diplodata']
 
-    post = db.post.find_one({"_id": ObjectId(post_id)})
+    doc = db.doc.find_one({"_id": ObjectId(doc_id)})
 
     topic_map = {}
     topic_ref_list = []
@@ -33,17 +33,17 @@ def classify(post_id):
         reference = DBRef('topic', record['_id'])
         decoded = base64.b64decode(depickled)
         text_clf = pickle.loads(decoded)
-        predicted = text_clf.predict_proba([post['meaningText']])[0]
+        predicted = text_clf.predict_proba([doc['meaningText']])[0]
         topic_map[topic] = predicted[0]
         topic_ref_list.append({ 'topic_id': record['_id'], 'score': predicted[0] })
 
-    post['predicted_topics'] = topic_ref_list
-    db.post.update({"_id": post["_id"]}, post)
+    doc['predicted_topics'] = topic_ref_list
+    db.doc.update({"_id": doc["_id"]}, doc)
 
     return 'RESULT: ' + str(topic_map)
 
 
-@app.route("/post-type-classifier/train-from-all-posts", methods=['POST', 'GET'])
+@app.route("/doc-type-classifier/train-from-all-docs", methods=['POST', 'GET'])
 def train():
     content = request.json
     partial_train = False
@@ -54,10 +54,10 @@ def train():
     db = client['diplodata']
 
     train_texts, train_labels = [], []
-    for post in db.post.find():
-        if 'train_topics' in post.keys():
-            train_texts.append(post['meaningText'])
-            train_labels.append([db.dereference(x)['label'] for x in post['train_topics']])
+    for doc in db.doc.find():
+        if 'train_topics' in doc.keys():
+            train_texts.append(doc['meaningText'])
+            train_labels.append([db.dereference(x)['label'] for x in doc['train_topics']])
 
     topics = []
     for record in db.topic.find():

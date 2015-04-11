@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Field
  */
 @EqualsAndHashCode
 @ToString(excludes = [ 'meaningText', 'html' ])
-class Post {
+class Doc {
 
     @Id
     String id

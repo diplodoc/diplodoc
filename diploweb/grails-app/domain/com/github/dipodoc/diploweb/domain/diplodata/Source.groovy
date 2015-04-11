@@ -13,7 +13,7 @@ class Source {
 
     String name
 
-    String newPostsFinderModule
+    String newDocsFinderModule
 
     String rssUrl
 }

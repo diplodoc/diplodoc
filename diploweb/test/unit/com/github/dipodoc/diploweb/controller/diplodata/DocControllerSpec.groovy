@@ -1,47 +1,47 @@
 package com.github.dipodoc.diploweb.controller.diplodata
 
-import com.github.dipodoc.diploweb.domain.diplodata.Post
+import com.github.dipodoc.diploweb.domain.diplodata.Doc
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import org.bson.types.ObjectId
 import spock.lang.Specification
 
-@TestFor(PostController)
-@Mock(Post)
-class PostControllerSpec extends Specification {
+@TestFor(DocController)
+@Mock(Doc)
+class DocControllerSpec extends Specification {
 
     def "'list' action"() {
-        given: 'single Post instance'
-            Post post = new Post().save flush:true
+        given: 'single Doc instance'
+            Doc doc = new Doc().save flush:true
 
         when: 'action is executed'
             controller.list()
 
         then: 'model contains this single instance'
-            model.postInstanceCount == 1
-            model.postInstanceList == [ post ]
+            model.docInstanceCount == 1
+            model.docInstanceList == [ doc ]
     }
 
     def "'list' action with pagination"() {
-        given: 'two Post instances'
-            Post post1 = new Post().save flush:true
-            Post post2 = new Post().save flush:true
+        given: 'two Doc instances'
+            Doc doc1 = new Doc().save flush:true
+            Doc doc2 = new Doc().save flush:true
 
         when: 'action is executed with max=1 parameter'
             controller.list(1)
 
         then: 'model contains one of instances, total instances count is 2'
-            model.postInstanceCount == 2
-            model.postInstanceList == [ post1 ] || model.postInstanceList == [ post2 ]
+            model.docInstanceCount == 2
+            model.docInstanceList == [ doc1 ] || model.docInstanceList == [ doc2 ]
     }
 
     void "'show' action"() {
         when: 'domain instance is passed to the action'
-            Post post = new Post(id: new ObjectId('111111111111111111111111'))
-            controller.show(post)
+            Doc doc = new Doc(id: new ObjectId('111111111111111111111111'))
+            controller.show(doc)
 
         then: 'model contains this instance'
-            model.postInstance == post
+            model.docInstance == doc
     }
 
     void "'show' action with null domain"() {
@@ -54,19 +54,19 @@ class PostControllerSpec extends Specification {
 
     void "'delete' action"() {
         when: 'domain instance is created'
-            Post post = new Post().save flush:true
+            Doc doc = new Doc().save flush:true
 
         then: 'it exists'
-            Post.count() == 1
+            Doc.count() == 1
 
         when: 'action is called'
             request.contentType = FORM_CONTENT_TYPE
             request.method = 'DELETE'
-            controller.delete(post)
+            controller.delete(doc)
 
         then: 'instance is deleted, correct response is returned'
-            Post.count() == 0
-            response.redirectedUrl == '/post/list'
+            Doc.count() == 0
+            response.redirectedUrl == '/doc/list'
             flash.message != null
     }
 
@@ -77,7 +77,7 @@ class PostControllerSpec extends Specification {
             controller.delete(null)
 
         then: "redirect to 'list' action"
-            response.redirectedUrl == '/post/list'
+            response.redirectedUrl == '/doc/list'
             flash.message != null
     }
 }

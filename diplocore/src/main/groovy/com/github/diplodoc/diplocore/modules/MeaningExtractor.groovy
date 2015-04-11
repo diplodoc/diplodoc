@@ -1,9 +1,9 @@
 package com.github.diplodoc.diplocore.modules
 
-import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Post
+import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Doc
 import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Module
 import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ModuleMethodRun
-import com.github.diplodoc.diplobase.repository.mongodb.diplodata.PostRepository
+import com.github.diplodoc.diplobase.repository.mongodb.diplodata.DocRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleMethodRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleMethodRunRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleRepository
@@ -39,7 +39,7 @@ import java.time.LocalDateTime
 class MeaningExtractor {
 
     @Autowired
-    PostRepository postRepository
+    DocRepository docRepository
 
     @Autowired
     ModuleRepository moduleRepository
@@ -56,22 +56,22 @@ class MeaningExtractor {
     @Autowired
     SerializationService serializationService
 
-    @RequestMapping(value = '/post/{id}/extract-meaning', method = RequestMethod.POST)
+    @RequestMapping(value = '/doc/{id}/extract-meaning', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    void extractMeaning(@PathVariable('id') String postId) {
-        Post post = postRepository.findOne postId
+    void extractMeaning(@PathVariable('id') String docId) {
+        Doc doc = docRepository.findOne docId
 
         Module module = moduleRepository.findOneByName('com.github.diplodoc.diplocore.modules.MeaningExtractor')
         LogisticRegressionModel model = serializationService.deserialize(module.data['model'])
 
-        Document document = htmlService.parse(post.html)
+        Document document = htmlService.parse(doc.html)
 
         List<Element> meaningElements = predictMeaningElements(model, document.body())
 
-        post.meaningHtml = meaningElements.collect({ it.outerHtml() }).join()
-        post.meaningText = meaningElements.collect({ it.text() }).join(' ')
+        doc.meaningHtml = meaningElements.collect({ it.outerHtml() }).join()
+        doc.meaningText = meaningElements.collect({ it.text() }).join(' ')
 
-        postRepository.save post
+        docRepository.save doc
     }
 
     @RequestMapping(value = '/train-model', method = RequestMethod.POST)
@@ -122,16 +122,16 @@ class MeaningExtractor {
         SparkConf sparkConf = new SparkConf().setAppName('/diplocore/meaning-extractor/train-model').setMaster('local')
         JavaSparkContext sparkContext = new JavaSparkContext(sparkConf)
 
-        Collection<LabeledPoint> data = postRepository.findByTrainMeaningHtmlIsNotNull().collectMany(this.&postToLabeledPoints)
+        Collection<LabeledPoint> data = docRepository.findByTrainMeaningHtmlIsNotNull().collectMany(this.&docToLabeledPoints)
 
         JavaRDD<LabeledPoint>[] splits = sparkContext.parallelize(data).randomSplit([ 0.7, 0.3 ] as double[])
 
         [ 'trainSet': splits[0], 'testSet': splits[1] ]
     }
 
-    Collection<LabeledPoint> postToLabeledPoints(Post post) {
-        Document document = htmlService.parse(post.html)
-        Collection<Element> positives = allSubelements(htmlService.parseFragment(post.trainMeaningHtml))
+    Collection<LabeledPoint> docToLabeledPoints(Doc doc) {
+        Document document = htmlService.parse(doc.html)
+        Collection<Element> positives = allSubelements(htmlService.parseFragment(doc.trainMeaningHtml))
 
         allSubelements(document.body()).collect { Element element ->
             double label = positives.find({ sameHtml(it, element) }) ? 1.0 : 0.0
