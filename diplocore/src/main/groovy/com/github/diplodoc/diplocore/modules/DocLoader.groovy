@@ -34,10 +34,11 @@ class DocLoader {
     void loadDoc(@PathVariable('id') String docId) {
         Doc doc = docRepository.findOne docId
 
-        log.info('loading doc from {}...', doc.url)
+        log.info('loading doc from {}...', doc.uri)
 
-        Document document = htmlService.load doc.url
-        doc.html = document.html()
+        Document document = htmlService.load doc.uri
+        doc.binary = document.html().bytes
+        doc.type = 'text/html'
         doc.loadTime = LocalDateTime.now()
 
         docRepository.save doc

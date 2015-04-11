@@ -47,7 +47,7 @@ class RssNewDocsFinder {
                                     .feed(source.rssUrl)
                                     .findAll { rssEntry -> !docRepository.findOneByUrl(rssEntry.link) }
                                     .collect { rssEntry ->
-                                        new Doc(   url: rssEntry.link,
+                                        new Doc(    uri: rssEntry.link,
                                                     sourceId: new ObjectId(sourceId),
                                                     title: rssEntry.title,
                                                     description: rssEntry.description.value,

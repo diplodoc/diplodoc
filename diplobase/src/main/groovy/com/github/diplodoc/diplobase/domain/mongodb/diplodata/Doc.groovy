@@ -11,14 +11,16 @@ import org.springframework.data.mongodb.core.mapping.Field
  * @author yaroslav.yermilov
  */
 @EqualsAndHashCode
-@ToString(excludes = [ 'meaningText', 'html' ])
+@ToString
 class Doc {
 
     @Id
     String id
 
 
-    String url
+    String uri
+
+    String type
 
     @Field('source')
     ObjectId sourceId
@@ -32,7 +34,7 @@ class Doc {
 
     String publishTime
 
-    String html
+    byte[] binary
 
 
     @Field('train_meaningHtml')

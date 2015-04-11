@@ -21,16 +21,16 @@ class DocLoaderSpec extends Specification {
             Document document = Mock(Document)
             document.html() >> 'html'
 
-            docRepository.findOne('id') >> new Doc(id: 'id', url: 'url')
-            htmlService.load('url') >> document
+            docRepository.findOne('id') >> new Doc(id: 'id', uri: 'uri')
+            htmlService.load('uri') >> document
 
             docLoader.loadDoc('id')
 
         then:
             1 * docRepository.save({ Doc doc ->
                 doc.id == 'id' &&
-                doc.url == 'url' &&
-                doc.html == 'html' &&
+                doc.uri == 'uri' &&
+                doc.binary == 'html'.bytes &&
                 doc.loadTime != null
             })
     }

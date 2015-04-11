@@ -24,7 +24,7 @@ import spock.lang.Specification
 /**
  * @author yaroslav.yermilov
  */
-class MeaningExtractorSpec extends Specification {
+class HtmlMeaningExtractorSpec extends Specification {
 
     DocRepository docRepository = Mock(DocRepository)
     ModuleRepository moduleRepository = Mock(ModuleRepository)
@@ -33,7 +33,7 @@ class MeaningExtractorSpec extends Specification {
     HtmlService htmlService = Mock(HtmlService)
     SerializationService serializationService = Mock(SerializationService)
 
-    MeaningExtractor meaningExtractor = Spy(MeaningExtractor)
+    HtmlMeaningExtractor meaningExtractor = Spy(HtmlMeaningExtractor)
 
     def 'void extractMeaning(String docId)'() {
         setup:
@@ -44,7 +44,7 @@ class MeaningExtractorSpec extends Specification {
 
             LogisticRegressionModel model = Mock(LogisticRegressionModel)
 
-            Doc doc = new Doc(id: 'doc-id', html: 'doc-html')
+            Doc doc = new Doc(id: 'doc-id', binary: 'doc-html'.bytes)
             Module module = new Module(name: 'com.github.diplodoc.diplocore.modules.MeaningExtractor', data: [ 'model': ([ 1, 2 ,3 ] as byte[]) ])
 
             Document document = Mock(Document)
@@ -69,7 +69,7 @@ class MeaningExtractorSpec extends Specification {
         then:
             1 * docRepository.save({ Doc docToSave ->
                 docToSave.id == 'doc-id' &&
-                docToSave.html == 'doc-html' &&
+                docToSave.binary == 'doc-html'.bytes &&
                 docToSave.meaningHtml.replaceAll('\\s+','') == '<div>text1</div><div>text2</div><div></div><div>text4</div>' &&
                 docToSave.meaningText.replaceAll('\\s+','') == 'text1text2text4'
             })
@@ -167,7 +167,7 @@ class MeaningExtractorSpec extends Specification {
         setup:
             meaningExtractor.htmlService = htmlService
 
-            Doc doc = new Doc(html: 'doc-html', trainMeaningHtml: 'doc-trainMeaningHtml')
+            Doc doc = new Doc(binary: 'doc-html'.bytes, trainMeaningHtml: 'doc-trainMeaningHtml')
 
             Document document = Mock(Document)
             document.body() >> Jsoup.parseBodyFragment('<div><div>text 1</div><div>text</div></div>').body().child(0)

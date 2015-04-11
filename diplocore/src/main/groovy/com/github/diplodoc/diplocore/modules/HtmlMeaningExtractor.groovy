@@ -35,8 +35,8 @@ import java.time.LocalDateTime
  * @author yaroslav.yermilov
  */
 @Controller
-@RequestMapping('/meaning-extractor')
-class MeaningExtractor {
+@RequestMapping('/html-meaning-extractor')
+class HtmlMeaningExtractor {
 
     @Autowired
     DocRepository docRepository
@@ -64,7 +64,8 @@ class MeaningExtractor {
         Module module = moduleRepository.findOneByName('com.github.diplodoc.diplocore.modules.MeaningExtractor')
         LogisticRegressionModel model = serializationService.deserialize(module.data['model'])
 
-        Document document = htmlService.parse(doc.html)
+        String html = new String(doc.binary)
+        Document document = htmlService.parse(html)
 
         List<Element> meaningElements = predictMeaningElements(model, document.body())
 
@@ -130,7 +131,8 @@ class MeaningExtractor {
     }
 
     Collection<LabeledPoint> docToLabeledPoints(Doc doc) {
-        Document document = htmlService.parse(doc.html)
+        String html = new String(doc.binary)
+        Document document = htmlService.parse(html)
         Collection<Element> positives = allSubelements(htmlService.parseFragment(doc.trainMeaningHtml))
 
         allSubelements(document.body()).collect { Element element ->
