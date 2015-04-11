@@ -1,8 +1,8 @@
 package com.github.diplodoc.diploexec
 
-import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
-import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
-import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRunParameter
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Process
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRunParameter
 import groovy.json.JsonOutput
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString

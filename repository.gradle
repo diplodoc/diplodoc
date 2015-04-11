@@ -25,7 +25,6 @@ ext {
     dependency.spring.shell = 'org.springframework.shell:spring-shell:1.1.0.RELEASE'
 
     dependency.spring.data = [:]
-    dependency.spring.data.jpa = 'org.springframework.data:spring-data-jpa:1.7.1.RELEASE'
     dependency.spring.data.mongodb = 'org.springframework.data:spring-data-mongodb:1.6.2.RELEASE'
     dependency.spring.data.rest = 'org.springframework.data:spring-data-rest-webmvc:2.2.1.RELEASE'
 
@@ -38,22 +37,16 @@ ext {
     dependency.grails.asset = 'org.grails.plugins:asset-pipeline:1.9.6'
     dependency.grails.jquery = 'org.grails.plugins:jquery:1.11.1'
     dependency.grails.mongodb = 'org.grails.plugins:mongodb:3.0.3'
-    dependency.grails.hibernate = 'org.grails.plugins:hibernate4:4.3.8.1'
     dependency.grails.security = 'org.grails.plugins:spring-security-core:2.0-RC4'
 
     dependency.spark = [:]
     dependency.spark.core = "org.apache.spark:spark-core_${versions.scala}:${versions.spark}"
     dependency.spark.mllib = "org.apache.spark:spark-mllib_${versions.scala}:${versions.spark}"
 
-    dependency.postgresql = 'org.postgresql:postgresql:9.3-1101-jdbc41'
-
     dependency.mongodb = 'org.mongodb:mongo-java-driver:2.13.0'
 
     dependency.commons = [:]
     dependency.commons.lang = 'org.apache.commons:commons-lang3:3.3.2'
-    dependency.commons.dbcp = 'commons-dbcp:commons-dbcp:1.4'
-
-    dependency.hibernate = 'org.hibernate:hibernate-entitymanager:4.3.6.Final'
 
     dependency.jsoup = 'org.jsoup:jsoup:1.7.3'
 

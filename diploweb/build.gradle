@@ -26,10 +26,6 @@ dependencies {
     compile dependency.grails.asset
     compile dependency.grails.mongodb
     compile dependency.grails.security
-    compile(dependency.grails.hibernate) {
-        exclude module: 'xml-apis'
-    }
 
-    runtime dependency.postgresql
     runtime dependency.grails.jquery
 }

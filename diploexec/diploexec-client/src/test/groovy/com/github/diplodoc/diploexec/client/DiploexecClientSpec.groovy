@@ -1,7 +1,7 @@
 package com.github.diplodoc.diploexec.client
 
-import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
-import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Process
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRun
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.hateoas.Resource
 import org.springframework.http.HttpEntity

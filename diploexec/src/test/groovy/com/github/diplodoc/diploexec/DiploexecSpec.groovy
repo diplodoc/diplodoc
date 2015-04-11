@@ -1,9 +1,9 @@
 package com.github.diplodoc.diploexec
 
-import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
-import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
-import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRepository
-import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRunRepository
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Process
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ProcessRepository
+import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ProcessRunRepository
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import spock.lang.Specification
 

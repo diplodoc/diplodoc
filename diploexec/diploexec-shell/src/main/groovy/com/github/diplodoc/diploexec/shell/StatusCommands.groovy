@@ -1,8 +1,8 @@
 package com.github.diplodoc.diploexec.shell
 
-import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
-import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRunParameter
-import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRunRepository
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRunParameter
+import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ProcessRunRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort

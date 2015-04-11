@@ -1,7 +1,7 @@
 package com.github.diplodoc.diploexec.controller
 
-import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
-import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRunParameter
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRunParameter
 import com.github.diplodoc.diploexec.Diploexec
 import spock.lang.Specification
 

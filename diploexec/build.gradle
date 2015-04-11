@@ -7,9 +7,6 @@ dependencies {
     compile dependency.jackson.core
     compile dependency.jackson.databind
 
-    compile dependency.postgresql
-    compile dependency.commons.dbcp
-
     compile dependency.jsoup
 }
 
