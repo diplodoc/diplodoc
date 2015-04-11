@@ -1,7 +1,6 @@
 package com.github.dipodoc.diploweb.controller.diploexec
 
-import com.github.dipodoc.diploweb.controller.diploexec.ModuleController
-import com.github.dipodoc.diploweb.diploexec.Module
+import com.github.dipodoc.diploweb.domain.diploexec.Module
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import org.bson.types.ObjectId

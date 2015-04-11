@@ -1,7 +1,6 @@
 package com.github.dipodoc.diploweb.controller.diploexec
 
-import com.github.dipodoc.diploweb.controller.diploexec.ProcessController
-import com.github.dipodoc.diploweb.diploexec.Process
+import com.github.dipodoc.diploweb.domain.diploexec.Process
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Ignore
