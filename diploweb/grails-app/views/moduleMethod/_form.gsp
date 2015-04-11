@@ -1,4 +1,4 @@
-<%@ page import="com.github.dipodoc.diploweb.diploexec.ModuleMethod" %>
+<%@ page import="com.github.dipodoc.diploweb.domain.diploexec.ModuleMethod" %>
 
 <div class="fieldcontain ${hasErrors(bean: moduleMethodInstance, field: 'module', 'error')} required">
 	<label for="module">

@@ -1,4 +1,4 @@
-<%@ page import="com.github.dipodoc.diploweb.domain.diplodata.Topic; com.github.dipodoc.diploweb.diplodata.Topic; com.github.dipodoc.diploweb.domain.diplodata.Doc" %>
+<%@ page import="com.github.dipodoc.diploweb.domain.diplodata.Topic; com.github.dipodoc.diploweb.domain.diplodata.Doc" %>
 
 <!DOCTYPE html>
 <html>

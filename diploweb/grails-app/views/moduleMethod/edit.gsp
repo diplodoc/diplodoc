@@ -1,4 +1,4 @@
-<%@ page import="com.github.dipodoc.diploweb.diploexec.ModuleMethod" %>
+<%@ page import="com.github.dipodoc.diploweb.domain.diploexec.ModuleMethod" %>
 
 <!DOCTYPE html>
 <html>

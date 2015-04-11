@@ -1,4 +1,4 @@
-<%@ page import="com.github.dipodoc.diploweb.diploexec.Process" %>
+<%@ page import="com.github.dipodoc.diploweb.domain.diploexec.Process" %>
 
 <div class="fieldcontain ${hasErrors(bean: processInstance, field: 'name', 'error')} required">
 	<label for="name">

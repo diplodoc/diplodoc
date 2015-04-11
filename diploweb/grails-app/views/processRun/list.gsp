@@ -1,4 +1,4 @@
-<%@ page import="com.github.dipodoc.diploweb.diploexec.ProcessRun" %>
+<%@ page import="com.github.dipodoc.diploweb.domain.diploexec.ProcessRun" %>
 
 <!DOCTYPE html>
 <html>
