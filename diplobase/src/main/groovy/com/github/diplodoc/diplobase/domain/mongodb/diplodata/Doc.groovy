@@ -7,6 +7,8 @@ import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Field
 
+import java.time.LocalDateTime
+
 /**
  * @author yaroslav.yermilov
  */
@@ -15,7 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Field
 class Doc {
 
     @Id
-    String id
+    ObjectId id
 
 
     String uri
@@ -25,14 +27,14 @@ class Doc {
     @Field('source')
     ObjectId sourceId
 
-    String loadTime
+    LocalDateTime loadTime
 
 
     String title
 
     String description
 
-    String publishTime
+    LocalDateTime publishTime
 
     byte[] binary
 

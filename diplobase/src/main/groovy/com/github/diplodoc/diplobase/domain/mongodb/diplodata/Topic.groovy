@@ -2,8 +2,10 @@ package com.github.diplodoc.diplobase.domain.mongodb.diplodata
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.DBRef
+import org.springframework.data.mongodb.core.mapping.Field
 
 /**
  * @author yaroslav.yermilov
@@ -13,10 +15,11 @@ import org.springframework.data.mongodb.core.mapping.DBRef
 class Topic {
 
     @Id
-    String id
+    ObjectId id
+
 
     String label
 
-    @DBRef
-    Topic parent
+    @Field('parent')
+    ObjectId parentId
 }

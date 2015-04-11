@@ -3,6 +3,7 @@ package com.github.diplodoc.diplocore.modules
 import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Doc
 import com.github.diplodoc.diplobase.repository.mongodb.diplodata.DocRepository
 import com.github.diplodoc.diplocore.services.HtmlService
+import org.bson.types.ObjectId
 import org.jsoup.nodes.Document
 import spock.lang.Specification
 
@@ -21,14 +22,14 @@ class DocLoaderSpec extends Specification {
             Document document = Mock(Document)
             document.html() >> 'html'
 
-            docRepository.findOne('id') >> new Doc(id: 'id', uri: 'uri')
+            docRepository.findOne(new ObjectId('111111111111111111111111')) >> new Doc(id: new ObjectId('111111111111111111111111'), uri: 'uri')
             htmlService.load('uri') >> document
 
-            docLoader.loadDoc('id')
+            docLoader.loadDoc('111111111111111111111111')
 
         then:
             1 * docRepository.save({ Doc doc ->
-                doc.id == 'id' &&
+                doc.id == new ObjectId('111111111111111111111111') &&
                 doc.uri == 'uri' &&
                 doc.binary == 'html'.bytes &&
                 doc.loadTime != null

@@ -1,5 +1,6 @@
 package com.github.diplodoc.diploexec
 
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Process
 import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRunParameter
 import groovy.json.JsonSlurper
@@ -27,7 +28,7 @@ class ProcessCall implements Runnable {
             println "process started ${processRun}"
             diploexec.notify(ProcessCallEvent.started(processRun))
 
-            String script = processRun.process.definition
+            String script = diploexec.getProcess(processRun.processId).definition
             Map<String, Object> parameters = processRun.parameters.collectEntries { ProcessRunParameter parameter ->
                 [ parameter.key,  Class.forName(parameter.type).newInstance(jsonSlurper.parseText(parameter.value)) ]
             }

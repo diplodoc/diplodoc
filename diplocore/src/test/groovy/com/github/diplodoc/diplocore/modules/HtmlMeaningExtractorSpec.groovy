@@ -44,14 +44,14 @@ class HtmlMeaningExtractorSpec extends Specification {
 
             LogisticRegressionModel model = Mock(LogisticRegressionModel)
 
-            Doc doc = new Doc(id: 'doc-id', binary: 'doc-html'.bytes)
+            Doc doc = new Doc(id: new ObjectId('111111111111111111111111'), binary: 'doc-html'.bytes)
             Module module = new Module(name: 'com.github.diplodoc.diplocore.modules.MeaningExtractor', data: [ 'model': ([ 1, 2 ,3 ] as byte[]) ])
 
             Document document = Mock(Document)
             Element body = Mock(Element)
             document.body() >> body
 
-            1 * docRepository.findOne('doc-id') >> doc
+            1 * docRepository.findOne(new ObjectId('111111111111111111111111')) >> doc
             1 * moduleRepository.findOneByName('com.github.diplodoc.diplocore.modules.MeaningExtractor') >> module
             1 * htmlService.parse('doc-html') >> document
             1 * serializationService.deserialize([ 1, 2 ,3 ] as byte[]) >> model
@@ -64,11 +64,11 @@ class HtmlMeaningExtractorSpec extends Specification {
             ]
 
         when:
-            meaningExtractor.extractMeaning('doc-id')
+            meaningExtractor.extractMeaning('111111111111111111111111')
 
         then:
             1 * docRepository.save({ Doc docToSave ->
-                docToSave.id == 'doc-id' &&
+                docToSave.id == new ObjectId('111111111111111111111111') &&
                 docToSave.binary == 'doc-html'.bytes &&
                 docToSave.meaningHtml.replaceAll('\\s+','') == '<div>text1</div><div>text2</div><div></div><div>text4</div>' &&
                 docToSave.meaningText.replaceAll('\\s+','') == 'text1text2text4'
@@ -82,7 +82,7 @@ class HtmlMeaningExtractorSpec extends Specification {
             meaningExtractor.moduleMethodRunRepository = moduleMethodRunRepository
             meaningExtractor.serializationService = serializationService
 
-            Module module = new Module(name: 'com.github.diplodoc.diplocore.modules.MeaningExtractor', id: '111111111111111111111111')
+            Module module = new Module(name: 'com.github.diplodoc.diplocore.modules.MeaningExtractor', id: new ObjectId('111111111111111111111111'))
 
             1 * moduleRepository.findOneByName('com.github.diplodoc.diplocore.modules.MeaningExtractor') >> module
 
@@ -98,8 +98,8 @@ class HtmlMeaningExtractorSpec extends Specification {
             serializationService.serialize(model) >> ([ 1, 2 ,3 ] as byte[])
 
             moduleMethodRepository.findByName('trainModel') >> [
-                new ModuleMethod(id: 'method-1', name: 'trainModel', moduleId: new ObjectId('111111111111111111111111')),
-                new ModuleMethod(id: 'method-2', name: 'trainModel', moduleId: new ObjectId('222222222222222222222222'))
+                new ModuleMethod(id: new ObjectId('111111111111111111111111'), name: 'trainModel', moduleId: new ObjectId('111111111111111111111111')),
+                new ModuleMethod(id: new ObjectId('222222222222222222222222'), name: 'trainModel', moduleId: new ObjectId('222222222222222222222222'))
             ]
 
         when:
@@ -107,7 +107,7 @@ class HtmlMeaningExtractorSpec extends Specification {
 
         then:
             1 * moduleRepository.save({ Module moduleToSave ->
-                moduleToSave.id == '111111111111111111111111' &&
+                moduleToSave.id == new ObjectId('111111111111111111111111') &&
                 moduleToSave.name == 'com.github.diplodoc.diplocore.modules.MeaningExtractor' &&
                 moduleToSave.data == [ 'model': ([ 1, 2, 3 ] as byte[]) ]
             })
@@ -116,7 +116,7 @@ class HtmlMeaningExtractorSpec extends Specification {
                 moduleMethodRunToSave.startTime != null &&
                 moduleMethodRunToSave.endTime != null &&
                 moduleMethodRunToSave.metrics == [ 'metric': 'value' ] &&
-                moduleMethodRunToSave.moduleMethod == new ModuleMethod(id: 'method-1', name: 'trainModel', moduleId: new ObjectId('111111111111111111111111'))
+                moduleMethodRunToSave.moduleMethodId == new ObjectId('111111111111111111111111')
             })
     }
 

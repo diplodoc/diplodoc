@@ -4,6 +4,7 @@ import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Process
 import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ProcessRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ProcessRunRepository
+import org.bson.types.ObjectId
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 
 import javax.annotation.PostConstruct
@@ -76,6 +77,10 @@ class Diploexec {
 
     Process getProcess(String name) {
         processes.find { Process process -> process.name == name }
+    }
+
+    Process getProcess(ObjectId id) {
+        processes.find { Process process -> process.id == id }
     }
 
     Collection<Process> getProcessesWaitingFor(String eventName) {

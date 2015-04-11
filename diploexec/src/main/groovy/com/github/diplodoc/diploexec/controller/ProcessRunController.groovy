@@ -28,9 +28,6 @@ class ProcessRunController {
     @ResponseStatus(HttpStatus.CREATED)
     void run(@RequestBody ProcessRun processRun) {
         log.info('receive process run call {}', processRun)
-
-        processRun.parameters.each { ProcessRunParameter parameter -> parameter.processRun = processRun }
-
         diploexec.run(processRun)
     }
 }

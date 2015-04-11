@@ -24,9 +24,9 @@ class SendEvent implements DiploexecEvent {
     @Override
     Collection<ProcessRun> shouldNotifyRuns(Diploexec diploexec) {
         ProcessRun processRun = new ProcessRun()
-        processRun.process = diploexec.getProcess(destination)
+        processRun.processId = diploexec.getProcess(destination).id
         processRun.parameters = parameters.collect { String key, Object value ->
-            new ProcessRunParameter(key: key, value: JsonOutput.toJson(value), type: value.class.name, processRun: processRun)
+            new ProcessRunParameter(key: key, value: JsonOutput.toJson(value), type: value.class.name)
         }
 
         [ processRun ]

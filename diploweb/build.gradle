@@ -24,6 +24,7 @@ dependencies {
 
     compile dependency.grails.scaffolding
     compile dependency.grails.asset
+    compile dependency.grails.ehcache
     compile dependency.grails.mongodb
     compile dependency.grails.security
 

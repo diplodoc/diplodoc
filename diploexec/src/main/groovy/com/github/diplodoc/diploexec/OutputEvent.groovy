@@ -24,11 +24,12 @@ class OutputEvent implements DiploexecEvent {
 
     @Override
     Collection<ProcessRun> shouldNotifyRuns(Diploexec diploexec) {
-        diploexec.getProcessesListeningTo(source.process).collect { Process process ->
+        Process outputProcess = diploexec.getProcess(source.processId)
+        diploexec.getProcessesListeningTo(outputProcess).collect { Process process ->
             ProcessRun processRun = new ProcessRun()
-            processRun.process = process
+            processRun.processId = process.id
             processRun.parameters = parameters.collect { String key, Object value ->
-                new ProcessRunParameter(key: key, value: JsonOutput.toJson(value), type: value.class.name, processRun: processRun)
+                new ProcessRunParameter(key: key, value: JsonOutput.toJson(value), type: value.class.name)
             }
 
             return processRun

@@ -2,8 +2,12 @@ package com.github.diplodoc.diplobase.domain.mongodb.diploexec
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.DBRef
+import org.springframework.data.mongodb.core.mapping.Field
+
+import java.time.LocalDateTime
 
 /**
  * @author yaroslav.yermilov
@@ -13,15 +17,15 @@ import org.springframework.data.mongodb.core.mapping.DBRef
 class ProcessRun {
 
     @Id
-    String id
+    ObjectId id
 
 
-    @DBRef
-    Process process
+    @Field('process')
+    ObjectId processId
 
-    String startTime
+    LocalDateTime startTime
 
-    String endTime
+    LocalDateTime endTime
 
     String exitStatus
 

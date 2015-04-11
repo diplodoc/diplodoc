@@ -19,6 +19,7 @@ import org.apache.spark.mllib.classification.LogisticRegressionWithLBFGS
 import org.apache.spark.mllib.linalg.Vector
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.regression.LabeledPoint
+import org.bson.types.ObjectId
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.springframework.beans.factory.annotation.Autowired
@@ -59,7 +60,7 @@ class HtmlMeaningExtractor {
     @RequestMapping(value = '/doc/{id}/extract-meaning', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     void extractMeaning(@PathVariable('id') String docId) {
-        Doc doc = docRepository.findOne docId
+        Doc doc = docRepository.findOne new ObjectId(docId)
 
         Module module = moduleRepository.findOneByName('com.github.diplodoc.diplocore.modules.MeaningExtractor')
         LogisticRegressionModel model = serializationService.deserialize(module.data['model'])
@@ -78,7 +79,7 @@ class HtmlMeaningExtractor {
     @RequestMapping(value = '/train-model', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     void trainModel() {
-        ModuleMethodRun moduleMethodRun = new ModuleMethodRun(startTime: LocalDateTime.now().toString())
+        ModuleMethodRun moduleMethodRun = new ModuleMethodRun(startTime: LocalDateTime.now())
 
         def dataSplits = dataSplits()
         JavaRDD<LabeledPoint> trainSet = dataSplits['trainSet']
@@ -87,11 +88,11 @@ class HtmlMeaningExtractor {
         LogisticRegressionModel model = model(trainSet)
         Map metrics = metrics(model, trainSet, testSet)
 
-        moduleMethodRun.endTime = LocalDateTime.now().toString()
+        moduleMethodRun.endTime = LocalDateTime.now()
         moduleMethodRun.metrics = metrics
 
         Module module = moduleRepository.findOneByName('com.github.diplodoc.diplocore.modules.MeaningExtractor')
-        moduleMethodRun.moduleMethod = moduleMethodRepository.findByName('trainModel').find { it.moduleId.toString() == module.id }
+        moduleMethodRun.moduleMethodId = moduleMethodRepository.findByName('trainModel').find({ it.moduleId == module.id }).id
         moduleMethodRunRepository.save moduleMethodRun
 
         if (!module.data) module.data = [:]

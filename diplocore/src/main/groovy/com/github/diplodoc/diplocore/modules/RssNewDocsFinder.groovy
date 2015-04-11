@@ -39,7 +39,7 @@ class RssNewDocsFinder {
     @RequestMapping(value = '/source/{id}/new-docs', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody Collection<String> newDocs(@PathVariable('id') String sourceId) {
-        Source source = sourceRepository.findOne sourceId
+        Source source = sourceRepository.findOne new ObjectId(sourceId)
 
         log.info('looking for new docs from {}...', source.name)
 
@@ -57,6 +57,6 @@ class RssNewDocsFinder {
 
         docRepository.save docs
 
-        return docs*.id
+        return docs*.id*.toString()
     }
 }

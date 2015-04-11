@@ -4,6 +4,7 @@ import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Doc
 import com.github.diplodoc.diplobase.repository.mongodb.diplodata.DocRepository
 import com.github.diplodoc.diplocore.services.HtmlService
 import groovy.util.logging.Slf4j
+import org.bson.types.ObjectId
 import org.jsoup.nodes.Document
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -32,7 +33,7 @@ class DocLoader {
     @RequestMapping(value = '/doc/{id}/load', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     void loadDoc(@PathVariable('id') String docId) {
-        Doc doc = docRepository.findOne docId
+        Doc doc = docRepository.findOne new ObjectId(docId)
 
         log.info('loading doc from {}...', doc.uri)
 

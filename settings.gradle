@@ -3,8 +3,6 @@ include 'diplobase'
 include 'diplocore'
 
 include 'diploexec'
-include 'diploexec:diploexec-client'
-include 'diploexec:diploexec-shell'
 
 include 'diploproc'
 

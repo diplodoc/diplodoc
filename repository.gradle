@@ -22,11 +22,8 @@ ext {
     dependency.spring.web = "org.springframework:spring-web:${versions.spring}"
     dependency.spring.webmvc = "org.springframework:spring-webmvc:${versions.spring}"
 
-    dependency.spring.shell = 'org.springframework.shell:spring-shell:1.1.0.RELEASE'
-
     dependency.spring.data = [:]
     dependency.spring.data.mongodb = 'org.springframework.data:spring-data-mongodb:1.6.2.RELEASE'
-    dependency.spring.data.rest = 'org.springframework.data:spring-data-rest-webmvc:2.2.1.RELEASE'
 
     dependency.spring.hateoas = 'org.springframework.hateoas:spring-hateoas:0.16.0.RELEASE'
 
@@ -36,6 +33,7 @@ ext {
     dependency.grails.scaffolding = 'org.grails.plugins:scaffolding:2.1.2'
     dependency.grails.asset = 'org.grails.plugins:asset-pipeline:1.9.6'
     dependency.grails.jquery = 'org.grails.plugins:jquery:1.11.1'
+    dependency.grails.ehcache = 'org.grails.plugins:cache-ehcache:1.0.5'
     dependency.grails.mongodb = 'org.grails.plugins:mongodb:3.0.3'
     dependency.grails.security = 'org.grails.plugins:spring-security-core:2.0-RC4'
 

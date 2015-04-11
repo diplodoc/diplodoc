@@ -3,6 +3,7 @@ package com.github.diplodoc.diploexec.controller
 import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRunParameter
 import com.github.diplodoc.diploexec.Diploexec
+import org.bson.types.ObjectId
 import spock.lang.Specification
 
 /**
@@ -16,7 +17,7 @@ class ProcessRunControllerSpec extends Specification {
 
     def 'void run(ProcessRun processRun)'() {
         when:
-            ProcessRun processRun = new ProcessRun(id : 1)
+            ProcessRun processRun = new ProcessRun(id: new ObjectId('111111111111111111111111'))
             processRun.parameters = [
                 new ProcessRunParameter(key: 'key-1', value: 'value-1'),
                 new ProcessRunParameter(key: 'key-2', value: 'value-2')
@@ -26,10 +27,10 @@ class ProcessRunControllerSpec extends Specification {
 
         then:
             1 * diploexec.run({ arg ->
-                arg.id == 1 &&
+                arg.id == new ObjectId('111111111111111111111111') &&
                 arg.parameters == [
-                    new ProcessRunParameter(key: 'key-1', value: 'value-1', processRun: arg),
-                    new ProcessRunParameter(key: 'key-2', value: 'value-2', processRun: arg)
+                    new ProcessRunParameter(key: 'key-1', value: 'value-1'),
+                    new ProcessRunParameter(key: 'key-2', value: 'value-2')
                 ]
             })
     }

@@ -4,6 +4,7 @@ import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Process
 import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRunParameter
 import groovy.json.JsonOutput
+import org.bson.types.ObjectId
 import org.springframework.web.client.RestTemplate
 import spock.lang.Specification
 
@@ -16,12 +17,13 @@ class ProcessCallSpec extends Specification {
         setup:
             Diploexec diploexec = Mock(Diploexec)
 
-            Process process = new Process(definition: 'definition')
-            ProcessRun processRun = new ProcessRun(process: process, parameters: [])
+            Process process = new Process(id: new ObjectId('111111111111111111111111'), definition: 'definition')
+            ProcessRun processRun = new ProcessRun(processId: new ObjectId('111111111111111111111111'), parameters: [])
             processRun.parameters << new ProcessRunParameter(key: 'key-1', type: String.name, value: JsonOutput.toJson('someValue'))
             processRun.parameters << new ProcessRunParameter(key: 'key-2', type: Integer.name, value: JsonOutput.toJson(28))
 
             ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ diploexec, processRun ])
+            1 * diploexec.getProcess(new ObjectId('111111111111111111111111')) >> process
             1 * processCall.evaluate([ 'key-1': 'someValue', 'key-2': 28 ], 'definition') >> {}
             1 * diploexec.notify({ ProcessCallEvent event -> event.processRun == processRun && event.type == ProcessCallEvent.Type.PROCESS_RUN_STARTED })
             1 * diploexec.notify({ ProcessCallEvent event -> event.processRun == processRun && event.type == ProcessCallEvent.Type.PROCESS_RUN_SUCCEED })
@@ -34,12 +36,13 @@ class ProcessCallSpec extends Specification {
         setup:
             Diploexec diploexec = Mock(Diploexec)
 
-            Process process = new Process(definition: 'definition')
-            ProcessRun processRun = new ProcessRun(process: process, parameters: [])
+            Process process = new Process(id: new ObjectId('111111111111111111111111'), definition: 'definition')
+            ProcessRun processRun = new ProcessRun(processId: new ObjectId('111111111111111111111111'), parameters: [])
             processRun.parameters << new ProcessRunParameter(key: 'key-1', type: String.name, value: JsonOutput.toJson('someValue'))
             processRun.parameters << new ProcessRunParameter(key: 'key-2', type: Integer.name, value: JsonOutput.toJson(28))
 
             ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ diploexec, processRun ])
+            1 * diploexec.getProcess(new ObjectId('111111111111111111111111')) >> process
             1 * processCall.evaluate([ 'key-1': 'someValue', 'key-2': 28 ], 'definition') >> { throw new RuntimeException() }
             1 * diploexec.notify({ ProcessCallEvent event -> event.processRun == processRun && event.type == ProcessCallEvent.Type.PROCESS_RUN_STARTED })
             1 * diploexec.notify({ ProcessCallEvent event -> event.processRun == processRun && event.type == ProcessCallEvent.Type.PROCESS_RUN_FAILED })
@@ -208,7 +211,7 @@ class ProcessCallSpec extends Specification {
     def 'void output(Map params)'() {
         setup:
             Diploexec diploexec = Mock(Diploexec)
-            ProcessRun processRun = new ProcessRun(id: 28)
+            ProcessRun processRun = new ProcessRun(id: new ObjectId('111111111111111111111111'))
             ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ diploexec, processRun ])
 
         when:

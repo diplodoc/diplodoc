@@ -32,7 +32,7 @@ class DiploexecClient {
 
     void run(Process process, Map<String, Object> parameters) {
         ProcessRun processRun = new ProcessRun()
-        processRun.process = process
+        processRun.processId = process.id
         processRun.parameters = parameters.collect { String key, Object value ->
             new ProcessRunParameter(key: key, value: JsonOutput.toJson(value), type: value.class.name)
         }

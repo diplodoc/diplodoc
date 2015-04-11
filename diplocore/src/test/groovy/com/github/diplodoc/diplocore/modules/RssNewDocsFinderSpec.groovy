@@ -40,7 +40,7 @@ class RssNewDocsFinderSpec extends Specification {
             rssEntry3.description >> new SyndContentImpl(value: 'description-3')
             rssEntry3.publishedDate >> new Date(3000000)
 
-            sourceRepository.findOne('111111111111111111111111') >> new Source(id: '111111111111111111111111', rssUrl: 'rss-url')
+            sourceRepository.findOne(new ObjectId('111111111111111111111111')) >> new Source(id: new ObjectId('111111111111111111111111'), rssUrl: 'rss-url')
 
             docRepository.findOneByUrl('uri-1') >> new Doc()
             docRepository.findOneByUrl('uri-2') >> null
@@ -52,16 +52,16 @@ class RssNewDocsFinderSpec extends Specification {
 
         then:
             1 * docRepository.save({ docs ->
-                docs.find { it.uri == 'uri-2' }.id = 'id-2'
-                docs.find { it.uri == 'uri-3' }.id = 'id-3'
+                docs.find { it.uri == 'uri-2' }.id = new ObjectId('222222222222222222222222')
+                docs.find { it.uri == 'uri-3' }.id = new ObjectId('333333333333333333333333')
 
                 docs == [
-                    new Doc(id: 'id-2', uri: 'uri-2', sourceId: new ObjectId('111111111111111111111111'), title: 'title-2', description: 'description-2', publishTime: LocalDateTime.parse('1970-01-01T02:33:20')),
-                    new Doc(id: 'id-3', uri: 'uri-3', sourceId: new ObjectId('111111111111111111111111'), title: 'title-3', description: 'description-3', publishTime: LocalDateTime.parse('1970-01-01T02:50'))
+                    new Doc(id: new ObjectId('222222222222222222222222'), uri: 'uri-2', sourceId: new ObjectId('111111111111111111111111'), title: 'title-2', description: 'description-2', publishTime: LocalDateTime.parse('1970-01-01T02:33:20')),
+                    new Doc(id: new ObjectId('333333333333333333333333'), uri: 'uri-3', sourceId: new ObjectId('111111111111111111111111'), title: 'title-3', description: 'description-3', publishTime: LocalDateTime.parse('1970-01-01T02:50'))
                 ]
             })
 
         expect:
-            actual == [ 'id-2', 'id-3' ]
+            actual == [ '222222222222222222222222', '333333333333333333333333' ]
     }
 }

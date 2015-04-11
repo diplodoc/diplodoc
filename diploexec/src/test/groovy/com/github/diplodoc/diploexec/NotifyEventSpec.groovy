@@ -2,6 +2,7 @@ package com.github.diplodoc.diploexec
 
 import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Process
 import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRun
+import org.bson.types.ObjectId
 import spock.lang.Specification
 
 /**
@@ -12,7 +13,7 @@ class NotifyEventSpec extends Specification {
     def 'Collection<ProcessRun> shouldNotifyRuns(Diploexec diploexec)'() {
         setup:
             Diploexec diploexec = Mock(Diploexec)
-            diploexec.getProcessesWaitingFor('event-1') >> [ new Process(name: 'process-1'), new Process(name: 'process-2') ]
+            diploexec.getProcessesWaitingFor('event-1') >> [ new Process(id: new ObjectId('111111111111111111111111')), new Process(id: new ObjectId('222222222222222222222222')) ]
 
             NotifyEvent notifyEvent = new NotifyEvent('event-1', [ 'key' : 'value' ])
 
@@ -22,17 +23,15 @@ class NotifyEventSpec extends Specification {
         then:
             actual.size() == 2
 
-            actual[0].process.name == 'process-1'
+            actual[0].processId == new ObjectId('111111111111111111111111')
             actual[0].parameters[0].key == 'key'
             actual[0].parameters[0].value == '"value"'
             actual[0].parameters[0].type == 'java.lang.String'
-            actual[0].parameters[0].processRun == actual[0]
 
-            actual[1].process.name == 'process-2'
+            actual[1].processId == new ObjectId('222222222222222222222222')
             actual[1].parameters[0].key == 'key'
             actual[1].parameters[0].value == '"value"'
             actual[1].parameters[0].type == 'java.lang.String'
-            actual[1].parameters[0].processRun == actual[1]
     }
 
     def 'boolean equals(Object other)'() {

@@ -2,6 +2,7 @@ package com.github.diplodoc.diplobase.domain.mongodb.diplodata
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 
 /**
@@ -12,7 +13,8 @@ import org.springframework.data.annotation.Id
 class Source {
 
     @Id
-    String id
+    ObjectId id
+
 
     String name
 
