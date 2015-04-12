@@ -44,7 +44,7 @@ class HtmlMeaningExtractorSpec extends Specification {
 
             LogisticRegressionModel model = Mock(LogisticRegressionModel)
 
-            Doc doc = new Doc(id: new ObjectId('111111111111111111111111'), binary: 'doc-html'.bytes)
+            Doc doc = new Doc(id: new ObjectId('111111111111111111111111'), html: 'doc-html')
             Module module = new Module(name: 'com.github.diplodoc.diplocore.modules.MeaningExtractor', data: [ 'model': ([ 1, 2 ,3 ] as byte[]) ])
 
             Document document = Mock(Document)
@@ -69,7 +69,7 @@ class HtmlMeaningExtractorSpec extends Specification {
         then:
             1 * docRepository.save({ Doc docToSave ->
                 docToSave.id == new ObjectId('111111111111111111111111') &&
-                docToSave.binary == 'doc-html'.bytes &&
+                docToSave.html == 'doc-html' &&
                 docToSave.meaningHtml.replaceAll('\\s+','') == '<div>text1</div><div>text2</div><div></div><div>text4</div>' &&
                 docToSave.meaningText.replaceAll('\\s+','') == 'text1text2text4'
             })
@@ -167,7 +167,7 @@ class HtmlMeaningExtractorSpec extends Specification {
         setup:
             meaningExtractor.htmlService = htmlService
 
-            Doc doc = new Doc(binary: 'doc-html'.bytes, trainMeaningHtml: 'doc-trainMeaningHtml')
+            Doc doc = new Doc(html: 'doc-html', trainMeaningHtml: 'doc-trainMeaningHtml')
 
             Document document = Mock(Document)
             document.body() >> Jsoup.parseBodyFragment('<div><div>text 1</div><div>text</div></div>').body().child(0)

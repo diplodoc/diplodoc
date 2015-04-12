@@ -65,8 +65,7 @@ class HtmlMeaningExtractor {
         Module module = moduleRepository.findOneByName('com.github.diplodoc.diplocore.modules.MeaningExtractor')
         LogisticRegressionModel model = serializationService.deserialize(module.data['model'])
 
-        String html = new String(doc.binary)
-        Document document = htmlService.parse(html)
+        Document document = htmlService.parse(doc.html)
 
         List<Element> meaningElements = predictMeaningElements(model, document.body())
 
@@ -132,8 +131,7 @@ class HtmlMeaningExtractor {
     }
 
     Collection<LabeledPoint> docToLabeledPoints(Doc doc) {
-        String html = new String(doc.binary)
-        Document document = htmlService.parse(html)
+        Document document = htmlService.parse(doc.html)
         Collection<Element> positives = allSubelements(htmlService.parseFragment(doc.trainMeaningHtml))
 
         allSubelements(document.body()).collect { Element element ->

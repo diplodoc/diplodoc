@@ -20,9 +20,9 @@ import java.time.LocalDateTime
  * @author yaroslav.yermilov
  */
 @Controller
-@RequestMapping('/doc-loader')
+@RequestMapping('/html-doc-loader')
 @Slf4j
-class DocLoader {
+class HtmlDocLoader {
 
     @Autowired
     HtmlService htmlService
@@ -38,7 +38,7 @@ class DocLoader {
         log.info('loading doc from {}...', doc.uri)
 
         Document document = htmlService.load doc.uri
-        doc.binary = document.html().bytes
+        doc.html = document.html()
         doc.type = 'text/html'
         doc.loadTime = LocalDateTime.now()
 

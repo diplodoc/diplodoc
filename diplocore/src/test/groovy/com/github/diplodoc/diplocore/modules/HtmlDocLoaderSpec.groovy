@@ -10,12 +10,12 @@ import spock.lang.Specification
 /**
  * @author yaroslav.yermilov
  */
-class DocLoaderSpec extends Specification {
+class HtmlDocLoaderSpec extends Specification {
 
     DocRepository docRepository = Mock(DocRepository)
     HtmlService htmlService = Mock(HtmlService)
 
-    DocLoader docLoader = new DocLoader(docRepository: docRepository, htmlService: htmlService)
+    HtmlDocLoader docLoader = new HtmlDocLoader(docRepository: docRepository, htmlService: htmlService)
 
     def 'void loadDoc(String docId)'() {
         when:
@@ -31,7 +31,7 @@ class DocLoaderSpec extends Specification {
             1 * docRepository.save({ Doc doc ->
                 doc.id == new ObjectId('111111111111111111111111') &&
                 doc.uri == 'uri' &&
-                doc.binary == 'html'.bytes &&
+                doc.html == 'html' &&
                 doc.loadTime != null
             })
     }

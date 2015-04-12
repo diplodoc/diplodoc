@@ -33,7 +33,7 @@ class Doc {
 
     String publishTime
 
-    byte[] binary
+    String html
 
 
     @Field('train_meaningHtml')
