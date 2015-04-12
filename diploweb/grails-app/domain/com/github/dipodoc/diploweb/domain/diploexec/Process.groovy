@@ -26,6 +26,11 @@ class Process {
         lastUpdate nullable: true
     }
 
+    static mapping = {
+        version false
+    }
+
+
     def beforeInsert() {
         updateFields()
     }

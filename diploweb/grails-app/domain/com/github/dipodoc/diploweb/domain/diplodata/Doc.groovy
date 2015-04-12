@@ -38,6 +38,7 @@ class Doc {
 
     List predicted_topics
 
+
     static constraints = {
         uri nullable: true
         source nullable: true
@@ -50,5 +51,9 @@ class Doc {
         meaningHtml nullable: true
         meaningText nullable: true
         predicted_topics nullable: true
+    }
+
+    static mapping = {
+        version false
     }
 }

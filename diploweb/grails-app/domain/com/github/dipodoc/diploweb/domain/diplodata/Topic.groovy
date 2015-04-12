@@ -15,7 +15,12 @@ class Topic {
 
     static belongsTo = [ parent: Topic ]
 
+
     static constraints = {
         parent nullable: true
+    }
+
+    static mapping = {
+        version false
     }
 }

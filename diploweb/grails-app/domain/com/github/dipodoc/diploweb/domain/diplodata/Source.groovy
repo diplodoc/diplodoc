@@ -16,4 +16,9 @@ class Source {
     String newDocsFinderModule
 
     String rssUrl
+
+
+    static mapping = {
+        version false
+    }
 }

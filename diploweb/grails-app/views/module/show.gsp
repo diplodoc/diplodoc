@@ -55,7 +55,7 @@
 					<span id="methods-label" class="property-label"><g:message code="module.methods.label" default="methods" /></span>
 
 					<div class="property-value" aria-labelledby="methods-label">
-						<g:each in="${ModuleMethod.findByModule(moduleInstance)}" var="moduleMethod">
+						<g:each in="${moduleMethodsList}" var="moduleMethod">
 							<div class="property-value" aria-labelledby="moduleMethod-label">
 								${moduleMethod.name}
 							</div>

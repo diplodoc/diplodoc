@@ -23,5 +23,10 @@ class ProcessRun {
 
     static hasMany = [ parameters: ProcessRunParameter ]
 
+
     static embedded = [ 'parameters' ]
+
+    static mapping = {
+        version false
+    }
 }
