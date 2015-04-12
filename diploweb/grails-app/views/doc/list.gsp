@@ -30,7 +30,7 @@
 
 						<g:sortableColumn property="id" title="${message(code: 'doc.id.label', default: 'id')}" />
 
-                        <g:sortableColumn property="url" title="${message(code: 'doc.url.label', default: 'url')}" />
+                        <g:sortableColumn property="uri" title="${message(code: 'doc.uri.label', default: 'uri')}" />
 					
 						<g:sortableColumn property="title" title="${message(code: 'doc.title.label', default: 'title')}" />
 
@@ -43,7 +43,7 @@
 
                             <td><g:link action="show" id="${docInstance.id}">${fieldValue(bean: docInstance, field: 'id')}</g:link></td>
 
-							<td><a href="${docInstance.url}" target="_blank"><g:fieldValue bean="${docInstance}" field="url"/></a></td>
+							<td><a href="${docInstance.uri}" target="_blank"><g:fieldValue bean="${docInstance}" field="uri"/></a></td>
 
                             <td>${fieldValue(bean: docInstance, field: 'title')}</td>
 

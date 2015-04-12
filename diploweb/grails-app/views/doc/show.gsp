@@ -34,10 +34,10 @@
                     </li>
                 </g:if>
 
-                <g:if test="${docInstance?.url}">
+                <g:if test="${docInstance?.uri}">
                     <li class="fieldcontain">
-                        <span id="url-label" class="property-label"><g:message code="doc.url.label" default="Url" /></span>
-                        <span class="property-value" aria-labelledby="url-label"><a href="${docInstance.url}" target="_blank"><g:fieldValue bean="${docInstance}" field="url"/></a></span>
+                        <span id="uri-label" class="property-label"><g:message code="doc.uri.label" default="uri" /></span>
+                        <span class="property-value" aria-labelledby="uri-label"><a href="${docInstance.uri}" target="_blank"><g:fieldValue bean="${docInstance}" field="uri"/></a></span>
                     </li>
                 </g:if>
 

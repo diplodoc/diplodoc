@@ -19,6 +19,11 @@ class ModuleController {
     }
 
     def show(Module moduleInstance) {
+        if (moduleInstance == null) {
+            render status: NOT_FOUND
+            return
+        }
+
         def moduleMethodsList = ModuleMethod.where({ module == moduleInstance }).list()
         [ 'moduleInstance': moduleInstance, 'moduleMethodsList': moduleMethodsList ]
     }
@@ -28,6 +33,11 @@ class ModuleController {
     }
 
     def edit(Module moduleInstance) {
+        if (moduleInstance == null) {
+            render status: NOT_FOUND
+            return
+        }
+
         def moduleMethodsList = ModuleMethod.where({ module == moduleInstance }).list()
         [ 'moduleInstance': moduleInstance, 'moduleMethodsList': moduleMethodsList ]
     }

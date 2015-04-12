@@ -24,7 +24,7 @@ class Doc {
 
     String publishTime
 
-    byte[] binary
+    String html
 
 
     String train_meaningHtml
@@ -46,7 +46,7 @@ class Doc {
         title nullable: true
         description nullable: true
         publishTime nullable: true
-        binary nullable: true
+        html nullable: true
         train_meaningHtml nullable: true
         meaningHtml nullable: true
         meaningText nullable: true

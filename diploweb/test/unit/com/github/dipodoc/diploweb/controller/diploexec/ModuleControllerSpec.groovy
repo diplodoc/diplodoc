@@ -1,13 +1,14 @@
 package com.github.dipodoc.diploweb.controller.diploexec
 
 import com.github.dipodoc.diploweb.domain.diploexec.Module
+import com.github.dipodoc.diploweb.domain.diploexec.ModuleMethod
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import org.bson.types.ObjectId
 import spock.lang.Specification
 
 @TestFor(ModuleController)
-@Mock(Module)
+@Mock([ Module, ModuleMethod ])
 class ModuleControllerSpec extends Specification {
 
     def "'list' action"() {
@@ -38,7 +39,7 @@ class ModuleControllerSpec extends Specification {
     def "'show' action"() {
         when: 'domain instance is passed to the action'
             Module module = new Module(id: new ObjectId('111111111111111111111111'), name: 'name', data: [:])
-            controller.show(module)
+            def model = controller.show(module)
 
         then: 'model contains this instance'
             model.moduleInstance == module
@@ -90,7 +91,7 @@ class ModuleControllerSpec extends Specification {
     def "'edit' action"() {
         when: 'action is executed'
             Module module = new Module(id: new ObjectId('111111111111111111111111'), name: 'name', data: [:])
-            controller.edit(module)
+            def model = controller.edit(module)
 
         then: 'model is populated with domain instance'
             model.moduleInstance == module
