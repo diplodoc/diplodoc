@@ -1,4 +1,4 @@
-listen to: 'extract-text'
+listen to: 'extract-meaning-from-html'
 
 input 'docId'
 

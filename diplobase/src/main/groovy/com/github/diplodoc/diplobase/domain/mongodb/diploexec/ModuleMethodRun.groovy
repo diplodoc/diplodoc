@@ -20,9 +20,9 @@ class ModuleMethodRun {
     ObjectId id
 
 
-    LocalDateTime startTime
+    String startTime
 
-    LocalDateTime endTime
+    String endTime
 
     Map metrics
 

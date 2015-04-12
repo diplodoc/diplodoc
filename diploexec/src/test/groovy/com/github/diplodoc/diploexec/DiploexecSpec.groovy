@@ -96,7 +96,7 @@ class DiploexecSpec extends Specification {
 
         expect:
             processCallEvent.processRun.exitStatus == 'NOT FINISHED'
-            processCallEvent.processRun.startTime == processCallEvent.time
+            processCallEvent.processRun.startTime == processCallEvent.time.toString()
     }
 
     def 'void notify(ProcessCallEvent event) - process run succeed event'() {
@@ -116,7 +116,7 @@ class DiploexecSpec extends Specification {
 
         expect:
             processCallEvent.processRun.exitStatus == 'SUCCEED'
-            processCallEvent.processRun.endTime == processCallEvent.time
+            processCallEvent.processRun.endTime == processCallEvent.time.toString()
     }
 
     def 'void notify(ProcessCallEvent event) - process run failed event'() {
@@ -136,7 +136,7 @@ class DiploexecSpec extends Specification {
 
         expect:
             processCallEvent.processRun.exitStatus == 'FAILED'
-            processCallEvent.processRun.endTime == processCallEvent.time
+            processCallEvent.processRun.endTime == processCallEvent.time.toString()
     }
 
     def 'Process getProcess(String name)'() {

@@ -15,9 +15,9 @@ class ProcessRun {
 
     static belongsTo = [ process: Process ]
 
-    LocalDateTime startTime
+    String startTime
 
-    LocalDateTime endTime
+    String endTime
 
     String exitStatus
 

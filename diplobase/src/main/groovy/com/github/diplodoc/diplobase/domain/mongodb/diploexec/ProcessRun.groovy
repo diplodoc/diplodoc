@@ -23,9 +23,9 @@ class ProcessRun {
     @Field('process')
     ObjectId processId
 
-    LocalDateTime startTime
+    String startTime
 
-    LocalDateTime endTime
+    String endTime
 
     String exitStatus
 

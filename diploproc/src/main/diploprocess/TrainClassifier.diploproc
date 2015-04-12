@@ -1,1 +1,0 @@
-get from: 'http://localhost:5000/doc-type-classifier/train-from-all-docs'

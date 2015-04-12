@@ -54,7 +54,7 @@
 			
 				<g:if test="${sourceInstance?.rssUrl}">
 					<li class="fieldcontain">
-						<span id="rssUrl-label" class="property-label"><g:message code="source.rssUrl.label" default="Rss Url" /></span>
+						<span id="rssUrl-label" class="property-label"><g:message code="source.rssUrl.label" default="rss url" /></span>
 
 						<span class="property-value" aria-labelledby="rssUrl-label"><g:fieldValue bean="${sourceInstance}" field="rssUrl"/></span>
 					</li>

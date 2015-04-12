@@ -6,17 +6,14 @@ import grails.test.mixin.TestFor
 import org.bson.types.ObjectId
 import spock.lang.Specification
 
-import java.time.Duration
-import java.time.LocalDateTime
-
 @TestFor(DiploclientController)
 @Mock(Doc)
 class DiploclientControllerSpec extends Specification {
 
     def "'docList' action with sorting"() {
         given: 'two docs'
-            Doc doc1 = new Doc(publishTime: LocalDateTime.now()).save flush:true
-            Doc doc2 = new Doc(publishTime: LocalDateTime.now() + Duration.ofMinutes(1)).save flush:true
+            Doc doc1 = new Doc(publishTime: '1').save flush:true
+            Doc doc2 = new Doc(publishTime: '2').save flush:true
 
         when: 'action is executed'
             controller.docList()
@@ -26,7 +23,7 @@ class DiploclientControllerSpec extends Specification {
             model.docInstanceList == [ doc2, doc1 ]
     }
 
-    void "'show' action"() {
+    void "'docShow' action"() {
         when: 'domain instance is passed to the action'
             Doc doc = new Doc(id: new ObjectId('111111111111111111111111'))
             controller.docShow(doc)
@@ -35,7 +32,7 @@ class DiploclientControllerSpec extends Specification {
             model.docInstance == doc
     }
 
-    void "'show' action with null domain"() {
+    void "'docShow' action with null domain"() {
         when: 'action is executed with a null domain'
             controller.docShow(null)
 

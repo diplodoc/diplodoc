@@ -3,8 +3,6 @@ package com.github.dipodoc.diploweb.domain.diplodata
 import groovy.transform.EqualsAndHashCode
 import org.bson.types.ObjectId
 
-import java.time.LocalDateTime
-
 @EqualsAndHashCode
 class Doc {
 
@@ -17,14 +15,14 @@ class Doc {
 
     static belongsTo = [ source: Source ]
 
-    LocalDateTime loadTime
+    String loadTime
 
 
     String title
 
     String description
 
-    LocalDateTime publishTime
+    String publishTime
 
     byte[] binary
 

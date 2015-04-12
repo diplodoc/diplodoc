@@ -7,9 +7,6 @@ import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
-import java.time.Duration
-import java.time.LocalDateTime
-
 @TestFor(ModuleMethodRunController)
 @Mock([ Module, ModuleMethod, ModuleMethodRun ])
 class ModuleMethodRunControllerSpec extends Specification {
@@ -18,8 +15,8 @@ class ModuleMethodRunControllerSpec extends Specification {
         given: 'two domain instances'
             Module module = new Module(name: 'name', data: [:]).save flush:true
             ModuleMethod moduleMethod = new ModuleMethod(name: 'name', module: module).save flush:true
-            ModuleMethodRun moduleMethodRun1 = new ModuleMethodRun(startTime: LocalDateTime.now(), endTime: LocalDateTime.now() + Duration.ofMinutes(1), metrics: [], moduleMethod: moduleMethod).save flush:true
-            ModuleMethodRun moduleMethodRun2 = new ModuleMethodRun(startTime: LocalDateTime.now() + Duration.ofMinutes(2), endTime: LocalDateTime.now() + Duration.ofMinutes(3), metrics: [], moduleMethod: moduleMethod).save flush:true
+            ModuleMethodRun moduleMethodRun1 = new ModuleMethodRun(startTime: '1', endTime: '2', metrics: [], moduleMethod: moduleMethod).save flush:true
+            ModuleMethodRun moduleMethodRun2 = new ModuleMethodRun(startTime: '3', endTime: '4', metrics: [], moduleMethod: moduleMethod).save flush:true
 
         when: 'action is executed'
             controller.list()
@@ -33,8 +30,8 @@ class ModuleMethodRunControllerSpec extends Specification {
         given: 'two domain instances'
             Module module = new Module(name: 'name', data: [:]).save flush:true
             ModuleMethod moduleMethod = new ModuleMethod(name: 'name', module: module).save flush:true
-            ModuleMethodRun moduleMethodRun1 = new ModuleMethodRun(startTime: LocalDateTime.now(), endTime: LocalDateTime.now() + Duration.ofMinutes(1), metrics: [], moduleMethod: moduleMethod).save flush:true
-            ModuleMethodRun moduleMethodRun2 = new ModuleMethodRun(startTime: LocalDateTime.now() + Duration.ofMinutes(2), endTime: LocalDateTime.now() + Duration.ofMinutes(3), metrics: [], moduleMethod: moduleMethod).save flush:true
+            ModuleMethodRun moduleMethodRun1 = new ModuleMethodRun(startTime: '1', endTime: '2', metrics: [], moduleMethod: moduleMethod).save flush:true
+            ModuleMethodRun moduleMethodRun2 = new ModuleMethodRun(startTime: '3', endTime: '4', metrics: [], moduleMethod: moduleMethod).save flush:true
 
         when: 'action is executed with max=1 parameter'
             controller.list(1)

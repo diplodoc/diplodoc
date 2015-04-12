@@ -17,20 +17,27 @@ class Process {
 
     String definition
 
-    LocalDateTime lastUpdate
+    String lastUpdate
 
     boolean active
 
 
+    static constraints = {
+        lastUpdate nullable: true
+    }
+
     def beforeInsert() {
-        updateLastUpdateTime()
+        updateFields()
     }
 
     def beforeUpdate() {
-        updateLastUpdateTime()
+        if (isDirty('name') || isDirty('definition')) {
+            updateFields()
+        }
     }
 
-    def updateLastUpdateTime() {
+    protected void updateFields() {
+        definition = definition.replace('\r', '')
         lastUpdate = LocalDateTime.now()
     }
 }

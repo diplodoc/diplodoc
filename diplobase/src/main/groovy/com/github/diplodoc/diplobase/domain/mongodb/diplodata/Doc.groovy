@@ -1,13 +1,10 @@
 package com.github.diplodoc.diplobase.domain.mongodb.diplodata
 
-import com.mongodb.DBRef
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Field
-
-import java.time.LocalDateTime
 
 /**
  * @author yaroslav.yermilov
@@ -27,14 +24,14 @@ class Doc {
     @Field('source')
     ObjectId sourceId
 
-    LocalDateTime loadTime
+    String loadTime
 
 
     String title
 
     String description
 
-    LocalDateTime publishTime
+    String publishTime
 
     byte[] binary
 

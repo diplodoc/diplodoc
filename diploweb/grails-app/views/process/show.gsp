@@ -40,7 +40,7 @@
 					<li class="fieldcontain">
 						<span id="definition-label" class="property-label"><g:message code="process.definition.label" default="Definition" /></span>
 
-						<span class="property-value" aria-labelledby="definition-label"><g:fieldValue bean="${processInstance}" field="definition"/></span>
+						<span class="property-value" aria-labelledby="definition-label">${processInstance.definition}</span>
 					</li>
 				</g:if>
 			
