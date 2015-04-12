@@ -42,9 +42,9 @@ class RssNewDocsFinderSpec extends Specification {
 
             sourceRepository.findOne(new ObjectId('111111111111111111111111')) >> new Source(id: new ObjectId('111111111111111111111111'), rssUrl: 'rss-url')
 
-            docRepository.findOneByUrl('uri-1') >> new Doc()
-            docRepository.findOneByUrl('uri-2') >> null
-            docRepository.findOneByUrl('uri-3') >> null
+            docRepository.findOneByUri('uri-1') >> new Doc()
+            docRepository.findOneByUri('uri-2') >> null
+            docRepository.findOneByUri('uri-3') >> null
 
             rssService.feed('rss-url') >> [ rssEntry1, rssEntry2, rssEntry3 ]
 

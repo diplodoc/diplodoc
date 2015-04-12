@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.repository.MongoRepository
  */
 interface DocRepository extends MongoRepository<Doc, ObjectId> {
 
-    Doc findOneByUrl(String url)
+    Doc findOneByUri(String uri)
 
     Collection<Doc> findByTrainMeaningHtmlIsNotNull()
 }
