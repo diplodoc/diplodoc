@@ -16,7 +16,7 @@ class ProcessRunControllerSpec extends Specification {
 
     def 'void run(ProcessRun processRun)'() {
         when:
-            processRunController.run('111111111111111111111111', [])
+            processRunController.run('111111111111111111111111')
 
         then:
             1 * diploexec.run(new ObjectId('111111111111111111111111'), [])
