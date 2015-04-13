@@ -4,6 +4,7 @@ import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Process
 import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRun
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ProcessRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ProcessRunRepository
+import groovy.util.logging.Slf4j
 import org.bson.types.ObjectId
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 
@@ -12,6 +13,7 @@ import javax.annotation.PostConstruct
 /**
  * @author yaroslav.yermilov
  */
+@Slf4j
 class Diploexec {
 
     ThreadPoolTaskExecutor threadPool
@@ -24,7 +26,7 @@ class Diploexec {
 
     @PostConstruct
     void init() {
-        println 'initializing diploexec runtime...'
+        log.info 'initializing diploexec runtime...'
 
         println 'loading processes...'
         processes = processRepository.findByActiveIsTrue()
