@@ -36,6 +36,7 @@ ext {
     dependency.grails.ehcache = 'org.grails.plugins:cache-ehcache:1.0.5'
     dependency.grails.mongodb = 'org.grails.plugins:mongodb:3.0.3'
     dependency.grails.security = 'org.grails.plugins:spring-security-core:2.0-RC4'
+    dependency.grails.rest = 'org.grails.plugins:rest:0.8'
 
     dependency.spark = [:]
     dependency.spark.core = "org.apache.spark:spark-core_${versions.scala}:${versions.spark}"

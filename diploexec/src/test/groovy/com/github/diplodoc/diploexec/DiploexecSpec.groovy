@@ -49,15 +49,18 @@ class DiploexecSpec extends Specification {
 
     def 'void run(ProcessRun processRun)'() {
         setup:
-            ProcessRun processRun = new ProcessRun()
+            ProcessRun processRun = new ProcessRun(id: new ObjectId('111111111111111111111111'))
+            processRunRepository.save(_) >> processRun
 
+            diploexec.processRunRepository = processRunRepository
             diploexec.threadPool = threadPool
 
-
         when:
-            diploexec.run(processRun)
+            ObjectId actual = diploexec.run(new ObjectId('111111111111111111111111'), [])
 
         then:
+            actual == new ObjectId('111111111111111111111111')
+
             1 * threadPool.execute({ ProcessCall processCall ->
                 processCall.diploexec == diploexec && processCall.processRun == processRun
             })
@@ -65,18 +68,22 @@ class DiploexecSpec extends Specification {
 
     def 'void notify(DiploexecEvent event)'() {
         setup:
-            ProcessRun[] processRuns = [ new ProcessRun(), new ProcessRun() ]
+            ProcessRun[] processRuns = [ new ProcessRun(processId: new ObjectId('111111111111111111111111'), parameters: []), new ProcessRun(processId: new ObjectId('222222222222222222222222'), parameters: []) ]
             DiploexecEvent event = Mock(DiploexecEvent)
 
             event.shouldNotifyRuns(_) >> processRuns
+
+            processRunRepository.save(_) >> { it[0] }
+
+            diploexec.processRunRepository = processRunRepository
             diploexec.threadPool = threadPool
 
         when:
             diploexec.notify(event)
 
         then:
-            1 * diploexec.run(processRuns[0])
-            1 * diploexec.run(processRuns[1])
+            1 * diploexec.run(new ObjectId('111111111111111111111111'), [])
+            1 * diploexec.run(new ObjectId('222222222222222222222222'), [])
     }
 
     def 'void notify(ProcessCallEvent event) - process run started event'() {

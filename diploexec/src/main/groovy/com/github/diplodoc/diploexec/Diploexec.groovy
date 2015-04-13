@@ -38,14 +38,18 @@ class Diploexec {
         }
     }
 
-    void run(ProcessRun processRun) {
+    ObjectId run(ObjectId processId, List parameters) {
+        ProcessRun processRun = processRunRepository.save new ProcessRun(processId: processId, parameters: parameters)
+
         println "starting process ${processRun}..."
         threadPool.execute(new ProcessCall(this, processRun))
+
+        return processRun.id
     }
 
     void notify(DiploexecEvent event) {
         println "event fired ${event}..."
-        event.shouldNotifyRuns(this).each { ProcessRun processRun -> run(processRun) }
+        event.shouldNotifyRuns(this).each { ProcessRun processRun -> run(processRun.processId, processRun.parameters) }
     }
 
     void notify(ProcessCallEvent event) {

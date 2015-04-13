@@ -17,21 +17,9 @@ class ProcessRunControllerSpec extends Specification {
 
     def 'void run(ProcessRun processRun)'() {
         when:
-            ProcessRun processRun = new ProcessRun(id: new ObjectId('111111111111111111111111'))
-            processRun.parameters = [
-                new ProcessRunParameter(key: 'key-1', value: 'value-1'),
-                new ProcessRunParameter(key: 'key-2', value: 'value-2')
-            ]
-
-            processRunController.run(processRun)
+            processRunController.run('111111111111111111111111')
 
         then:
-            1 * diploexec.run({ arg ->
-                arg.id == new ObjectId('111111111111111111111111') &&
-                arg.parameters == [
-                    new ProcessRunParameter(key: 'key-1', value: 'value-1'),
-                    new ProcessRunParameter(key: 'key-2', value: 'value-2')
-                ]
-            })
+            1 * diploexec.run(new ObjectId('111111111111111111111111'), [])
     }
 }

@@ -16,6 +16,7 @@
 				<g:render template="/navigation/base-navigation"/>
 				<li><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
+				<li><g:link action="run" resource="${processInstance}"><g:message message="Run" /></g:link></li>
 			</ul>
 		</div>
 
