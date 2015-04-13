@@ -60,19 +60,23 @@ class HtmlMeaningExtractor {
     @RequestMapping(value = '/doc/{id}/extract-meaning', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     void extractMeaning(@PathVariable('id') String docId) {
-        Doc doc = docRepository.findOne new ObjectId(docId)
+        try {
+            Doc doc = docRepository.findOne new ObjectId(docId)
 
-        Module module = moduleRepository.findOneByName('com.github.diplodoc.diplocore.modules.MeaningExtractor')
-        LogisticRegressionModel model = serializationService.deserialize(module.data['model'])
+            Module module = moduleRepository.findOneByName('com.github.diplodoc.diplocore.modules.HtmlMeaningExtractor')
+            LogisticRegressionModel model = serializationService.deserialize(module.data['model'])
 
-        Document document = htmlService.parse(doc.html)
+            Document document = htmlService.parse(doc.html)
 
-        List<Element> meaningElements = predictMeaningElements(model, document.body())
+            List<Element> meaningElements = predictMeaningElements(model, document.body())
 
-        doc.meaningHtml = meaningElements.collect({ it.outerHtml() }).join()
-        doc.meaningText = meaningElements.collect({ it.text() }).join(' ')
+            doc.meaningHtml = meaningElements.collect({ it.outerHtml() }).join()
+            doc.meaningText = meaningElements.collect({ it.text() }).join(' ')
 
-        docRepository.save doc
+            docRepository.save doc
+        } catch (e) {
+            log.error 'failed', e
+        }
     }
 
     @RequestMapping(value = '/train-model', method = RequestMethod.POST)
@@ -90,7 +94,7 @@ class HtmlMeaningExtractor {
         moduleMethodRun.endTime = LocalDateTime.now()
         moduleMethodRun.metrics = metrics
 
-        Module module = moduleRepository.findOneByName('com.github.diplodoc.diplocore.modules.MeaningExtractor')
+        Module module = moduleRepository.findOneByName('com.github.diplodoc.diplocore.modules.HtmlMeaningExtractor')
         moduleMethodRun.moduleMethodId = moduleMethodRepository.findByName('trainModel').find({ it.moduleId == module.id }).id
         moduleMethodRunRepository.save moduleMethodRun
 

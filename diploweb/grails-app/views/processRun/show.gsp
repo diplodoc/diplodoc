@@ -73,9 +73,7 @@
 
 						<g:each in="${processRunInstance.parameters}" var="p">
 							<div class="property-value" aria-labelledby="parameters-label">
-								<g:link controller="processRunParameter" action="show" id="${p.id}">
-									id=${p?.id}: ${p?.key} = ${p?.value} (of type ${p?.type})
-								</g:link>
+								${p?.key} = ${p?.value} (of type ${p?.type})
 							</div>
 						</g:each>
 					</li>

@@ -28,12 +28,10 @@ class Diploexec {
     void init() {
         log.info 'initializing diploexec runtime...'
 
-        println 'loading processes...'
         processes = processRepository.findByActiveIsTrue()
         waitsForEventsMap = new HashMap<>()
         listenToProcessesMap = new HashMap<>()
 
-        println 'creating process interaction map...'
         processes.each { Process process ->
             waitsForEventsMap[process] = findEventsOneWaitsFor(process)
             listenToProcessesMap[process] = findProcessesOneListensTo(process)
@@ -43,38 +41,38 @@ class Diploexec {
     ObjectId run(ObjectId processId, List parameters) {
         ProcessRun processRun = processRunRepository.save new ProcessRun(processId: processId, parameters: parameters)
 
-        println "starting process ${processRun}..."
+        log.info "starting process ${processRun}..."
         threadPool.execute(new ProcessCall(this, processRun))
 
         return processRun.id
     }
 
     void notify(DiploexecEvent event) {
-        println "event fired ${event}..."
+        log.info "event fired ${event}..."
         event.shouldNotifyRuns(this).each { ProcessRun processRun -> run(processRun.processId, processRun.parameters) }
     }
 
     void notify(ProcessCallEvent event) {
-        println "event fired ${event}..."
+        log.info "event fired ${event}..."
 
         switch (event.type) {
             case ProcessCallEvent.Type.PROCESS_RUN_STARTED:
                 event.processRun.exitStatus = 'NOT FINISHED'
                 event.processRun.startTime = event.time
                 processRunRepository.save event.processRun
-            break;
+            break
 
             case ProcessCallEvent.Type.PROCESS_RUN_SUCCEED:
                 event.processRun.exitStatus = 'SUCCEED'
                 event.processRun.endTime = event.time
                 processRunRepository.save event.processRun
-            break;
+            break
 
             case ProcessCallEvent.Type.PROCESS_RUN_FAILED:
                 event.processRun.exitStatus = 'FAILED'
                 event.processRun.endTime = event.time
                 processRunRepository.save event.processRun
-                break;
+            break
 
             default:
                 assert false : "unknown ProcessCallEvent: ${event.type}"

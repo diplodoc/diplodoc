@@ -15,6 +15,8 @@ class ModuleMethodRun {
 
     String endTime
 
+    Map parameters
+
     Map metrics
 
     static belongsTo = [ moduleMethod: ModuleMethod ]

@@ -2,8 +2,13 @@ package com.github.diplodoc.diplocore.modules
 
 import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Doc
 import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Source
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Module
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ModuleMethodRun
 import com.github.diplodoc.diplobase.repository.mongodb.diplodata.DocRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diplodata.SourceRepository
+import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleMethodRepository
+import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleMethodRunRepository
+import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleRepository
 import com.github.diplodoc.diplocore.services.RssService
 import groovy.util.logging.Slf4j
 import org.bson.types.ObjectId
@@ -36,27 +41,48 @@ class RssNewDocsFinder {
     @Autowired
     RssService rssService
 
+    @Autowired
+    ModuleRepository moduleRepository
+
+    @Autowired
+    ModuleMethodRepository moduleMethodRepository
+
+    @Autowired
+    ModuleMethodRunRepository moduleMethodRunRepository
+
     @RequestMapping(value = '/source/{id}/new-docs', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody Collection<String> newDocs(@PathVariable('id') String sourceId) {
-        Source source = sourceRepository.findOne new ObjectId(sourceId)
+        try {
+            log.debug "sourceId = ${sourceId}"
+            ModuleMethodRun moduleMethodRun = new ModuleMethodRun(startTime: LocalDateTime.now(), parameters: [ 'sourceId': sourceId ])
 
-        log.info('looking for new docs from {}...', source.name)
+            Source source = sourceRepository.findOne new ObjectId(sourceId)
 
-        Collection<Doc> docs = rssService
-                                    .feed(source.rssUrl)
-                                    .findAll { rssEntry -> !docRepository.findOneByUri(rssEntry.link) }
-                                    .collect { rssEntry ->
-                                        new Doc(    uri: rssEntry.link,
-                                                    sourceId: new ObjectId(sourceId),
-                                                    title: rssEntry.title,
-                                                    description: rssEntry.description.value,
-                                                    publishTime: LocalDateTime.ofInstant(rssEntry.publishedDate.toInstant(), ZoneId.systemDefault())
-                                        )
-                                    }
+            Collection<Doc> docs = rssService
+                    .feed(source.rssUrl)
+                    .findAll { rssEntry -> !docRepository.findOneByUri(rssEntry.link) }
+                    .collect { rssEntry ->
+                new Doc(    uri: rssEntry.link,
+                        sourceId: new ObjectId(sourceId),
+                        title: rssEntry.title,
+                        description: rssEntry.description.value,
+                        publishTime: LocalDateTime.ofInstant(rssEntry.publishedDate.toInstant(), ZoneId.systemDefault())
+                )
+            }
 
-        docRepository.save docs
+            docRepository.save docs
 
-        return docs*.id*.toString()
+            moduleMethodRun.endTime = LocalDateTime.now()
+            moduleMethodRun.metrics = [ 'new docs count': docs.size() ]
+
+            Module module = moduleRepository.findOneByName('com.github.diplodoc.diplocore.modules.RssNewDocsFinder')
+            moduleMethodRun.moduleMethodId = moduleMethodRepository.findByName('newDocs').find({ it.moduleId == module.id }).id
+            moduleMethodRunRepository.save moduleMethodRun
+
+            return docs*.id*.toString()
+        } catch (e) {
+            log.error 'failed', e
+        }
     }
 }

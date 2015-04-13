@@ -24,6 +24,8 @@ class ModuleMethodRun {
 
     String endTime
 
+    Map parameters
+
     Map metrics
 
     @Field('moduleMethod')
