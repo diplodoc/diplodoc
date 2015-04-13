@@ -11,7 +11,6 @@ import spock.lang.Specification
 @Mock([ Process, ProcessRun ])
 class ProcessRunControllerSpec extends Specification {
 
-    @Ignore
     def "'list' action"() {
         given: 'single domain instance'
             Process process = new Process(name: 'name', definition: 'definition', active: true).save flush:true
@@ -25,7 +24,6 @@ class ProcessRunControllerSpec extends Specification {
             model.processRunInstanceList == [ processRun ]
     }
 
-    @Ignore
     def "'list' action with pagination"() {
         given: 'two domain instances'
             Process process = new Process(name: 'name', definition: 'definition', active: true).save flush:true

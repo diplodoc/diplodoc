@@ -3,6 +3,7 @@ package com.github.dipodoc.diploweb.controller.diploexec
 import com.github.dipodoc.diploweb.domain.diploexec.Process
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
+import org.bson.types.ObjectId
 import spock.lang.Ignore
 import spock.lang.Specification
 
@@ -10,7 +11,6 @@ import spock.lang.Specification
 @Mock(Process)
 class ProcessControllerSpec extends Specification {
 
-    @Ignore
     def "'list' action"() {
         given: 'single domain instance'
             Process process = new Process(name: 'name', definition: 'definition', active: true).save flush:true
@@ -23,7 +23,6 @@ class ProcessControllerSpec extends Specification {
             model.processInstanceList == [ process ]
     }
 
-    @Ignore
     def "'list' action with pagination"() {
         given: 'two domain instances'
             Process process1 = new Process(name: 'name', definition: 'definition', active: true).save flush:true
@@ -39,7 +38,7 @@ class ProcessControllerSpec extends Specification {
 
     def "'show' action"() {
         when: 'domain instance is passed to the action'
-            Process process = new Process(id: 1, name: 'name', definition: 'definition', active: true)
+            Process process = new Process(id: new ObjectId('111111111111111111111111'), name: 'name', definition: 'definition', active: true)
             controller.show(process)
 
         then: 'model contains this instance'
@@ -54,6 +53,23 @@ class ProcessControllerSpec extends Specification {
             response.status == 404
     }
 
+    def "'run' action"() {
+        when: 'domain instance is passed to the action'
+            Process process = new Process(id: new ObjectId('111111111111111111111111'), name: 'name', definition: 'definition', active: true)
+            controller.run(process)
+
+        then: 'model contains this instance'
+            model.processInstance == process
+    }
+
+    def "'run' action with null domain"() {
+        when: 'action is executed with a null domain'
+            controller.run(null)
+
+        then: 'A 404 error is returned'
+            response.status == 404
+    }
+
     def "'create' action"() {
         when: 'action is executed'
             controller.create()
@@ -62,7 +78,6 @@ class ProcessControllerSpec extends Specification {
             model.processInstance != null
     }
 
-    @Ignore
     def "'save' action with valid domain instance"() {
         when: 'action is executed with a valid instance'
             request.contentType = FORM_CONTENT_TYPE
@@ -92,7 +107,7 @@ class ProcessControllerSpec extends Specification {
 
     def "'edit' action"() {
         when: 'action is executed'
-            Process process = new Process(id: 1, name: 'name', definition: 'definition', active: true)
+            Process process = new Process(id: new ObjectId('111111111111111111111111'), name: 'name', definition: 'definition', active: true)
             controller.edit(process)
 
         then: 'model is populated with domain instance'
@@ -107,7 +122,6 @@ class ProcessControllerSpec extends Specification {
             response.status == 404
     }
 
-    @Ignore
     def "'update' action with valid domain instance"() {
         when: 'valid domain instance is passed to the action'
             request.contentType = FORM_CONTENT_TYPE
@@ -144,7 +158,6 @@ class ProcessControllerSpec extends Specification {
             model.processInstance == process
     }
 
-    @Ignore
     void "'delete' action"() {
         when: 'domain instance is created'
             Process process = new Process(name: 'name', definition: 'definition', active: true).save flush:true
