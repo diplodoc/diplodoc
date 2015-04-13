@@ -8,6 +8,7 @@ import com.github.diplodoc.diplobase.repository.mongodb.diplodata.DocRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleMethodRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleMethodRunRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleRepository
+import com.github.diplodoc.diplocore.services.AuditService
 import com.github.diplodoc.diplocore.services.HtmlService
 import com.github.diplodoc.diplocore.services.SerializationService
 import org.apache.spark.api.java.JavaRDD
@@ -27,32 +28,36 @@ import spock.lang.Specification
 class HtmlMeaningExtractorSpec extends Specification {
 
     DocRepository docRepository = Mock(DocRepository)
-    ModuleRepository moduleRepository = Mock(ModuleRepository)
-    ModuleMethodRepository moduleMethodRepository = Mock(ModuleMethodRepository)
-    ModuleMethodRunRepository moduleMethodRunRepository = Mock(ModuleMethodRunRepository)
     HtmlService htmlService = Mock(HtmlService)
     SerializationService serializationService = Mock(SerializationService)
+    AuditService auditService = Mock(AuditService)
 
     HtmlMeaningExtractor meaningExtractor = Spy(HtmlMeaningExtractor)
 
-    def 'void extractMeaning(String docId)'() {
+    def 'def extractMeaning(String docId)'() {
         setup:
+            1 * auditService.runMethodUnderAudit('com.github.diplodoc.diplocore.modules.HtmlMeaningExtractor', 'extractMeaning', _) >> { it ->
+                Module module = new Module(name: 'com.github.diplodoc.diplocore.modules.HtmlMeaningExtractor', data: [ 'model': ([ 1, 2 ,3 ] as byte[]) ])
+                ModuleMethod moduleMethod = new ModuleMethod()
+                ModuleMethodRun moduleMethodRun = new ModuleMethodRun()
+
+                return it[2].call(module, moduleMethod, moduleMethodRun)
+            }
+
             meaningExtractor.docRepository = docRepository
-            meaningExtractor.moduleRepository = moduleRepository
+            meaningExtractor.auditService = auditService
             meaningExtractor.htmlService = htmlService
             meaningExtractor.serializationService = serializationService
 
             LogisticRegressionModel model = Mock(LogisticRegressionModel)
 
             Doc doc = new Doc(id: new ObjectId('111111111111111111111111'), html: 'doc-html')
-            Module module = new Module(name: 'com.github.diplodoc.diplocore.modules.MeaningExtractor', data: [ 'model': ([ 1, 2 ,3 ] as byte[]) ])
 
             Document document = Mock(Document)
             Element body = Mock(Element)
             document.body() >> body
 
             1 * docRepository.findOne(new ObjectId('111111111111111111111111')) >> doc
-            1 * moduleRepository.findOneByName('com.github.diplodoc.diplocore.modules.MeaningExtractor') >> module
             1 * htmlService.parse('doc-html') >> document
             1 * serializationService.deserialize([ 1, 2 ,3 ] as byte[]) >> model
 
@@ -64,7 +69,7 @@ class HtmlMeaningExtractorSpec extends Specification {
             ]
 
         when:
-            meaningExtractor.extractMeaning('111111111111111111111111')
+            Map actual = meaningExtractor.extractMeaning('111111111111111111111111')
 
         then:
             1 * docRepository.save({ Doc docToSave ->
@@ -73,18 +78,23 @@ class HtmlMeaningExtractorSpec extends Specification {
                 docToSave.meaningHtml.replaceAll('\\s+','') == '<div>text1</div><div>text2</div><div></div><div>text4</div>' &&
                 docToSave.meaningText.replaceAll('\\s+','') == 'text1text2text4'
             })
+
+            actual.keySet().size() == 1
+            actual['moduleMethodRun'].parameters == [ 'docId': '111111111111111111111111' ]
     }
 
-    def 'void trainModel()'() {
+    def 'def trainModel()'() {
         setup:
-            meaningExtractor.moduleRepository = moduleRepository
-            meaningExtractor.moduleMethodRepository = moduleMethodRepository
-            meaningExtractor.moduleMethodRunRepository = moduleMethodRunRepository
+            1 * auditService.runMethodUnderAudit('com.github.diplodoc.diplocore.modules.HtmlMeaningExtractor', 'trainModel', _) >> { it ->
+                Module module = new Module(name: 'com.github.diplodoc.diplocore.modules.HtmlMeaningExtractor', id: new ObjectId('111111111111111111111111'))
+                ModuleMethod moduleMethod = new ModuleMethod()
+                ModuleMethodRun moduleMethodRun = new ModuleMethodRun()
+
+                return it[2].call(module, moduleMethod, moduleMethodRun)
+            }
+
+            meaningExtractor.auditService = auditService
             meaningExtractor.serializationService = serializationService
-
-            Module module = new Module(name: 'com.github.diplodoc.diplocore.modules.MeaningExtractor', id: new ObjectId('111111111111111111111111'))
-
-            1 * moduleRepository.findOneByName('com.github.diplodoc.diplocore.modules.MeaningExtractor') >> module
 
             JavaRDD<LabeledPoint> trainSet = Mock(JavaRDD)
             JavaRDD<LabeledPoint> testSet = Mock(JavaRDD)
@@ -97,27 +107,13 @@ class HtmlMeaningExtractorSpec extends Specification {
 
             serializationService.serialize(model) >> ([ 1, 2 ,3 ] as byte[])
 
-            moduleMethodRepository.findByName('trainModel') >> [
-                new ModuleMethod(id: new ObjectId('111111111111111111111111'), name: 'trainModel', moduleId: new ObjectId('111111111111111111111111')),
-                new ModuleMethod(id: new ObjectId('222222222222222222222222'), name: 'trainModel', moduleId: new ObjectId('222222222222222222222222'))
-            ]
-
         when:
-            meaningExtractor.trainModel()
+            Map actual = meaningExtractor.trainModel()
 
         then:
-            1 * moduleRepository.save({ Module moduleToSave ->
-                moduleToSave.id == new ObjectId('111111111111111111111111') &&
-                moduleToSave.name == 'com.github.diplodoc.diplocore.modules.MeaningExtractor' &&
-                moduleToSave.data == [ 'model': ([ 1, 2, 3 ] as byte[]) ]
-            })
-
-            1 * moduleMethodRunRepository.save({ ModuleMethodRun moduleMethodRunToSave ->
-                moduleMethodRunToSave.startTime != null &&
-                moduleMethodRunToSave.endTime != null &&
-                moduleMethodRunToSave.metrics == [ 'metric': 'value' ] &&
-                moduleMethodRunToSave.moduleMethodId == new ObjectId('111111111111111111111111')
-            })
+            actual.keySet().size() == 2
+            actual['module'].data == [ 'model': ([ 1, 2, 3 ] as byte[]) ]
+            actual['metrics'] == [ 'metric': 'value' ]
     }
 
     def 'List<Element> predictMeaningElements(LogisticRegressionModel model, Element element) - predict 1.0 for element'() {

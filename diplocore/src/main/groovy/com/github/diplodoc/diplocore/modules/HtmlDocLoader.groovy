@@ -41,7 +41,7 @@ class HtmlDocLoader {
 
     @RequestMapping(value = '/doc/{id}/load', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    void loadDoc(@PathVariable('id') String docId) {
+    def loadDoc(@PathVariable('id') String docId) {
         auditService.runMethodUnderAudit('com.github.diplodoc.diplocore.modules.HtmlDocLoader', 'loadDoc') { module, moduleMethod, moduleMethodRun ->
             moduleMethodRun.parameters = [ 'docId': docId ]
 

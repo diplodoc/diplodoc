@@ -35,7 +35,7 @@ class Sources {
 
     @RequestMapping(value = '/sources', method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody Collection<String> all() {
+    @ResponseBody def all() {
         auditService.runMethodUnderAudit('com.github.diplodoc.diplocore.modules.data.Sources', 'all') { module, moduleMethod, moduleMethodRun ->
             def result = sourceRepository.findAll()*.id*.toString()
             def metrics = [ 'sources count': result.size() ]
