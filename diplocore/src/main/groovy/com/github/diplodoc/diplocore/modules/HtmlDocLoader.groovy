@@ -7,6 +7,7 @@ import com.github.diplodoc.diplobase.repository.mongodb.diplodata.DocRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleMethodRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleMethodRunRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleRepository
+import com.github.diplodoc.diplocore.services.AuditService
 import com.github.diplodoc.diplocore.services.HtmlService
 import groovy.util.logging.Slf4j
 import org.bson.types.ObjectId
@@ -36,19 +37,13 @@ class HtmlDocLoader {
     DocRepository docRepository
 
     @Autowired
-    ModuleRepository moduleRepository
-
-    @Autowired
-    ModuleMethodRepository moduleMethodRepository
-
-    @Autowired
-    ModuleMethodRunRepository moduleMethodRunRepository
+    AuditService auditService
 
     @RequestMapping(value = '/doc/{id}/load', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     void loadDoc(@PathVariable('id') String docId) {
-        try {
-            ModuleMethodRun moduleMethodRun = new ModuleMethodRun(startTime: LocalDateTime.now(), parameters: [ 'docId': docId ])
+        auditService.runMethodUnderAudit('com.github.diplodoc.diplocore.modules.HtmlDocLoader', 'loadDoc') { module, moduleMethod, moduleMethodRun ->
+            moduleMethodRun.parameters = [ 'docId': docId ]
 
             Doc doc = docRepository.findOne new ObjectId(docId)
 
@@ -59,13 +54,7 @@ class HtmlDocLoader {
 
             docRepository.save doc
 
-            moduleMethodRun.endTime = LocalDateTime.now()
-
-            Module module = moduleRepository.findOneByName('com.github.diplodoc.diplocore.modules.HtmlDocLoader')
-            moduleMethodRun.moduleMethodId = moduleMethodRepository.findByName('loadDoc').find({ it.moduleId == module.id }).id
-            moduleMethodRunRepository.save moduleMethodRun
-        } catch (e) {
-            log.error 'failed', e
+            [ 'moduleMethodRun': moduleMethodRun ]
         }
     }
 }

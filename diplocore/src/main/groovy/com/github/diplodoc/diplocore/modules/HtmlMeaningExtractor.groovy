@@ -7,6 +7,7 @@ import com.github.diplodoc.diplobase.repository.mongodb.diplodata.DocRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleMethodRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleMethodRunRepository
 import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleRepository
+import com.github.diplodoc.diplocore.services.AuditService
 import com.github.diplodoc.diplocore.services.HtmlService
 import com.github.diplodoc.diplocore.services.SerializationService
 import org.apache.commons.lang3.SerializationUtils
@@ -43,27 +44,22 @@ class HtmlMeaningExtractor {
     DocRepository docRepository
 
     @Autowired
-    ModuleRepository moduleRepository
-
-    @Autowired
-    ModuleMethodRepository moduleMethodRepository
-
-    @Autowired
-    ModuleMethodRunRepository moduleMethodRunRepository
-
-    @Autowired
     HtmlService htmlService
 
     @Autowired
     SerializationService serializationService
 
+    @Autowired
+    AuditService auditService
+
     @RequestMapping(value = '/doc/{id}/extract-meaning', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     void extractMeaning(@PathVariable('id') String docId) {
-        try {
+        auditService.runMethodUnderAudit('com.github.diplodoc.diplocore.modules.HtmlMeaningExtractor', 'extractMeaning') { module, moduleMethod, moduleMethodRun ->
+            moduleMethodRun.parameters = [ 'docId': docId ]
+
             Doc doc = docRepository.findOne new ObjectId(docId)
 
-            Module module = moduleRepository.findOneByName('com.github.diplodoc.diplocore.modules.HtmlMeaningExtractor')
             LogisticRegressionModel model = serializationService.deserialize(module.data['model'])
 
             Document document = htmlService.parse(doc.html)
@@ -74,33 +70,26 @@ class HtmlMeaningExtractor {
             doc.meaningText = meaningElements.collect({ it.text() }).join(' ')
 
             docRepository.save doc
-        } catch (e) {
-            log.error 'failed', e
+
+            [ 'moduleMethodRun': moduleMethodRun ]
         }
     }
 
     @RequestMapping(value = '/train-model', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     void trainModel() {
-        ModuleMethodRun moduleMethodRun = new ModuleMethodRun(startTime: LocalDateTime.now())
+        auditService.runMethodUnderAudit('com.github.diplodoc.diplocore.modules.HtmlMeaningExtractor', 'trainModel') { module, moduleMethod, moduleMethodRun ->
+            def dataSplits = dataSplits()
+            JavaRDD<LabeledPoint> trainSet = dataSplits['trainSet']
+            JavaRDD<LabeledPoint> testSet = dataSplits['testSet']
 
-        def dataSplits = dataSplits()
-        JavaRDD<LabeledPoint> trainSet = dataSplits['trainSet']
-        JavaRDD<LabeledPoint> testSet = dataSplits['testSet']
+            LogisticRegressionModel model = model(trainSet)
 
-        LogisticRegressionModel model = model(trainSet)
-        Map metrics = metrics(model, trainSet, testSet)
+            if (!module.data) module.data = [:]
+            module.data['model'] = serializationService.serialize(model)
 
-        moduleMethodRun.endTime = LocalDateTime.now()
-        moduleMethodRun.metrics = metrics
-
-        Module module = moduleRepository.findOneByName('com.github.diplodoc.diplocore.modules.HtmlMeaningExtractor')
-        moduleMethodRun.moduleMethodId = moduleMethodRepository.findByName('trainModel').find({ it.moduleId == module.id }).id
-        moduleMethodRunRepository.save moduleMethodRun
-
-        if (!module.data) module.data = [:]
-        module.data['model'] = serializationService.serialize(model)
-        moduleRepository.save module
+            [ 'metrics': metrics(model, trainSet, testSet), 'module': module ]
+        }
     }
 
     List<Element> predictMeaningElements(LogisticRegressionModel model, Element element) {
