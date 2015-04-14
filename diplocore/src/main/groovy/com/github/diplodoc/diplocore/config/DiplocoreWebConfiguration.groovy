@@ -13,4 +13,4 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc
 @EnableWebMvc
 @Import(DiplobaseConfiguration)
 @ComponentScan('com.github.diplodoc.diplocore.modules')
-class DiplocoreWebConfiguration { }
+class DiplocoreWebConfiguration {}

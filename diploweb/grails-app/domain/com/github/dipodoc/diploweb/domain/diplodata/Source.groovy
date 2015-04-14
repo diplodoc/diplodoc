@@ -13,7 +13,12 @@ class Source {
 
     String name
 
-    String newPostsFinderModule
+    String newDocsFinderModule
 
     String rssUrl
+
+
+    static mapping = {
+        version false
+    }
 }

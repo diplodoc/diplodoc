@@ -1,4 +1,4 @@
-<%@ page import="com.github.dipodoc.diploweb.domain.diplodata.Post" %>
+<%@ page import="com.github.dipodoc.diploweb.domain.diplodata.Doc" %>
 
 <!DOCTYPE html>
 <html>
@@ -8,17 +8,17 @@
     </head>
 
     <body>
-        <a href="#list-post" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;" /></a>
+        <a href="#list-doc" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;" /></a>
 
         <div class="nav" role="navigation">
             <ul>
                 <g:render template="/navigation/base-navigation"/>
-                <li><g:link action="trainNext"><g:message message="train next post" /></g:link></li>
+                <li><g:link action="trainNext"><g:message message="train next doc" /></g:link></li>
             </ul>
         </div>
 
-        <div id="list-post" class="content scaffold-list" role="main">
-            <h1><g:message message="Meaning html train set, total ${postInstanceCount} posts" /></h1>
+        <div id="list-doc" class="content scaffold-list" role="main">
+            <h1><g:message message="Meaning html train set, total ${docInstanceCount} docs" /></h1>
 
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
@@ -28,24 +28,24 @@
                 <thead>
                     <tr>
 
-                        <g:sortableColumn property="id" title="${message(code: 'post.id.label', default: 'id')}" />
+                        <g:sortableColumn property="id" title="${message(code: 'doc.id.label', default: 'id')}" />
 
-                        <g:sortableColumn property="url" title="${message(code: 'post.url.label', default: 'url')}" />
+                        <g:sortableColumn property="url" title="${message(code: 'doc.url.label', default: 'url')}" />
 
-                        <g:sortableColumn property="title" title="${message(code: 'post.title.label', default: 'title')}" />
+                        <g:sortableColumn property="title" title="${message(code: 'doc.title.label', default: 'title')}" />
 
                     </tr>
                 </thead>
 
                 <tbody>
-                    <g:each in="${postInstanceList}" status="i" var="postInstance">
+                    <g:each in="${docInstanceList}" status="i" var="docInstance">
                         <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 
-                            <td><g:link action="edit" id="${postInstance.id}">${fieldValue(bean: postInstance, field: 'id')}</g:link></td>
+                            <td><g:link action="edit" id="${docInstance.id}">${fieldValue(bean: docInstance, field: 'id')}</g:link></td>
 
-                            <td><a href="${postInstance.url}" target="_blank"><g:fieldValue bean="${postInstance}" field="url"/></a></td>
+                            <td><a href="${docInstance.url}" target="_blank"><g:fieldValue bean="${docInstance}" field="url"/></a></td>
 
-                            <td>${fieldValue(bean: postInstance, field: 'title')}</td>
+                            <td>${fieldValue(bean: docInstance, field: 'title')}</td>
 
                         </tr>
                     </g:each>
@@ -53,7 +53,7 @@
             </table>
 
             <div class="pagination">
-                <g:paginate total="${postInstanceCount ?: 0}" />
+                <g:paginate total="${docInstanceCount ?: 0}" />
             </div>
         </div>
 

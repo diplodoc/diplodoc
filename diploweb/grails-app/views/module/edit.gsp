@@ -16,6 +16,7 @@
 				<g:render template="/navigation/base-navigation"/>
 				<li><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
+				<li><g:link class="create" controller="moduleMethod" action="create" params="[ 'moduleId': moduleInstance.id ]"><g:message code="default.new.label" args="[ 'Module method' ]" /></g:link></li>
 			</ul>
 		</div>
 

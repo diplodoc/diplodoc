@@ -1,9 +1,10 @@
 package com.github.diplodoc.diploexec
 
-import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
-import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
-import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRepository
-import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRunRepository
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Process
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ProcessRepository
+import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ProcessRunRepository
+import org.bson.types.ObjectId
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import spock.lang.Specification
 
@@ -23,40 +24,43 @@ class DiploexecSpec extends Specification {
 
     def 'void init()'() {
         setup:
-            Process[] processes = [ new Process(id: 1), new Process(id: 2) ]
+            Process[] processes = [ new Process(id: new ObjectId('111111111111111111111111')), new Process(id: new ObjectId('222222222222222222222222')) ]
             processRepository.findByActiveIsTrue() >> processes
             diploexec.processRepository = processRepository
 
-            diploexec.findEventsOneWaitsFor({ it.id == 1 }) >> [ 'event-1-for-process-1', 'event-2-for-process-1' ]
-            diploexec.findEventsOneWaitsFor({ it.id == 2 }) >> [ 'event-3-for-process-2', 'event-4-for-process-2' ]
+            diploexec.findEventsOneWaitsFor({ it.id == new ObjectId('111111111111111111111111') }) >> [ 'event-1-for-process-1', 'event-2-for-process-1' ]
+            diploexec.findEventsOneWaitsFor({ it.id == new ObjectId('222222222222222222222222') }) >> [ 'event-3-for-process-2', 'event-4-for-process-2' ]
 
-            diploexec.findProcessesOneListensTo({ it.id == 1 }) >> [ 'process-2', 'process-3' ]
-            diploexec.findProcessesOneListensTo({ it.id == 2 }) >> [ 'process-1', 'process-4' ]
+            diploexec.findProcessesOneListensTo({ it.id == new ObjectId('111111111111111111111111') }) >> [ 'process-2', 'process-3' ]
+            diploexec.findProcessesOneListensTo({ it.id == new ObjectId('222222222222222222222222') }) >> [ 'process-1', 'process-4' ]
 
         when:
             diploexec.init()
 
         then:
             diploexec.waitsForEventsMap.size() == 2
-            diploexec.waitsForEventsMap[new Process(id: 1)] == [ 'event-1-for-process-1', 'event-2-for-process-1' ]
-            diploexec.waitsForEventsMap[new Process(id: 2)] == [ 'event-3-for-process-2', 'event-4-for-process-2' ]
+            diploexec.waitsForEventsMap[new Process(id: new ObjectId('111111111111111111111111'))] == [ 'event-1-for-process-1', 'event-2-for-process-1' ]
+            diploexec.waitsForEventsMap[new Process(id: new ObjectId('222222222222222222222222'))] == [ 'event-3-for-process-2', 'event-4-for-process-2' ]
 
             diploexec.listenToProcessesMap.size() == 2
-            diploexec.listenToProcessesMap[new Process(id: 1)] == [ 'process-2', 'process-3' ]
-            diploexec.listenToProcessesMap[new Process(id: 2)] == [ 'process-1', 'process-4' ]
+            diploexec.listenToProcessesMap[new Process(id: new ObjectId('111111111111111111111111'))] == [ 'process-2', 'process-3' ]
+            diploexec.listenToProcessesMap[new Process(id: new ObjectId('222222222222222222222222'))] == [ 'process-1', 'process-4' ]
     }
 
     def 'void run(ProcessRun processRun)'() {
         setup:
-            ProcessRun processRun = new ProcessRun()
+            ProcessRun processRun = new ProcessRun(id: new ObjectId('111111111111111111111111'))
+            processRunRepository.save(_) >> processRun
 
+            diploexec.processRunRepository = processRunRepository
             diploexec.threadPool = threadPool
 
-
         when:
-            diploexec.run(processRun)
+            ObjectId actual = diploexec.run(new ObjectId('111111111111111111111111'), [])
 
         then:
+            actual == new ObjectId('111111111111111111111111')
+
             1 * threadPool.execute({ ProcessCall processCall ->
                 processCall.diploexec == diploexec && processCall.processRun == processRun
             })
@@ -64,18 +68,22 @@ class DiploexecSpec extends Specification {
 
     def 'void notify(DiploexecEvent event)'() {
         setup:
-            ProcessRun[] processRuns = [ new ProcessRun(), new ProcessRun() ]
+            ProcessRun[] processRuns = [ new ProcessRun(processId: new ObjectId('111111111111111111111111'), parameters: []), new ProcessRun(processId: new ObjectId('222222222222222222222222'), parameters: []) ]
             DiploexecEvent event = Mock(DiploexecEvent)
 
             event.shouldNotifyRuns(_) >> processRuns
+
+            processRunRepository.save(_) >> { it[0] }
+
+            diploexec.processRunRepository = processRunRepository
             diploexec.threadPool = threadPool
 
         when:
             diploexec.notify(event)
 
         then:
-            1 * diploexec.run(processRuns[0])
-            1 * diploexec.run(processRuns[1])
+            1 * diploexec.run(new ObjectId('111111111111111111111111'), [])
+            1 * diploexec.run(new ObjectId('222222222222222222222222'), [])
     }
 
     def 'void notify(ProcessCallEvent event) - process run started event'() {
@@ -140,19 +148,19 @@ class DiploexecSpec extends Specification {
 
     def 'Process getProcess(String name)'() {
         setup:
-            diploexec.processes = [ new Process(id: 0, name: 'process-0'), new Process(id: 1, name: 'process-1'), new Process(id: 2, name: 'process-2') ]
+            diploexec.processes = [ new Process(id: new ObjectId('000000000000000000000000'), name: 'process-0'), new Process(id: new ObjectId('111111111111111111111111'), name: 'process-1'), new Process(id: new ObjectId('222222222222222222222222'), name: 'process-2') ]
 
         when:
             Process actual = diploexec.getProcess('process-1')
 
         then:
-            actual == new Process(id: 1, name: 'process-1')
+            actual == new Process(id: new ObjectId('111111111111111111111111'), name: 'process-1')
     }
 
     def 'Collection<Process> getProcessesWaitingFor(String eventName)'() {
         setup:
-            Process process1 = new Process(id: 1, name: 'process-1')
-            Process process2 = new Process(id: 2, name: 'process-2')
+            Process process1 = new Process(id: new ObjectId('111111111111111111111111'), name: 'process-1')
+            Process process2 = new Process(id: new ObjectId('222222222222222222222222'), name: 'process-2')
             diploexec.waitsForEventsMap = [:]
             diploexec.waitsForEventsMap.put(process1, [ 'event-1', 'event-2' ])
             diploexec.waitsForEventsMap.put(process2, [ 'event-2', 'event-3' ])
@@ -167,8 +175,8 @@ class DiploexecSpec extends Specification {
 
     def 'Collection<Process> getProcessesListeningTo(Process outputProcess)'() {
         setup:
-            Process process1 = new Process(id: 1, name: 'process-1')
-            Process process2 = new Process(id: 2, name: 'process-2')
+            Process process1 = new Process(id: new ObjectId('111111111111111111111111'), name: 'process-1')
+            Process process2 = new Process(id: new ObjectId('222222222222222222222222'), name: 'process-2')
             diploexec.listenToProcessesMap = [:]
             diploexec.listenToProcessesMap.put(process1, [ 'process-1', 'process-2' ])
             diploexec.listenToProcessesMap.put(process2, [ 'process-2', 'process-3' ])
@@ -183,7 +191,7 @@ class DiploexecSpec extends Specification {
 
     def 'Collection<String> findEventsOneWaitsFor(Process process)'() {
         setup:
-            Process process0 = new Process(id: 0, name: 'process-0')
+            Process process0 = new Process(id: new ObjectId('111111111111111111111111'), name: 'process-0')
             process0.definition = "command\nwaiting for: 'process-1'\ncommand\nlisten to: 'process-2'\ncommand"
 
         when:
@@ -196,7 +204,7 @@ class DiploexecSpec extends Specification {
 
     def 'Collection<String> findProcessesOneListensTo(Process process)'() {
         setup:
-            Process process0 = new Process(id: 0, name: 'process-0')
+            Process process0 = new Process(id: new ObjectId('111111111111111111111111'), name: 'process-0')
             process0.definition = "command\nwaiting for: 'process-1'\ncommand\nlisten to: 'process-2'\ncommand"
 
         when:

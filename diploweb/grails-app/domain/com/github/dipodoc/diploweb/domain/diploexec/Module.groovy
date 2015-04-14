@@ -14,4 +14,9 @@ class Module {
     String name
 
     Map data
+
+
+    static mapping = {
+        version false
+    }
 }

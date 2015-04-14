@@ -1,4 +1,4 @@
-<%@ page import="com.github.dipodoc.diploweb.diploexec.ModuleMethodRun" %>
+<%@ page import="com.github.dipodoc.diploweb.domain.diploexec.ModuleMethodRun" %>
 
 <!DOCTYPE html>
 <html>
@@ -37,15 +37,29 @@
 
 				<g:if test="${moduleMethodRunInstance?.moduleMethod}">
 					<li class="fieldcontain">
-						<span id="moduleMethod-label" class="property-label"><g:message code="moduleMethodRun.moduleMethod.label" default="Module Method" /></span>
+						<span id="moduleMethod-label" class="property-label"><g:message code="moduleMethodRun.moduleMethod.label" default="module method" /></span>
 
 						<span class="property-value" aria-labelledby="moduleMethod-label">${moduleMethodRunInstance?.moduleMethod?.module?.name}::${moduleMethodRunInstance?.moduleMethod?.name}</span>
 					</li>
 				</g:if>
 
+				<g:if test="${moduleMethodRunInstance?.parameters}">
+					<li class="fieldcontain">
+						<span id="parameters-label" class="property-label"><g:message code="moduleMethodRun.parameters.label" default="parameters" /></span>
+
+						<div class="property-value" aria-labelledby="parameters-label">
+							<g:each in="${moduleMethodRunInstance.parameters.entrySet()}" var="parametersItem">
+								<div class="property-value" aria-labelledby="parametersItem-label">
+									${parametersItem.key} = ${parametersItem.value}
+								</div>
+							</g:each>
+						</div>
+					</li>
+				</g:if>
+
 				<g:if test="${moduleMethodRunInstance?.startTime}">
 					<li class="fieldcontain">
-						<span id="startTime-label" class="property-label"><g:message code="moduleMethodRun.startTime.label" default="Start Time" /></span>
+						<span id="startTime-label" class="property-label"><g:message code="moduleMethodRun.startTime.label" default="start time" /></span>
 
 						<span class="property-value" aria-labelledby="startTime-label"><g:fieldValue bean="${moduleMethodRunInstance}" field="startTime"/></span>
 					</li>
@@ -53,7 +67,7 @@
 			
 				<g:if test="${moduleMethodRunInstance?.endTime}">
 					<li class="fieldcontain">
-						<span id="endTime-label" class="property-label"><g:message code="moduleMethodRun.endTime.label" default="End Time" /></span>
+						<span id="endTime-label" class="property-label"><g:message code="moduleMethodRun.endTime.label" default="end time" /></span>
 
 						<span class="property-value" aria-labelledby="endTime-label"><g:fieldValue bean="${moduleMethodRunInstance}" field="endTime"/></span>
 					</li>
@@ -61,7 +75,7 @@
 			
 				<g:if test="${moduleMethodRunInstance?.metrics}">
 					<li class="fieldcontain">
-						<span id="metrics-label" class="property-label"><g:message code="moduleMethodRun.metrics.label" default="Metrics" /></span>
+						<span id="metrics-label" class="property-label"><g:message code="moduleMethodRun.metrics.label" default="metrics" /></span>
 
 						<div class="property-value" aria-labelledby="metrics-label">
 							<g:each in="${moduleMethodRunInstance.metrics.entrySet()}" var="metricsItem">

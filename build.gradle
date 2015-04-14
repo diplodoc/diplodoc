@@ -84,16 +84,3 @@ project(':diploexec') {
 		compile project(':diplobase')
 	}
 }
-
-project(':diploexec:diploexec-shell') {
-	dependencies {
-        compile project(':diplobase')
-		compile project(':diploexec:diploexec-client')
-	}
-}
-
-project(':diploexec:diploexec-client') {
-	dependencies {
-		compile project(':diplobase')
-	}
-}

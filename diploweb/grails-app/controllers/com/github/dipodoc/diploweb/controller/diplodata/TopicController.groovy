@@ -68,7 +68,7 @@ class TopicController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [ message(code: 'Topic.label', default: 'Topic'), topicInstance.id ])
+                flash.message = message(code: 'default.updated.message', args: [ message(code: 'topic.label', default: 'Topic'), topicInstance.id ])
                 redirect topicInstance
             }
             '*' { respond topicInstance, [status: OK] }

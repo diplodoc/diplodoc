@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Field
 class ModuleMethod {
 
     @Id
-    String id
+    ObjectId id
 
 
     String name

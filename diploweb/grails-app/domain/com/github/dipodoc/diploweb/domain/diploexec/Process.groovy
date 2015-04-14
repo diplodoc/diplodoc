@@ -1,13 +1,17 @@
 package com.github.dipodoc.diploweb.domain.diploexec
 
 import groovy.transform.EqualsAndHashCode
+import org.bson.types.ObjectId
 
 import java.time.LocalDateTime
 
 @EqualsAndHashCode
 class Process {
 
-    Long id
+    static mapWith = 'mongo'
+
+    ObjectId id
+
 
     String name
 
@@ -17,24 +21,28 @@ class Process {
 
     boolean active
 
-    static mapping = {
-        table schema: 'diploexec'
 
-        version false
-
-        id generator: 'sequence', params: [ sequence:'diploexec.process_id_seq' ]
-        lastUpdate column: 'lastupdate'
+    static constraints = {
+        lastUpdate nullable: true
     }
 
+    static mapping = {
+        version false
+    }
+
+
     def beforeInsert() {
-        updatelastUpdateTime()
+        updateFields()
     }
 
     def beforeUpdate() {
-        updatelastUpdateTime()
+        if (isDirty('name') || isDirty('definition')) {
+            updateFields()
+        }
     }
 
-    def updatelastUpdateTime() {
-        lastUpdate = LocalDateTime.now().toString()
+    protected void updateFields() {
+        definition = definition.replace('\r', '')
+        lastUpdate = LocalDateTime.now()
     }
 }

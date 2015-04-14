@@ -1,6 +1,6 @@
 package com.github.dipodoc.diploweb.controller.train
 
-import com.github.dipodoc.diploweb.domain.diplodata.Post
+import com.github.dipodoc.diploweb.domain.diplodata.Doc
 import grails.transaction.Transactional
 import org.springframework.security.access.annotation.Secured
 
@@ -15,79 +15,81 @@ class TrainMeaningHtmlController {
     Random random = new Random()
 
     def list(Integer max) {
+        // FIXIT: DIPLODOC-161. Extract all grails controllers logic to services
         params.max = Math.min(max ?: 10, 100)
-        def trainSet = Post.findAllByTrain_meaningHtmlIsNotNull(params)
+        def trainSet = Doc.findAllByTrain_meaningHtmlIsNotNull(params)
 
-        respond trainSet, model: [ postInstanceCount: Post.countByTrain_meaningHtmlIsNotNull() ]
+        respond trainSet, model: [ docInstanceCount: Doc.countByTrain_meaningHtmlIsNotNull() ]
     }
 
     def trainNext() {
-        int index = random.nextInt(Post.countByTrain_meaningHtmlIsNull())
+        // FIXIT: DIPLODOC-161. Extract all grails controllers logic to services
+        int index = random.nextInt(Doc.countByTrain_meaningHtmlIsNull())
         def params = [ offset: index, max: 1 ]
 
-        Post randomUntrainedPost = Post.findByTrain_meaningHtmlIsNull(params)
-        [ postToTrain: randomUntrainedPost ]
+        Doc randomUntrainedDoc = Doc.findByTrain_meaningHtmlIsNull(params)
+        [ docToTrain: randomUntrainedDoc ]
     }
 
-    def edit(Post postInstance) {
-        respond postInstance
+    def edit(Doc docInstance) {
+        respond docInstance
     }
 
     @Transactional
     def saveAndNext() {
-        Post postToTrain = Post.get(params.id)
+        Doc docToTrain = Doc.get(params.id)
 
-        if (postToTrain == null) {
+        if (docToTrain == null) {
             notFound()
             return
         }
 
-        postToTrain.train_meaningHtml = params.train_meaningHtml
-        postToTrain.validate()
+        docToTrain.train_meaningHtml = params.train_meaningHtml
+        docToTrain.validate()
 
-        if (postToTrain.hasErrors()) {
-            respond postToTrain.errors, view: 'trainNext'
+        if (docToTrain.hasErrors()) {
+            respond docToTrain.errors, view: 'trainNext'
             return
         }
 
-        postToTrain.save flush:true
+        docToTrain.save flush:true
 
         redirect action: 'trainNext'
     }
 
     @Transactional
     def save() {
-        Post postToTrain = Post.get(params.id)
+        Doc docToTrain = Doc.get(params.id)
 
-        if (postToTrain == null) {
+        if (docToTrain == null) {
             notFound()
             return
         }
 
-        postToTrain.train_meaningHtml = params.train_meaningHtml
-        postToTrain.validate()
+        docToTrain.train_meaningHtml = params.train_meaningHtml
+        docToTrain.validate()
 
-        if (postToTrain.hasErrors()) {
-            respond postToTrain.errors, view: 'trainNext'
+        if (docToTrain.hasErrors()) {
+            respond docToTrain.errors, view: 'trainNext'
             return
         }
 
-        postToTrain.save flush:true
+        docToTrain.save flush:true
 
         redirect action: 'list'
     }
 
     @Transactional
     def removeFromTrain() {
-        Post postInstance = Post.get(params.id)
+        Doc docInstance = Doc.get(params.id)
 
-        if (postInstance == null) {
+        if (docInstance == null) {
             notFound()
             return
         }
 
-        postInstance.train_meaningHtml = null
-        postInstance.save flush:true
+        docInstance.train_meaningHtml = null
+        docInstance.save flush:true
 
         redirect action: 'list'
     }
@@ -95,7 +97,7 @@ class TrainMeaningHtmlController {
     protected void notFound() {
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.not.found.message', args: [ message(code: 'post.label', default: 'Post'), params.id ])
+                flash.message = message(code: 'default.not.found.message', args: [ message(code: 'doc.label', default: 'Doc'), params.id ])
                 redirect action: 'list', method: 'GET'
             }
             '*' { render status: NOT_FOUND }

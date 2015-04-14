@@ -1,15 +1,14 @@
 package com.github.dipodoc.diploweb.controller.diploexec
 
-import com.github.dipodoc.diploweb.controller.diploexec.ModuleMethodRunController
-import com.github.dipodoc.diploweb.diploexec.Module
-import com.github.dipodoc.diploweb.diploexec.ModuleMethod
-import com.github.dipodoc.diploweb.diploexec.ModuleMethodRun
+import com.github.dipodoc.diploweb.domain.diploexec.Module
+import com.github.dipodoc.diploweb.domain.diploexec.ModuleMethod
+import com.github.dipodoc.diploweb.domain.diploexec.ModuleMethodRun
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
 @TestFor(ModuleMethodRunController)
-@Mock([ Module, ModuleMethod, ModuleMethodRun])
+@Mock([ Module, ModuleMethod, ModuleMethodRun ])
 class ModuleMethodRunControllerSpec extends Specification {
 
     def "'list' action"() {

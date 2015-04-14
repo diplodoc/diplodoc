@@ -1,4 +1,4 @@
-<%@ page import="com.github.dipodoc.diploweb.diploexec.Process" %>
+<%@ page import="com.github.dipodoc.diploweb.domain.diploexec.Process" %>
 
 <!DOCTYPE html>
 <html>
@@ -16,6 +16,7 @@
 				<g:render template="/navigation/base-navigation"/>
 				<li><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
+				<li><g:link action="run" resource="${processInstance}"><g:message message="Run" /></g:link></li>
 			</ul>
 		</div>
 
@@ -40,7 +41,7 @@
 					<li class="fieldcontain">
 						<span id="definition-label" class="property-label"><g:message code="process.definition.label" default="Definition" /></span>
 
-						<span class="property-value" aria-labelledby="definition-label"><g:fieldValue bean="${processInstance}" field="definition"/></span>
+						<span class="property-value" aria-labelledby="definition-label">${processInstance.definition}</span>
 					</li>
 				</g:if>
 			

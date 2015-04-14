@@ -12,7 +12,7 @@ class SourceControllerSpec extends Specification {
 
     def "'list' action"() {
         given: 'single domain instance'
-            Source source = new Source(name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module').save flush:true
+            Source source = new Source(name: 'name', rssUrl: 'rss-url', newDocsFinderModule: 'module').save flush:true
 
         when: 'action is executed'
             controller.list()
@@ -24,8 +24,8 @@ class SourceControllerSpec extends Specification {
 
     def "'list' action with pagination"() {
         given: 'two domain instances'
-            Source source1 = new Source(name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module').save flush:true
-            Source source2 = new Source(name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module').save flush:true
+            Source source1 = new Source(name: 'name', rssUrl: 'rss-url', newDocsFinderModule: 'module').save flush:true
+            Source source2 = new Source(name: 'name', rssUrl: 'rss-url', newDocsFinderModule: 'module').save flush:true
 
         when: 'action is executed with max=1 parameter'
             controller.list(1)
@@ -37,7 +37,7 @@ class SourceControllerSpec extends Specification {
 
     def "'show' action"() {
         when: 'domain instance is passed to the action'
-            Source source = new Source(id: new ObjectId('111111111111111111111111'), name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module')
+            Source source = new Source(id: new ObjectId('111111111111111111111111'), name: 'name', rssUrl: 'rss-url', newDocsFinderModule: 'module')
             controller.show(source)
 
         then: 'model contains this instance'
@@ -64,7 +64,7 @@ class SourceControllerSpec extends Specification {
         when: 'action is executed with a valid instance'
             request.contentType = FORM_CONTENT_TYPE
             request.method = 'POST'
-            Source source = new Source(name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module')
+            Source source = new Source(name: 'name', rssUrl: 'rss-url', newDocsFinderModule: 'module')
 
             controller.save(source)
 
@@ -89,7 +89,7 @@ class SourceControllerSpec extends Specification {
 
     def "'edit' action"() {
         when: 'action is executed'
-            Source source = new Source(id: new ObjectId('111111111111111111111111'), name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module')
+            Source source = new Source(id: new ObjectId('111111111111111111111111'), name: 'name', rssUrl: 'rss-url', newDocsFinderModule: 'module')
             controller.edit(source)
 
         then: 'model is populated with domain instance'
@@ -108,7 +108,7 @@ class SourceControllerSpec extends Specification {
         when: 'valid domain instance is passed to the action'
             request.contentType = FORM_CONTENT_TYPE
             request.method = 'PUT'
-            Source source = new Source(name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module').save(flush: true)
+            Source source = new Source(name: 'name', rssUrl: 'rss-url', newDocsFinderModule: 'module').save(flush: true)
             controller.update(source)
 
         then: "redirect is issues to the 'show' action"
@@ -142,7 +142,7 @@ class SourceControllerSpec extends Specification {
 
     void "'delete' action"() {
         when: 'domain instance is created'
-            Source source = new Source(name: 'name', rssUrl: 'rss-url', newPostsFinderModule: 'module').save(flush: true)
+            Source source = new Source(name: 'name', rssUrl: 'rss-url', newDocsFinderModule: 'module').save(flush: true)
 
         then: 'it exists'
             Source.count() == 1

@@ -1,6 +1,7 @@
 package com.github.dipodoc.diploweb.controller.diploexec
 
 import com.github.dipodoc.diploweb.domain.diploexec.Module
+import com.github.dipodoc.diploweb.domain.diploexec.ModuleMethod
 import org.springframework.security.access.annotation.Secured
 
 import static org.springframework.http.HttpStatus.*
@@ -18,11 +19,29 @@ class ModuleController {
     }
 
     def show(Module moduleInstance) {
-        respond moduleInstance
+        if (moduleInstance == null) {
+            render status: NOT_FOUND
+            return
+        }
+
+        // FIXIT: DIPLODOC-161. Extract all grails controllers logic to services
+        def moduleMethodsList = ModuleMethod.where({ module == moduleInstance }).list()
+        [ 'moduleInstance': moduleInstance, 'moduleMethodsList': moduleMethodsList ]
     }
 
     def create() {
         respond new Module(params)
+    }
+
+    def edit(Module moduleInstance) {
+        if (moduleInstance == null) {
+            render status: NOT_FOUND
+            return
+        }
+
+        // FIXIT: DIPLODOC-161. Extract all grails controllers logic to services
+        def moduleMethodsList = ModuleMethod.where({ module == moduleInstance }).list()
+        [ 'moduleInstance': moduleInstance, 'moduleMethodsList': moduleMethodsList ]
     }
 
     @Transactional
@@ -46,10 +65,6 @@ class ModuleController {
             }
             '*' { respond moduleInstance, [status: CREATED] }
         }
-    }
-
-    def edit(Module moduleInstance) {
-        respond moduleInstance
     }
 
     @Transactional

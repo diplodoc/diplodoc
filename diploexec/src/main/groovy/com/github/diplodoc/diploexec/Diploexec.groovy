@@ -1,9 +1,11 @@
 package com.github.diplodoc.diploexec
 
-import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
-import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
-import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRepository
-import com.github.diplodoc.diplobase.repository.jpa.diploexec.ProcessRunRepository
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Process
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ProcessRepository
+import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ProcessRunRepository
+import groovy.util.logging.Slf4j
+import org.bson.types.ObjectId
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 
 import javax.annotation.PostConstruct
@@ -11,6 +13,7 @@ import javax.annotation.PostConstruct
 /**
  * @author yaroslav.yermilov
  */
+@Slf4j
 class Diploexec {
 
     ThreadPoolTaskExecutor threadPool
@@ -23,51 +26,54 @@ class Diploexec {
 
     @PostConstruct
     void init() {
-        println 'initializing diploexec runtime...'
+        log.info 'initializing diploexec runtime...'
 
-        println 'loading processes...'
+        // FIXIT: DIPLODOC-122. Refresh post definitions while diploexec runs
         processes = processRepository.findByActiveIsTrue()
         waitsForEventsMap = new HashMap<>()
         listenToProcessesMap = new HashMap<>()
 
-        println 'creating process interaction map...'
         processes.each { Process process ->
             waitsForEventsMap[process] = findEventsOneWaitsFor(process)
             listenToProcessesMap[process] = findProcessesOneListensTo(process)
         }
     }
 
-    void run(ProcessRun processRun) {
-        println "starting process ${processRun}..."
+    ObjectId run(ObjectId processId, List parameters) {
+        ProcessRun processRun = processRunRepository.save new ProcessRun(processId: processId, parameters: parameters)
+
+        log.info "starting process ${processRun}..."
         threadPool.execute(new ProcessCall(this, processRun))
+
+        return processRun.id
     }
 
     void notify(DiploexecEvent event) {
-        println "event fired ${event}..."
-        event.shouldNotifyRuns(this).each { ProcessRun processRun -> run(processRun) }
+        log.info "event fired ${event}..."
+        event.shouldNotifyRuns(this).each { ProcessRun processRun -> run(processRun.processId, processRun.parameters) }
     }
 
     void notify(ProcessCallEvent event) {
-        println "event fired ${event}..."
+        log.info "event fired ${event}..."
 
         switch (event.type) {
             case ProcessCallEvent.Type.PROCESS_RUN_STARTED:
                 event.processRun.exitStatus = 'NOT FINISHED'
                 event.processRun.startTime = event.time
                 processRunRepository.save event.processRun
-            break;
+            break
 
             case ProcessCallEvent.Type.PROCESS_RUN_SUCCEED:
                 event.processRun.exitStatus = 'SUCCEED'
                 event.processRun.endTime = event.time
                 processRunRepository.save event.processRun
-            break;
+            break
 
             case ProcessCallEvent.Type.PROCESS_RUN_FAILED:
                 event.processRun.exitStatus = 'FAILED'
                 event.processRun.endTime = event.time
                 processRunRepository.save event.processRun
-                break;
+            break
 
             default:
                 assert false : "unknown ProcessCallEvent: ${event.type}"
@@ -76,6 +82,10 @@ class Diploexec {
 
     Process getProcess(String name) {
         processes.find { Process process -> process.name == name }
+    }
+
+    Process getProcess(ObjectId id) {
+        processes.find { Process process -> process.id == id }
     }
 
     Collection<Process> getProcessesWaitingFor(String eventName) {

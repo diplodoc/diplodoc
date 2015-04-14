@@ -1,40 +1,40 @@
 package com.github.dipodoc.diploweb.controller
 
-import com.github.dipodoc.diploweb.domain.diplodata.Post
+import com.github.dipodoc.diploweb.domain.diplodata.Doc
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import org.bson.types.ObjectId
 import spock.lang.Specification
 
 @TestFor(DiploclientController)
-@Mock(Post)
+@Mock(Doc)
 class DiploclientControllerSpec extends Specification {
 
-    def "'postList' action with sorting"() {
-        given: 'two posts'
-            Post post1 = new Post(publishTime: '1').save flush:true
-            Post post2 = new Post(publishTime: '2').save flush:true
+    def "'docList' action with sorting"() {
+        given: 'two docs'
+            Doc doc1 = new Doc(publishTime: '1').save flush:true
+            Doc doc2 = new Doc(publishTime: '2').save flush:true
 
         when: 'action is executed'
-            controller.postList()
+            controller.docList()
 
-        then: 'model contains posts sorted by publishTime desc'
-            model.postInstanceCount == 2
-            model.postInstanceList == [ post2, post1 ]
+        then: 'model contains docs sorted by publishTime desc'
+            model.docInstanceCount == 2
+            model.docInstanceList == [ doc2, doc1 ]
     }
 
-    void "'show' action"() {
+    void "'docShow' action"() {
         when: 'domain instance is passed to the action'
-            Post post = new Post(id: new ObjectId('111111111111111111111111'))
-            controller.postShow(post)
+            Doc doc = new Doc(id: new ObjectId('111111111111111111111111'))
+            controller.docShow(doc)
 
         then: 'model contains this instance'
-            model.postInstance == post
+            model.docInstance == doc
     }
 
-    void "'show' action with null domain"() {
+    void "'docShow' action with null domain"() {
         when: 'action is executed with a null domain'
-            controller.postShow(null)
+            controller.docShow(null)
 
         then: '404 error is returned'
             response.status == 404

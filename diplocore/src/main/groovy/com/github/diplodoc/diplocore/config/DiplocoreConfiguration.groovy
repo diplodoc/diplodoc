@@ -10,4 +10,4 @@ import org.springframework.context.annotation.Import
  */
 @Configuration
 @ComponentScan('com.github.diplodoc.diplocore')
-class DiplocoreConfiguration { }
+class DiplocoreConfiguration {}

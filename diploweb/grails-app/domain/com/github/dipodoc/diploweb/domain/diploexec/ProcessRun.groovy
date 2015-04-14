@@ -1,15 +1,19 @@
 package com.github.dipodoc.diploweb.domain.diploexec
 
 import groovy.transform.EqualsAndHashCode
+import org.bson.types.ObjectId
+
+import java.time.LocalDateTime
 
 @EqualsAndHashCode
 class ProcessRun {
 
-    Long id
+    static mapWith = 'mongo'
+
+    ObjectId id
+
 
     static belongsTo = [ process: Process ]
-
-    static hasMany = [ parameters: ProcessRunParameter ]
 
     String startTime
 
@@ -17,14 +21,12 @@ class ProcessRun {
 
     String exitStatus
 
+    static hasMany = [ parameters: ProcessRunParameter ]
+
+
+    static embedded = [ 'parameters' ]
+
     static mapping = {
-        table schema: 'diploexec', name: 'processrun'
-
         version false
-
-        id generator: 'sequence', params: [ sequence:'diploexec.processrun_id_seq' ]
-        startTime column: 'starttime'
-        endTime column: 'endtime'
-        exitStatus column: 'exitstatus'
     }
 }

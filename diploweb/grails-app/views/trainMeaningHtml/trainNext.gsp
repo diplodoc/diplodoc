@@ -1,82 +1,82 @@
-<%@ page import="com.github.dipodoc.diploweb.domain.diplodata.Post" %>
+<%@ page import="com.github.dipodoc.diploweb.domain.diplodata.Doc" %>
 
 <!DOCTYPE html>
 <html>
     <head>
         <meta name="layout" content="main">
-        <title><g:message message="Train post id=${postToTrain.id}" /></title>
+        <title><g:message message="Train doc id=${docToTrain.id}" /></title>
     </head>
 
     <body>
-        <a href="#show-post" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
+        <a href="#show-doc" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 
         <div class="nav" role="navigation">
             <ul>
                 <g:render template="/navigation/base-navigation"/>
-                <li><g:link class="list" action="list"><g:message code="default.list.label" args="['Post']" /></g:link></li>
-                <li><g:link action="trainNext"><g:message message="train next post" /></g:link></li>
+                <li><g:link class="list" action="list"><g:message code="default.list.label" args="['Doc']" /></g:link></li>
+                <li><g:link action="trainNext"><g:message message="train next doc" /></g:link></li>
             </ul>
         </div>
 
-        <div id="show-post" class="content scaffold-show" role="main">
-            <h1>Train post id=${postToTrain.id}</h1>
+        <div id="show-doc" class="content scaffold-show" role="main">
+            <h1>Train doc id=${docToTrain.id}</h1>
 
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
 
-            <g:hasErrors bean="${postToTrain}">
+            <g:hasErrors bean="${docToTrain}">
                 <ul class="errors" role="alert">
-                    <g:eachError bean="${postToTrain}" var="error">
+                    <g:eachError bean="${docToTrain}" var="error">
                         <li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
                     </g:eachError>
                 </ul>
             </g:hasErrors>
 
-            <ol class="property-list post">
+            <ol class="property-list doc">
 
-                <g:if test="${postToTrain?.id}">
+                <g:if test="${docToTrain?.id}">
                     <li class="fieldcontain">
-                        <span id="id-label" class="property-label"><g:message code="post.id.label" default="id" /></span>
-                        <span class="property-value" aria-labelledby="id-label"><g:fieldValue bean="${postToTrain}" field="id"/></span>
+                        <span id="id-label" class="property-label"><g:message code="doc.id.label" default="id" /></span>
+                        <span class="property-value" aria-labelledby="id-label"><g:fieldValue bean="${docToTrain}" field="id"/></span>
                     </li>
                 </g:if>
 
-                <g:if test="${postToTrain?.url}">
+                <g:if test="${docToTrain?.url}">
                     <li class="fieldcontain">
-                        <span id="url-label" class="property-label"><g:message code="post.url.label" default="Url" /></span>
-                        <span class="property-value" aria-labelledby="url-label"><a href="${postToTrain.url}" target="_blank"><g:fieldValue bean="${postToTrain}" field="url"/></a></span>
+                        <span id="url-label" class="property-label"><g:message code="doc.url.label" default="Url" /></span>
+                        <span class="property-value" aria-labelledby="url-label"><a href="${docToTrain.url}" target="_blank"><g:fieldValue bean="${docToTrain}" field="url"/></a></span>
                     </li>
 
                     <li class="fieldcontain">
-                        <span id="htmlSource-label" class="property-label"><g:message code="post.htmlSource.label" default="html source" /></span>
-                        <span class="property-value" aria-labelledby="htmlSource-label"><a href="view-source:${postToTrain.url}" target="_blank"><g:fieldValue bean="${postToTrain}" field="url"/></a></span>
-                    </li>
-                </g:if>
-
-                <g:if test="${postToTrain?.title}">
-                    <li class="fieldcontain">
-                        <span id="title-label" class="property-label"><g:message code="post.title.label" default="Title" /></span>
-                        <span class="property-value" aria-labelledby="title-label"><g:fieldValue bean="${postToTrain}" field="title"/></span>
+                        <span id="htmlSource-label" class="property-label"><g:message code="doc.htmlSource.label" default="html source" /></span>
+                        <span class="property-value" aria-labelledby="htmlSource-label"><a href="view-source:${docToTrain.url}" target="_blank"><g:fieldValue bean="${docToTrain}" field="url"/></a></span>
                     </li>
                 </g:if>
 
-                <g:if test="${postToTrain?.source}">
+                <g:if test="${docToTrain?.title}">
                     <li class="fieldcontain">
-                        <span id="source-label" class="property-label"><g:message code="post.source.label" default="Source" /></span>
-                        <span class="property-value" aria-labelledby="source-label"><g:link controller="source" action="show" id="${postToTrain?.source?.id}">${postToTrain?.source?.name}</g:link></span>
+                        <span id="title-label" class="property-label"><g:message code="doc.title.label" default="Title" /></span>
+                        <span class="property-value" aria-labelledby="title-label"><g:fieldValue bean="${docToTrain}" field="title"/></span>
+                    </li>
+                </g:if>
+
+                <g:if test="${docToTrain?.source}">
+                    <li class="fieldcontain">
+                        <span id="source-label" class="property-label"><g:message code="doc.source.label" default="Source" /></span>
+                        <span class="property-value" aria-labelledby="source-label"><g:link controller="source" action="show" id="${docToTrain?.source?.id}">${docToTrain?.source?.name}</g:link></span>
                     </li>
                 </g:if>
 
                 <g:form controller="trainMeaningHtml" action="saveAndNext" method="PUT">
-                    <g:hiddenField name="id" value="${postToTrain?.id}" />
+                    <g:hiddenField name="id" value="${docToTrain?.id}" />
                     <fieldset class="form">
-                        <div class="fieldcontain ${hasErrors(bean: postToTrain, field: 'train_meaningHtml', 'error')} required">
+                        <div class="fieldcontain ${hasErrors(bean: docToTrain, field: 'train_meaningHtml', 'error')} required">
                             <label for="train_meaningHtml">
                                 <g:message code="process.train_meaningHtml.label" default="train meaning html" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <g:textArea name="train_meaningHtml" required="" value="${postToTrain?.train_meaningHtml}"/>
+                            <g:textArea name="train_meaningHtml" required="" value="${docToTrain?.train_meaningHtml}"/>
                         </div>
                     </fieldset>
                     <fieldset class="buttons">

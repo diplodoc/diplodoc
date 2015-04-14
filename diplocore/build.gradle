@@ -26,6 +26,9 @@ dependencies {
 
     compile dependency.spark.core
     compile dependency.spark.mllib
+
+    compile dependency.log.slf4j
+    compile dependency.log.logback
 }
 
 apply plugin: 'war'

@@ -24,12 +24,10 @@ dependencies {
 
     compile dependency.grails.scaffolding
     compile dependency.grails.asset
+    compile dependency.grails.ehcache
     compile dependency.grails.mongodb
     compile dependency.grails.security
-    compile(dependency.grails.hibernate) {
-        exclude module: 'xml-apis'
-    }
+    compile dependency.grails.rest
 
-    runtime dependency.postgresql
     runtime dependency.grails.jquery
 }

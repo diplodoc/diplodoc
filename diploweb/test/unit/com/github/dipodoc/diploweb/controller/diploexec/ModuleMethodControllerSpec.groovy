@@ -1,8 +1,7 @@
 package com.github.dipodoc.diploweb.controller.diploexec
 
-import com.github.dipodoc.diploweb.controller.diploexec.ModuleMethodController
-import com.github.dipodoc.diploweb.diploexec.Module
-import com.github.dipodoc.diploweb.diploexec.ModuleMethod
+import com.github.dipodoc.diploweb.domain.diploexec.Module
+import com.github.dipodoc.diploweb.domain.diploexec.ModuleMethod
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification

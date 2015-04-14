@@ -1,6 +1,7 @@
 package com.github.dipodoc.diploweb.controller.diploexec
 
 import com.github.dipodoc.diploweb.domain.diploexec.Process
+import grails.plugins.rest.client.RestBuilder
 import org.springframework.security.access.annotation.Secured
 
 import static org.springframework.http.HttpStatus.*
@@ -23,6 +24,23 @@ class ProcessController {
 
     def create() {
         respond new Process(params)
+    }
+
+    def run(Process processInstance) {
+        respond processInstance
+    }
+
+    def start(Process processInstance) {
+        // FIXIT: DIPLODOC-161. Extract all grails controllers logic to services
+        def client = new RestBuilder()
+
+        // FIXIT: DIPLODOC-26. Externalize application configuration
+        def response = client.post("http://localhost:8080/diploexec/process/${processInstance.id}/run") {
+            contentType 'text/plain'
+        }
+        String processRunId = "${response?.text}"
+
+        redirect controller: 'processRun', action: 'show', id: processRunId
     }
 
     @Transactional

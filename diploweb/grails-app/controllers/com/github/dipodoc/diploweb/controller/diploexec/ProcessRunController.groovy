@@ -12,6 +12,8 @@ class ProcessRunController {
 
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
+        params.sort = 'startTime'
+        params.order = 'desc'
         respond ProcessRun.list(params), model: [ processRunInstanceCount: ProcessRun.count() ]
     }
 

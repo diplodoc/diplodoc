@@ -1,14 +1,14 @@
 package com.github.dipodoc.diploweb.controller.diploexec
 
-import com.github.dipodoc.diploweb.controller.diploexec.ModuleController
-import com.github.dipodoc.diploweb.diploexec.Module
+import com.github.dipodoc.diploweb.domain.diploexec.Module
+import com.github.dipodoc.diploweb.domain.diploexec.ModuleMethod
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import org.bson.types.ObjectId
 import spock.lang.Specification
 
 @TestFor(ModuleController)
-@Mock(Module)
+@Mock([ Module, ModuleMethod ])
 class ModuleControllerSpec extends Specification {
 
     def "'list' action"() {
@@ -37,12 +37,18 @@ class ModuleControllerSpec extends Specification {
     }
 
     def "'show' action"() {
+        given: 'domain instances'
+            Module module1 = new Module(id: new ObjectId('111111111111111111111111'), name: 'module1', data: [:])
+            Module module2 = new Module(id: new ObjectId('222222222222222222222222'), name: 'module2', data: [:])
+            ModuleMethod moduleMethod1 = new ModuleMethod(module: module1, name: 'moduleMethod1').save flush:true
+            new ModuleMethod(module: module2, name: 'moduleMethod2').save flush:true
+
         when: 'domain instance is passed to the action'
-            Module module = new Module(id: new ObjectId('111111111111111111111111'), name: 'name', data: [:])
-            controller.show(module)
+            def model = controller.show(module1)
 
         then: 'model contains this instance'
-            model.moduleInstance == module
+            model.moduleInstance == module1
+            model.moduleMethodsList == [ moduleMethod1 ]
     }
 
     def "'show' action with null domain"() {
@@ -89,12 +95,18 @@ class ModuleControllerSpec extends Specification {
     }
 
     def "'edit' action"() {
+        given: 'domain instances'
+            Module module1 = new Module(id: new ObjectId('111111111111111111111111'), name: 'module1', data: [:])
+            Module module2 = new Module(id: new ObjectId('222222222222222222222222'), name: 'module2', data: [:])
+            ModuleMethod moduleMethod1 = new ModuleMethod(module: module1, name: 'moduleMethod1').save flush:true
+            new ModuleMethod(module: module2, name: 'moduleMethod2').save flush:true
+
         when: 'action is executed'
-            Module module = new Module(id: new ObjectId('111111111111111111111111'), name: 'name', data: [:])
-            controller.edit(module)
+            def model = controller.edit(module1)
 
         then: 'model is populated with domain instance'
-            model.moduleInstance == module
+            model.moduleInstance == module1
+            model.moduleMethodsList == [ moduleMethod1 ]
     }
 
     def "'edit' action with null domain"() {

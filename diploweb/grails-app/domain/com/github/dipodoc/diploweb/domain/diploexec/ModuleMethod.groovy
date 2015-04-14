@@ -14,4 +14,9 @@ class ModuleMethod {
     String name
 
     static belongsTo = [ module: Module ]
+
+
+    static mapping = {
+        version false
+    }
 }

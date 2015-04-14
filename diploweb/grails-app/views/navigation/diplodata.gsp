@@ -10,7 +10,7 @@
         <div class="nav" role="navigation">
             <ul>
                 <g:render template="/navigation/base-navigation"/>
-                <li><a href="${createLink(controller: 'post', action: 'list')}"><g:message code="default.post.label" default="posts" /></a></li>
+                <li><a href="${createLink(controller: 'doc', action: 'list')}"><g:message code="default.doc.label" default="docs" /></a></li>
                 <li><a href="${createLink(controller: 'topic', action: 'list')}"><g:message code="default.topic.label" default="topics" /></a></li>
                 <li><a href="${createLink(controller: 'source', action: 'list')}"><g:message code="default.source.label" default="sources" /></a></li>
                 <li><a href="${createLink(uri: '/train-sets')}"><g:message code="default.trainSets.label" default="train sets" /></a></li>
