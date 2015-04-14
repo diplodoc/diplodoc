@@ -2,7 +2,9 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.svm import SVC
 from sklearn.pipeline import Pipeline
+
 import random
+import Queue
 
 import pickle
 import base64
@@ -27,15 +29,32 @@ def classify(post_id):
 
     topic_map = {}
     topic_ref_list = []
-    for record in db.topic.find():
+
+    queue = Queue.Queue()
+    immidiate_children = get_immediate_children()
+    for child in immidiate_children:
+        queue.put(child)
+
+    while not queue.empty():
+        record = queue.get()
         depickled = record['classifier']
         topic = record['label']
-        reference = DBRef('topic', record['_id'])
         decoded = base64.b64decode(depickled)
         text_clf = pickle.loads(decoded)
-        predicted = text_clf.predict_proba([post['meaningText']])[0]
-        topic_map[topic] = predicted[0]
-        topic_ref_list.append({ 'topic_id': record['_id'], 'score': predicted[0] })
+
+        if text_clf is None:
+            score = 0.0
+        else :
+            predicted = text_clf.predict_proba([post['meaningText']])[0]
+            score = predicted[0]
+
+        if score > 0.4:
+            topic_map[topic] = score
+            topic_ref_list.append({'topic_id': record['_id'], 'score': score})
+
+            children = children_list(record)
+            for child in children:
+                queue.put(child)
 
     post['predicted_topics'] = topic_ref_list
     db.post.update({"_id": post["_id"]}, post)
@@ -91,6 +110,16 @@ def train():
     return "YOUR CLASSIFIER IS READY TO USE: " + str(quality_score)
 
 
+def get_immediate_children():
+    client = MongoClient()
+    db = client['diplodata']
+    children = []
+    for x in db.topic.find({'parent': {'$exists': 0}}):
+        children.append(x)
+
+    return children
+
+
 def extend_label_list(train_labels):
     extended_train_labels = [None]*len(train_labels)
     for i in range(len(train_labels)):
@@ -110,20 +139,26 @@ def build_classifiers(train_texts, train_labels, topics):
 
     scores = [None]*len(cv_test_texts)
     for topic in topics:
-        cv_train_labels_adjusted = adjust_labels(cv_train_labels, topic)
+        (cv_train_labels_adjusted, cv_train_texts_adjusted) = adjust_and_filter(cv_train_labels, cv_train_texts, topic)
         text_clf = Pipeline([('vect', CountVectorizer()), ('tfidf', TfidfTransformer()), ('clf', SVC(probability=True))])
 
         if len(set(cv_train_labels_adjusted)) <= 1:
-            cv_train_labels_adjusted = adjust_labels(train_labels, topic)
-            text_clf = text_clf.fit(train_texts, cv_train_labels_adjusted)
+            (cv_train_labels_adjusted, cv_train_texts_adjusted) = adjust_and_filter(train_labels, train_texts, topic)
+            if len(set(cv_train_labels_adjusted)) <= 1:
+                text_clf = None
+            else:
+                text_clf = text_clf.fit(cv_train_texts_adjusted, cv_train_labels_adjusted)
         else:
-            text_clf = text_clf.fit(cv_train_texts, cv_train_labels_adjusted)
+            text_clf = text_clf.fit(cv_train_texts_adjusted, cv_train_labels_adjusted)
 
         classifiers.append(text_clf)
         print 'classifier for topic %s created' % topic
 
         for i, test_text in enumerate(cv_test_texts):
-            score = text_clf.predict_proba(test_text)[0][0]
+            if text_clf is None:
+                score = 0.0
+            else:
+                score = text_clf.predict_proba(test_text)[0][0]
             if scores[i] is None:
                 scores[i] = {topic: score}
             else:
@@ -149,6 +184,36 @@ def final_score(test_label_list, predicted_labels_map):
     return sum(res_list)/len(res_list)
 
 
+def children_list(topic):
+    client = MongoClient()
+    db = client['diplodata']
+
+    if topic is None:
+        return get_immediate_children()
+
+    if isinstance(topic, basestring):
+        topic_record = db.topic.find_one({'label': topic})
+    else:
+        topic_record = topic
+
+    children_record = []
+    for record in db.topic.find({'parent': DBRef('topic', topic_record['_id'])}):
+        children_record.append(record)
+
+    return children_record
+
+
+def get_direct_parent(topic):
+    client = MongoClient()
+    db = client['diplodata']
+    record = db.topic.find_one({'label': topic})
+
+    if 'parent' not in record:
+        return None
+
+    return db.dereference(record['parent'])
+
+
 def parent_list(topic):
     parents = [topic]
 
@@ -163,14 +228,21 @@ def parent_list(topic):
     return parents
 
 
-def adjust_labels(train_labels, topic):
-    adjusted_labels = [0]*len(train_labels)
+def adjust_and_filter(train_labels, train_texts, topic):
+    adjusted_labels, adjusted_texts = [], []
+
+    parent_topic = get_direct_parent(topic)
+    eligible_topics = set([x['label'] for x in children_list(parent_topic)])
+
     for i in range(len(train_labels)):
         if topic in train_labels[i]:
-            adjusted_labels[i] = 0
-        else:
-            adjusted_labels[i] = 1
-    return adjusted_labels
+            adjusted_labels.append(0)
+            adjusted_texts.append(train_texts[i])
+        elif len(eligible_topics.intersection(train_labels[i])) > 0:
+            adjusted_labels.append(1)
+            adjusted_texts.append(train_texts[i])
+
+    return adjusted_labels, adjusted_texts
 
 
 if __name__ == '__main__':
