@@ -41,7 +41,7 @@ class TrainTopicsControllerSpec extends Specification {
             model.docInstanceList == [ doc2 ] || model.docInstanceList == [ doc3 ]
     }
 
-    @Ignore
+    @Ignore('FIXIT: DIPLODOC-145. Fix multiple failing tests in diploweb')
     def "'trainNext' action with no 'id' parameter"() {
         given: 'domain instances'
             Topic topic = new Topic(label: 'label').save flush:true
@@ -119,7 +119,7 @@ class TrainTopicsControllerSpec extends Specification {
             flash.message != null
     }
 
-    @Ignore
+    @Ignore('FIXIT: DIPLODOC-145. Fix multiple failing tests in diploweb')
     def "'removeTopicFromTrainingSet' action with valid domain instance"() {
         given: 'domain instances'
             Topic topic1 = new Topic(label: 'label').save flush:true
@@ -174,7 +174,7 @@ class TrainTopicsControllerSpec extends Specification {
             flash.message != null
     }
 
-    @Ignore
+    @Ignore('FIXIT: DIPLODOC-145. Fix multiple failing tests in diploweb')
     def "'addTopicToTrainingSet' action with valid domain instance"() {
         given: 'domain instances'
             Topic topic1 = new Topic(label: 'label').save flush:true
@@ -195,7 +195,7 @@ class TrainTopicsControllerSpec extends Specification {
             Doc.get(doc.id).train_topics == [ topic1, topic2 ]
     }
 
-    @Ignore
+    @Ignore('FIXIT: DIPLODOC-145. Fix multiple failing tests in diploweb')
     void "'addTopicToTrainingSet' action with null domain"() {
         given: 'domain instances'
             Topic topic = new Topic(label: 'label').save flush:true
@@ -213,7 +213,7 @@ class TrainTopicsControllerSpec extends Specification {
             flash.message != null
     }
 
-    @Ignore
+    @Ignore('FIXIT: DIPLODOC-145. Fix multiple failing tests in diploweb')
     void "'addTopicToTrainingSet' action with invalid topic"() {
         given: 'domain instances'
             Doc doc = new Doc(train_topics: []).save flush:true
