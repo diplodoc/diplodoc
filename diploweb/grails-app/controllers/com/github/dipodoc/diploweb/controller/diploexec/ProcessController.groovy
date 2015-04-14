@@ -31,7 +31,10 @@ class ProcessController {
     }
 
     def start(Process processInstance) {
+        // FIXIT: DIPLODOC-161. Extract all grails controllers logic to services
         def client = new RestBuilder()
+
+        // FIXIT: DIPLODOC-26. Externalize application configuration
         def response = client.post("http://localhost:8080/diploexec/process/${processInstance.id}/run") {
             contentType 'text/plain'
         }

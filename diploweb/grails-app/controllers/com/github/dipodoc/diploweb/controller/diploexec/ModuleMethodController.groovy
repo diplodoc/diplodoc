@@ -14,6 +14,7 @@ class ModuleMethodController {
     static allowedMethods = [ save: 'POST', update: 'PUT', delete: 'DELETE' ]
 
     def create() {
+        // FIXIT: DIPLODOC-161. Extract all grails controllers logic to services
         ModuleMethod moduleMethod = new ModuleMethod(params)
         moduleMethod.module = Module.get(params.moduleId)
         respond moduleMethod

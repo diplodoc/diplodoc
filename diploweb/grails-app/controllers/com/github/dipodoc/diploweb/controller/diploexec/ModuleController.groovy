@@ -24,6 +24,7 @@ class ModuleController {
             return
         }
 
+        // FIXIT: DIPLODOC-161. Extract all grails controllers logic to services
         def moduleMethodsList = ModuleMethod.where({ module == moduleInstance }).list()
         [ 'moduleInstance': moduleInstance, 'moduleMethodsList': moduleMethodsList ]
     }
@@ -38,6 +39,7 @@ class ModuleController {
             return
         }
 
+        // FIXIT: DIPLODOC-161. Extract all grails controllers logic to services
         def moduleMethodsList = ModuleMethod.where({ module == moduleInstance }).list()
         [ 'moduleInstance': moduleInstance, 'moduleMethodsList': moduleMethodsList ]
     }

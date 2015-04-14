@@ -16,6 +16,7 @@ class TrainTopicsController {
     Random random = new Random()
 
     def list(Integer max) {
+        // FIXIT: DIPLODOC-161. Extract all grails controllers logic to services
         params.max = Math.min(max ?: 10, 100)
         def trainSet = Doc.where { train_topics != null && train_topics.size() > 0 }
 
@@ -23,6 +24,7 @@ class TrainTopicsController {
     }
 
     def trainNext() {
+        // FIXIT: DIPLODOC-161. Extract all grails controllers logic to services
         if (params.id == null) {
             int untrainedCount = Doc.where({ train_topics == null || train_topics.isEmpty() }).count()
             int index = random.nextInt(untrainedCount)

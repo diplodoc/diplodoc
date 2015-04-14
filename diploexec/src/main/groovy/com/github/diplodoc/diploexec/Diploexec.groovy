@@ -28,6 +28,7 @@ class Diploexec {
     void init() {
         log.info 'initializing diploexec runtime...'
 
+        // FIXIT: DIPLODOC-122. Refresh post definitions while diploexec runs
         processes = processRepository.findByActiveIsTrue()
         waitsForEventsMap = new HashMap<>()
         listenToProcessesMap = new HashMap<>()

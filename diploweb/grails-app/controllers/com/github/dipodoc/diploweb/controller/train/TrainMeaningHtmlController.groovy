@@ -15,6 +15,7 @@ class TrainMeaningHtmlController {
     Random random = new Random()
 
     def list(Integer max) {
+        // FIXIT: DIPLODOC-161. Extract all grails controllers logic to services
         params.max = Math.min(max ?: 10, 100)
         def trainSet = Doc.findAllByTrain_meaningHtmlIsNotNull(params)
 
@@ -22,6 +23,7 @@ class TrainMeaningHtmlController {
     }
 
     def trainNext() {
+        // FIXIT: DIPLODOC-161. Extract all grails controllers logic to services
         int index = random.nextInt(Doc.countByTrain_meaningHtmlIsNull())
         def params = [ offset: index, max: 1 ]
 
