@@ -30,7 +30,7 @@ class RssNewDocsFinderSpec extends Specification {
 
     def 'def newDocs(String sourceId)'() {
         when:
-            1 * auditService.runMethodUnderAudit('com.github.diplodoc.diplocore.modules.RssNewDocsFinder', 'newDocs', _) >> { it ->
+            1 * auditService.runMethodUnderAudit('RssNewDocsFinder', 'newDocs', _) >> { it ->
                 Module module = new Module()
                 ModuleMethod moduleMethod = new ModuleMethod()
                 ModuleMethodRun moduleMethodRun = new ModuleMethodRun()

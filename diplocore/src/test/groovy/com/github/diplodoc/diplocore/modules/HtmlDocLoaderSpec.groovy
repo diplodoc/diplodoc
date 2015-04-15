@@ -24,7 +24,7 @@ class HtmlDocLoaderSpec extends Specification {
 
     def 'def loadDoc(String docId)'() {
         when:
-            1 * auditService.runMethodUnderAudit('com.github.diplodoc.diplocore.modules.HtmlDocLoader', 'loadDoc', _) >> { it ->
+            1 * auditService.runMethodUnderAudit('HtmlDocLoader', 'loadDoc', _) >> { it ->
                 Module module = new Module()
                 ModuleMethod moduleMethod = new ModuleMethod()
                 ModuleMethodRun moduleMethodRun = new ModuleMethodRun()

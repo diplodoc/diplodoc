@@ -21,7 +21,7 @@ class SourcesSpec extends Specification {
 
     def 'def all()'() {
         when:
-            1 * auditService.runMethodUnderAudit('com.github.diplodoc.diplocore.modules.data.Sources', 'all', _) >> { it ->
+            1 * auditService.runMethodUnderAudit('data.Sources', 'all', _) >> { it ->
                 Module module = new Module()
                 ModuleMethod moduleMethod = new ModuleMethod()
                 ModuleMethodRun moduleMethodRun = new ModuleMethodRun()

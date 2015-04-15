@@ -48,7 +48,7 @@ class RssNewDocsFinder {
     @RequestMapping(value = '/source/{id}/new-docs', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody def newDocs(@PathVariable('id') String sourceId) {
-        auditService.runMethodUnderAudit('com.github.diplodoc.diplocore.modules.RssNewDocsFinder', 'newDocs') { module, moduleMethod, moduleMethodRun ->
+        auditService.runMethodUnderAudit('RssNewDocsFinder', 'newDocs') { module, moduleMethod, moduleMethodRun ->
             moduleMethodRun.parameters = [ 'sourceId': sourceId ]
 
             Source source = sourceRepository.findOne new ObjectId(sourceId)

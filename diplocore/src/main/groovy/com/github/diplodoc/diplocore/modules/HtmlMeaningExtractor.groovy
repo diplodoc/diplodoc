@@ -55,7 +55,7 @@ class HtmlMeaningExtractor {
     @RequestMapping(value = '/doc/{id}/extract-meaning', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     def extractMeaning(@PathVariable('id') String docId) {
-        auditService.runMethodUnderAudit('com.github.diplodoc.diplocore.modules.HtmlMeaningExtractor', 'extractMeaning') { module, moduleMethod, moduleMethodRun ->
+        auditService.runMethodUnderAudit('HtmlMeaningExtractor', 'extractMeaning') { module, moduleMethod, moduleMethodRun ->
             moduleMethodRun.parameters = [ 'docId': docId ]
 
             Doc doc = docRepository.findOne new ObjectId(docId)
@@ -78,7 +78,7 @@ class HtmlMeaningExtractor {
     @RequestMapping(value = '/train-model', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     def trainModel() {
-        auditService.runMethodUnderAudit('com.github.diplodoc.diplocore.modules.HtmlMeaningExtractor', 'trainModel') { module, moduleMethod, moduleMethodRun ->
+        auditService.runMethodUnderAudit('HtmlMeaningExtractor', 'trainModel') { module, moduleMethod, moduleMethodRun ->
             def dataSplits = dataSplits()
             JavaRDD<LabeledPoint> trainSet = dataSplits['trainSet']
             JavaRDD<LabeledPoint> testSet = dataSplits['testSet']

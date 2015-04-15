@@ -36,8 +36,8 @@ class HtmlMeaningExtractorSpec extends Specification {
 
     def 'def extractMeaning(String docId)'() {
         setup:
-            1 * auditService.runMethodUnderAudit('com.github.diplodoc.diplocore.modules.HtmlMeaningExtractor', 'extractMeaning', _) >> { it ->
-                Module module = new Module(name: 'com.github.diplodoc.diplocore.modules.HtmlMeaningExtractor', data: [ 'model': ([ 1, 2 ,3 ] as byte[]) ])
+            1 * auditService.runMethodUnderAudit('HtmlMeaningExtractor', 'extractMeaning', _) >> { it ->
+                Module module = new Module(name: 'HtmlMeaningExtractor', data: [ 'model': ([ 1, 2 ,3 ] as byte[]) ])
                 ModuleMethod moduleMethod = new ModuleMethod()
                 ModuleMethodRun moduleMethodRun = new ModuleMethodRun()
 
@@ -85,8 +85,8 @@ class HtmlMeaningExtractorSpec extends Specification {
 
     def 'def trainModel()'() {
         setup:
-            1 * auditService.runMethodUnderAudit('com.github.diplodoc.diplocore.modules.HtmlMeaningExtractor', 'trainModel', _) >> { it ->
-                Module module = new Module(name: 'com.github.diplodoc.diplocore.modules.HtmlMeaningExtractor', id: new ObjectId('111111111111111111111111'))
+            1 * auditService.runMethodUnderAudit('HtmlMeaningExtractor', 'trainModel', _) >> { it ->
+                Module module = new Module(name: 'HtmlMeaningExtractor', id: new ObjectId('111111111111111111111111'))
                 ModuleMethod moduleMethod = new ModuleMethod()
                 ModuleMethodRun moduleMethodRun = new ModuleMethodRun()
 
