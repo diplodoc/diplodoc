@@ -49,6 +49,7 @@ class HtmlDocLoader {
 
             Document document = htmlService.load doc.uri
             doc.html = document.html()
+            doc.binary = doc.html.bytes
             doc.type = 'text/html'
             doc.loadTime = LocalDateTime.now()
 
