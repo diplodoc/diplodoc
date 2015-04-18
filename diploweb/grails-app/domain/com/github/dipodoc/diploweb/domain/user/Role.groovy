@@ -15,7 +15,6 @@ class Role {
 
 	static mapping = {
 		version false
-		cache true
 	}
 
 	static constraints = {
