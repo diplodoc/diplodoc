@@ -34,10 +34,13 @@ class AuditService {
             ModuleMethod moduleMethod = moduleMethodRepository.findByName(methodName).find({ it.moduleId == module.id })
             ModuleMethodRun moduleMethodRun = new ModuleMethodRun(moduleMethodId: moduleMethod.id, startTime: LocalDateTime.now())
 
+            log.info "Starting ${moduleName}::${methodName}..."
             def response = originalMethod.call(module, moduleMethod, moduleMethodRun)
 
             moduleMethodRun.endTime = LocalDateTime.now()
             moduleMethodRun.metrics = response['metrics']
+
+            log.info "${moduleName}::${methodName}(${moduleMethodRun?.parameters}) finished"
 
             if (response['module']) {
                 moduleRepository.save response['module']
