@@ -39,14 +39,17 @@ class LocalFileLoader {
         auditService.runMethodUnderAudit('knu.LocalFileLoader', 'loadFiles') { module, moduleMethod, moduleMethodRun ->
             moduleMethodRun.parameters = [ 'path': path ]
 
-            Collection<Doc> docs = localFilesService.listFiles(path).collect { File file ->
-                new Doc(
-                    knu: true,
-                    uri: "file://localhost/${file.absolutePath}",
-                    loadTime: LocalDateTime.now(),
-                    binary: localFilesService.read(file)
-                )
-            }
+            Collection<Doc> docs = localFilesService
+                                    .listFiles(path)
+                                    .findAll { File file -> !docRepository.findOneByUri("file://localhost/${file.absolutePath}") }
+                                    .collect { File file ->
+                                        new Doc(
+                                            knu: true,
+                                            uri: "file://localhost/${file.absolutePath}",
+                                            loadTime: LocalDateTime.now(),
+                                            binary: localFilesService.read(file)
+                                        )
+                                    }
 
             def metrics = [ 'new files count': docs.size() ]
 
