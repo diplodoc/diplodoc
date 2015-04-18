@@ -27,13 +27,16 @@ class Doc {
     String loadTime
 
 
+    String html
+
+    byte[] binary
+
+
     String title
 
     String description
 
     String publishTime
-
-    String html
 
 
     @Field('train_meaningHtml')
@@ -42,4 +45,7 @@ class Doc {
     String meaningHtml
 
     String meaningText
+
+
+    boolean knu
 }
