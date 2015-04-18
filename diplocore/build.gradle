@@ -28,6 +28,9 @@ dependencies {
     compile dependency.spark.core
     compile dependency.spark.mllib
 
+    compile dependency.tika.core
+    compile dependency.tika.parsers
+
     compile dependency.log.slf4j
     compile dependency.log.logback
 }

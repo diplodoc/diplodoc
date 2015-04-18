@@ -1,17 +1,11 @@
-package com.github.diplodoc.diplocore.modules
+package com.github.diplodoc.diplocore.modules.knu
 
 import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Doc
-import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Module
-import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ModuleMethodRun
 import com.github.diplodoc.diplobase.repository.mongodb.diplodata.DocRepository
-import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleMethodRepository
-import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleMethodRunRepository
-import com.github.diplodoc.diplobase.repository.mongodb.diploexec.ModuleRepository
 import com.github.diplodoc.diplocore.services.AuditService
-import com.github.diplodoc.diplocore.services.HtmlService
+import com.github.diplodoc.diplocore.services.RawDataService
 import groovy.util.logging.Slf4j
 import org.bson.types.ObjectId
-import org.jsoup.nodes.Document
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
@@ -26,12 +20,9 @@ import java.time.LocalDateTime
  * @author yaroslav.yermilov
  */
 @Controller
-@RequestMapping('/html-doc-loader')
+@RequestMapping('/doc-type-detector')
 @Slf4j
-class HtmlDocLoader {
-
-    @Autowired
-    HtmlService htmlService
+class DocTypeDetector {
 
     @Autowired
     DocRepository docRepository
@@ -39,19 +30,20 @@ class HtmlDocLoader {
     @Autowired
     AuditService auditService
 
-    @RequestMapping(value = '/doc/{id}/load', method = RequestMethod.POST)
+    @Autowired
+    RawDataService rawDataService
+
+    @RequestMapping(value = '/doc/{id}/type', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    def loadDoc(@PathVariable('id') String docId) {
-        auditService.runMethodUnderAudit('HtmlDocLoader', 'loadDoc') { module, moduleMethod, moduleMethodRun ->
+    def detectType(@PathVariable('id') String docId) {
+        auditService.runMethodUnderAudit('knu.DocTypeDetector', 'detectType') { module, moduleMethod, moduleMethodRun ->
             moduleMethodRun.parameters = [ 'docId': docId ]
 
             Doc doc = docRepository.findOne new ObjectId(docId)
 
-            Document document = htmlService.load doc.uri
-            doc.html = document.html()
-            doc.binary = doc.html.bytes
-            doc.type = 'text/html'
-            doc.loadTime = LocalDateTime.now()
+            doc.type = rawDataService.detectType(doc.uri, doc.binary)
+
+            log.info "${doc.uri} detected as ${doc.type}"
 
             docRepository.save doc
 
