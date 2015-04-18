@@ -50,6 +50,7 @@ ext {
 
     dependency.commons = [:]
     dependency.commons.lang = 'org.apache.commons:commons-lang3:3.3.2'
+    dependency.commons.io = 'commons-io:commons-io:2.4'
 
     dependency.jsoup = 'org.jsoup:jsoup:1.7.3'
 

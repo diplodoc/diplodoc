@@ -13,6 +13,7 @@ sourceSets {
 
 dependencies {
     compile dependency.commons.lang
+    compile dependency.commons.io
 
     compile dependency.servlet
     compile dependency.spring.web
