@@ -13,6 +13,8 @@ class Doc {
 
     String uri
 
+    String type
+
     static belongsTo = [ source: Source ]
 
     String loadTime
@@ -41,6 +43,7 @@ class Doc {
 
     static constraints = {
         uri nullable: true
+        type nullable: true
         source nullable: true
         loadTime nullable: true
         title nullable: true

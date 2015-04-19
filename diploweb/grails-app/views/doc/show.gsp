@@ -41,6 +41,13 @@
                     </li>
                 </g:if>
 
+                <g:if test="${docInstance?.type}">
+                    <li class="fieldcontain">
+                        <span id="type-label" class="property-label"><g:message code="doc.type.label" default="type" /></span>
+                        <span class="property-value" aria-labelledby="type-label"><g:fieldValue bean="${docInstance}" field="type"/></span>
+                    </li>
+                </g:if>
+
                 <g:if test="${docInstance?.title}">
                     <li class="fieldcontain">
                         <span id="title-label" class="property-label"><g:message code="doc.title.label" default="Title" /></span>
