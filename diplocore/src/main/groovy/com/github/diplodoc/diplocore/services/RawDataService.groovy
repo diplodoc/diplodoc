@@ -1,11 +1,11 @@
 package com.github.diplodoc.diplocore.services
 
-import org.apache.commons.io.IOUtils
 import org.apache.tika.config.TikaConfig
 import org.apache.tika.io.TikaInputStream
 import org.apache.tika.metadata.Metadata
 import org.apache.tika.parser.AutoDetectParser
 import org.apache.tika.sax.BodyContentHandler
+import org.apache.tika.sax.ToXMLContentHandler
 import org.springframework.stereotype.Service
 
 /**
@@ -29,5 +29,14 @@ class RawDataService {
         autoDetectParser.parse(new ByteArrayInputStream(rawData), bodyContentHandler, metadata)
 
         bodyContentHandler.toString()
+    }
+
+    String extractHtml(byte[] rawData) {
+        AutoDetectParser autoDetectParser = new AutoDetectParser()
+        ToXMLContentHandler toXMLContentHandler = new ToXMLContentHandler()
+        Metadata metadata = new Metadata()
+        autoDetectParser.parse(new ByteArrayInputStream(rawData), toXMLContentHandler, metadata)
+
+        toXMLContentHandler.toString()
     }
 }

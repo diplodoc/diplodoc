@@ -40,6 +40,7 @@ class TextExtractor {
             Doc doc = docRepository.findOne new ObjectId(docId)
 
             doc.meaningText = rawDataService.extractText(doc.binary)
+            doc.meaningHtml = rawDataService.extractHtml(doc.binary)
 
             docRepository.save doc
 
