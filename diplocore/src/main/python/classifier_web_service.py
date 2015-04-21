@@ -16,12 +16,16 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 from bson.dbref import DBRef
 
+from datetime import datetime
+
 
 app = Flask(__name__)
 
 
 @app.route("/doc-type-classifier/doc/<doc_id>/classify")
 def classify(doc_id):
+    start_time = str(datetime.now())
+
     client = MongoClient()
     db = client['diplodata']
 
@@ -59,11 +63,21 @@ def classify(doc_id):
     doc['predicted_topics'] = topic_ref_list
     db.doc.update({"_id": doc["_id"]}, doc)
 
+    end_time = str(datetime.now())
+
+    module = db.module.find_one({ "name": "DocTypeClassifier" })
+    moduleMethod = db.moduleMethod.find_one({ "name": "classify", "module": module['_id'] })
+    moduleMethodRun = { "moduleMethod": moduleMethod['_id'], "startTime": start_time, "endTime": end_time }
+
+    db.moduleMethodRun.insert(moduleMethodRun)
+
     return 'RESULT: ' + str(topic_map)
 
 
 @app.route("/doc-type-classifier/train-from-all-docs", methods=['POST', 'GET'])
 def train():
+    start_time = str(datetime.now())
+
     content = request.json
     partial_train = False
     if content is not None and 'partial_train' in content:
@@ -76,7 +90,7 @@ def train():
     for doc in db.doc.find():
         if 'train_topics' in doc.keys():
             train_texts.append(doc['meaningText'])
-            train_labels.append([db.dereference(x)['label'] for x in doc['train_topics']])
+            train_labels.append([dereference_topic(db, x)['label'] for x in doc['train_topics']])
 
     topics = []
     for record in db.topic.find():
@@ -93,9 +107,6 @@ def train():
     print 'start building classifiers...'
     (classifiers, quality_score) = build_classifiers(train_texts, train_labels, topics)
 
-    print 'save perf data...'
-    db.stats.insert({'aggregated_score': quality_score, 'num_topics': len(topics)})
-
     print 'save classifiers'
     for i in range(len(classifiers)):
         topic = topics[i]
@@ -106,6 +117,15 @@ def train():
         record = db.topic.find_one({'label': topic})
         record['classifier'] = encoded
         db.topic.update({"_id": record["_id"]}, record, upsert=True)
+
+    end_time = str(datetime.now())
+
+    print 'save perf data...'
+    module = db.module.find_one({ "name": "DocTypeClassifier" })
+    moduleMethod = db.moduleMethod.find_one({ "name": "train", "module": module['_id'] })
+    moduleMethodRun = { "moduleMethod": moduleMethod['_id'], "startTime": start_time, "endTime": end_time, "metrics": {'aggregated_score': quality_score, 'num_topics': len(topics)} }
+
+    db.moduleMethodRun.insert(moduleMethodRun)
 
     return "YOUR CLASSIFIER IS READY TO USE: " + str(quality_score)
 
@@ -211,7 +231,7 @@ def get_direct_parent(topic):
     if 'parent' not in record:
         return None
 
-    return db.dereference(record['parent'])
+    return dereference_topic(db, record['parent'])
 
 
 def parent_list(topic):
@@ -222,7 +242,7 @@ def parent_list(topic):
     record = db.topic.find_one({'label': topic})
     iterator = record
     while 'parent' in iterator.keys():
-        iterator = db.dereference(iterator['parent'])
+        iterator = dereference_topic(db, iterator['parent'])
         parents.append(iterator['label'])
 
     return parents
@@ -243,6 +263,13 @@ def adjust_and_filter(train_labels, train_texts, topic):
             adjusted_texts.append(train_texts[i])
 
     return adjusted_labels, adjusted_texts
+
+
+def dereference_topic(db, topic):
+    if isinstance(topic, DBRef):
+        return db.dereference(topic)
+    else:
+        return db.topic.find_one({ "_id": ObjectId(str(topic)) })
 
 
 if __name__ == '__main__':
