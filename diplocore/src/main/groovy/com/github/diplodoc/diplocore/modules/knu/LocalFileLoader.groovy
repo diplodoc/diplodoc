@@ -44,7 +44,7 @@ class LocalFileLoader {
                                     .findAll { File file -> !docRepository.findOneByUri("file://localhost/${file.absolutePath}") }
                                     .collect { File file ->
                                         new Doc(
-                                            knu: true,
+                                            knuDocument: true,
                                             uri: "file://localhost/${file.absolutePath}",
                                             loadTime: LocalDateTime.now(),
                                             binary: localFilesService.read(file)

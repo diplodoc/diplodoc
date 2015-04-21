@@ -8,6 +8,8 @@ class UrlMappings {
         '/diploexec'(view: '/navigation/diploexec')
         '/train-sets'(view: '/navigation/train-sets')
 
+        '/knu'(view: '/navigation/knu')
+
         '500'(view: '/error')
 	}
 }

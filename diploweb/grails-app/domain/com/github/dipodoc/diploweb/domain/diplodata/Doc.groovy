@@ -2,6 +2,7 @@ package com.github.dipodoc.diploweb.domain.diplodata
 
 import groovy.transform.EqualsAndHashCode
 import org.bson.types.ObjectId
+import org.springframework.data.mongodb.core.mapping.Field
 
 @EqualsAndHashCode
 class Doc {
@@ -39,6 +40,9 @@ class Doc {
     static hasMany = [ train_topics: Topic ]
 
     List predicted_topics
+
+
+    boolean knu_document
 
 
     static constraints = {

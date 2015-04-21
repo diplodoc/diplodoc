@@ -47,5 +47,6 @@ class Doc {
     String meaningText
 
 
-    boolean knu
+    @Field('knu_document')
+    boolean knuDocument
 }
