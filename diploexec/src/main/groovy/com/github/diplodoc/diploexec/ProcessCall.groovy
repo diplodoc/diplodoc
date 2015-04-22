@@ -1,13 +1,16 @@
 package com.github.diplodoc.diploexec
 
-import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
-import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRunParameter
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Process
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRunParameter
 import groovy.json.JsonSlurper
+import groovy.util.logging.Slf4j
 import org.springframework.web.client.RestTemplate
 
 /**
  * @author yaroslav.yermilov
  */
+@Slf4j
 class ProcessCall implements Runnable {
 
     JsonSlurper jsonSlurper = new JsonSlurper()
@@ -24,22 +27,21 @@ class ProcessCall implements Runnable {
     @Override
     void run() {
         try {
-            println "process started ${processRun}"
+            log.info "process started ${processRun}"
             diploexec.notify(ProcessCallEvent.started(processRun))
 
-            String script = processRun.process.definition
+            String script = diploexec.getProcess(processRun.processId).definition
             Map<String, Object> parameters = processRun.parameters.collectEntries { ProcessRunParameter parameter ->
                 [ parameter.key,  Class.forName(parameter.type).newInstance(jsonSlurper.parseText(parameter.value)) ]
             }
-            println "process definition\n${script}"
+            log.info "process definition\n${script}"
 
             evaluate(parameters, script)
 
-            println "process succeeded ${processRun}"
+            log.info "process succeeded ${processRun}"
             diploexec.notify(ProcessCallEvent.succeed(processRun))
         } catch (e) {
-            println "process failed ${processRun}"
-            e.printStackTrace()
+            log.error "process failed ${processRun}", e
             diploexec.notify(ProcessCallEvent.failed(processRun))
         }
     }
@@ -82,14 +84,14 @@ class ProcessCall implements Runnable {
         }
     }
 
-    void get(Map params) {
+    def get(Map params) {
         String url = params.from
         Class responseType = params.expect ?: String
 
         restTemplate.getForObject(url, responseType)
     }
 
-    void post(Map params) {
+    def post(Map params) {
         String url = params.to
         Object request = params.request
         Class responseType = params.expect ?: String

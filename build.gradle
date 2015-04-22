@@ -2,7 +2,7 @@ apply from: 'repository.gradle'
 
 allprojects {
 	group = 'com.github.diplodoc'
-	version = '0.0.5'
+	version = '0.0.6'
 
     apply plugin: 'jacoco'
 
@@ -11,13 +11,8 @@ allprojects {
     }
 }
 
-subprojects {
-    apply plugin: 'java'
+configure(subprojects.findAll {it.name != 'diploweb'}) {
 	apply plugin: 'groovy'
-
-	repositories {
-	    jcenter()
-	}
 
 	dependencies {
 		compile dependency.groovy
@@ -35,18 +30,25 @@ subprojects {
 
 task testFailReport(type: TestReport) {
     destinationDir = file("$buildDir/reports/results")
-    reportOn subprojects*.test*.binResultsDir
+    reportOn subprojects.findAll({it.name != 'diploweb'})*.test*.binResultsDir
 }
 
 task testResultsReport(type: TestReport) {
     destinationDir = file("$buildDir/reports/results")
-    reportOn subprojects*.test
+    reportOn subprojects.findAll({it.name != 'diploweb'})*.test
+}
+
+task grailsTestResultReport(type: Copy) {
+    from fileTree("${project(':diploweb').buildDir}/test-results/html").include('**/*.html').include('**/*.css')
+    into "$buildDir/reports/grails-results"
+
+    dependsOn ':diploweb:grails-test-app'
 }
 
 task testCoverageReport(type: JacocoReport) {
     executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
 
-    subprojects.each { sourceSets it.sourceSets.main }
+    subprojects.findAll({it.name != 'diploweb'}).each { sourceSets it.sourceSets.main }
 
     reports {
         xml.enabled false
@@ -56,7 +58,7 @@ task testCoverageReport(type: JacocoReport) {
     }
 
     dependsOn {
-        subprojects*.test
+        subprojects.findAll({it.name != 'diploweb'})*.test
     }
 }
 
@@ -66,15 +68,10 @@ task clean(type: Delete) {
 
 task testReport(type: DefaultTask) {
     dependsOn {
-        [ testResultsReport, testCoverageReport ]
+        [ testResultsReport, grailsTestResultReport, testCoverageReport ]
     }
 }
 
-project(':diplobase:diplobase-shell') {
-	dependencies {
-		compile project(':diplobase')
-	}
-}
 project(':diplocore') {
 	dependencies {
 		compile project(':diplobase')
@@ -84,19 +81,6 @@ project(':diplocore') {
 project(':diploexec') {
 	dependencies {
 		compile project(':diplocore')
-		compile project(':diplobase')
-	}
-}
-
-project(':diploexec:diploexec-shell') {
-	dependencies {
-        compile project(':diplobase')
-		compile project(':diploexec:diploexec-client')
-	}
-}
-
-project(':diploexec:diploexec-client') {
-	dependencies {
 		compile project(':diplobase')
 	}
 }

@@ -7,5 +7,5 @@ import org.springframework.context.annotation.Import
  * @author yaroslav.yermilov
  */
 @Configuration
-@Import([ JpaConfiguration, MongodbConfiguration ])
-class DiplobaseConfiguration { }
+@Import(MongodbConfiguration)
+class DiplobaseConfiguration {}

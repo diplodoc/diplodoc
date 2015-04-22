@@ -1,9 +1,0 @@
-dependencies {
-    compile dependency.spring.shell
-}
-
-apply plugin: 'application'
-mainClassName = 'org.springframework.shell.Bootstrap'
-run {
-    standardInput = System.in
-}

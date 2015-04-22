@@ -1,0 +1,5 @@
+listen to: 'extract-meaning-from-html'
+
+input 'docId'
+
+get from: "http://localhost:5000/doc-type-classifier/doc/${docId}/classify"

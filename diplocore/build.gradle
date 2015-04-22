@@ -12,6 +12,9 @@ sourceSets {
 }
 
 dependencies {
+    compile dependency.commons.lang
+    compile dependency.commons.io
+
     compile dependency.servlet
     compile dependency.spring.web
     compile dependency.spring.webmvc
@@ -21,6 +24,15 @@ dependencies {
 
     compile dependency.jsoup
     compile dependency.rome
+
+    compile dependency.spark.core
+    compile dependency.spark.mllib
+
+    compile dependency.tika.core
+    compile dependency.tika.parsers
+
+    compile dependency.log.slf4j
+    compile dependency.log.logback
 }
 
 apply plugin: 'war'

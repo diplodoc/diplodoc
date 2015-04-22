@@ -1,7 +1,12 @@
 package com.github.diplodoc.diplocore.modules.data
 
-import com.github.diplodoc.diplobase.domain.mongodb.Source
-import com.github.diplodoc.diplobase.repository.mongodb.SourceRepository
+import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Source
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Module
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ModuleMethod
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ModuleMethodRun
+import com.github.diplodoc.diplobase.repository.mongodb.diplodata.SourceRepository
+import com.github.diplodoc.diplocore.services.AuditService
+import org.bson.types.ObjectId
 import spock.lang.Specification
 
 /**
@@ -10,17 +15,28 @@ import spock.lang.Specification
 class SourcesSpec extends Specification {
 
     SourceRepository sourceRepository = Mock(SourceRepository)
+    AuditService auditService = Mock(AuditService)
 
-    Sources sources = new Sources(sourceRepository: sourceRepository)
+    Sources sources = new Sources(sourceRepository: sourceRepository, auditService: auditService)
 
-    def 'Collection<Source> all()'() {
+    def 'def all()'() {
         when:
-            sourceRepository.findAll() >> [ new Source(name: 'name-1'), new Source(name: 'name-2') ]
+            1 * auditService.runMethodUnderAudit('data.Sources', 'all', _) >> { it ->
+                Module module = new Module()
+                ModuleMethod moduleMethod = new ModuleMethod()
+                ModuleMethodRun moduleMethodRun = new ModuleMethodRun()
+
+                return it[2].call(module, moduleMethod, moduleMethodRun)
+            }
+
+            sourceRepository.findAll() >> [ new Source(id: new ObjectId('111111111111111111111111')), new Source(id: new ObjectId('222222222222222222222222')) ]
 
         then:
-            Collection<Source> actual = sources.all()
+            Map actual = sources.all()
 
         expect:
-            actual == [ new Source(name: 'name-1'), new Source(name: 'name-2') ]
+            actual.keySet().size() == 2
+            actual['result'] == [ '111111111111111111111111', '222222222222222222222222' ]
+            actual['metrics'] == [ 'sources count': 2 ]
     }
 }

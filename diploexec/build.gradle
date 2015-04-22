@@ -7,10 +7,10 @@ dependencies {
     compile dependency.jackson.core
     compile dependency.jackson.databind
 
-    compile dependency.postgresql
-    compile dependency.commons.dbcp
-
     compile dependency.jsoup
+
+    compile dependency.log.slf4j
+    compile dependency.log.logback
 }
 
 apply plugin: 'war'

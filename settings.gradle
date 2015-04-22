@@ -1,10 +1,9 @@
 include 'diplobase'
-include 'diplobase:diplobase-shell'
 
 include 'diplocore'
 
 include 'diploexec'
-include 'diploexec:diploexec-client'
-include 'diploexec:diploexec-shell'
 
 include 'diploproc'
+
+include 'diploweb'

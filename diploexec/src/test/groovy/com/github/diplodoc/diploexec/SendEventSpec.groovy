@@ -1,7 +1,8 @@
 package com.github.diplodoc.diploexec
 
-import com.github.diplodoc.diplobase.domain.jpa.diploexec.Process
-import com.github.diplodoc.diplobase.domain.jpa.diploexec.ProcessRun
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.Process
+import com.github.diplodoc.diplobase.domain.mongodb.diploexec.ProcessRun
+import org.bson.types.ObjectId
 import spock.lang.Specification
 
 /**
@@ -11,7 +12,7 @@ class SendEventSpec extends Specification {
 
     def 'Collection<ProcessRun> shouldNotifyRuns(Diploexec diploexec)'() {
         setup:
-            Process process0 = new Process(name: 'process-0')
+            Process process0 = new Process(id: new ObjectId('000000000000000000000000'), name: 'process-0')
 
             Diploexec diploexec = Mock(Diploexec)
             diploexec.getProcess('process-0') >> process0
@@ -24,10 +25,24 @@ class SendEventSpec extends Specification {
         then:
             actual.size() == 1
 
-            actual[0].process.name == 'process-0'
+            actual[0].processId == new ObjectId('000000000000000000000000')
             actual[0].parameters[0].key == 'key'
             actual[0].parameters[0].value == '"value"'
             actual[0].parameters[0].type == 'java.lang.String'
-            actual[0].parameters[0].processRun == actual[0]
+    }
+
+    def 'boolean equals(Object other)'() {
+        expect:
+            new SendEvent('process-0', [ 'key' : 'value' ]).equals(other) == expected
+
+        where:
+            other                                                                | expected
+            new SendEvent('process-0', [ 'key' : 'value' ])                      | true
+            new SendEvent('process-1', [ 'key' : 'value' ])                      | false
+            new SendEvent('process-0', [ 'key-2' : 'value-2' ])                  | false
+            new SendEvent('process-0', [:])                                      | false
+            new SendEvent('process-0', [ 'key' : 'value', 'key-2' : 'value-2' ]) | false
+            new SendEvent(null, [:])                                             | false
+            new SendEvent('process-0', null)                                     | false
     }
 }
