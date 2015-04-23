@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
  * @author yaroslav.yermilov
  */
 @Controller
-@RequestMapping('/text-extractor')
+@RequestMapping('/knu/text-extractor')
 @Slf4j
 class TextExtractor {
 

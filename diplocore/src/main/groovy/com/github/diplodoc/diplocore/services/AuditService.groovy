@@ -40,7 +40,7 @@ class AuditService {
             moduleMethodRun.endTime = LocalDateTime.now()
             moduleMethodRun.metrics = response['metrics']
 
-            log.info "${moduleName}::${methodName}(${moduleMethodRun?.parameters}) finished"
+            log.info "${moduleName}::${methodName}(${moduleMethodRun?.parameters ?: ''}) finished"
 
             if (response['module']) {
                 moduleRepository.save response['module']
