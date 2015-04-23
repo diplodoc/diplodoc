@@ -20,7 +20,7 @@ import java.time.LocalDateTime
  * @author yaroslav.yermilov
  */
 @Controller
-@RequestMapping('/local-file-loader')
+@RequestMapping('/knu/local-file-loader')
 @Slf4j
 class LocalFileLoader {
 

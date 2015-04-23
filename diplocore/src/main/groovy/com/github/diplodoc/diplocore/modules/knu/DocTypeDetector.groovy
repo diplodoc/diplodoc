@@ -20,7 +20,7 @@ import java.time.LocalDateTime
  * @author yaroslav.yermilov
  */
 @Controller
-@RequestMapping('/doc-type-detector')
+@RequestMapping('/knu/doc-type-detector')
 @Slf4j
 class DocTypeDetector {
 
