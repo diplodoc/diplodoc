@@ -5,14 +5,14 @@
 	<head>
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'doc.label', default: 'Doc')}" />
-		<title><g:message message="documents" /></title>
+		<title><g:message message="posts" /></title>
 	</head>
 
 	<body>
 		<a href="#list-doc" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;" /></a>
 
 		<div id="list-doc" class="content scaffold-list" role="main">
-			<h1><g:message message="documents" /></h1>
+			<h1><g:message message="posts" /></h1>
 
 			<g:if test="${flash.message}">
 				<div class="message" role="status">${flash.message}</div>
