@@ -49,4 +49,7 @@ class Doc {
 
     @Field('knu_document')
     boolean knuDocument
+
+    @Field('knu_post')
+    boolean knuPost
 }
