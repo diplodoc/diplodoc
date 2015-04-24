@@ -33,6 +33,8 @@ dependencies {
 
     compile dependency.log.slf4j
     compile dependency.log.logback
+
+    compile dependency.spring.social.facebook
 }
 
 apply plugin: 'war'

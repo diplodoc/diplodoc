@@ -13,7 +13,7 @@
 
 		<div class="nav" role="navigation">
 			<ul>
-				<li><g:link class="list" action="list"><g:message message="posts list" /></g:link></li>
+				<li><g:link class="list" action="list"><g:message message="social list" /></g:link></li>
 			</ul>
 		</div>
 
