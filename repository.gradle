@@ -26,6 +26,9 @@ ext {
     dependency.spring.data = [:]
     dependency.spring.data.mongodb = 'org.springframework.data:spring-data-mongodb:1.6.2.RELEASE'
 
+    dependency.spring.social = [:]
+    dependency.spring.social.facebook = 'org.springframework.social:spring-social-facebook:2.0.0.RELEASE'
+
     dependency.spring.hateoas = 'org.springframework.hateoas:spring-hateoas:0.16.0.RELEASE'
 
     dependency.grails = [:]

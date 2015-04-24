@@ -52,4 +52,7 @@ class Doc {
 
     @Field('knu_post')
     boolean knuPost
+
+    @Field('knu_social')
+    boolean knuSocial
 }

@@ -46,6 +46,8 @@ class Doc {
 
     boolean knu_post
 
+    boolean knu_social
+
 
     static constraints = {
         uri nullable: true
