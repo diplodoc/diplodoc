@@ -31,7 +31,15 @@ class AuditService {
     def runMethodUnderAudit(String moduleName, String methodName, Closure originalMethod) {
         try {
             Module module = moduleRepository.findOneByName(moduleName)
+            if (!module) {
+                throw new RuntimeException("Module ${moduleName} does not exists")
+            }
+
             ModuleMethod moduleMethod = moduleMethodRepository.findByName(methodName).find({ it.moduleId == module.id })
+            if (!moduleMethod) {
+                throw new RuntimeException("Module method ${moduleName}::${methodName} does not exists")
+            }
+
             ModuleMethodRun moduleMethodRun = new ModuleMethodRun(moduleMethodId: moduleMethod.id, startTime: LocalDateTime.now())
 
             log.info "Starting ${moduleName}::${methodName}..."
