@@ -58,6 +58,7 @@ class Doc {
         meaningHtml nullable: true
         meaningText nullable: true
         predicted_topics nullable: true
+        knu nullable: true
     }
 
     static mapping = {
