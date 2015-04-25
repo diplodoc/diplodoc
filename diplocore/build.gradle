@@ -35,6 +35,7 @@ dependencies {
     compile dependency.log.logback
 
     compile dependency.spring.social.facebook
+    compile dependency.spring.social.twitter
 }
 
 apply plugin: 'war'

@@ -28,6 +28,7 @@ ext {
 
     dependency.spring.social = [:]
     dependency.spring.social.facebook = 'org.springframework.social:spring-social-facebook:2.0.0.RELEASE'
+    dependency.spring.social.twitter = 'org.springframework.social:spring-social-twitter:1.1.0.RELEASE'
 
     dependency.spring.hateoas = 'org.springframework.hateoas:spring-hateoas:0.16.0.RELEASE'
 
