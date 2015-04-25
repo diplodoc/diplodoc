@@ -25,7 +25,7 @@
             </div>
 
             <div class="content">
-                ${raw(docInstance.meaningHtml)}
+                ${docInstance.meaningText}
             </div>
 
             <g:form url="[resource:docInstance, action:'delete']" method="DELETE">

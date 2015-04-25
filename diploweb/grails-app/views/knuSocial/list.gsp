@@ -19,7 +19,7 @@
 				<g:each in="${docInstanceList}" status="i" var="docInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 						<td>
-							<h3><g:link action="show" id="${docInstance.id}">${fieldValue(bean: docInstance, field: 'title')}</g:link></h3>
+							<h3><g:link action="show" id="${docInstance.id}">${fieldValue(bean: docInstance, field: 'id')}</g:link></h3>
 
 							<div><a href="${docInstance.uri}" target="_blank"><g:fieldValue bean="${docInstance}" field="uri"/></a> at ${fieldValue(bean: docInstance, field: 'loadTime')}</div>
 
