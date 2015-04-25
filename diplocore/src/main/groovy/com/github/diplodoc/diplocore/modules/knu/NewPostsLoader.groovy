@@ -52,7 +52,7 @@ class NewPostsLoader {
                                                     title: rssEntry.title,
                                                     description: rssEntry.description.value,
                                                     publishTime: LocalDateTime.ofInstant(rssEntry.publishedDate.toInstant(), ZoneId.systemDefault()),
-                                                    knuPost: true
+                                                    knu: 'post'
                                         )
                                     }
                                     .collect { doc ->

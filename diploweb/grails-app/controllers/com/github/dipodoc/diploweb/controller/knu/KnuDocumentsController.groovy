@@ -15,7 +15,7 @@ class KnuDocumentsController {
 
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        def knuDocuments = Doc.where { knu_document != null && knu_document == true }
+        def knuDocuments = Doc.where { knu == 'document' }
 
         respond knuDocuments.list(params), model: [ docInstanceCount: knuDocuments.count() ]
     }

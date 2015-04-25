@@ -47,12 +47,5 @@ class Doc {
     String meaningText
 
 
-    @Field('knu_document')
-    boolean knuDocument
-
-    @Field('knu_post')
-    boolean knuPost
-
-    @Field('knu_social')
-    boolean knuSocial
+    String knu
 }
