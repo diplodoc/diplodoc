@@ -42,11 +42,7 @@ class Doc {
     List predicted_topics
 
 
-    boolean knu_document
-
-    boolean knu_post
-
-    boolean knu_social
+    String knu
 
 
     static constraints = {

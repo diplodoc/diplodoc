@@ -15,7 +15,7 @@ class KnuSocialController {
 
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        def knuSocials = Doc.where { knu_social != null && knu_social == true }
+        def knuSocials = Doc.where { knu == 'social' }
 
         respond knuSocials.list(params), model: [ docInstanceCount: knuSocials.count() ]
     }

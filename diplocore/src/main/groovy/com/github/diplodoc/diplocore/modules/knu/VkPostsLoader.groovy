@@ -41,12 +41,12 @@ class VkPostsLoader {
         auditService.runMethodUnderAudit('knu.VkPostsLoader', 'load') { module, moduleMethod, moduleMethodRun ->
             Collection<Doc> docs = vkService.search(SEARCH_QUERY).collect { post ->
                 new Doc(
-                        uri: "vk://post/${post.owner_id}/${post.from_id}/${post.id}",
-                        type: 'social/vk',
-                        loadTime: LocalDateTime.now(),
-                        publishTime: LocalDateTime.ofInstant(Instant.ofEpochSecond(post.date), ZoneId.systemDefault()),
-                        meaningText: post.text,
-                        knuSocial: true
+                    uri: "vk://post/${post.owner_id}/${post.from_id}/${post.id}",
+                    type: 'social/vk',
+                    loadTime: LocalDateTime.now(),
+                    publishTime: LocalDateTime.ofInstant(Instant.ofEpochSecond(post.date), ZoneId.systemDefault()),
+                    meaningText: post.text,
+                    knu: 'social'
                 )
             }
 

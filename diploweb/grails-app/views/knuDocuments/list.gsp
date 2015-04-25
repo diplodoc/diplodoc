@@ -12,7 +12,7 @@
 		<a href="#list-doc" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;" /></a>
 
 		<div id="list-doc" class="content scaffold-list" role="main">
-			<h1><g:message message="documents" /></h1>
+			<h1><g:message message="${docInstanceCount} documents" /></h1>
 
 			<g:if test="${flash.message}">
 				<div class="message" role="status">${flash.message}</div>

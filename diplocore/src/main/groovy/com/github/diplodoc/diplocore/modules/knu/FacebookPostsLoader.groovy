@@ -49,7 +49,7 @@ class FacebookPostsLoader {
                         description: post.description,
                         publishTime: LocalDateTime.ofInstant(post.createdTime.toInstant(), ZoneId.systemDefault()),
                         meaningText: post.message,
-                        knuSocial: true
+                        knu: 'social'
                     )
                 }
             }

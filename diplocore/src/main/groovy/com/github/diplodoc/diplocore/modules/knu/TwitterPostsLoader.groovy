@@ -45,7 +45,7 @@ class TwitterPostsLoader {
                     loadTime: LocalDateTime.now(),
                     publishTime: LocalDateTime.ofInstant(tweet.createdAt.toInstant(), ZoneId.systemDefault()),
                     meaningText: tweet.text,
-                    knuSocial: true
+                    knu: 'social'
                 )
             }
 
