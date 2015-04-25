@@ -13,8 +13,10 @@ class KnuDocumentsController {
 
     static allowedMethods = [ delete: 'DELETE' ]
 
-    def list(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
+    def list() {
+        params.max = 20
+        params.sort = 'loadTime'
+        params.order = 'desc'
         def knuDocuments = Doc.where { knu == 'document' }
 
         respond knuDocuments.list(params), model: [ docInstanceCount: knuDocuments.count() ]
