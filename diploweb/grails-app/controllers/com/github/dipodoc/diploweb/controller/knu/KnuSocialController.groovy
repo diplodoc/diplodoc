@@ -13,8 +13,11 @@ class KnuSocialController {
 
     static allowedMethods = [ delete: 'DELETE' ]
 
-    def list(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
+    def list() {
+        params.max = 20
+        params.sort = 'publishTime'
+        params.order = 'desc'
+
         def knuSocials = Doc.where { knu == 'social' }
 
         respond knuSocials.list(params), model: [ docInstanceCount: knuSocials.count() ]
