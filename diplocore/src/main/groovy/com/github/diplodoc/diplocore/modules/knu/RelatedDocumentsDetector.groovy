@@ -8,6 +8,8 @@ import org.apache.spark.SparkConf
 import org.apache.spark.api.java.JavaSparkContext
 import org.apache.spark.mllib.feature.HashingTF
 import org.apache.spark.mllib.feature.IDF
+import org.apache.spark.mllib.linalg.Vector
+import org.apache.spark.mllib.linalg.Vectors
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
@@ -33,12 +35,10 @@ class RelatedDocumentsDetector {
     @ResponseStatus(HttpStatus.OK)
     def detectRelated() {
         auditService.runMethodUnderAudit('knu.RelatedDocumentsDetector', 'detectRelated') { module, moduleMethod, moduleMethodRun ->
-            Collection<Doc> documents = docRepository.findByKnu('document')
-            Collection<String> words = documents
-                                        .collectMany { Doc doc ->
-                                            doc.meaningText.split('\\s+')
-                                        }
-                                        .collect { String word -> word.replaceAll('\\s+','') }
+            List<Doc> documents = docRepository.findByKnu('document')
+            List<String> words = documents.findAll({ Doc doc -> doc.meaningText != null }).collect { Doc doc ->
+                doc.meaningText.split('\\s+').collect { String word -> word.toLowerCase().replaceAll('\\s+','') }
+            }
 
             SparkConf sparkConf = new SparkConf().setAppName('/diplocore/knu/related-documents-detector/detect-related').setMaster('local')
             JavaSparkContext sparkContext = new JavaSparkContext(sparkConf)
@@ -47,7 +47,22 @@ class RelatedDocumentsDetector {
             def tf = new HashingTF().transform(wordsRdd)
 
             def idf = new IDF().fit(tf)
-            def tfidf = idf.transform(tf)
+            def tfidf = idf.transform(tf).toArray()
+
+            tfidf.eachWithIndex { Vector vector1, int i ->
+                def knu_similarities = [:]
+                tfidf.eachWithIndex { Vector vector2, int j ->
+                    if (i != j) {
+                        double dist = Vectors.sqdist(vector1, vector2)
+                        knu_similarities.put(documents[j].id, dist)
+                    }
+                }
+                documents[i].knuSimilarities = knu_similarities
+            }
+
+            docRepository.save(documents)
+
+            [ : ]
         }
     }
 }

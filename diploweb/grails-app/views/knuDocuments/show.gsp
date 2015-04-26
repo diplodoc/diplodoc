@@ -34,6 +34,20 @@
 				</fieldset>
 			</g:form>
 
+			<g:if test="${docInstance?.knu_similarities}">
+				<li class="fieldcontain">
+					<span id="knu_similarities-label" class="property-label"><g:message message="knu_similarities" /></span>
+
+					<div class="property-value" aria-labelledby="knu_similarities-label">
+						<g:each in="${docInstance.knu_similarities.entrySet()}" var="knu_similaritiesItem">
+							<div class="property-value" aria-labelledby="knu_similaritiesItem-label">
+								${Doc.read(knu_similaritiesItem.key).uri} = ${knu_similaritiesItem.value}
+							</div>
+						</g:each>
+					</div>
+				</li>
+			</g:if>
+
 		</div>
 	</body>
 </html>

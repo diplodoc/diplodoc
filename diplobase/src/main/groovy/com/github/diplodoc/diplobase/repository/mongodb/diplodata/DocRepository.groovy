@@ -13,5 +13,5 @@ interface DocRepository extends MongoRepository<Doc, ObjectId> {
 
     Collection<Doc> findByTrainMeaningHtmlIsNotNull()
 
-    Collection<Doc> findByKnu()
+    Collection<Doc> findByKnu(String knu)
 }

@@ -44,6 +44,8 @@ class Doc {
 
     String knu
 
+    Map<ObjectId, Double> knu_similarities
+
 
     static constraints = {
         uri nullable: true
@@ -59,6 +61,7 @@ class Doc {
         meaningText nullable: true
         predicted_topics nullable: true
         knu nullable: true
+        knu_similarities nullable: true
     }
 
     static mapping = {
