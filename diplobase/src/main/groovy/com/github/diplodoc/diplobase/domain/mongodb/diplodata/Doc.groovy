@@ -48,4 +48,7 @@ class Doc {
 
 
     String knu
+
+    @Field('knu_similarities')
+    Map<ObjectId, Double> knuSimilarities
 }
