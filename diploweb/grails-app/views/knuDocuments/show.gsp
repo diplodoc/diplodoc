@@ -28,25 +28,24 @@
                 ${raw(docInstance.meaningHtml)}
             </div>
 
+			<g:if test="${similar}">
+				<br/>
+				<div id="similar-label" class="property-label"><g:message message="SIMILAR" /></div>
+
+				<div class="property-value" aria-labelledby="similar-label">
+					<g:each in="${similar}" var="similarItem">
+						<div class="property-value" aria-labelledby="similarItem-label">
+							<g:link action="show" id="${similarItem.id}">${fieldValue(bean: similarItem, field: 'uri')}</g:link>
+						</div>
+					</g:each>
+				</div>
+			</g:if>
+
 			<g:form url="[resource:docInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">
 					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
 				</fieldset>
 			</g:form>
-
-			<g:if test="${docInstance?.knu_similarities}">
-				<li class="fieldcontain">
-					<span id="knu_similarities-label" class="property-label"><g:message message="knu_similarities" /></span>
-
-					<div class="property-value" aria-labelledby="knu_similarities-label">
-						<g:each in="${docInstance.knu_similarities.entrySet()}" var="knu_similaritiesItem">
-							<div class="property-value" aria-labelledby="knu_similaritiesItem-label">
-								${Doc.read(knu_similaritiesItem.key).uri} = ${knu_similaritiesItem.value}
-							</div>
-						</g:each>
-					</div>
-				</li>
-			</g:if>
 
 		</div>
 	</body>
