@@ -2,6 +2,7 @@ package com.github.diplodoc.diplobase.repository.mongodb.diplodata
 
 import com.github.diplodoc.diplobase.domain.mongodb.diplodata.Doc
 import org.bson.types.ObjectId
+import org.springframework.data.domain.Pageable
 import org.springframework.data.mongodb.repository.MongoRepository
 
 /**
@@ -14,4 +15,6 @@ interface DocRepository extends MongoRepository<Doc, ObjectId> {
     Collection<Doc> findByTrainMeaningHtmlIsNotNull()
 
     Collection<Doc> findByKnu(String knu)
+
+    List<Doc> findByKnuIsNull(Pageable pageable)
 }
