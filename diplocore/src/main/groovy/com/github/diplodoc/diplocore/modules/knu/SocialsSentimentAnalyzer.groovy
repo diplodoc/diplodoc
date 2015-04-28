@@ -10,6 +10,7 @@ import org.apache.spark.api.java.JavaRDD
 import org.apache.spark.api.java.JavaSparkContext
 import org.apache.spark.mllib.classification.SVMModel
 import org.apache.spark.mllib.classification.SVMWithSGD
+import org.apache.spark.mllib.linalg.Vector
 import org.apache.spark.mllib.regression.LabeledPoint
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
@@ -61,16 +62,8 @@ class SocialsSentimentAnalyzer {
             moduleMethodRun.parameters = [ 'docId': docId ]
 
             Doc doc = docRepository.findOne new ObjectId(docId)
-
             SVMModel model = serializationService.deserialize(module.data['model'])
-
-            assert null: 'not implemented yet'
-//            Document document = htmlService.parse(doc.html)
-//
-//            List<Element> meaningElements = predictMeaningElements(model, document.body())
-//
-//            doc.meaningHtml = meaningElements.collect({ it.outerHtml() }).join()
-//            doc.meaningText = meaningElements.collect({ it.text() }).join(' ')
+            doc.knuSocialPredictedSentimentScore = model.predict(elementFeatures(doc.meaningText))
 
             docRepository.save doc
 
@@ -88,6 +81,16 @@ class SocialsSentimentAnalyzer {
         JavaRDD<LabeledPoint>[] splits = sparkContext.parallelize(data).randomSplit([ 0.7, 0.3 ] as double[])
 
         [ 'trainSet': splits[0], 'testSet': splits[1] ]
+    }
+
+    Vector elementFeatures(String element) {
+//        List<String> words = doc.meaningText.split('\\s+').collect { String word -> word.toLowerCase().replaceAll('\\s+','') }
+//        words.eachWithIndex { String word, int index ->
+//            if (index > 0) {
+//                String bigram = "${words[index - 1]} ${word}"
+//            }
+//        }
+        assert null: 'not implemented yet'
     }
 
     SVMModel model(JavaRDD<LabeledPoint> trainSet) {

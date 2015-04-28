@@ -51,4 +51,7 @@ class Doc {
 
     @Field('knu_similarities')
     Map<ObjectId, Double> knuSimilarities
+
+    @Field('knu_social_predicted_sentiment_score')
+    Double knuSocialPredictedSentimentScore
 }
