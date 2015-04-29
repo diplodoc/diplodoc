@@ -36,7 +36,7 @@ class RelatedDocumentsDetector {
     def detectRelated() {
         auditService.runMethodUnderAudit('knu.RelatedDocumentsDetector', 'detectRelated') { module, moduleMethod, moduleMethodRun ->
             List<Doc> documents = docRepository.findByKnu('document')
-            List<String> words = documents.findAll({ Doc doc -> doc.meaningText != null }).collect { Doc doc ->
+            List words = documents.findAll({ Doc doc -> doc.meaningText != null }).collect { Doc doc ->
                 doc.meaningText.split('\\s+').collect { String word -> word.toLowerCase().replaceAll('\\s+','') }
             }
 
@@ -45,9 +45,7 @@ class RelatedDocumentsDetector {
             def wordsRdd = sparkContext.parallelize(words)
 
             def tf = new HashingTF().transform(wordsRdd)
-
-            def idf = new IDF().fit(tf)
-            def tfidf = idf.transform(tf).toArray()
+            def tfidf = new IDF().fit(tf).transform(tf).toArray()
 
             tfidf.eachWithIndex { Vector vector1, int i ->
                 def knu_similarities = [:]
