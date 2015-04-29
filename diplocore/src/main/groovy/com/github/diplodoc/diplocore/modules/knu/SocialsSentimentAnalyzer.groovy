@@ -6,17 +6,15 @@ import com.github.diplodoc.diplocore.services.AuditService
 import com.github.diplodoc.diplocore.services.SerializationService
 import groovy.util.logging.Slf4j
 import org.apache.spark.SparkConf
-import org.apache.spark.api.java.JavaRDD
 import org.apache.spark.api.java.JavaSparkContext
 import org.apache.spark.mllib.classification.SVMModel
 import org.apache.spark.mllib.classification.SVMWithSGD
-import org.apache.spark.mllib.linalg.Vector
+import org.apache.spark.mllib.feature.HashingTF
+import org.apache.spark.mllib.feature.IDF
 import org.apache.spark.mllib.regression.LabeledPoint
-import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -38,93 +36,53 @@ class SocialsSentimentAnalyzer {
     @Autowired
     SerializationService serializationService
 
-    @RequestMapping(value = '/train-model', method = RequestMethod.POST)
+    @RequestMapping(value = '/analyze-all-sentiments', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    def trainModel() {
-        auditService.runMethodUnderAudit('knu.SocialsSentimentAnalyzer', 'trainModel') { module, moduleMethod, moduleMethodRun ->
-            def dataSplits = dataSplits()
-            JavaRDD<LabeledPoint> trainSet = dataSplits['trainSet']
-            JavaRDD<LabeledPoint> testSet = dataSplits['testSet']
+    def analyzeAllSentiments() {
+        auditService.runMethodUnderAudit('knu.SocialsSentimentAnalyzer', 'analyzeAllSentiments') { module, moduleMethod, moduleMethodRun ->
+            List<Doc> socials = docRepository.findByKnu('social')
+            List words = socials.findAll({ Doc doc -> doc.meaningText != null }).collect { Doc doc ->
+                doc.meaningText.split('\\s+').collect { String word -> word.toLowerCase().replaceAll('\\s+','') }
+            }
+            log.info "words=${words}"
 
-            SVMModel model = model(trainSet)
+            Map<String, Double> trainingBigrams = serializationService.deserialize(module.data['training-bigrams'])
+            log.info "trainingBigrams=${trainingBigrams}"
 
-            if (!module.data) module.data = [:]
-            module.data['model'] = serializationService.serialize(model)
+            List bigrams = words.collect { List socialWords ->
+                List socialBigrams = []
+                socialWords.eachWithIndex { String word, int index ->
+                    if (index > 0) {
+                        socialBigrams << "${socialWords[index - 1]} ${word}"
+                    }
+                }
+                return socialBigrams
+            }
+            bigrams.addAll(trainingBigrams.keySet().collect([ it ]))
+            log.info "bigrams=${bigrams}"
 
-            [ 'metrics': metrics(model, trainSet, testSet), 'module': module ]
+            SparkConf sparkConf = new SparkConf().setAppName('/diplocore/knu/socials-sentiment-analyzer/analyze-all-sentiments').setMaster('local')
+            JavaSparkContext sparkContext = new JavaSparkContext(sparkConf)
+
+            def tf = new HashingTF().transform(sparkContext.parallelize(bigrams))
+            def tfidf = new IDF().fit(tf).transform(tf).toArray()
+
+            List trainSet = []
+            bigrams.eachWithIndex { List bigram, int index ->
+                if (index >= bigrams.size() - trainingBigrams.keySet().size()) {
+                    trainSet << new LabeledPoint(trainingBigrams.get(bigram.first()), tfidf[index])
+                }
+            }
+            log.info "trainSet=${trainSet}"
+
+            SVMModel model = SVMWithSGD.train(sparkContext.parallelize(trainSet).rdd(), 100)
+
+            socials.eachWithIndex { Doc social, int index ->
+                social.knuSocialPredictedSentimentScore = model.predict(tfidf[index])
+                log.info "social.[${social.id}].sentiment=${social.knuSocialPredictedSentimentScore}"
+            }
+
+            docRepository.save socials
         }
-    }
-
-    @RequestMapping(value = '/doc/{id}/analyze-sentiment', method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.OK)
-    def analyzeSentiment(@PathVariable('id') String docId) {
-        auditService.runMethodUnderAudit('knu.SocialsSentimentAnalyzer', 'analyzeSentiment') { module, moduleMethod, moduleMethodRun ->
-            moduleMethodRun.parameters = [ 'docId': docId ]
-
-            Doc doc = docRepository.findOne new ObjectId(docId)
-            SVMModel model = serializationService.deserialize(module.data['model'])
-            doc.knuSocialPredictedSentimentScore = model.predict(elementFeatures(doc.meaningText))
-
-            docRepository.save doc
-
-            [ 'moduleMethodRun': moduleMethodRun ]
-        }
-    }
-
-    def dataSplits() {
-        SparkConf sparkConf = new SparkConf().setAppName('/diplocore/knu/socials-sentiment-analyzer/train-model').setMaster('local')
-        JavaSparkContext sparkContext = new JavaSparkContext(sparkConf)
-
-        assert null: 'not implemented yet'
-//        Collection<LabeledPoint> data = docRepository.findByTrainMeaningHtmlIsNotNull().collectMany(this.&docToLabeledPoints)
-
-        JavaRDD<LabeledPoint>[] splits = sparkContext.parallelize(data).randomSplit([ 0.7, 0.3 ] as double[])
-
-        [ 'trainSet': splits[0], 'testSet': splits[1] ]
-    }
-
-    Vector elementFeatures(String element) {
-//        List<String> words = doc.meaningText.split('\\s+').collect { String word -> word.toLowerCase().replaceAll('\\s+','') }
-//        words.eachWithIndex { String word, int index ->
-//            if (index > 0) {
-//                String bigram = "${words[index - 1]} ${word}"
-//            }
-//        }
-        assert null: 'not implemented yet'
-    }
-
-    SVMModel model(JavaRDD<LabeledPoint> trainSet) {
-        SVMWithSGD.train(trainSet.rdd(), 100)
-    }
-
-    Map metrics(SVMModel model, JavaRDD<LabeledPoint> trainSet, JavaRDD<LabeledPoint> testSet) {
-        int testSetSize = testSet.toArray().size()
-        int truePositives = 0
-        int trueNegatives = 0
-        int falsePositives = 0
-        int falseNegatives = 0
-
-        testSet.toArray().each{ LabeledPoint point ->
-            double prediction = model.predict(point.features())
-
-            if (point.label() == 1.0 && prediction == 1.0) truePositives++
-            if (point.label() == 0.0 && prediction == 0.0) trueNegatives++
-            if (point.label() == 0.0 && prediction == 1.0) falsePositives++
-            if (point.label() == 1.0 && prediction == 0.0) falseNegatives++
-        }
-
-        Map metrics = [:]
-        metrics.model = model.weights().toArray()
-        metrics.trainSetSize = trainSet.toArray().size()
-        metrics.testSetSize = testSetSize
-        metrics.truePositives = truePositives
-        metrics.trueNegatives = trueNegatives
-        metrics.falsePositives = falsePositives
-        metrics.falseNegatives = falseNegatives
-        metrics.accuracy = 1.0 * (truePositives + trueNegatives) / testSetSize
-        metrics.precision = 1.0 * truePositives / (truePositives + falsePositives)
-        metrics.recall = 1.0 * truePositives / (truePositives + falseNegatives)
-
-        metrics
     }
 }
