@@ -31,7 +31,6 @@ gradlew.bat
 
 # Grails
 buildPlugins/
-diploweb/application.properties
 
 # Python
 *.py[cod]

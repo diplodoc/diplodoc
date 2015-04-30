@@ -1,7 +1,0 @@
-listen to: 'load-new-docs-from-all-sources'
-
-input 'docId'
-
-post to: "http://localhost:8080/diplocore/html-meaning-extractor/doc/${docId}/extract-meaning"
-
-output docId: docId

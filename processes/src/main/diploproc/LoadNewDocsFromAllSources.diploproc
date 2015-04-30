@@ -1,0 +1,10 @@
+def sourceIds = get from: 'http://localhost:8080/modules-java/data/sources', expect: List
+
+sourceIds.each { sourceId ->
+    def newDocsIds = post to: "http://localhost:8080/modules-java/rss-new-docs-finder/source/${sourceId}/new-docs", expect: List
+
+    newDocsIds.each { docId ->
+        post to: "http://localhost:8080/modules-java/html-doc-loader/doc/${docId}/load"
+        output docId: docId
+    }
+}

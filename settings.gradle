@@ -1,9 +1,15 @@
-include 'diplobase'
+rootProject.name = 'diplodoc'
 
-include 'diplocore'
+include 'domain'
 
-include 'diploexec'
+include 'modules-java'
 
-include 'diploproc'
+include 'modules-python'
 
-include 'diploweb'
+include 'orchestration'
+
+include 'processes'
+
+include 'admin-webui'
+
+include 'client-webui'

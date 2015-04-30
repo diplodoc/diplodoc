@@ -4,83 +4,21 @@ allprojects {
 	group = 'com.github.diplodoc'
 	version = '0.0.7-SNAPSHOT'
 
-    apply plugin: 'jacoco'
-
     repositories {
         jcenter()
     }
 }
 
-configure(subprojects.findAll {it.name != 'diploweb'}) {
-	apply plugin: 'groovy'
-
+project(':modules-java') {
+	apply plugin: 'java'
 	dependencies {
-		compile dependency.groovy
-		compile dependency.spring.context
-
-        testCompile dependency.spock
-        testCompile dependency.cglib
-        testCompile dependency.objenesis
-	}
-
-    test {
-        test.reports.html.enabled = true
-    }
-}
-
-task testFailReport(type: TestReport) {
-    destinationDir = file("$buildDir/reports/results")
-    reportOn subprojects.findAll({it.name != 'diploweb'})*.test*.binResultsDir
-}
-
-task testResultsReport(type: TestReport) {
-    destinationDir = file("$buildDir/reports/results")
-    reportOn subprojects.findAll({it.name != 'diploweb'})*.test
-}
-
-task grailsTestResultReport(type: Copy) {
-    from fileTree("${project(':diploweb').buildDir}/test-results/html").include('**/*.html').include('**/*.css')
-    into "$buildDir/reports/grails-results"
-
-    dependsOn ':diploweb:grails-test-app'
-}
-
-task testCoverageReport(type: JacocoReport) {
-    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
-
-    subprojects.findAll({it.name != 'diploweb'}).each { sourceSets it.sourceSets.main }
-
-    reports {
-        xml.enabled false
-        html.enabled true
-        html.destination "${buildDir}/reports/coverage"
-        csv.enabled false
-    }
-
-    dependsOn {
-        subprojects.findAll({it.name != 'diploweb'})*.test
-    }
-}
-
-task clean(type: Delete) {
-    delete "$buildDir/reports"
-}
-
-task testReport(type: DefaultTask) {
-    dependsOn {
-        [ testResultsReport, grailsTestResultReport, testCoverageReport ]
-    }
-}
-
-project(':diplocore') {
-	dependencies {
-		compile project(':diplobase')
+		compile project(':domain')
 	}
 }
 
-project(':diploexec') {
+project(':orchestration') {
+	apply plugin: 'java'
 	dependencies {
-		compile project(':diplocore')
-		compile project(':diplobase')
+		compile project(':domain')
 	}
 }
