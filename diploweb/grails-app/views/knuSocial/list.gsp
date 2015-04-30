@@ -24,6 +24,8 @@
 							<div><a href="${docInstance.uri}" target="_blank"><g:fieldValue bean="${docInstance}" field="uri"/></a> at ${fieldValue(bean: docInstance, field: 'loadTime')}</div>
 
 							<div>${fieldValue(bean: docInstance, field: 'description')}</div>
+
+							<div>${fieldValue(bean: docInstance, field: 'knu_social_predicted_sentiment_score')}</div>
 						</td>
 					</tr>
 				</g:each>
