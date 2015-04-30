@@ -46,6 +46,8 @@ class Doc {
 
     Map<ObjectId, Double> knu_similarities
 
+    Double knu_social_predicted_sentiment_score
+
 
     static constraints = {
         uri nullable: true
@@ -62,6 +64,7 @@ class Doc {
         predicted_topics nullable: true
         knu nullable: true
         knu_similarities nullable: true
+        knu_social_predicted_sentiment_score nullable: true
     }
 
     static mapping = {

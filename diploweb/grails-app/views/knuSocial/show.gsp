@@ -25,6 +25,10 @@
             </div>
 
             <div class="content">
+                Sentiment score: ${docInstance.knu_social_predicted_sentiment_score}
+            </div>
+
+            <div class="content">
                 ${docInstance.meaningText}
             </div>
 
