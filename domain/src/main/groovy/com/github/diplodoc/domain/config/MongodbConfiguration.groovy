@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
  * @author yaroslav.yermilov
  */
 @Configuration
-@EnableMongoRepositories('com.github.diplodoc.diplobase.repository.mongodb')
+@EnableMongoRepositories('com.github.diplodoc.domain.repository.mongodb')
 class MongodbConfiguration extends AbstractMongoConfiguration {
 
     @Override
@@ -24,6 +24,6 @@ class MongodbConfiguration extends AbstractMongoConfiguration {
 
     @Override
     String getMappingBasePackage() {
-        'com.github.diplodoc.diplobase.domain.mongodb'
+        'com.github.diplodoc.domain.mongodb'
     }
 }

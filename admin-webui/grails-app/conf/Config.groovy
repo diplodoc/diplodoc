@@ -118,9 +118,9 @@ log4j.main = {
 
 
 // Added by the Spring Security Core plugin:
-grails.plugin.springsecurity.userLookup.userDomainClassName = 'com.github.dipodoc.diploweb.domain.user.User'
-grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.github.dipodoc.diploweb.domain.user.UserRole'
-grails.plugin.springsecurity.authority.className = 'com.github.dipodoc.diploweb.domain.user.Role'
+grails.plugin.springsecurity.userLookup.userDomainClassName = 'com.github.dipodoc.webui.admin.domain.user.User'
+grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.github.dipodoc.webui.admin.domain.user.UserRole'
+grails.plugin.springsecurity.authority.className = 'com.github.dipodoc.webui.admin.domain.user.Role'
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
     '/**/*':                          [ 'permitAll' ],
 
