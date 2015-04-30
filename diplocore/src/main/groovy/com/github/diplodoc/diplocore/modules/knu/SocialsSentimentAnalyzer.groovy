@@ -12,6 +12,8 @@ import org.apache.spark.mllib.classification.SVMWithSGD
 import org.apache.spark.mllib.feature.HashingTF
 import org.apache.spark.mllib.feature.IDF
 import org.apache.spark.mllib.regression.LabeledPoint
+import org.apache.spark.mllib.regression.LinearRegressionModel
+import org.apache.spark.mllib.regression.LinearRegressionWithSGD
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
@@ -44,10 +46,8 @@ class SocialsSentimentAnalyzer {
             List words = socials.findAll({ Doc doc -> doc.meaningText != null }).collect { Doc doc ->
                 doc.meaningText.split('\\s+').collect { String word -> word.toLowerCase().replaceAll('\\s+','') }
             }
-            log.info "words=${words}"
 
-            Map<String, Double> trainingBigrams = serializationService.deserialize(module.data['training-bigrams'])
-            log.info "trainingBigrams=${trainingBigrams}"
+            Map<String, Double> trainingBigrams = module.data['training-bigrams']
 
             List bigrams = words.collect { List socialWords ->
                 List socialBigrams = []
@@ -58,8 +58,7 @@ class SocialsSentimentAnalyzer {
                 }
                 return socialBigrams
             }
-            bigrams.addAll(trainingBigrams.keySet().collect([ it ]))
-            log.info "bigrams=${bigrams}"
+            bigrams.addAll(trainingBigrams.keySet().collect({ [ it ] }))
 
             SparkConf sparkConf = new SparkConf().setAppName('/diplocore/knu/socials-sentiment-analyzer/analyze-all-sentiments').setMaster('local')
             JavaSparkContext sparkContext = new JavaSparkContext(sparkConf)
@@ -73,16 +72,17 @@ class SocialsSentimentAnalyzer {
                     trainSet << new LabeledPoint(trainingBigrams.get(bigram.first()), tfidf[index])
                 }
             }
-            log.info "trainSet=${trainSet}"
 
-            SVMModel model = SVMWithSGD.train(sparkContext.parallelize(trainSet).rdd(), 100)
+            LinearRegressionModel model = LinearRegressionWithSGD.train(sparkContext.parallelize(trainSet).rdd(), 100)
 
             socials.eachWithIndex { Doc social, int index ->
                 social.knuSocialPredictedSentimentScore = model.predict(tfidf[index])
-                log.info "social.[${social.id}].sentiment=${social.knuSocialPredictedSentimentScore}"
+                //log.info "social.[${social.id}].sentiment=${social.knuSocialPredictedSentimentScore}"
             }
 
             docRepository.save socials
+
+            [:]
         }
     }
 }
