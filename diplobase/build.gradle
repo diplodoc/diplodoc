@@ -1,4 +1,0 @@
-dependencies {
-    compile dependency.mongodb
-    compile dependency.spring.data.mongodb
-}

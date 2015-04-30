@@ -1,0 +1,39 @@
+apply plugin: 'groovy'
+
+dependencies {
+    compile dependency.groovy
+    compile dependency.spring.context
+
+    compile dependency.commons.lang
+    compile dependency.commons.io
+
+    compile dependency.servlet
+    compile dependency.spring.web
+    compile dependency.spring.webmvc
+
+    compile dependency.jackson.core
+    compile dependency.jackson.databind
+
+    compile dependency.jsoup
+    compile dependency.rome
+
+    compile dependency.spark.core
+    compile dependency.spark.mllib
+
+    compile dependency.tika.core
+    compile dependency.tika.parsers
+
+    compile dependency.log.slf4j
+    compile dependency.log.logback
+
+    compile dependency.spring.social.facebook
+    compile dependency.spring.social.twitter
+
+    testCompile dependency.spock
+    testCompile dependency.cglib
+    testCompile dependency.objenesis
+}
+
+apply plugin: 'jacoco'
+
+apply plugin: 'war'
