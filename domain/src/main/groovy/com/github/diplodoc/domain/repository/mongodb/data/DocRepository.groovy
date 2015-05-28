@@ -13,8 +13,4 @@ interface DocRepository extends MongoRepository<Doc, ObjectId> {
     Doc findOneByUri(String uri)
 
     Collection<Doc> findByTrainMeaningHtmlIsNotNull()
-
-    Collection<Doc> findByKnu(String knu)
-
-    List<Doc> findByKnuIsNull(Pageable pageable)
 }

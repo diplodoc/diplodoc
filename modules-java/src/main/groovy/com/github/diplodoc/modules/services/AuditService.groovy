@@ -32,12 +32,16 @@ class AuditService {
         try {
             Module module = moduleRepository.findOneByName(moduleName)
             if (!module) {
-                throw new RuntimeException("Module ${moduleName} does not exists")
+                log.warn "Module ${moduleName} does not exists, it will be created"
+                module = new Module(name: moduleName)
+                module = moduleRepository.save(module)
             }
 
             ModuleMethod moduleMethod = moduleMethodRepository.findByName(methodName).find({ it.moduleId == module.id })
             if (!moduleMethod) {
-                throw new RuntimeException("Module method ${moduleName}::${methodName} does not exists")
+                log.warn "Module method ${moduleName}::${methodName} does not exists, it will be created"
+                moduleMethod = new ModuleMethod(name: methodName, moduleId: module.id)
+                moduleMethod = moduleMethodRepository.save(moduleMethod)
             }
 
             ModuleMethodRun moduleMethodRun = new ModuleMethodRun(moduleMethodId: moduleMethod.id, startTime: LocalDateTime.now())
