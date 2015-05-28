@@ -38,7 +38,7 @@ class Feeder {
         auditService.runMethodUnderAudit('client.Feeder', 'feed') { module, moduleMethod, moduleMethodRun ->
             moduleMethodRun.parameters = [ 'page': page, 'size': size ]
 
-            List<Doc> docs = docRepository.findByKnuIsNull(new PageRequest(page?:0, size?:DEFAULT_SIZE, SORT))
+            List<Doc> docs = docRepository.findAll(new PageRequest(page?:0, size?:DEFAULT_SIZE, SORT)).content
 
             def feed = docs.collect { Doc doc ->
                 [   'id'         : doc.id.toString(),

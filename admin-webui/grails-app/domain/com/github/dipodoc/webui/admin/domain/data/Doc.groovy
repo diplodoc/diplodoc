@@ -41,13 +41,6 @@ class Doc {
     List predicted_topics
 
 
-    String knu
-
-    Map<ObjectId, Double> knu_similarities
-
-    Double knu_social_predicted_sentiment_score
-
-
     static constraints = {
         uri nullable: true
         type nullable: true
@@ -61,9 +54,6 @@ class Doc {
         meaningHtml nullable: true
         meaningText nullable: true
         predicted_topics nullable: true
-        knu nullable: true
-        knu_similarities nullable: true
-        knu_social_predicted_sentiment_score nullable: true
     }
 
     static mapping = {

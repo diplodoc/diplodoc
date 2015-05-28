@@ -7,7 +7,4 @@ import org.springframework.data.mongodb.repository.MongoRepository
 /**
  * @author yaroslav.yermilov
  */
-interface TopicRepository extends MongoRepository<Topic, ObjectId> {
-
-    Topic findOneByLabel(String label)
-}
+interface TopicRepository extends MongoRepository<Topic, ObjectId> { }
