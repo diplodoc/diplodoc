@@ -1,0 +1,9 @@
+apply plugin: 'groovy'
+
+dependencies {
+    compile dependency.groovy
+    compile dependency.spring.context
+
+    compile dependency.mongodb
+    compile dependency.spring.data.mongodb
+}
