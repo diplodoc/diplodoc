@@ -1,14 +1,61 @@
-function createData() {
-  res = []
-  for (var i=0; i<100; i++) {
-    res.push({'url': 'http://habrahabr.ru/', 'title': 'Shit title ' + i, 'description': 'Shit description ' + i})
+function topPosition(domElt) {
+  if (!domElt) {
+    return 0;
   }
-  return res
+  return domElt.offsetTop + topPosition(domElt.offsetParent);
 }
 
-data = createData()
+  var InfiniteScroll = React.createClass({
+    getDefaultProps: function () {
+      return {
+        pageStart: 0,
+        hasMore: false,
+        loadMore: function () {},
+        threshold: 250
+      };
+    },
+    componentDidMount: function () {
+      this.pageLoaded = this.props.pageStart;
+      this.attachScrollListener();
+    },
+    componentDidUpdate: function () {
+      this.attachScrollListener();
+    },
+    render: function () {
+      var props = this.props;
+      return React.DOM.div(null, props.children, props.hasMore && (props.loader || InfiniteScroll._defaultLoader));
+    },
+    scrollListener: function () {
+      var el = this.getDOMNode();
+      var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+      if (topPosition(el) + el.offsetHeight - scrollTop - window.innerHeight < Number(this.props.threshold)) {
+        this.detachScrollListener();
+        // call loadMore after detachScrollListener to allow
+        // for non-async loadMore functions
+        this.props.loadMore(this.pageLoaded += 1);
+      }
+    },
+    attachScrollListener: function () {
+      if (!this.props.hasMore) {
+        return;
+      }
+      window.addEventListener('scroll', this.scrollListener);
+      window.addEventListener('resize', this.scrollListener);
+      this.scrollListener();
+    },
+    detachScrollListener: function () {
+      window.removeEventListener('scroll', this.scrollListener);
+      window.removeEventListener('resize', this.scrollListener);
+    },
+    componentWillUnmount: function () {
+      this.detachScrollListener();
+    }
+  });
+  InfiniteScroll.setDefaultLoader = function (loader) {
+    InfiniteScroll._defaultLoader = loader;
+  };
 
-url = "http://localhost:8080/modules-java/client/feeder/feed?size=50"
+url = "http://localhost:8080/modules-java/client/feeder/feed?size=16&page="
 
 var DiploPanel = React.createClass({
   render: function() {
@@ -42,9 +89,6 @@ var DiploPanelBlock = React.createClass({
   },
 
   render: function() {
-    // var title = 'Panel Title'
-    // var description = 'This is a six columns'
-    // var url = 'http://habrahabr.ru/'
     var config = this.styleConfig(this.props.style)
     var nodes = []
     for (var i=0; i<this.props.data.length; i++) {
@@ -72,6 +116,7 @@ var DiploPagelet = React.createClass({
   },
 
   loadCommentsFromServer: function() {
+    console.log(this.props.url)
     $.ajax({
       url: this.props.url,
       dataType: 'json',
@@ -82,31 +127,6 @@ var DiploPagelet = React.createClass({
         console.error(this.props.url, status, err.toString());
       }.bind(this)
     });
-    // this.setState({data: 
-    //   [
-    //     {
-    //         id: "552ce0df0fdeea99d7d93e0f",
-    //         url: "http://habrahabr.ru/post/254129/",
-    //         title: "Я тебя по сетям вычислю: используем API крупнейших соцсетей в своих корыстных целях",
-    //         time: "2015-04-14T11:13:41",
-    //         description: "<br/><img src=\"//habrastorage.org/files/eff/fa7/a52/efffa7a52db948febafdfd32bcfde903.jpg\"/><br/>\n<br/>\nНи для кого не секрет, что современные социальные сети представляют собой огромные БД, содержащие много интересной информации о частной жизни своих пользователей. Через веб-морду особо много данных не вытянешь, но ведь у каждой сети есть свой API… Так давай же посмотрим, как этим можно воспользоваться для поиска пользователей и сбора информации о них.<br/>\n<br/>\nЕсть в американской разведке такая дисциплина, как OSINT (Open source intelligence), которая отвечает за поиск, сбор и выбор информации из общедоступных источников. К одному из крупнейших поставщиков общедоступной информации можно отнести социальные сети. Ведь практически у каждого из нас есть учетка (а у кого-то и не одна) в одной или нескольких соцсетях. Тут мы делимся своими новостями, личными фотографиями, вкусами (например, лайкая что-то или вступая в какую-либо группу), кругом своих знакомств. Причем делаем это по своей доброй воле и практически совершенно не задумываемся о возможных последствиях. На страницах журнала уже не раз рассматривали, как можно с помощью различных уловок вытаскивать из соцсетей интересные данные. Обычно для этого нужно было вручную совершить какие-то манипуляции. Но для успешной разведки логичнее воспользоваться специальными утилитами. Существует несколько open source утилит, позволяющих вытаскивать информацию о пользователях из соцсетей.<br/>\n <a href=\"http://habrahabr.ru/post/254129/#habracut\">Читать дальше &#8594;</a>"
-    //     },
-    //     {
-    //         id: "552ce0df0fdeea99d7d93e0e",
-    //         url: "http://habrahabr.ru/post/255687/",
-    //         title: "[Из песочницы] Обнаружение сигнала в шумах",
-    //         time: "2015-04-14T11:12:08",
-    //         description: "<br/><img src=\"//habrastorage.org/files/7e4/2d7/474/7e42d7474ef747e0a125bd65d01227b6.png\"/><br/>\nПо роду своей деятельности мне приходится осуществлять контроль различных параметров наземных импульсно-фазовых радионавигационных систем (ИФРНС) «Чайка» и Loran-C. В этой статье я хочу поделиться одним из методов обнаружения времени прихода импульса ИФРНС при наличии шумов. Метод применим во многих задачах поиска сигнала известной формы.<br/>\n <a href=\"http://habrahabr.ru/post/255687/#habracut\">Читать дальше &#8594;</a>"
-    //     },
-    //     {
-    //       id: "552ce0df0fdeea99d7d93e13",
-    //       url: "http://habrahabr.ru/post/255683/",
-    //       title: "[Перевод] Глубокое погружение в систему рендеринга WPF",
-    //       time: "2015-04-14T10:43:34",
-    //       description: "<br/><i>На перевод этой статьи меня подтолкнуло обсуждение записей <a href=\"http://habrahabr.ru/company/geekfamily/blog/253341/\">«Почему WPF живее всех живых?»</a> и <a href=\"http://habrahabr.ru/post/165273/\">«Семь лет WPF: что изменилось?»</a> Исходная статья написана в 2011 году, когда Silverlight еще был жив, но информация по WPF не потеряла актуальности.</i><br/>\n<br/>\nСначала я не хотел публиковать эту статью. Мне казалось, что это невежливо — о мертвых надо говорить либо хорошо, либо ничего. Но несколько бесед с людьми, чье мнение я очень ценю, заставили меня передумать. Вложившие много усилий в платформу Microsoft разработчики должны знать о внутренних особенностях ее работы, чтобы, зайдя в тупик, они могли понимать причины произошедшего и более точно формулировать пожелания к разработчикам платформы. Я считаю WPF и Silverlight хорошими технологиями, но… Если вы следили за моим Twitter последние несколько месяцев, то некоторые высказывания могли показаться вам безосновательными нападками на производительность WPF и Silverlight. Почему я это писал? Ведь, в конце концов, я вложил тысячи и тысячи часов моего собственного времени в течение многих лет, пропагандируя платформу, разрабатывая библиотеки, помогая участникам сообщества и так далее. Я однозначно лично заинтересован. Я хочу, чтобы платформа стала лучше.<br/>\n<br/>\n<img src=\"//habrastorage.org/files/82d/b5e/62d/82db5e62d4524237975836e5b2bceea9.png\"/><br/>\n <a href=\"http://habrahabr.ru/post/255683/#habracut\">Читать дальше &#8594;</a>"
-    //     }
-    //   ]
-    // });
   },
 
   getInitialState: function() {
@@ -115,10 +135,11 @@ var DiploPagelet = React.createClass({
 
   componentDidMount: function() {
     this.loadCommentsFromServer();
-    setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+    // setInterval(this.loadCommentsFromServer, this.props.pollInterval);
   },
 
   render: function() {
+    console.log('here')
     var pagelet = []
     var styles = this.styleList()
     var index = Math.floor(Math.random() * styles.length);
@@ -143,37 +164,47 @@ var DiploPagelet = React.createClass({
   }
 });
 
+var DiploPage = React.createClass({
+  
+  getInitialState: function () {
+    return {
+      hasMore: true,
+      items: [<DiploPagelet url={url+'0'} pollInterval={5000} />]
+    };
+  },
 
-// DEPRECATED
-var DiploArticle = React.createClass({
-  render: function() {
-    return (
-        <article>
-          <h1><a href={this.props.url} title={this.props.title}>TITLE</a></h1>
-          <img src="" alt="" />
-          <p>{this.props.description}</p>
-        </article>
-      ); 
-  }
-});
+  loadMore: function (page) {
+    console.log('load');
+    setTimeout(function () {
+      this.setState({
+        items: this.state.items.concat([<DiploPagelet url={url+page.toString()} pollInterval={5000} />]),
+        hasMore: (page < 100)
+      });
+    }.bind(this), 1000);
+  },
 
-// DEPRECATED
-var DiploArticleList = React.createClass({
-  render: function() {
-    var nodes = this.props.data.map(function(item) {
-      return (
-        <DiploArticle url={item.url} title={item.title} description={item.description}/>
-      );
-    });
+  render: function () {
+    console.log('render');
     return (
-      <div className="article_list_component">
-        {nodes}
-      </div>
+      <InfiniteScroll loader={<div className="loader">Loading ...</div>} loadMore={this.loadMore} hasMore={this.state.hasMore}>
+        {this.state.items}
+      </InfiniteScroll > 
     );
-  }
+  },
 });
 
-React.render(
-  <DiploPagelet url={url} pollInterval={5000} />,
+document.onload = React.render(
+  <DiploPage />,
   document.getElementById('article_list')
 );
+
+// document.onload = React.render(
+//   <DiploPagelet url={url} pollInterval={5000} />,
+//   document.getElementById('article_list')
+// );
+
+// $(window).scroll(function() {
+//    if($(window).scrollTop() + $(window).height() == $(document).height()) {
+//        alert("bottom!");
+//    }
+// });
