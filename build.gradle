@@ -2,7 +2,7 @@ apply from: 'repository.gradle'
 
 allprojects {
 	group = 'com.github.diplodoc'
-	version = '0.0.7-SNAPSHOT'
+	version = '0.0.7'
 
     repositories {
         jcenter()
