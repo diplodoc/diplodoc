@@ -141,10 +141,10 @@ class ProcessCallSpec extends Specification {
             processCall.restTemplate = restTemplate
 
         when:
-            processCall.get(from: 'url', expect: Integer)
+            processCall.get(from: 'url', root: 'root', expect: Integer)
 
         then:
-            1 * restTemplate.getForObject('url', Integer)
+            1 * restTemplate.getForObject('null/root/url', Integer)
     }
 
     def 'void get(Map params) - default response type'() {
@@ -157,10 +157,10 @@ class ProcessCallSpec extends Specification {
             processCall.restTemplate = restTemplate
 
         when:
-            processCall.get(from: 'url')
+            processCall.get(from: 'url', root: 'root')
 
         then:
-            1 * restTemplate.getForObject('url', String)
+            1 * restTemplate.getForObject('null/root/url', String)
     }
 
     def 'void post(Map params)'() {
@@ -173,10 +173,10 @@ class ProcessCallSpec extends Specification {
             processCall.restTemplate = restTemplate
 
         when:
-            processCall.post(to: 'url', request: 'request', expect: Integer)
+            processCall.post(to: 'url', root: 'root', request: 'request', expect: Integer)
 
         then:
-            1 * restTemplate.postForObject('url', 'request', Integer)
+            1 * restTemplate.postForObject('null/root/url', 'request', Integer)
     }
 
     def 'void post(Map params) - default response type'() {
@@ -189,10 +189,10 @@ class ProcessCallSpec extends Specification {
             processCall.restTemplate = restTemplate
 
         when:
-            processCall.post(to: 'url', request: 'request')
+            processCall.post(to: 'url', root: 'root', request: 'request')
 
         then:
-            1 * restTemplate.postForObject('url', 'request', String)
+            1 * restTemplate.postForObject('null/root/url', 'request', String)
     }
 
     def 'void send(Map params)'() {
