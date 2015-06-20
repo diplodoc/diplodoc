@@ -20,7 +20,7 @@ class MongodbConfiguration extends AbstractMongoConfiguration {
 
     @Override
     Mongo mongo() throws Exception {
-        new Mongo(System.getProperty('mongodb_host'), System.getProperty('mongodb_port'))
+        new Mongo(System.getProperty('mongodb_host'), Integer.parseInt(System.getProperty('mongodb_port')))
     }
 
     @Override

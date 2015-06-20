@@ -84,16 +84,22 @@ class ProcessCall implements Runnable {
     }
 
     def get(Map params) {
-        String url = params.from
+        String root = params.root
+        String path = params.from
         Class responseType = params.expect ?: String
+
+        String url = "${System.getProperty 'modules_host'}/$root/$path"
 
         restTemplate.getForObject(url, responseType)
     }
 
     def post(Map params) {
-        String url = params.to
+        String root = params.root
+        String path = params.to
         Object request = params.request
         Class responseType = params.expect ?: String
+
+        String url = "${System.getProperty 'modules_host'}/$root/$path"
 
         restTemplate.postForObject(url, request, responseType)
     }
