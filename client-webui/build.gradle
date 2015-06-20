@@ -1,0 +1,14 @@
+task clean(type: Delete) {
+    delete file('build')
+}
+
+task build(type: Zip) {
+    from '.'
+
+    exclude 'build'
+    exclude 'build.gradle'
+    exclude 'client-webui.iml'
+
+    destinationDir = file('build/libs')
+    baseName = project.name
+}
