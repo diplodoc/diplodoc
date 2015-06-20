@@ -1,0 +1,22 @@
+task clean(type: Delete) {
+    delete file('build')
+}
+
+task build(type: Zip) {
+    from '.'
+
+    exclude 'build'
+    exclude 'build.gradle'
+    exclude 'client-webui.iml'
+
+    destinationDir = file('build/libs')
+    baseName = project.name
+
+    doFirst {
+        files({ file('src').listFiles() }).findAll({ it.name.endsWith 'js' }).each({ it.text = it.text.replace 'localhost:8080', 'env-6227801.whelastic.net' })
+    }
+
+    doLast {
+        files({ file('src').listFiles() }).findAll({ it.name.endsWith 'js' }).each({ it.text = it.text.replace 'env-6227801.whelastic.net', 'localhost:8080' })
+    }
+}

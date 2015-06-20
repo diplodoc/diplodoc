@@ -35,7 +35,7 @@ class ProcessController {
         def client = new RestBuilder()
 
         // FIXIT: DIPLODOC-26. Externalize application configuration
-        def response = client.post("http://localhost:8080/orchestration/process/${processInstance.id}/run") {
+        def response = client.post("${System.getProperty 'orchestration_host'}/orchestration/process/${processInstance.id}/run") {
             contentType 'text/plain'
         }
         String processRunId = "${response?.text}"
