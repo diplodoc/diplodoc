@@ -2,6 +2,7 @@ apply plugin: 'groovy'
 
 dependencies {
     compile dependency.groovy
+
     compile dependency.spring.context
 
     compile dependency.commons.lang
