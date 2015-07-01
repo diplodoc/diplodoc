@@ -157,6 +157,17 @@ class OrchestratorSpec extends Specification {
             actual == new Process(id: new ObjectId('111111111111111111111111'), name: 'process-1')
     }
 
+    def 'Process getProcess(ObjectId id)'() {
+        setup:
+            orchestrator.processes = [ new Process(id: new ObjectId('000000000000000000000000'), name: 'process-0'), new Process(id: new ObjectId('111111111111111111111111'), name: 'process-1'), new Process(id: new ObjectId('222222222222222222222222'), name: 'process-2') ]
+
+        when:
+            Process actual = orchestrator.getProcess(new ObjectId('111111111111111111111111'))
+
+        then:
+            actual == new Process(id: new ObjectId('111111111111111111111111'), name: 'process-1')
+    }
+
     def 'Collection<Process> getProcessesWaitingFor(String eventName)'() {
         setup:
             Process process1 = new Process(id: new ObjectId('111111111111111111111111'), name: 'process-1')
