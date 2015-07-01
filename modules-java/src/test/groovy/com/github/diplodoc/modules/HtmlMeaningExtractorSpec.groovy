@@ -80,10 +80,43 @@ class HtmlMeaningExtractorSpec extends Specification {
             actual['moduleMethodRun'].parameters == [ 'docId': '111111111111111111111111' ]
     }
 
-    def 'def trainModel()'() {
+    def 'def trainModel() - first ever run'() {
         setup:
             1 * auditService.runMethodUnderAudit('HtmlMeaningExtractor', 'trainModel', _) >> { it ->
                 Module module = new Module(name: 'HtmlMeaningExtractor', id: new ObjectId('111111111111111111111111'))
+                ModuleMethod moduleMethod = new ModuleMethod()
+                ModuleMethodRun moduleMethodRun = new ModuleMethodRun()
+
+                return it[2].call(module, moduleMethod, moduleMethodRun)
+            }
+
+            meaningExtractor.auditService = auditService
+            meaningExtractor.serializationService = serializationService
+
+            JavaRDD<LabeledPoint> trainSet = Mock(JavaRDD)
+            JavaRDD<LabeledPoint> testSet = Mock(JavaRDD)
+            1 * meaningExtractor.dataSplits() >> [ 'trainSet': trainSet, 'testSet': testSet ]
+
+            LogisticRegressionModel model = Mock(LogisticRegressionModel)
+            1 * meaningExtractor.model(trainSet) >> model
+
+            1 * meaningExtractor.metrics(model, trainSet, testSet) >> [ 'metric': 'value' ]
+
+            serializationService.serialize(model) >> ([ 1, 2 ,3 ] as byte[])
+
+        when:
+            Map actual = meaningExtractor.trainModel()
+
+        then:
+            actual.keySet().size() == 2
+            actual['module'].data == [ 'model': ([ 1, 2, 3 ] as byte[]) ]
+            actual['metrics'] == [ 'metric': 'value' ]
+    }
+
+    def 'def trainModel() - second run'() {
+        setup:
+            1 * auditService.runMethodUnderAudit('HtmlMeaningExtractor', 'trainModel', _) >> { it ->
+                Module module = new Module(name: 'HtmlMeaningExtractor', id: new ObjectId('111111111111111111111111'), data: [ model: ([ 4, 5 ] as byte[]) ])
                 ModuleMethod moduleMethod = new ModuleMethod()
                 ModuleMethodRun moduleMethodRun = new ModuleMethodRun()
 
