@@ -8,8 +8,6 @@ class UrlMappings {
         '/orchestration'(view: '/navigation/orchestration')
         '/train-sets'(view: '/navigation/train-sets')
 
-        '/knu'(view: '/navigation/knu')
-
         '500'(view: '/error')
 	}
 }
