@@ -38,7 +38,7 @@
 				</thead>
 
 				<tbody>
-					<g:each in="${moduleMethodRunInstanceList}" status="i" var="moduleMethodRunInstance">
+					<g:each in="${moduleMethodRunList}" status="i" var="moduleMethodRunInstance">
 						<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 
 							<td><g:link action="show" id="${moduleMethodRunInstance.id}">${fieldValue(bean: moduleMethodRunInstance, field: "id")}</g:link></td>

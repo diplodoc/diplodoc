@@ -3,12 +3,10 @@ package com.github.dipodoc.webui.admin.controller.train
 import com.github.dipodoc.webui.admin.domain.data.Doc
 import com.github.dipodoc.webui.admin.domain.data.Topic
 import grails.transaction.Transactional
-import org.springframework.security.access.annotation.Secured
 
 import static org.springframework.http.HttpStatus.NOT_FOUND
 
 @Transactional(readOnly = true)
-@Secured([ 'ROLE_ADMIN' ])
 class TrainTopicsController {
 
     static allowedMethods = [ save: 'PUT', saveAndNext: 'PUT', addTopicToTrainingSet: 'PUT', removeFromTrain: 'DELETE', removeTopicFromTrainingSet: 'DELETE' ]

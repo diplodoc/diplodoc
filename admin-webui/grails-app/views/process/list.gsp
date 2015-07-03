@@ -39,7 +39,7 @@
 				</thead>
 
 				<tbody>
-					<g:each in="${processInstanceList}" status="i" var="processInstance">
+					<g:each in="${processList}" status="i" var="processInstance">
 						<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 
 							<td><g:link action="show" id="${processInstance.id}">${fieldValue(bean: processInstance, field: "name")}</g:link></td>

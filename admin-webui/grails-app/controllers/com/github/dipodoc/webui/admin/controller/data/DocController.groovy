@@ -1,13 +1,11 @@
 package com.github.dipodoc.webui.admin.controller.data
 
 import com.github.dipodoc.webui.admin.domain.data.Doc
-import org.springframework.security.access.annotation.Secured
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
-@Secured([ 'ROLE_ADMIN' ])
 class DocController {
 
     static allowedMethods = [ delete: 'DELETE' ]

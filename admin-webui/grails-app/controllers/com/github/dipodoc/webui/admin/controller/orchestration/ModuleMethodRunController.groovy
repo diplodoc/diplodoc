@@ -2,10 +2,8 @@ package com.github.dipodoc.webui.admin.controller.orchestration
 
 import com.github.dipodoc.webui.admin.domain.orchestration.ModuleMethodRun
 import grails.transaction.Transactional
-import org.springframework.security.access.annotation.Secured
 
 @Transactional(readOnly = true)
-@Secured([ 'ROLE_ADMIN' ])
 class ModuleMethodRunController {
 
     def list(Integer max) {

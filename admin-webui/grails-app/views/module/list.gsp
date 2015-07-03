@@ -32,7 +32,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<g:each in="${moduleInstanceList}" status="i" var="moduleInstance">
+					<g:each in="${moduleList}" status="i" var="moduleInstance">
 						<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 
 							<td><g:link action="show" id="${moduleInstance.id}">${fieldValue(bean: moduleInstance, field: "name")}</g:link></td>

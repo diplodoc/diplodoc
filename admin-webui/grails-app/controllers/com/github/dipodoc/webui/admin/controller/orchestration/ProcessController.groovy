@@ -1,14 +1,11 @@
 package com.github.dipodoc.webui.admin.controller.orchestration
 
 import com.github.dipodoc.webui.admin.domain.orchestration.Process
-import grails.plugins.rest.client.RestBuilder
-import org.springframework.security.access.annotation.Secured
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
-@Secured([ 'ROLE_ADMIN' ])
 class ProcessController {
 
     static allowedMethods = [ save: 'POST', update: 'PUT', delete: 'DELETE' ]
@@ -31,16 +28,16 @@ class ProcessController {
     }
 
     def start(Process processInstance) {
-        // FIXIT: DIPLODOC-161. Extract all grails controllers logic to services
-        def client = new RestBuilder()
-
-        // FIXIT: DIPLODOC-26. Externalize application configuration
-        def response = client.post("${System.getProperty 'orchestration_host'}/orchestration/process/${processInstance.id}/run") {
-            contentType 'text/plain'
-        }
-        String processRunId = "${response?.text}"
-
-        redirect controller: 'processRun', action: 'show', id: processRunId
+//        // FIXIT: DIPLODOC-161. Extract all grails controllers logic to services
+//        def client = new RestBuilder()
+//
+//        // FIXIT: DIPLODOC-26. Externalize application configuration
+//        def response = client.post("${System.getProperty 'orchestration_host'}/orchestration/process/${processInstance.id}/run") {
+//            contentType 'text/plain'
+//        }
+//        String processRunId = "${response?.text}"
+//
+//        redirect controller: 'processRun', action: 'show', id: processRunId
     }
 
     @Transactional
