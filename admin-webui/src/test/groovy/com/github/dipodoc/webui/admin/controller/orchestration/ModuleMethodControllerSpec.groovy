@@ -17,8 +17,8 @@ class ModuleMethodControllerSpec extends Specification {
             controller.create()
 
         then: 'model is correctly created, module is populated'
-            model.moduleMethodInstance != null
-            model.moduleMethodInstance.module == module
+            model.moduleMethod != null
+            model.moduleMethod.module == module
     }
 
     def "'save' action with valid domain instance"() {
@@ -44,7 +44,7 @@ class ModuleMethodControllerSpec extends Specification {
             controller.save(moduleMethod)
 
         then: "'create' view is rendered again with the correct model"
-            model.moduleMethodInstance != null
+            model.moduleMethod != null
             view == 'create'
     }
 
@@ -55,7 +55,7 @@ class ModuleMethodControllerSpec extends Specification {
             controller.edit(moduleMethod)
 
         then: 'model is populated with domain instance'
-            model.moduleMethodInstance == moduleMethod
+            model.moduleMethod == moduleMethod
     }
 
     def "'edit' action with null domain"() {
@@ -99,7 +99,7 @@ class ModuleMethodControllerSpec extends Specification {
 
         then: "'edit' view is rendered again with the invalid instance"
             view == 'edit'
-            model.moduleMethodInstance == moduleMethod
+            model.moduleMethod == moduleMethod
     }
 
     void "'delete' action"() {

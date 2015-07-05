@@ -19,8 +19,8 @@ class ProcessRunControllerSpec extends Specification {
             controller.list()
 
         then: 'model contains this single instance'
-            model.processRunInstanceCount == 1
-            model.processRunInstanceList == [ processRun ]
+            model.processRunCount == 1
+            model.processRunList == [ processRun ]
     }
 
     def "'list' action with pagination"() {
@@ -33,8 +33,8 @@ class ProcessRunControllerSpec extends Specification {
             controller.list(1)
 
         then: 'model contains one of instances, total instances count is 2'
-            model.processRunInstanceCount == 2
-            model.processRunInstanceList == [ processRun1 ] || model.processRunInstanceList == [ processRun2 ]
+            model.processRunCount == 2
+            model.processRunList == [ processRun1 ] || model.processRunList == [ processRun2 ]
     }
 
     def "'show' action"() {
@@ -44,7 +44,7 @@ class ProcessRunControllerSpec extends Specification {
             controller.show(processRun)
 
         then: 'model contains this instance'
-            model.processRunInstance == processRun
+            model.processRun == processRun
     }
 
     def "'show' action with null domain"() {

@@ -18,12 +18,12 @@ class TopicControllerSpec extends Specification {
             controller.list()
 
         then: 'model contains this single instance'
-            model.topicInstanceCount == 1
-            model.topicInstanceList == [ topic ]
+            model.topicCount == 1
+            model.topicList == [ topic ]
     }
 
     def "'list' action with pagination"() {
-        given: 'two domain instances'
+        given: 'two domain s'
             Topic topic1 = new Topic(label: 'label').save flush:true
             Topic topic2 = new Topic(label: 'label').save flush:true
 
@@ -31,8 +31,8 @@ class TopicControllerSpec extends Specification {
             controller.list(1)
 
         then: 'model contains one of instances, total instances count is 2'
-            model.topicInstanceCount == 2
-            model.topicInstanceList == [ topic1 ] || model.topicInstanceList == [ topic2 ]
+            model.topicCount == 2
+            model.topicList == [ topic1 ] || model.topicList == [ topic2 ]
     }
 
     def "'show' action"() {
@@ -41,7 +41,7 @@ class TopicControllerSpec extends Specification {
             controller.show(topic)
 
         then: 'model contains this instance'
-            model.topicInstance == topic
+            model.topic == topic
     }
 
     def "'show' action with null domain"() {
@@ -57,7 +57,7 @@ class TopicControllerSpec extends Specification {
             controller.create()
 
         then: 'model is correctly created'
-            model.topicInstance != null
+            model.topic != null
     }
 
     def "'save' action with valid domain instance"() {
@@ -83,7 +83,7 @@ class TopicControllerSpec extends Specification {
             controller.save(topic)
 
         then: "'create' view is rendered again with the correct model"
-            model.topicInstance != null
+            model.topic != null
             view == 'create'
     }
 
@@ -93,7 +93,7 @@ class TopicControllerSpec extends Specification {
             controller.edit(topic)
 
         then: 'model is populated with domain instance'
-            model.topicInstance == topic
+            model.topic == topic
     }
 
     def "'edit' action with null domain"() {
@@ -137,7 +137,7 @@ class TopicControllerSpec extends Specification {
 
         then: "'edit' view is rendered again with the invalid instance"
             view == 'edit'
-            model.topicInstance == topic
+            model.topic == topic
     }
 
     void "'delete' action"() {

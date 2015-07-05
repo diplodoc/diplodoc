@@ -22,8 +22,8 @@ class ModuleMethodRunControllerSpec extends Specification {
             controller.list()
 
         then: 'model contains both instances sorted by startTime desc'
-            model.moduleMethodRunInstanceCount == 2
-            model.moduleMethodRunInstanceList == [ moduleMethodRun2, moduleMethodRun1 ]
+            model.moduleMethodRunCount == 2
+            model.moduleMethodRunList == [ moduleMethodRun2, moduleMethodRun1 ]
     }
 
     def "'list' action with pagination"() {
@@ -37,8 +37,8 @@ class ModuleMethodRunControllerSpec extends Specification {
             controller.list(1)
 
         then: 'model contains one of instances, total instances count is 2'
-            model.moduleMethodRunInstanceCount == 2
-            model.moduleMethodRunInstanceList == [ moduleMethodRun1 ] || model.moduleMethodRunInstanceList == [ moduleMethodRun2 ]
+            model.moduleMethodRunCount == 2
+            model.moduleMethodRunList == [ moduleMethodRun1 ] || model.moduleMethodRunList == [ moduleMethodRun2 ]
     }
 
     def "'show' action"() {
@@ -49,7 +49,7 @@ class ModuleMethodRunControllerSpec extends Specification {
             controller.show(moduleMethodRun)
 
         then: 'model contains this instance'
-            model.moduleMethodRunInstance == moduleMethodRun
+            model.moduleMethodRun == moduleMethodRun
     }
 
     def "'show' action with null domain"() {

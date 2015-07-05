@@ -1,12 +1,12 @@
 <%@ page import="com.github.dipodoc.webui.admin.domain.orchestration.Module" %>
 <%@ page import="com.github.dipodoc.webui.admin.domain.orchestration.ModuleMethod" %>
 
-<div class="fieldcontain ${hasErrors(bean: moduleInstance, field: 'name', 'error')} required">
+<div class="fieldcontain ${hasErrors(bean: module, field: 'name', 'error')} required">
 	<label for="name">
 		<g:message code="module.name.label" default="name" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:textField name="name" required="" value="${moduleInstance?.name}"/>
+	<g:textField name="name" required="" value="${module?.name}"/>
 </div>
 
 <div class="fieldcontain">

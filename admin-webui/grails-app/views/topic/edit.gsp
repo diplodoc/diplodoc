@@ -5,7 +5,7 @@
 	<head>
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'topic.label', default: 'Topic')}" />
-		<title><g:message code="default.edit.label" args='["Topic id=${topicInstance.id}" ]' /></title>
+		<title><g:message code="default.edit.label" args='["Topic id=${topic.id}" ]' /></title>
 	</head>
 
 	<body>
@@ -21,21 +21,21 @@
 		</div>
 
 		<div id="edit-topic" class="content scaffold-edit" role="main">
-			<h1><g:message code="default.edit.label" args='["Topic id=${topicInstance.id}" ]' /></h1>
+			<h1><g:message code="default.edit.label" args='["Topic id=${topic.id}" ]' /></h1>
 
 			<g:if test="${flash.message}">
 				<div class="message" role="status">${flash.message}</div>
 			</g:if>
 
-			<g:hasErrors bean="${topicInstance}">
+			<g:hasErrors bean="${topic}">
 				<ul class="errors" role="alert">
-					<g:eachError bean="${topicInstance}" var="error">
+					<g:eachError bean="${topic}" var="error">
 						<li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
 					</g:eachError>
 				</ul>
 			</g:hasErrors>
 
-			<g:form url="[resource:topicInstance, action:'update']" method="PUT" >
+			<g:form url="[resource:topic, action:'update']" method="PUT" >
 				<fieldset class="form">
 					<g:render template="form"/>
 				</fieldset>

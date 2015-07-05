@@ -35,12 +35,12 @@
 				</thead>
 
 				<tbody>
-					<g:each in="${topicList}" status="i" var="topicInstance">
+					<g:each in="${topicList}" status="i" var="topic">
 						<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 
-							<td><g:link action="show" id="${topicInstance.id}">${fieldValue(bean: topicInstance, field: "id")}</g:link></td>
+							<td><g:link action="show" id="${topic.id}">${fieldValue(bean: topic, field: "id")}</g:link></td>
 
-							<td><diplo:topics topics="${topicInstance}" /></td>
+							<td><diplo:topics topics="${topic}" /></td>
 
 						</tr>
 					</g:each>
@@ -48,7 +48,7 @@
 			</table>
 
 			<div class="pagination">
-				<g:paginate total="${topicInstanceCount ?: 0}" />
+				<g:paginate total="${topicCount ?: 0}" />
 			</div>
 		</div>
 

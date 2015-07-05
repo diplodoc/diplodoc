@@ -18,7 +18,7 @@
         </div>
 
         <div id="list-doc" class="content scaffold-list" role="main">
-            <h1><g:message message="Topics train set, total ${docInstanceCount} docs" /></h1>
+            <h1><g:message message="Topics train set, total ${docCount} docs" /></h1>
 
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
@@ -38,14 +38,14 @@
                 </thead>
 
                 <tbody>
-                    <g:each in="${docList}" status="i" var="docInstance">
+                    <g:each in="${docList}" status="i" var="doc">
                         <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 
-                            <td><g:link action="edit" id="${docInstance.id}">${fieldValue(bean: docInstance, field: 'id')}</g:link></td>
+                            <td><g:link action="edit" id="${doc.id}">${fieldValue(bean: doc, field: 'id')}</g:link></td>
 
-                            <td><a href="${docInstance.url}" target="_blank"><g:fieldValue bean="${docInstance}" field="url"/></a></td>
+                            <td><a href="${doc.url}" target="_blank"><g:fieldValue bean="${doc}" field="url"/></a></td>
 
-                            <td>${fieldValue(bean: docInstance, field: 'title')}</td>
+                            <td>${fieldValue(bean: doc, field: 'title')}</td>
 
                         </tr>
                     </g:each>
@@ -53,7 +53,7 @@
             </table>
 
             <div class="pagination">
-                <g:paginate total="${docInstanceCount ?: 0}" />
+                <g:paginate total="${docCount ?: 0}" />
             </div>
         </div>
 

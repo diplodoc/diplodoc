@@ -10,10 +10,10 @@ class ModuleMethodRunController {
         params.max = Math.min(max ?: 10, 100)
         params.sort = 'startTime'
         params.order = 'desc'
-        respond ModuleMethodRun.list(params), model: [ moduleMethodRunInstanceCount: ModuleMethodRun.count() ]
+        respond ModuleMethodRun.list(params), model: [ moduleMethodRunCount: ModuleMethodRun.count() ]
     }
 
-    def show(ModuleMethodRun moduleMethodRunInstance) {
-        respond moduleMethodRunInstance
+    def show(ModuleMethodRun moduleMethodRun) {
+        respond moduleMethodRun
     }
 }

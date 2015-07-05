@@ -12,25 +12,25 @@ class DocController {
 
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond Doc.list(params), model: [ docInstanceCount: Doc.count() ]
+        respond Doc.list(params), model: [ docCount: Doc.count() ]
     }
 
-    def show(Doc docInstance) {
-        respond docInstance
+    def show(Doc doc) {
+        respond doc
     }
 
     @Transactional
-    def delete(Doc docInstance) {
-        if (docInstance == null) {
+    def delete(Doc doc) {
+        if (doc == null) {
             notFound()
             return
         }
 
-        docInstance.delete flush:true
+        doc.delete flush:true
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [ message(code: 'doc.label', default: 'Doc'), docInstance.id ])
+                flash.message = message(code: 'default.deleted.message', args: [ message(code: 'doc.label', default: 'Doc'), doc.id ])
                 redirect action: 'list', method: 'GET'
             }
             '*' { render status: NO_CONTENT }

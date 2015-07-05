@@ -32,10 +32,10 @@
 					</tr>
 				</thead>
 				<tbody>
-					<g:each in="${moduleList}" status="i" var="moduleInstance">
+					<g:each in="${moduleList}" status="i" var="module">
 						<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 
-							<td><g:link action="show" id="${moduleInstance.id}">${fieldValue(bean: moduleInstance, field: "name")}</g:link></td>
+							<td><g:link action="show" id="${module.id}">${fieldValue(bean: module, field: "name")}</g:link></td>
 
 						</tr>
 					</g:each>
@@ -43,7 +43,7 @@
 			</table>
 
 			<div class="pagination">
-				<g:paginate total="${moduleInstanceCount ?: 0}" />
+				<g:paginate total="${moduleCount ?: 0}" />
 			</div>
 		</div>
 

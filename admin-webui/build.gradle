@@ -57,4 +57,9 @@ dependencies {
     testCompile 'org.grails:grails-plugin-testing'
 
     console 'org.grails:grails-console'
+
+    compile dependency.spring.web
+
+    compile dependency.jackson.core
+    compile dependency.jackson.databind
 }

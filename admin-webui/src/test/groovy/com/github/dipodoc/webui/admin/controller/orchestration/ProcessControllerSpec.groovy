@@ -18,8 +18,8 @@ class ProcessControllerSpec extends Specification {
             controller.list()
 
         then: 'model contains this single instance'
-            model.processInstanceCount == 1
-            model.processInstanceList == [ process ]
+            model.processCount == 1
+            model.processList == [ process ]
     }
 
     def "'list' action with pagination"() {
@@ -31,8 +31,8 @@ class ProcessControllerSpec extends Specification {
             controller.list(1)
 
         then: 'model contains one of instances, total instances count is 2'
-            model.processInstanceCount == 2
-            model.processInstanceList == [ process1 ] || model.processInstanceList == [ process2 ]
+            model.processCount == 2
+            model.processList == [ process1 ] || model.processList == [ process2 ]
     }
 
     def "'show' action"() {
@@ -41,7 +41,7 @@ class ProcessControllerSpec extends Specification {
             controller.show(process)
 
         then: 'model contains this instance'
-            model.processInstance == process
+            model.process == process
     }
 
     def "'show' action with null domain"() {
@@ -58,7 +58,7 @@ class ProcessControllerSpec extends Specification {
             controller.run(process)
 
         then: 'model contains this instance'
-            model.processInstance == process
+            model.process == process
     }
 
     def "'run' action with null domain"() {
@@ -74,7 +74,7 @@ class ProcessControllerSpec extends Specification {
             controller.create()
 
         then: 'model is correctly created'
-            model.processInstance != null
+            model.process != null
     }
 
     def "'save' action with valid domain instance"() {
@@ -100,7 +100,7 @@ class ProcessControllerSpec extends Specification {
             controller.save(process)
 
         then: "'create' view is rendered again with the correct model"
-            model.processInstance != null
+            model.process != null
             view == 'create'
     }
 
@@ -110,7 +110,7 @@ class ProcessControllerSpec extends Specification {
             controller.edit(process)
 
         then: 'model is populated with domain instance'
-            model.processInstance == process
+            model.process == process
     }
 
     def "'edit' action with null domain"() {
@@ -154,7 +154,7 @@ class ProcessControllerSpec extends Specification {
 
         then: "'edit' view is rendered again with the invalid instance"
             view == 'edit'
-            model.processInstance == process
+            model.process == process
     }
 
     void "'delete' action"() {

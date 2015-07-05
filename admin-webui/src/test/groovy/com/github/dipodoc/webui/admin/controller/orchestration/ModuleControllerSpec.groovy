@@ -19,12 +19,12 @@ class ModuleControllerSpec extends Specification {
             controller.list()
 
         then: 'model contains this single instance'
-            model.moduleInstanceCount == 1
-            model.moduleInstanceList == [ module ]
+            model.moduleCount == 1
+            model.moduleList == [ module ]
     }
 
     def "'list' action with pagination"() {
-        given: 'two domain instances'
+        given: 'two domain s'
             Module module1 = new Module(name: 'name', data: [:]).save flush:true
             Module module2 = new Module(name: 'name', data: [:]).save flush:true
 
@@ -32,8 +32,8 @@ class ModuleControllerSpec extends Specification {
             controller.list(1)
 
         then: 'model contains one of instances, total instances count is 2'
-            model.moduleInstanceCount == 2
-            model.moduleInstanceList == [ module1 ] || model.topicInstanceList == [ module2 ]
+            model.moduleCount == 2
+            model.moduleList == [ module1 ] || model.topicList == [ module2 ]
     }
 
     def "'show' action"() {
@@ -47,7 +47,7 @@ class ModuleControllerSpec extends Specification {
             def model = controller.show(module1)
 
         then: 'model contains this instance'
-            model.moduleInstance == module1
+            model.module == module1
             model.moduleMethodsList == [ moduleMethod1 ]
     }
 
@@ -64,7 +64,7 @@ class ModuleControllerSpec extends Specification {
             controller.create()
 
         then: 'model is correctly created'
-            model.moduleInstance != null
+            model.module != null
     }
 
     def "'save' action with valid domain instance"() {
@@ -90,7 +90,7 @@ class ModuleControllerSpec extends Specification {
             controller.save(module)
 
         then: "'create' view is rendered again with the correct model"
-            model.moduleInstance != null
+            model.module != null
             view == 'create'
     }
 
@@ -105,7 +105,7 @@ class ModuleControllerSpec extends Specification {
             def model = controller.edit(module1)
 
         then: 'model is populated with domain instance'
-            model.moduleInstance == module1
+            model.module == module1
             model.moduleMethodsList == [ moduleMethod1 ]
     }
 
@@ -150,7 +150,7 @@ class ModuleControllerSpec extends Specification {
 
         then: "'edit' view is rendered again with the invalid instance"
             view == 'edit'
-            model.moduleInstance == module
+            model.module == module
     }
 
     void "'delete' action"() {

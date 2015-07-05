@@ -18,8 +18,8 @@ class DocControllerSpec extends Specification {
             controller.list()
 
         then: 'model contains this single instance'
-            model.docInstanceCount == 1
-            model.docInstanceList == [ doc ]
+            model.docCount == 1
+            model.docList == [ doc ]
     }
 
     def "'list' action with pagination"() {
@@ -31,8 +31,8 @@ class DocControllerSpec extends Specification {
             controller.list(1)
 
         then: 'model contains one of instances, total instances count is 2'
-            model.docInstanceCount == 2
-            model.docInstanceList == [ doc1 ] || model.docInstanceList == [ doc2 ]
+            model.docCount == 2
+            model.docList == [ doc1 ] || model.docList == [ doc2 ]
     }
 
     void "'show' action"() {
@@ -41,7 +41,7 @@ class DocControllerSpec extends Specification {
             controller.show(doc)
 
         then: 'model contains this instance'
-            model.docInstance == doc
+            model.doc == doc
     }
 
     void "'show' action with null domain"() {

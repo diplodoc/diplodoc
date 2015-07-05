@@ -1,6 +1,7 @@
 package com.github.dipodoc.webui.admin.controller.orchestration
 
 import com.github.dipodoc.webui.admin.domain.orchestration.Process
+import org.springframework.web.client.RestTemplate
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
@@ -12,96 +13,94 @@ class ProcessController {
 
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond Process.list(params), model: [ processInstanceCount: Process.count() ]
+        respond Process.list(params), model: [ processCount: Process.count() ]
     }
 
-    def show(Process processInstance) {
-        respond processInstance
+    def show(Process process) {
+        respond process
     }
 
     def create() {
         respond new Process(params)
     }
 
-    def run(Process processInstance) {
-        respond processInstance
+    def run(Process process) {
+        respond process
     }
 
-    def start(Process processInstance) {
-//        // FIXIT: DIPLODOC-161. Extract all grails controllers logic to services
-//        def client = new RestBuilder()
-//
-//        // FIXIT: DIPLODOC-26. Externalize application configuration
-//        def response = client.post("${System.getProperty 'orchestration_host'}/orchestration/process/${processInstance.id}/run") {
-//            contentType 'text/plain'
-//        }
-//        String processRunId = "${response?.text}"
-//
-//        redirect controller: 'processRun', action: 'show', id: processRunId
+    def start(Process process) {
+        // FIXIT: Extract all grails controllers logic to services
+        def client = new RestTemplate()
+        String url = "${System.getProperty 'orchestration_host'}/orchestration/process/${process.id}/run"
+
+        def response = client.postForObject(url, null, String)
+        String processRunId = response
+
+        redirect controller: 'processRun', action: 'show', id: processRunId
     }
 
     @Transactional
-    def save(Process processInstance) {
-        if (processInstance == null) {
+    def save(Process process) {
+        if (process == null) {
             notFound()
             return
         }
 
-        if (processInstance.hasErrors()) {
-            respond processInstance.errors, view: 'create'
+        if (process.hasErrors()) {
+            respond process.errors, view: 'create'
             return
         }
 
-        processInstance.save flush:true
+        process.save flush:true
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [ message(code: 'process.label', default: 'Process'), processInstance.id ])
-                redirect processInstance
+                flash.message = message(code: 'default.created.message', args: [ message(code: 'process.label', default: 'Process'), process.id ])
+                redirect process
             }
-            '*' { respond processInstance, [status: CREATED] }
+            '*' { respond process, [status: CREATED] }
         }
     }
 
-    def edit(Process processInstance) {
-        respond processInstance
+    def edit(Process process) {
+        respond process
     }
 
     @Transactional
-    def update(Process processInstance) {
-        if (processInstance == null) {
+    def update(Process process) {
+        if (process == null) {
             notFound()
             return
         }
 
-        if (processInstance.hasErrors()) {
-            respond processInstance.errors, view: 'edit'
+        if (process.hasErrors()) {
+            respond process.errors, view: 'edit'
             return
         }
 
-        processInstance.save flush:true
+        process.save flush:true
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [ message(code: 'Process.label', default: 'Process'), processInstance.id ])
-                redirect processInstance
+                flash.message = message(code: 'default.updated.message', args: [ message(code: 'Process.label', default: 'Process'), process.id ])
+                redirect process
             }
-            '*' { respond processInstance, [status: OK] }
+            '*' { respond process, [status: OK] }
         }
     }
 
     @Transactional
-    def delete(Process processInstance) {
-        if (processInstance == null) {
+    def delete(Process process) {
+        if (process == null) {
             notFound()
             return
         }
 
-        processInstance.delete flush:true
+        process.delete flush:true
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [ message(code: 'Process.label', default: 'Process'), processInstance.id ])
+                flash.message = message(code: 'default.deleted.message', args: [ message(code: 'Process.label', default: 'Process'), process.id ])
                 redirect action: 'list', method:'GET'
             }
             '*' { render status: NO_CONTENT }

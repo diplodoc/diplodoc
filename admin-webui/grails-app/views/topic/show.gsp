@@ -5,7 +5,7 @@
 	<head>
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'topic.label', default: 'Topic')}" />
-		<title><g:message code="default.show.label" args='[ "Topic id=${topicInstance.id}" ]' /></title>
+		<title><g:message code="default.show.label" args='[ "Topic id=${topic.id}" ]' /></title>
 	</head>
 
 	<body>
@@ -20,7 +20,7 @@
 		</div>
 
 		<div id="show-topic" class="content scaffold-show" role="main">
-			<h1>Topic id=${topicInstance.id}</h1>
+			<h1>Topic id=${topic.id}</h1>
 
 			<g:if test="${flash.message}">
 				<div class="message" role="status">${flash.message}</div>
@@ -28,35 +28,35 @@
 
 			<ol class="property-list topic">
 
-				<g:if test="${topicInstance?.id}">
+				<g:if test="${topic?.id}">
 					<li class="fieldcontain">
 						<span id="id-label" class="property-label"><g:message code="topic.id.label" default="id" /></span>
 
-						<span class="property-value" aria-idledby="id-label"><g:fieldValue bean="${topicInstance}" field="id"/></span>
+						<span class="property-value" aria-idledby="id-label"><g:fieldValue bean="${topic}" field="id"/></span>
 					</li>
 				</g:if>
 
-				<g:if test="${topicInstance?.label}">
+				<g:if test="${topic?.label}">
 					<li class="fieldcontain">
 						<span id="label-label" class="property-label"><g:message code="topic.label.label" default="label" /></span>
 
-						<span class="property-value" aria-labelledby="label-label"><g:fieldValue bean="${topicInstance}" field="label"/></span>
+						<span class="property-value" aria-labelledby="label-label"><g:fieldValue bean="${topic}" field="label"/></span>
 					</li>
 				</g:if>
 			
-				<g:if test="${topicInstance?.parent}">
+				<g:if test="${topic?.parent}">
 					<li class="fieldcontain">
 						<span id="parent-label" class="property-label"><g:message code="topic.hierarchy.label" default="hierarchy" /></span>
 
-						<diplo:topics topics="${topicInstance}" divClass="property-value" />
+						<diplo:topics topics="${topic}" divClass="property-value" />
 					</li>
 				</g:if>
 			
 			</ol>
 
-			<g:form url="[resource:topicInstance, action:'delete']" method="DELETE">
+			<g:form url="[resource:topic, action:'delete']" method="DELETE">
 				<fieldset class="buttons">
-					<g:link class="edit" action="edit" resource="${topicInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
+					<g:link class="edit" action="edit" resource="${topic}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
 					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
 				</fieldset>
 			</g:form>

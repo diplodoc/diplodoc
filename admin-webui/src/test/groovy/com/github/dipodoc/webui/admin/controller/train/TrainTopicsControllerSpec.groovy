@@ -22,8 +22,8 @@ class TrainTopicsControllerSpec extends Specification {
             controller.list()
 
         then: 'model contains instance with train_topics field'
-            model.docInstanceCount == 1
-            model.docInstanceList == [ doc2 ]
+            model.docCount == 1
+            model.docList == [ doc2 ]
     }
 
     def "'list' action with pagination"() {
@@ -37,8 +37,8 @@ class TrainTopicsControllerSpec extends Specification {
             controller.list(1)
 
         then: 'model contains only one instance with train_meaningHtml field, total instances count is 2'
-            model.docInstanceCount == 2
-            model.docInstanceList == [ doc2 ] || model.docInstanceList == [ doc3 ]
+            model.docCount == 2
+            model.docList == [ doc2 ] || model.docList == [ doc3 ]
     }
 
     @Ignore('FIXIT: DIPLODOC-145. Fix multiple failing tests in diploweb')
@@ -78,7 +78,7 @@ class TrainTopicsControllerSpec extends Specification {
             controller.edit(doc)
 
         then: 'model is populated with domain instance'
-            model.docInstance == doc
+            model.doc == doc
     }
 
     def "'edit' action with null domain"() {

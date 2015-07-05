@@ -5,7 +5,7 @@
 	<head>
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'process.label', default: 'Process')}" />
-		<title><g:message code="default.edit.label" args='["Process name=${processInstance.name}" ]' /></title>
+		<title><g:message code="default.edit.label" args='["Process name=${process.name}" ]' /></title>
 	</head>
 
 	<body>
@@ -21,21 +21,21 @@
 		</div>
 
 		<div id="edit-process" class="content scaffold-edit" role="main">
-			<h1><g:message code="default.edit.label" args='["Process name=${processInstance.name}" ]' /></h1>
+			<h1><g:message code="default.edit.label" args='["Process name=${process.name}" ]' /></h1>
 
 			<g:if test="${flash.message}">
 				<div class="message" role="status">${flash.message}</div>
 			</g:if>
 
-			<g:hasErrors bean="${processInstance}">
+			<g:hasErrors bean="${process}">
 				<ul class="errors" role="alert">
-					<g:eachError bean="${processInstance}" var="error">
+					<g:eachError bean="${process}" var="error">
 						<li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
 					</g:eachError>
 				</ul>
 			</g:hasErrors>
 
-			<g:form url="[resource:processInstance, action:'update']" method="PUT" >
+			<g:form url="[resource:process, action:'update']" method="PUT" >
 				<fieldset class="form">
 					<g:render template="form"/>
 				</fieldset>

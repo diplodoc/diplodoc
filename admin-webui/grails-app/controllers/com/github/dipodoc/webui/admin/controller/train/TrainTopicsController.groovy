@@ -18,7 +18,7 @@ class TrainTopicsController {
         params.max = Math.min(max ?: 10, 100)
         def trainSet = Doc.where { train_topics != null && train_topics.size() > 0 }
 
-        respond trainSet.list(params), model: [ docInstanceCount: trainSet.count() ]
+        respond trainSet.list(params), model: [ docCount: trainSet.count() ]
     }
 
     def trainNext() {
@@ -35,55 +35,55 @@ class TrainTopicsController {
         }
     }
 
-    def edit(Doc docInstance) {
-        respond docInstance
+    def edit(Doc doc) {
+        respond doc
     }
 
     @Transactional
     def removeFromTrain() {
-        Doc docInstance = Doc.get(params.id)
+        Doc doc = Doc.get(params.id)
 
-        if (docInstance == null) {
+        if (doc == null) {
             notFound()
             return
         }
 
-        docInstance.train_topics = []
-        docInstance.save flush:true
+        doc.train_topics = []
+        doc.save flush:true
 
         redirect action: 'list'
     }
 
     @Transactional
     def removeTopicFromTrainingSet() {
-        Doc docInstance = Doc.get(params.docId)
-        Topic topicInstance = Topic.get(params.topicId)
+        Doc doc = Doc.get(params.docId)
+        Topic topic = Topic.get(params.topicId)
 
-        if (docInstance == null || topicInstance == null) {
+        if (doc == null || topic == null) {
             notFound()
             return
         }
 
-        docInstance.train_topics.remove(topicInstance)
-        docInstance.save flush:true
+        doc.train_topics.remove(topic)
+        doc.save flush:true
 
-        redirect action: params.redirectTo, id: docInstance.id, params: [ id: docInstance.id ]
+        redirect action: params.redirectTo, id: doc.id, params: [ id: doc.id ]
     }
 
     @Transactional
     def addTopicToTrainingSet() {
-        Doc docInstance = Doc.get(params.docId)
-        Topic topicInstance = Topic.get(params.topicId)
+        Doc doc = Doc.get(params.docId)
+        Topic topic = Topic.get(params.topicId)
 
-        if (docInstance == null || topicInstance == null) {
+        if (doc == null || topic == null) {
             notFound()
             return
         }
 
-        docInstance.train_topics.add(topicInstance)
-        docInstance.save flush:true
+        doc.train_topics.add(topic)
+        doc.save flush:true
 
-        redirect action: params.redirectTo, id: docInstance.id, params: [ id: docInstance.id ]
+        redirect action: params.redirectTo, id: doc.id, params: [ id: doc.id ]
     }
 
     protected void notFound() {

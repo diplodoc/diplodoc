@@ -18,8 +18,8 @@ class SourceControllerSpec extends Specification {
             controller.list()
 
         then: 'model contains this single instance'
-            model.sourceInstanceCount == 1
-            model.sourceInstanceList == [ source ]
+            model.sourceCount == 1
+            model.sourceList == [ source ]
     }
 
     def "'list' action with pagination"() {
@@ -31,8 +31,8 @@ class SourceControllerSpec extends Specification {
             controller.list(1)
 
         then: 'model contains one of instances, total instances count is 2'
-            model.sourceInstanceCount == 2
-            model.sourceInstanceList == [ source1 ] || model.sourceInstanceList == [ source2 ]
+            model.sourceCount == 2
+            model.sourceList == [ source1 ] || model.sourceList == [ source2 ]
     }
 
     def "'show' action"() {
@@ -41,7 +41,7 @@ class SourceControllerSpec extends Specification {
             controller.show(source)
 
         then: 'model contains this instance'
-            model.sourceInstance == source
+            model.source == source
     }
 
     def "'show' action with null domain"() {
@@ -57,7 +57,7 @@ class SourceControllerSpec extends Specification {
             controller.create()
 
         then: 'model is correctly created'
-            model.sourceInstance != null
+            model.source != null
     }
 
     def "'save' action with valid domain instance"() {
@@ -83,7 +83,7 @@ class SourceControllerSpec extends Specification {
             controller.save(source)
 
         then: "'create' view is rendered again with the correct model"
-            model.sourceInstance != null
+            model.source != null
             view == 'create'
     }
 
@@ -93,7 +93,7 @@ class SourceControllerSpec extends Specification {
             controller.edit(source)
 
         then: 'model is populated with domain instance'
-            model.sourceInstance == source
+            model.source == source
     }
 
     def "'edit' action with null domain"() {
@@ -137,7 +137,7 @@ class SourceControllerSpec extends Specification {
 
         then: "'edit' view is rendered again with the invalid instance"
             view == 'edit'
-            model.sourceInstance == source
+            model.source == source
     }
 
     void "'delete' action"() {

@@ -12,7 +12,7 @@
 		<div class="nav" role="navigation">
 			<ul>
 				<g:render template="/navigation/base-navigation"/>
-				<li><g:link controller="module" action="show" id="${moduleMethodInstance?.module?.id}"><g:message message="to module" /></g:link></li>
+				<li><g:link controller="module" action="show" id="${moduleMethod?.module?.id}"><g:message message="to module" /></g:link></li>
 			</ul>
 		</div>
 
@@ -23,15 +23,15 @@
 				<div class="message" role="status">${flash.message}</div>
 			</g:if>
 
-			<g:hasErrors bean="${moduleMethodInstance}">
+			<g:hasErrors bean="${moduleMethod}">
 				<ul class="errors" role="alert">
-					<g:eachError bean="${moduleMethodInstance}" var="error">
+					<g:eachError bean="${moduleMethod}" var="error">
 						<li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
 					</g:eachError>
 				</ul>
 			</g:hasErrors>
 
-			<g:form url="[resource:moduleMethodInstance, action:'save']" >
+			<g:form url="[resource:moduleMethod, action:'save']" >
 				<fieldset class="form">
 					<g:render template="form"/>
 				</fieldset>
