@@ -35,12 +35,12 @@
 				</thead>
 
 				<tbody>
-					<g:each in="${sourceInstanceList}" status="i" var="sourceInstance">
+					<g:each in="${sourceList}" status="i" var="source">
 						<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 
-							<td><g:link action="show" id="${sourceInstance.id}">${fieldValue(bean: sourceInstance, field: "id")}</g:link></td>
+							<td><g:link action="show" id="${source.id}">${fieldValue(bean: source, field: "id")}</g:link></td>
 
-							<td>${fieldValue(bean: sourceInstance, field: "name")}</td>
+							<td>${fieldValue(bean: source, field: "name")}</td>
 
 						</tr>
 					</g:each>
@@ -48,7 +48,7 @@
 			</table>
 
 			<div class="pagination">
-				<g:paginate total="${sourceInstanceCount ?: 0}" />
+				<g:paginate total="${sourceCount ?: 0}" />
 			</div>
 		</div>
 

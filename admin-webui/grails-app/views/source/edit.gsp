@@ -5,7 +5,7 @@
 	<head>
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'source.label', default: 'Source')}" />
-		<title><g:message code="default.edit.label" args='["Source id=${sourceInstance.id}" ]' /></title>
+		<title><g:message code="default.edit.label" args='["Source id=${source.id}" ]' /></title>
 	</head>
 
 	<body>
@@ -21,21 +21,21 @@
 		</div>
 
 		<div id="edit-source" class="content scaffold-edit" role="main">
-			<h1><g:message code="default.edit.label" args='["Source id=${sourceInstance.id}" ]' /></h1>
+			<h1><g:message code="default.edit.label" args='["Source id=${source.id}" ]' /></h1>
 
 			<g:if test="${flash.message}">
 				<div class="message" role="status">${flash.message}</div>
 			</g:if>
 
-			<g:hasErrors bean="${sourceInstance}">
+			<g:hasErrors bean="${source}">
 				<ul class="errors" role="alert">
-					<g:eachError bean="${sourceInstance}" var="error">
+					<g:eachError bean="${source}" var="error">
 						<li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
 					</g:eachError>
 				</ul>
 			</g:hasErrors>
 
-			<g:form url="[resource:sourceInstance, action:'update']" method="PUT" >
+			<g:form url="[resource:source, action:'update']" method="PUT" >
 				<fieldset class="form">
 					<g:render template="form"/>
 				</fieldset>

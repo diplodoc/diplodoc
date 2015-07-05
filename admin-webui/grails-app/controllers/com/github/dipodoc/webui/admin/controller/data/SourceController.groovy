@@ -1,24 +1,22 @@
 package com.github.dipodoc.webui.admin.controller.data
 
 import com.github.dipodoc.webui.admin.domain.data.Source
-import org.springframework.security.access.annotation.Secured
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
-@Secured([ 'ROLE_ADMIN' ])
 class SourceController {
 
     static allowedMethods = [ save: 'POST', update: 'PUT', delete: 'DELETE' ]
 
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond Source.list(params), model: [ sourceInstanceCount: Source.count() ]
+        respond Source.list(params), model: [ sourceCount: Source.count() ]
     }
 
-    def show(Source sourceInstance) {
-        respond sourceInstance
+    def show(Source source) {
+        respond source
     }
 
     def create() {
@@ -26,67 +24,67 @@ class SourceController {
     }
 
     @Transactional
-    def save(Source sourceInstance) {
-        if (sourceInstance == null) {
+    def save(Source source) {
+        if (source == null) {
             notFound()
             return
         }
 
-        if (sourceInstance.hasErrors()) {
-            respond sourceInstance.errors, view: 'create'
+        if (source.hasErrors()) {
+            respond source.errors, view: 'create'
             return
         }
 
-        sourceInstance.save flush:true
+        source.save flush:true
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [ message(code: 'source.label', default: 'Source'), sourceInstance.id ])
-                redirect sourceInstance
+                flash.message = message(code: 'default.created.message', args: [ message(code: 'source.label', default: 'Source'), source.id ])
+                redirect source
             }
-            '*' { respond sourceInstance, [ status: CREATED ] }
+            '*' { respond source, [ status: CREATED ] }
         }
     }
 
-    def edit(Source sourceInstance) {
-        respond sourceInstance
+    def edit(Source source) {
+        respond source
     }
 
     @Transactional
-    def update(Source sourceInstance) {
-        if (sourceInstance == null) {
+    def update(Source source) {
+        if (source == null) {
             notFound()
             return
         }
 
-        if (sourceInstance.hasErrors()) {
-            respond sourceInstance.errors, view: 'edit'
+        if (source.hasErrors()) {
+            respond source.errors, view: 'edit'
             return
         }
 
-        sourceInstance.save flush:true
+        source.save flush:true
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [ message(code: 'Source.label', default: 'Source'), sourceInstance.id ])
-                redirect sourceInstance
+                flash.message = message(code: 'default.updated.message', args: [ message(code: 'Source.label', default: 'Source'), source.id ])
+                redirect source
             }
-            '*' { respond sourceInstance, [status: OK] }
+            '*' { respond source, [status: OK] }
         }
     }
 
     @Transactional
-    def delete(Source sourceInstance) {
-        if (sourceInstance == null) {
+    def delete(Source source) {
+        if (source == null) {
             notFound()
             return
         }
 
-        sourceInstance.delete flush:true
+        source.delete flush:true
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [ message(code: 'Source.label', default: 'Source'), sourceInstance.id ])
+                flash.message = message(code: 'default.deleted.message', args: [ message(code: 'Source.label', default: 'Source'), source.id ])
                 redirect action:'list', method:'GET'
             }
             '*' { render status: NO_CONTENT }

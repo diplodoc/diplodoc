@@ -5,7 +5,7 @@
 	<head>
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'processRun.label', default: 'ProcessRun')}" />
-		<title><g:message code="default.show.label" args='[ "Process run id=${processRunInstance.id}" ]' /></title>
+		<title><g:message code="default.show.label" args='[ "Process run id=${processRun.id}" ]' /></title>
 	</head>
 
 	<body>
@@ -19,7 +19,7 @@
 		</div>
 
 		<div id="show-processRun" class="content scaffold-show" role="main">
-			<h1><g:message code="default.show.label" args='[ "Process run id=${processRunInstance.id}" ]' /></h1>
+			<h1><g:message code="default.show.label" args='[ "Process run id=${processRun.id}" ]' /></h1>
 
 			<g:if test="${flash.message}">
 				<div class="message" role="status">${flash.message}</div>
@@ -27,51 +27,51 @@
 
 			<ol class="property-list processRun">
 
-				<g:if test="${processRunInstance?.id}">
+				<g:if test="${processRun?.id}">
 					<li class="fieldcontain">
 						<span id="id-label" class="property-label"><g:message code="processRun.id.label" default="id" /></span>
 
-						<span class="property-value" aria-labelledby="id-label"><g:fieldValue bean="${processRunInstance}" field="id"/></span>
+						<span class="property-value" aria-labelledby="id-label"><g:fieldValue bean="${processRun}" field="id"/></span>
 					</li>
 				</g:if>
 
-				<g:if test="${processRunInstance?.process}">
+				<g:if test="${processRun?.process}">
 					<li class="fieldcontain">
 						<span id="process-label" class="property-label"><g:message code="processRun.process.label" default="process" /></span>
 
-						<span class="property-value" aria-labelledby="process-label"><g:link controller="process" action="show" id="${processRunInstance?.process?.id}">${processRunInstance?.process?.name}</g:link></span>
+						<span class="property-value" aria-labelledby="process-label"><g:link controller="process" action="show" id="${processRun?.process?.id}">${processRun?.process?.name}</g:link></span>
 					</li>
 				</g:if>
 
-				<g:if test="${processRunInstance?.startTime}">
+				<g:if test="${processRun?.startTime}">
 					<li class="fieldcontain">
 						<span id="startTime-label" class="property-label"><g:message code="processRun.startTime.label" default="start" /></span>
 
-						<span class="property-value" aria-labelledby="startTime-label"><g:fieldValue bean="${processRunInstance}" field="startTime"/></span>
+						<span class="property-value" aria-labelledby="startTime-label"><g:fieldValue bean="${processRun}" field="startTime"/></span>
 					</li>
 				</g:if>
 			
-				<g:if test="${processRunInstance?.endTime}">
+				<g:if test="${processRun?.endTime}">
 					<li class="fieldcontain">
 						<span id="endTime-label" class="property-label"><g:message code="processRun.endTime.label" default="end" /></span>
 
-						<span class="property-value" aria-labelledby="endTime-label"><g:fieldValue bean="${processRunInstance}" field="endTime"/></span>
+						<span class="property-value" aria-labelledby="endTime-label"><g:fieldValue bean="${processRun}" field="endTime"/></span>
 					</li>
 				</g:if>
 			
-				<g:if test="${processRunInstance?.exitStatus}">
+				<g:if test="${processRun?.exitStatus}">
 					<li class="fieldcontain">
 						<span id="exitStatus-label" class="property-label"><g:message code="processRun.exitStatus.label" default="exit status" /></span>
 
-						<span class="property-value" aria-labelledby="exitStatus-label"><g:fieldValue bean="${processRunInstance}" field="exitStatus"/></span>
+						<span class="property-value" aria-labelledby="exitStatus-label"><g:fieldValue bean="${processRun}" field="exitStatus"/></span>
 					</li>
 				</g:if>
 			
-				<g:if test="${processRunInstance?.parameters}">
+				<g:if test="${processRun?.parameters}">
 					<li class="fieldcontain">
 						<span id="parameters-label" class="property-label"><g:message code="processRun.parameters.label" default="parameters" /></span>
 
-						<g:each in="${processRunInstance.parameters}" var="p">
+						<g:each in="${processRun.parameters}" var="p">
 							<div class="property-value" aria-labelledby="parameters-label">
 								${p?.key} = ${p?.value} (of type ${p?.type})
 							</div>

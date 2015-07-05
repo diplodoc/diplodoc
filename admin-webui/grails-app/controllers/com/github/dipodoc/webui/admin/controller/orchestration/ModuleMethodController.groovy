@@ -2,13 +2,11 @@ package com.github.dipodoc.webui.admin.controller.orchestration
 
 import com.github.dipodoc.webui.admin.domain.orchestration.Module
 import com.github.dipodoc.webui.admin.domain.orchestration.ModuleMethod
-import org.springframework.security.access.annotation.Secured
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
-@Secured([ 'ROLE_ADMIN' ])
 class ModuleMethodController {
 
     static allowedMethods = [ save: 'POST', update: 'PUT', delete: 'DELETE' ]
@@ -21,53 +19,53 @@ class ModuleMethodController {
     }
 
     @Transactional
-    def save(ModuleMethod moduleMethodInstance) {
-        if (moduleMethodInstance == null) {
+    def save(ModuleMethod moduleMethod) {
+        if (moduleMethod == null) {
             notFound()
             return
         }
 
-        if (moduleMethodInstance.hasErrors()) {
-            respond moduleMethodInstance.errors, view:'create'
+        if (moduleMethod.hasErrors()) {
+            respond moduleMethod.errors, view:'create'
             return
         }
 
-        moduleMethodInstance.save flush:true
+        moduleMethod.save flush:true
 
-        redirect controller: 'module', action: 'show', id: moduleMethodInstance.module.id
+        redirect controller: 'module', action: 'show', id: moduleMethod.module.id
     }
 
-    def edit(ModuleMethod moduleMethodInstance) {
-        respond moduleMethodInstance
-    }
-
-    @Transactional
-    def update(ModuleMethod moduleMethodInstance) {
-        if (moduleMethodInstance == null) {
-            notFound()
-            return
-        }
-
-        if (moduleMethodInstance.hasErrors()) {
-            respond moduleMethodInstance.errors, view:'edit'
-            return
-        }
-
-        moduleMethodInstance.save flush:true
-
-        redirect controller: 'module', action: 'show', id: moduleMethodInstance.module.id
+    def edit(ModuleMethod moduleMethod) {
+        respond moduleMethod
     }
 
     @Transactional
-    def delete(ModuleMethod moduleMethodInstance) {
-        if (moduleMethodInstance == null) {
+    def update(ModuleMethod moduleMethod) {
+        if (moduleMethod == null) {
             notFound()
             return
         }
 
-        moduleMethodInstance.delete flush:true
+        if (moduleMethod.hasErrors()) {
+            respond moduleMethod.errors, view:'edit'
+            return
+        }
 
-        redirect controller: 'module', action: 'show', id: moduleMethodInstance.module.id
+        moduleMethod.save flush:true
+
+        redirect controller: 'module', action: 'show', id: moduleMethod.module.id
+    }
+
+    @Transactional
+    def delete(ModuleMethod moduleMethod) {
+        if (moduleMethod == null) {
+            notFound()
+            return
+        }
+
+        moduleMethod.delete flush:true
+
+        redirect controller: 'module', action: 'show', id: moduleMethod.module.id
     }
 
     protected void notFound() {

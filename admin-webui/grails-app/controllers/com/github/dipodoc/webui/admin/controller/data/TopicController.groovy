@@ -1,24 +1,21 @@
 package com.github.dipodoc.webui.admin.controller.data
 
 import com.github.dipodoc.webui.admin.domain.data.Topic
-import org.springframework.security.access.annotation.Secured
-
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
-@Secured([ 'ROLE_ADMIN' ])
 class TopicController {
 
     static allowedMethods = [ save: 'POST', update: 'PUT', delete: 'DELETE' ]
 
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond Topic.list(params), model: [ topicInstanceCount: Topic.count() ]
+        respond Topic.list(params), model: [ topicCount: Topic.count() ]
     }
 
-    def show(Topic topicInstance) {
-        respond topicInstance
+    def show(Topic topic) {
+        respond topic
     }
 
     def create() {
@@ -26,67 +23,67 @@ class TopicController {
     }
 
     @Transactional
-    def save(Topic topicInstance) {
-        if (topicInstance == null) {
+    def save(Topic topic) {
+        if (topic == null) {
             notFound()
             return
         }
 
-        if (topicInstance.hasErrors()) {
-            respond topicInstance.errors, view: 'create'
+        if (topic.hasErrors()) {
+            respond topic.errors, view: 'create'
             return
         }
 
-        topicInstance.save flush:true
+        topic.save flush:true
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [ message(code: 'topic.label', default: 'Topic'), topicInstance.id ])
-                redirect topicInstance
+                flash.message = message(code: 'default.created.message', args: [ message(code: 'topic.label', default: 'Topic'), topic.id ])
+                redirect topic
             }
-            '*' { respond topicInstance, [status: CREATED] }
+            '*' { respond topic, [status: CREATED] }
         }
     }
 
-    def edit(Topic topicInstance) {
-        respond topicInstance
+    def edit(Topic topic) {
+        respond topic
     }
 
     @Transactional
-    def update(Topic topicInstance) {
-        if (topicInstance == null) {
+    def update(Topic topic) {
+        if (topic == null) {
             notFound()
             return
         }
 
-        if (topicInstance.hasErrors()) {
-            respond topicInstance.errors, view: 'edit'
+        if (topic.hasErrors()) {
+            respond topic.errors, view: 'edit'
             return
         }
 
-        topicInstance.save flush:true
+        topic.save flush:true
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [ message(code: 'topic.label', default: 'Topic'), topicInstance.id ])
-                redirect topicInstance
+                flash.message = message(code: 'default.updated.message', args: [ message(code: 'topic.label', default: 'Topic'), topic.id ])
+                redirect topic
             }
-            '*' { respond topicInstance, [status: OK] }
+            '*' { respond topic, [status: OK] }
         }
     }
 
     @Transactional
-    def delete(Topic topicInstance) {
-        if (topicInstance == null) {
+    def delete(Topic topic) {
+        if (topic == null) {
             notFound()
             return
         }
 
-        topicInstance.delete flush:true
+        topic.delete flush:true
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [ message(code: 'Topic.label', default: 'Topic'), topicInstance.id ])
+                flash.message = message(code: 'default.deleted.message', args: [ message(code: 'Topic.label', default: 'Topic'), topic.id ])
                 redirect action:'list', method:'GET'
             }
             '*' { render status: NO_CONTENT }

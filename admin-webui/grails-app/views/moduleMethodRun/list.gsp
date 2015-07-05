@@ -38,16 +38,16 @@
 				</thead>
 
 				<tbody>
-					<g:each in="${moduleMethodRunInstanceList}" status="i" var="moduleMethodRunInstance">
+					<g:each in="${moduleMethodRunList}" status="i" var="moduleMethodRun">
 						<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 
-							<td><g:link action="show" id="${moduleMethodRunInstance.id}">${fieldValue(bean: moduleMethodRunInstance, field: "id")}</g:link></td>
+							<td><g:link action="show" id="${moduleMethodRun.id}">${fieldValue(bean: moduleMethodRun, field: "id")}</g:link></td>
 
-							<td>${moduleMethodRunInstance?.moduleMethod?.module?.name}::${moduleMethodRunInstance?.moduleMethod?.name}</td>
+							<td>${moduleMethodRun?.moduleMethod?.module?.name}::${moduleMethodRun?.moduleMethod?.name}</td>
 
-							<td>${fieldValue(bean: moduleMethodRunInstance, field: "startTime")}</td>
+							<td>${fieldValue(bean: moduleMethodRun, field: "startTime")}</td>
 
-							<td>${fieldValue(bean: moduleMethodRunInstance, field: "endTime")}</td>
+							<td>${fieldValue(bean: moduleMethodRun, field: "endTime")}</td>
 
 						</tr>
 					</g:each>
@@ -55,7 +55,7 @@
 			</table>
 
 			<div class="pagination">
-				<g:paginate total="${moduleMethodRunInstanceCount ?: 0}" />
+				<g:paginate total="${moduleMethodRunCount ?: 0}" />
 			</div>
 		</div>
 

@@ -6,7 +6,7 @@
 	<head>
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'module.label', default: 'Module')}" />
-		<title><g:message code="default.show.label" args='[ "Module name=${moduleInstance.name}" ]' /></title>
+		<title><g:message code="default.show.label" args='[ "Module name=${module.name}" ]' /></title>
 	</head>
 
 	<body>
@@ -21,7 +21,7 @@
 		</div>
 
 		<div id="show-module" class="content scaffold-show" role="main">
-			<h1><g:message code="default.show.label" args='[ "Module name=${moduleInstance.name}" ]' /></h1>
+			<h1><g:message code="default.show.label" args='[ "Module name=${module.name}" ]' /></h1>
 
 			<g:if test="${flash.message}">
 				<div class="message" role="status">${flash.message}</div>
@@ -29,20 +29,20 @@
 
 			<ol class="property-list module">
 
-				<g:if test="${moduleInstance?.name}">
+				<g:if test="${module?.name}">
 					<li class="fieldcontain">
 						<span id="name-label" class="property-label"><g:message code="module.name.label" default="name" /></span>
 
-						<span class="property-value" aria-labelledby="name-label"><g:fieldValue bean="${moduleInstance}" field="name"/></span>
+						<span class="property-value" aria-labelledby="name-label"><g:fieldValue bean="${module}" field="name"/></span>
 					</li>
 				</g:if>
 			
-				<g:if test="${moduleInstance?.data}">
+				<g:if test="${module?.data}">
 					<li class="fieldcontain">
 						<span id="data-label" class="property-label"><g:message code="module.data.label" default="data items" /></span>
 
 						<div class="property-value" aria-labelledby="data-label">
-							<g:each in="${moduleInstance.data.entrySet()}" var="dataItem">
+							<g:each in="${module.data.entrySet()}" var="dataItem">
 								<div class="property-value" aria-labelledby="dataItem-label">
 									${dataItem.key} = ${dataItem.value}
 								</div>
@@ -65,9 +65,9 @@
 			
 			</ol>
 
-			<g:form url="[resource:moduleInstance, action:'delete']" method="DELETE">
+			<g:form url="[resource:module, action:'delete']" method="DELETE">
 				<fieldset class="buttons">
-					<g:link class="edit" action="edit" resource="${moduleInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
+					<g:link class="edit" action="edit" resource="${module}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
 					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
 				</fieldset>
 			</g:form>

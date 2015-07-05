@@ -5,7 +5,7 @@
     <head>
         <meta name="layout" content="main">
         <g:set var="entityName" value="${message(code: 'process.label', default: 'Process')}" />
-        <title><g:message message="Run process name=${processInstance.name}" /></title>
+        <title><g:message message="Run process name=${process.name}" /></title>
     </head>
 
     <body>
@@ -19,7 +19,7 @@
         </div>
 
         <div id="show-process" class="content scaffold-show" role="main">
-            <h1><g:message message="Run process name=${processInstance.name}" /></h1>
+            <h1><g:message message="Run process name=${process.name}" /></h1>
 
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
@@ -27,35 +27,35 @@
 
             <ol class="property-list process">
 
-                <g:if test="${processInstance?.id}">
+                <g:if test="${process?.id}">
                     <li class="fieldcontain">
                         <span id="id-label" class="property-label"><g:message code="process.id.label" default="id" /></span>
 
-                        <span class="property-value" aria-labelledby="id-label"><g:fieldValue bean="${processInstance}" field="id"/></span>
+                        <span class="property-value" aria-labelledby="id-label"><g:fieldValue bean="${process}" field="id"/></span>
                     </li>
                 </g:if>
 
-                <g:if test="${processInstance?.name}">
+                <g:if test="${process?.name}">
                     <li class="fieldcontain">
                         <span id="name-label" class="property-label"><g:message code="process.name.label" default="name" /></span>
 
-                        <span class="property-value" aria-labelledby="name-label"><g:fieldValue bean="${processInstance}" field="name"/></span>
+                        <span class="property-value" aria-labelledby="name-label"><g:fieldValue bean="${process}" field="name"/></span>
                     </li>
                 </g:if>
 
-                <g:if test="${processInstance?.definition}">
+                <g:if test="${process?.definition}">
                     <li class="fieldcontain">
                         <span id="definition-label" class="property-label"><g:message code="process.definition.label" default="definition" /></span>
 
-                        <span class="property-value" aria-labelledby="definition-label">${processInstance.definition}</span>
+                        <span class="property-value" aria-labelledby="definition-label">${process.definition}</span>
                     </li>
                 </g:if>
 
             </ol>
 
-            <g:form url="[ resource: processInstance, action: 'start' ]" method="POST">
+            <g:form url="[ resource: process, action: 'start' ]" method="POST">
                 <fieldset class="buttons">
-                    <g:link action="start" resource="${processInstance}"><g:message message="Start" /></g:link>
+                    <g:link action="start" resource="${process}"><g:message message="Start" /></g:link>
                 </fieldset>
             </g:form>
         </div>

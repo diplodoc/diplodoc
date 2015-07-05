@@ -1,14 +1,14 @@
 <%@ page import="com.github.dipodoc.webui.admin.domain.data.Topic" %>
 
-<div class="fieldcontain ${hasErrors(bean: topicInstance, field: 'label', 'error')} required">
+<div class="fieldcontain ${hasErrors(bean: topic, field: 'label', 'error')} required">
 	<label for="label">
 		<g:message code="topic.label.label" default="Label" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:textField name="label" required="" value="${topicInstance?.label}"/>
+	<g:textField name="label" required="" value="${topic?.label}"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: topicInstance, field: 'parent', 'error')}">
+<div class="fieldcontain ${hasErrors(bean: topic, field: 'parent', 'error')}">
 	<label for="parent">
 		<g:message code="topic.parent.label" default="Parent" />
 	</label>

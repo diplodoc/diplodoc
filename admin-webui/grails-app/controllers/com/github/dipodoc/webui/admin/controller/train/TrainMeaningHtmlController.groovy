@@ -2,12 +2,10 @@ package com.github.dipodoc.webui.admin.controller.train
 
 import com.github.dipodoc.webui.admin.domain.data.Doc
 import grails.transaction.Transactional
-import org.springframework.security.access.annotation.Secured
 
 import static org.springframework.http.HttpStatus.NOT_FOUND
 
 @Transactional(readOnly = true)
-@Secured([ 'ROLE_ADMIN' ])
 class TrainMeaningHtmlController {
 
     static allowedMethods = [ save: 'PUT', saveAndNext: 'PUT', removeFromTrain: 'DELETE' ]
@@ -19,7 +17,7 @@ class TrainMeaningHtmlController {
         params.max = Math.min(max ?: 10, 100)
         def trainSet = Doc.findAllByTrain_meaningHtmlIsNotNull(params)
 
-        respond trainSet, model: [ docInstanceCount: Doc.countByTrain_meaningHtmlIsNotNull() ]
+        respond trainSet, model: [ docCount: Doc.countByTrain_meaningHtmlIsNotNull() ]
     }
 
     def trainNext() {
@@ -31,8 +29,8 @@ class TrainMeaningHtmlController {
         [ docToTrain: randomUntrainedDoc ]
     }
 
-    def edit(Doc docInstance) {
-        respond docInstance
+    def edit(Doc doc) {
+        respond doc
     }
 
     @Transactional
@@ -81,15 +79,15 @@ class TrainMeaningHtmlController {
 
     @Transactional
     def removeFromTrain() {
-        Doc docInstance = Doc.get(params.id)
+        Doc doc = Doc.get(params.id)
 
-        if (docInstance == null) {
+        if (doc == null) {
             notFound()
             return
         }
 
-        docInstance.train_meaningHtml = null
-        docInstance.save flush:true
+        doc.train_meaningHtml = null
+        doc.save flush:true
 
         redirect action: 'list'
     }

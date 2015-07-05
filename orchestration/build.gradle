@@ -1,4 +1,8 @@
+plugins {
+    id "net.saliman.cobertura" version "2.2.8"
+}
 apply plugin: 'groovy'
+apply plugin: 'war'
 
 dependencies {
     compile dependency.groovy
@@ -22,6 +26,8 @@ dependencies {
     testCompile dependency.objenesis
 }
 
-apply plugin: 'jacoco'
-
-apply plugin: 'war'
+cobertura {
+    coverageFormats = [ 'html' ]
+    coverageIgnoreTrivial = true
+    coverageReportDir = new File("$buildDir/reports/cobertura")
+}

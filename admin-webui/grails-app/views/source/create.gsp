@@ -24,15 +24,15 @@
 				<div class="message" role="status">${flash.message}</div>
 			</g:if>
 
-			<g:hasErrors bean="${sourceInstance}">
+			<g:hasErrors bean="${source}">
 				<ul class="errors" role="alert">
-					<g:eachError bean="${sourceInstance}" var="error">
+					<g:eachError bean="${source}" var="error">
 						<li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
 					</g:eachError>
 				</ul>
 			</g:hasErrors>
 
-			<g:form url="[resource:sourceInstance, action:'save']" >
+			<g:form url="[resource:source, action:'save']" >
 				<fieldset class="form">
 					<g:render template="form"/>
 				</fieldset>

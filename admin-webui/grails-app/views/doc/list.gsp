@@ -38,14 +38,14 @@
 				</thead>
 
 				<tbody>
-				    <g:each in="${docInstanceList}" status="i" var="docInstance">
+				    <g:each in="${docList}" status="i" var="doc">
                         <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 
-                            <td><g:link action="show" id="${docInstance.id}">${fieldValue(bean: docInstance, field: 'id')}</g:link></td>
+                            <td><g:link action="show" id="${doc.id}">${fieldValue(bean: doc, field: 'id')}</g:link></td>
 
-							<td><a href="${docInstance.uri}" target="_blank"><g:fieldValue bean="${docInstance}" field="uri"/></a></td>
+							<td><a href="${doc.uri}" target="_blank"><g:fieldValue bean="${doc}" field="uri"/></a></td>
 
-                            <td>${fieldValue(bean: docInstance, field: 'title')}</td>
+                            <td>${fieldValue(bean: doc, field: 'title')}</td>
 
                         </tr>
                     </g:each>
@@ -53,7 +53,7 @@
 			</table>
 
 			<div class="pagination">
-				<g:paginate total="${docInstanceCount ?: 0}" />
+				<g:paginate total="${docCount ?: 0}" />
 			</div>
 		</div>
 

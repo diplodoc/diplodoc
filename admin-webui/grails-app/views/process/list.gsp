@@ -39,14 +39,14 @@
 				</thead>
 
 				<tbody>
-					<g:each in="${processInstanceList}" status="i" var="processInstance">
+					<g:each in="${processList}" status="i" var="process">
 						<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 
-							<td><g:link action="show" id="${processInstance.id}">${fieldValue(bean: processInstance, field: "name")}</g:link></td>
+							<td><g:link action="show" id="${process.id}">${fieldValue(bean: process, field: "name")}</g:link></td>
 
-							<td>${fieldValue(bean: processInstance, field: "lastUpdate")}</td>
+							<td>${fieldValue(bean: process, field: "lastUpdate")}</td>
 
-							<td>${processInstance.active ? 'active' : 'disabled'}</td>
+							<td>${process.active ? 'active' : 'disabled'}</td>
 
 						</tr>
 					</g:each>
@@ -54,7 +54,7 @@
 			</table>
 
 			<div class="pagination">
-				<g:paginate total="${processInstanceCount ?: 0}" />
+				<g:paginate total="${processCount ?: 0}" />
 			</div>
 		</div>
 
