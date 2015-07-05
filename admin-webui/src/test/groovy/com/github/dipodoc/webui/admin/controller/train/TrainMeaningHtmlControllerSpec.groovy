@@ -142,7 +142,7 @@ class TrainMeaningHtmlControllerSpec extends Specification {
             Doc.get(doc.id).train_meaningHtml == null
     }
 
-    void "'removeFromTrain' action with null domain"() {
+    def "'removeFromTrain' action with null domain"() {
         given: 'no domain instances'
 
         when: 'action is executed with a invalid instance'

@@ -35,7 +35,7 @@ class DocControllerSpec extends Specification {
             model.docList == [ doc1 ] || model.docList == [ doc2 ]
     }
 
-    void "'show' action"() {
+    def "'show' action"() {
         when: 'domain instance is passed to the action'
             Doc doc = new Doc(id: new ObjectId('111111111111111111111111'))
             controller.show(doc)
@@ -44,7 +44,7 @@ class DocControllerSpec extends Specification {
             model.doc == doc
     }
 
-    void "'show' action with null domain"() {
+    def "'show' action with null domain"() {
         when: 'action is executed with a null domain'
             controller.show(null)
 
@@ -52,7 +52,7 @@ class DocControllerSpec extends Specification {
             response.status == 404
     }
 
-    void "'delete' action"() {
+    def "'delete' action"() {
         when: 'domain instance is created'
             Doc doc = new Doc().save flush:true
 
@@ -70,7 +70,7 @@ class DocControllerSpec extends Specification {
             flash.message != null
     }
 
-    void "'delete' action with null domain"() {
+    def "'delete' action with null domain"() {
         when: 'action is called for a null instance'
             request.contentType = FORM_CONTENT_TYPE
             request.method = 'DELETE'

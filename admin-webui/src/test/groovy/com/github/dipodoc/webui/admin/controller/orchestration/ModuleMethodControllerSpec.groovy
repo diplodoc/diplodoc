@@ -102,7 +102,7 @@ class ModuleMethodControllerSpec extends Specification {
             model.moduleMethod == moduleMethod
     }
 
-    void "'delete' action"() {
+    def "'delete' action"() {
         when: 'domain instance is created'
             Module module = new Module(name: 'name', data: [:]).save flush:true
             ModuleMethod moduleMethod = new ModuleMethod(name: 'name', module: module).save flush:true
@@ -120,7 +120,7 @@ class ModuleMethodControllerSpec extends Specification {
             response.redirectedUrl == "/module/show/$module.id"
     }
 
-    void "'delete' action with null domain"() {
+    def "'delete' action with null domain"() {
         when: 'action is called for a null instance'
             request.contentType = FORM_CONTENT_TYPE
             request.method = 'DELETE'

@@ -140,7 +140,7 @@ class TopicControllerSpec extends Specification {
             model.topic == topic
     }
 
-    void "'delete' action"() {
+    def "'delete' action"() {
         when: 'domain instance is created'
             Topic topic = new Topic(label: 'label').save(flush: true)
 
@@ -158,7 +158,7 @@ class TopicControllerSpec extends Specification {
             flash.message != null
     }
 
-    void "'delete' action with null domain"() {
+    def "'delete' action with null domain"() {
         when: 'action is called for a null instance'
             request.contentType = FORM_CONTENT_TYPE
             request.method = 'DELETE'

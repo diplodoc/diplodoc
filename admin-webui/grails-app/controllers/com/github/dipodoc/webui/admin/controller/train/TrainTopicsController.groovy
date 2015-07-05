@@ -24,7 +24,7 @@ class TrainTopicsController {
     def trainNext() {
         // FIXIT: DIPLODOC-161. Extract all grails controllers logic to services
         if (params.id == null) {
-            int untrainedCount = Doc.where({ train_topics == null || train_topics.isEmpty() }).count()
+            int untrainedCount = Doc.where({ train_topics == null || train_topics.isEmpty() }).size()
             int index = random.nextInt(untrainedCount)
             def params = [ offset: index, max: 1 ]
 

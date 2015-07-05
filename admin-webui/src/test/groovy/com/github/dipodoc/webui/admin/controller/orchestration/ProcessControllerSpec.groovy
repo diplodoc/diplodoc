@@ -157,7 +157,7 @@ class ProcessControllerSpec extends Specification {
             model.process == process
     }
 
-    void "'delete' action"() {
+    def "'delete' action"() {
         when: 'domain instance is created'
             Process process = new Process(name: 'name', definition: 'definition', active: true).save flush:true
 
@@ -175,7 +175,7 @@ class ProcessControllerSpec extends Specification {
             flash.message != null
     }
 
-    void "'delete' action with null domain"() {
+    def "'delete' action with null domain"() {
         when: 'action is called for a null instance'
             request.contentType = FORM_CONTENT_TYPE
             request.method = 'DELETE'

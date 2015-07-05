@@ -140,7 +140,7 @@ class SourceControllerSpec extends Specification {
             model.source == source
     }
 
-    void "'delete' action"() {
+    def "'delete' action"() {
         when: 'domain instance is created'
             Source source = new Source(name: 'name', rssUrl: 'rss-url', newDocsFinderModule: 'module').save(flush: true)
 
@@ -158,7 +158,7 @@ class SourceControllerSpec extends Specification {
             flash.message != null
     }
 
-    void "'delete' action with null domain"() {
+    def "'delete' action with null domain"() {
         when: 'action is called for a null instance'
             request.contentType = FORM_CONTENT_TYPE
             request.method = 'DELETE'

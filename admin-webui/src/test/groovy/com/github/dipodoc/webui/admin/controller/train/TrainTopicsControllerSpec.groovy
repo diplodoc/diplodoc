@@ -41,7 +41,7 @@ class TrainTopicsControllerSpec extends Specification {
             model.docList == [ doc2 ] || model.docList == [ doc3 ]
     }
 
-    @Ignore('FIXIT: DIPLODOC-145. Fix multiple failing tests in diploweb')
+    @Ignore('FIXIT: Doc.where() is not working in the test context')
     def "'trainNext' action with no 'id' parameter"() {
         given: 'domain instances'
             Topic topic = new Topic(label: 'label').save flush:true
@@ -52,7 +52,7 @@ class TrainTopicsControllerSpec extends Specification {
         when: 'action is executed'
             def model = controller.trainNext()
 
-        then: 'model contains instance without train_meaningHtml field'
+        then: 'model contains instance without train_topics field'
             model.docToTrain != null
             model.docToTrain.train_topics == null || model.docToTrain.train_topics == []
     }
@@ -105,7 +105,7 @@ class TrainTopicsControllerSpec extends Specification {
             Doc.get(doc.id).train_topics.isEmpty()
     }
 
-    void "'removeFromTrain' action with null domain"() {
+    def "'removeFromTrain' action with null domain"() {
         given: 'no domain instances'
 
         when: 'action is executed with a invalid instance'
@@ -119,7 +119,6 @@ class TrainTopicsControllerSpec extends Specification {
             flash.message != null
     }
 
-    @Ignore('FIXIT: DIPLODOC-145. Fix multiple failing tests in diploweb')
     def "'removeTopicFromTrainingSet' action with valid domain instance"() {
         given: 'domain instances'
             Topic topic1 = new Topic(label: 'label').save flush:true
@@ -136,11 +135,11 @@ class TrainTopicsControllerSpec extends Specification {
 
         then: "topic is removed from train list, redirect is issued to the 'redirect' action"
             response.redirectedUrl == "/trainTopics/redirect/$doc.id"
-            params.id == doc.id
-            Doc.get(doc.id).train_topics == [ topic2 ]
+            Doc.get(doc.id).train_topics.size() == 1
+            Doc.get(doc.id).train_topics.contains(topic2)
     }
 
-    void "'removeTopicFromTrainingSet' action with null domain"() {
+    def "'removeTopicFromTrainingSet' action with null domain"() {
         given: 'domain instances'
             Topic topic = new Topic(label: 'label').save flush:true
 
@@ -157,7 +156,7 @@ class TrainTopicsControllerSpec extends Specification {
             flash.message != null
     }
 
-    void "'removeTopicFromTrainingSet' action with invalid topic"() {
+    def "'removeTopicFromTrainingSet' action with invalid topic"() {
         given: 'domain instances'
             Doc doc = new Doc(train_topics: []).save flush:true
 
@@ -174,7 +173,6 @@ class TrainTopicsControllerSpec extends Specification {
             flash.message != null
     }
 
-    @Ignore('FIXIT: DIPLODOC-145. Fix multiple failing tests in diploweb')
     def "'addTopicToTrainingSet' action with valid domain instance"() {
         given: 'domain instances'
             Topic topic1 = new Topic(label: 'label').save flush:true
@@ -191,18 +189,18 @@ class TrainTopicsControllerSpec extends Specification {
 
         then: "topic is added from train list, redirect is issued to the 'redirect' action"
             response.redirectedUrl == "/trainTopics/redirect/$doc.id"
-            params.id == doc.id
-            Doc.get(doc.id).train_topics == [ topic1, topic2 ]
+            Doc.get(doc.id).train_topics.size() == 2
+            Doc.get(doc.id).train_topics.contains(topic1)
+            Doc.get(doc.id).train_topics.contains(topic2)
     }
 
-    @Ignore('FIXIT: DIPLODOC-145. Fix multiple failing tests in diploweb')
-    void "'addTopicToTrainingSet' action with null domain"() {
+    def "'addTopicToTrainingSet' action with null domain"() {
         given: 'domain instances'
             Topic topic = new Topic(label: 'label').save flush:true
 
         when: 'action is executed with a invalid instance'
             request.contentType = FORM_CONTENT_TYPE
-            request.method = 'DELETE'
+            request.method = 'PUT'
             params.docId = 0
             params.topicId = topic.id
             params.redirectTo = 'redirect'
@@ -213,14 +211,13 @@ class TrainTopicsControllerSpec extends Specification {
             flash.message != null
     }
 
-    @Ignore('FIXIT: DIPLODOC-145. Fix multiple failing tests in diploweb')
-    void "'addTopicToTrainingSet' action with invalid topic"() {
+    def "'addTopicToTrainingSet' action with invalid topic"() {
         given: 'domain instances'
             Doc doc = new Doc(train_topics: []).save flush:true
 
         when: 'action is executed with a invalid instance'
             request.contentType = FORM_CONTENT_TYPE
-            request.method = 'DELETE'
+            request.method = 'PUT'
             params.docId = doc.id
             params.topicId = 0
             params.redirectTo = 'redirect'
