@@ -12,6 +12,6 @@
 	<label for="parent">
 		<g:message code="topic.parent.label" default="Parent" />
 	</label>
-	<g:select id="parent" name="parent.id" from="${Topic.list()}" optionKey="id" optionValue="label" required="" value="" class="many-to-one"/>
+	<g:select id="parent" name="parent.id" from="${Topic.list()}" optionKey="id" optionValue="label" noSelection="[ key: 'root', value: null ]" value="" class="many-to-one"/>
 </div>
 
