@@ -10,4 +10,8 @@ import org.springframework.data.mongodb.repository.MongoRepository
 interface ProcessRepository extends MongoRepository<Process, ObjectId> {
 
     Collection<Process> findByActiveIsTrue()
+
+    Collection<Process> findByNameAndActiveIsTrue(String name)
+
+    Collection<Process> findByIdAndActiveIsTrue(ObjectId id)
 }

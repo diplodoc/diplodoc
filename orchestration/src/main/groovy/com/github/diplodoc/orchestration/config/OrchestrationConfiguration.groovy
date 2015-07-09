@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
-import org.springframework.context.annotation.Lazy
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 
 /**
@@ -29,7 +28,6 @@ class OrchestrationConfiguration {
 
     @Bean
     @Autowired
-    @Lazy
     Orchestrator orchestrator(ThreadPoolTaskExecutor threadPool, ProcessRepository processRepository, ProcessRunRepository processRunRepository) {
         Orchestrator orchestrator = new Orchestrator()
         orchestrator.threadPool = threadPool

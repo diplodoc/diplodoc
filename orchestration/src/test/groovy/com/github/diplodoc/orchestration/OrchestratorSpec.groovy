@@ -22,31 +22,6 @@ class OrchestratorSpec extends Specification {
 
     Orchestrator orchestrator = Spy(Orchestrator)
 
-    def 'void init()'() {
-        setup:
-            Process[] processes = [ new Process(id: new ObjectId('111111111111111111111111')), new Process(id: new ObjectId('222222222222222222222222')) ]
-            processRepository.findByActiveIsTrue() >> processes
-            orchestrator.processRepository = processRepository
-
-            orchestrator.findEventsOneWaitsFor({ it.id == new ObjectId('111111111111111111111111') }) >> [ 'event-1-for-process-1', 'event-2-for-process-1' ]
-            orchestrator.findEventsOneWaitsFor({ it.id == new ObjectId('222222222222222222222222') }) >> [ 'event-3-for-process-2', 'event-4-for-process-2' ]
-
-            orchestrator.findProcessesOneListensTo({ it.id == new ObjectId('111111111111111111111111') }) >> [ 'process-2', 'process-3' ]
-            orchestrator.findProcessesOneListensTo({ it.id == new ObjectId('222222222222222222222222') }) >> [ 'process-1', 'process-4' ]
-
-        when:
-            orchestrator.init()
-
-        then:
-            orchestrator.waitsForEventsMap.size() == 2
-            orchestrator.waitsForEventsMap[new Process(id: new ObjectId('111111111111111111111111'))] == [ 'event-1-for-process-1', 'event-2-for-process-1' ]
-            orchestrator.waitsForEventsMap[new Process(id: new ObjectId('222222222222222222222222'))] == [ 'event-3-for-process-2', 'event-4-for-process-2' ]
-
-            orchestrator.listenToProcessesMap.size() == 2
-            orchestrator.listenToProcessesMap[new Process(id: new ObjectId('111111111111111111111111'))] == [ 'process-2', 'process-3' ]
-            orchestrator.listenToProcessesMap[new Process(id: new ObjectId('222222222222222222222222'))] == [ 'process-1', 'process-4' ]
-    }
-
     def 'void run(ProcessRun processRun)'() {
         setup:
             ProcessRun processRun = new ProcessRun(id: new ObjectId('111111111111111111111111'))
@@ -148,9 +123,10 @@ class OrchestratorSpec extends Specification {
 
     def 'Process getProcess(String name)'() {
         setup:
-            orchestrator.processes = [ new Process(id: new ObjectId('000000000000000000000000'), name: 'process-0'), new Process(id: new ObjectId('111111111111111111111111'), name: 'process-1'), new Process(id: new ObjectId('222222222222222222222222'), name: 'process-2') ]
+            orchestrator.processRepository = processRepository
 
         when:
+            processRepository.findByNameAndActiveIsTrue('process-1') >> [ new Process(id: new ObjectId('111111111111111111111111'), name: 'process-1') ]
             Process actual = orchestrator.getProcess('process-1')
 
         then:
@@ -159,9 +135,10 @@ class OrchestratorSpec extends Specification {
 
     def 'Process getProcess(ObjectId id)'() {
         setup:
-            orchestrator.processes = [ new Process(id: new ObjectId('000000000000000000000000'), name: 'process-0'), new Process(id: new ObjectId('111111111111111111111111'), name: 'process-1'), new Process(id: new ObjectId('222222222222222222222222'), name: 'process-2') ]
+            orchestrator.processRepository = processRepository
 
         when:
+            processRepository.findByIdAndActiveIsTrue(new ObjectId('111111111111111111111111')) >> [ new Process(id: new ObjectId('111111111111111111111111'), name: 'process-1') ]
             Process actual = orchestrator.getProcess(new ObjectId('111111111111111111111111'))
 
         then:
@@ -170,13 +147,12 @@ class OrchestratorSpec extends Specification {
 
     def 'Collection<Process> getProcessesWaitingFor(String eventName)'() {
         setup:
-            Process process1 = new Process(id: new ObjectId('111111111111111111111111'), name: 'process-1')
-            Process process2 = new Process(id: new ObjectId('222222222222222222222222'), name: 'process-2')
-            orchestrator.waitsForEventsMap = [:]
-            orchestrator.waitsForEventsMap.put(process1, [ 'event-1', 'event-2' ])
-            orchestrator.waitsForEventsMap.put(process2, [ 'event-2', 'event-3' ])
+            Process process1 = new Process(id: new ObjectId('111111111111111111111111'), name: 'process-1', definition: 'waiting for: \'event-1\'\nwaiting for: \'event-2\'')
+            Process process2 = new Process(id: new ObjectId('222222222222222222222222'), name: 'process-2', definition: 'waiting for: \'event-2\'\nwaiting for: \'event-3\'')
+            orchestrator.processRepository = processRepository
 
         when:
+            processRepository.findByActiveIsTrue() >> [ process1, process2 ]
             Collection<Process> actual = orchestrator.getProcessesWaitingFor('event-1')
 
         then:
@@ -186,13 +162,12 @@ class OrchestratorSpec extends Specification {
 
     def 'Collection<Process> getProcessesListeningTo(Process outputProcess)'() {
         setup:
-            Process process1 = new Process(id: new ObjectId('111111111111111111111111'), name: 'process-1')
-            Process process2 = new Process(id: new ObjectId('222222222222222222222222'), name: 'process-2')
-            orchestrator.listenToProcessesMap = [:]
-            orchestrator.listenToProcessesMap.put(process1, [ 'process-1', 'process-2' ])
-            orchestrator.listenToProcessesMap.put(process2, [ 'process-2', 'process-3' ])
+            Process process1 = new Process(id: new ObjectId('111111111111111111111111'), name: 'process-1', definition: 'listen to: \'process-1\'\nlisten to: \'process-2\'')
+            Process process2 = new Process(id: new ObjectId('222222222222222222222222'), name: 'process-2', definition: 'listen to: \'process-2\'\nlisten to: \'process-3\'')
+            orchestrator.processRepository = processRepository
 
         when:
+            processRepository.findByActiveIsTrue() >> [ process1, process2 ]
             Collection<Process> actual = orchestrator.getProcessesListeningTo(new Process(name: 'process-1'))
 
         then:

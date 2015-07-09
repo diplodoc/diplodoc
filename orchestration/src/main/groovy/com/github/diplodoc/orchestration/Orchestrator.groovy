@@ -8,8 +8,6 @@ import groovy.util.logging.Slf4j
 import org.bson.types.ObjectId
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 
-import javax.annotation.PostConstruct
-
 /**
  * @author yaroslav.yermilov
  */
@@ -19,25 +17,6 @@ class Orchestrator {
     ThreadPoolTaskExecutor threadPool
     ProcessRepository processRepository
     ProcessRunRepository processRunRepository
-
-    Collection<Process> processes
-    Map<Process, Collection<String>> waitsForEventsMap
-    Map<Process, Collection<String>> listenToProcessesMap
-
-    @PostConstruct
-    void init() {
-        log.info 'initializing orchestration runtime...'
-
-        // FIXIT: DIPLODOC-122. Refresh post definitions while diploexec runs
-        processes = processRepository.findByActiveIsTrue()
-        waitsForEventsMap = new HashMap<>()
-        listenToProcessesMap = new HashMap<>()
-
-        processes.each { Process process ->
-            waitsForEventsMap[process] = findEventsOneWaitsFor(process)
-            listenToProcessesMap[process] = findProcessesOneListensTo(process)
-        }
-    }
 
     ObjectId run(ObjectId processId, List parameters) {
         ProcessRun processRun = processRunRepository.save new ProcessRun(processId: processId, parameters: parameters)
@@ -81,19 +60,23 @@ class Orchestrator {
     }
 
     Process getProcess(String name) {
-        processes.find { Process process -> process.name == name }
+        processRepository.findByNameAndActiveIsTrue(name)?.first()
     }
 
     Process getProcess(ObjectId id) {
-        processes.find { Process process -> process.id == id }
+        processRepository.findByIdAndActiveIsTrue(id)?.first()
     }
 
     Collection<Process> getProcessesWaitingFor(String eventName) {
-        waitsForEventsMap.findAll { Process process, Collection<String> waitsFor -> waitsFor.contains(eventName) }.keySet()
+        processRepository.findByActiveIsTrue().findAll { Process process ->
+            findEventsOneWaitsFor(process).contains(eventName)
+        }
     }
 
     Collection<Process> getProcessesListeningTo(Process outputProcess) {
-        listenToProcessesMap.findAll { Process process, Collection<String> inputFor -> inputFor.contains(outputProcess.name) }.keySet()
+        processRepository.findByActiveIsTrue().findAll { Process process ->
+            findProcessesOneListensTo(process).contains(outputProcess.name)
+        }
     }
 
     Collection<String> findEventsOneWaitsFor(Process process) {
