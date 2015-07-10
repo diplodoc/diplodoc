@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 
 /**
  * @author yaroslav.yermilov
@@ -18,19 +18,18 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 class OrchestrationConfiguration {
 
     @Bean
-    ThreadPoolTaskExecutor threadPool() {
-        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor()
-        taskExecutor.corePoolSize = 5
-        taskExecutor.maxPoolSize = 20
+    ThreadPoolTaskScheduler scheduler() {
+        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler()
+        scheduler.poolSize = 5
 
-        return taskExecutor
+        return scheduler
     }
 
     @Bean
     @Autowired
-    Orchestrator orchestrator(ThreadPoolTaskExecutor threadPool, ProcessRepository processRepository, ProcessRunRepository processRunRepository) {
+    Orchestrator orchestrator(ThreadPoolTaskScheduler scheduler, ProcessRepository processRepository, ProcessRunRepository processRunRepository) {
         Orchestrator orchestrator = new Orchestrator()
-        orchestrator.threadPool = threadPool
+        orchestrator.scheduler = scheduler
         orchestrator.processRepository = processRepository
         orchestrator.processRunRepository = processRunRepository
 

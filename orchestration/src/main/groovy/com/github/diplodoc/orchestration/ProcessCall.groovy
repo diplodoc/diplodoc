@@ -6,6 +6,8 @@ import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 import org.springframework.web.client.RestTemplate
 
+import java.util.concurrent.TimeUnit
+
 /**
  * @author yaroslav.yermilov
  */
@@ -63,6 +65,14 @@ class ProcessCall implements Runnable {
         binding.notify = this.&notify
         binding.listen = { /* do nothing */ }
         binding.waiting = { /* do nothing */ }
+        binding.start = { /* do nothing */ }
+        
+        Integer.metaClass.propertyMissing = {String name ->
+            TimeUnit timeUnit = TimeUnit.valueOf(name.toUpperCase())
+            if (timeUnit != null) {
+                return timeUnit.toMillis(delegate)
+            }
+        }
 
         return binding
     }
