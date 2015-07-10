@@ -8,6 +8,7 @@ import groovy.util.logging.Slf4j
 import org.bson.types.ObjectId
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 
+import javax.annotation.PostConstruct
 import java.util.concurrent.TimeUnit
 
 /**
@@ -19,6 +20,15 @@ class Orchestrator {
     ThreadPoolTaskScheduler scheduler
     ProcessRepository processRepository
     ProcessRunRepository processRunRepository
+
+    @PostConstruct
+    void init() {
+        log.info "initializing orchestrator..."
+
+        processRepository.findByActiveIsTrue()
+                .findAll({ Process process -> findSchedulingPeriod(process) != null })
+                .each({ Process process -> run(process.id, []) })
+    }
 
     ObjectId run(ObjectId processId, List parameters) {
         ProcessRun processRun = processRunRepository.save new ProcessRun(processId: processId, parameters: parameters)
