@@ -6,6 +6,7 @@ import com.github.diplodoc.domain.repository.mongodb.orchestration.ProcessReposi
 import com.github.diplodoc.domain.repository.mongodb.orchestration.ProcessRunRepository
 import org.bson.types.ObjectId
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
+import spock.lang.Ignore
 import spock.lang.Specification
 
 import java.time.LocalDateTime
@@ -22,6 +23,7 @@ class OrchestratorSpec extends Specification {
 
     Orchestrator orchestrator = Spy(Orchestrator)
 
+    @Ignore
     def 'void run(ProcessRun processRun)'() {
         setup:
             ProcessRun processRun = new ProcessRun(id: new ObjectId('111111111111111111111111'))
@@ -41,6 +43,7 @@ class OrchestratorSpec extends Specification {
             })
     }
 
+    @Ignore
     def 'void notify(OrchestrationEvent event)'() {
         setup:
             ProcessRun[] processRuns = [ new ProcessRun(processId: new ObjectId('111111111111111111111111'), parameters: []), new ProcessRun(processId: new ObjectId('222222222222222222222222'), parameters: []) ]
@@ -81,6 +84,7 @@ class OrchestratorSpec extends Specification {
             processCallEvent.processRun.startTime == processCallEvent.time.toString()
     }
 
+    @Ignore
     def 'void notify(ProcessCallEvent event) - process run succeed event'() {
         setup:
             ProcessCallEvent processCallEvent = new ProcessCallEvent()
@@ -101,6 +105,7 @@ class OrchestratorSpec extends Specification {
             processCallEvent.processRun.endTime == processCallEvent.time.toString()
     }
 
+    @Ignore
     def 'void notify(ProcessCallEvent event) - process run failed event'() {
         setup:
             ProcessCallEvent processCallEvent = new ProcessCallEvent()

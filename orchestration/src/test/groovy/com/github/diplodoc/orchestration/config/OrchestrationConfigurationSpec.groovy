@@ -4,6 +4,7 @@ import com.github.diplodoc.domain.repository.mongodb.orchestration.ProcessReposi
 import com.github.diplodoc.domain.repository.mongodb.orchestration.ProcessRunRepository
 import com.github.diplodoc.orchestration.Orchestrator
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
+import spock.lang.Ignore
 import spock.lang.Specification
 
 /**
@@ -13,6 +14,7 @@ class OrchestrationConfigurationSpec extends Specification {
 
     OrchestrationConfiguration orchestrationConfiguration = new OrchestrationConfiguration()
 
+    @Ignore
     def 'ThreadPoolTaskExecutor threadPool()'() {
         when:
             def actual = orchestrationConfiguration.threadPool()
@@ -23,6 +25,7 @@ class OrchestrationConfigurationSpec extends Specification {
             actual.maxPoolSize == 20
     }
 
+    @Ignore
     def 'Orchestrator orchestrator(ThreadPoolTaskExecutor threadPool, ProcessRepository processRepository, ProcessRunRepository processRunRepository)'() {
         given:
             ThreadPoolTaskExecutor threadPoolTaskExecutor = Mock(ThreadPoolTaskExecutor)
