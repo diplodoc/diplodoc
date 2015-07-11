@@ -30,7 +30,7 @@ class OrchestratorController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody String run(@PathVariable('processId') String processId) {
         Process process = processRepository.findOne new ObjectId(processId)
-        ProcessRun processRun = orchestrator.start(process, [:])
+        ProcessRun processRun = orchestrator.start process
 
         return processRun.id
     }

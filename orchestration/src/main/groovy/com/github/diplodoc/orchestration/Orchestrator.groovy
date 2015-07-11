@@ -9,4 +9,6 @@ import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
 interface Orchestrator {
 
     ProcessRun start(Process process, Map parameters)
+
+    ProcessRun start(Process process)
 }
