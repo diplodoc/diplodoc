@@ -2,7 +2,7 @@ package com.github.diplodoc.orchestration.config
 
 import com.github.diplodoc.domain.repository.mongodb.orchestration.ProcessRepository
 import com.github.diplodoc.domain.repository.mongodb.orchestration.ProcessRunRepository
-import com.github.diplodoc.orchestration.Orchestrator
+import com.github.diplodoc.orchestration.OldOrchestratorImpl
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import spock.lang.Ignore
 import spock.lang.Specification
@@ -36,7 +36,7 @@ class OrchestrationConfigurationSpec extends Specification {
             def actual = orchestrationConfiguration.orchestrator(threadPoolTaskExecutor, processRepository, processRunRepository)
 
         then:
-            actual instanceof Orchestrator
+            actual instanceof OldOrchestratorImpl
             actual.threadPool == threadPoolTaskExecutor
             actual.processRepository == processRepository
             actual.processRunRepository == processRunRepository

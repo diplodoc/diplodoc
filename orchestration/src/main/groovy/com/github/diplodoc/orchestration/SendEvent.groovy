@@ -22,7 +22,7 @@ class SendEvent implements OrchestrationEvent {
     }
 
     @Override
-    Collection<ProcessRun> shouldNotifyRuns(Orchestrator orchestrator) {
+    Collection<ProcessRun> shouldNotifyRuns(OldOrchestratorImpl orchestrator) {
         ProcessRun processRun = new ProcessRun()
         processRun.processId = orchestrator.getProcess(destination).id
         processRun.parameters = parameters.collect { String key, Object value ->

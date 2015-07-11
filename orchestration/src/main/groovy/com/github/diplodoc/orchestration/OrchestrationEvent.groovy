@@ -7,5 +7,5 @@ import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
  */
 interface OrchestrationEvent {
 
-    Collection<ProcessRun> shouldNotifyRuns(Orchestrator orchestrator)
+    Collection<ProcessRun> shouldNotifyRuns(OldOrchestratorImpl orchestrator)
 }

@@ -14,7 +14,7 @@ class SendEventSpec extends Specification {
         setup:
             Process process0 = new Process(id: new ObjectId('000000000000000000000000'), name: 'process-0')
 
-            Orchestrator orchestrator = Mock(Orchestrator)
+            OldOrchestratorImpl orchestrator = Mock(OldOrchestratorImpl)
             orchestrator.getProcess('process-0') >> process0
 
             SendEvent sendEvent = new SendEvent('process-0', [ 'key' : 'value' ])

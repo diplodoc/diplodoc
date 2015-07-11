@@ -14,7 +14,7 @@ class OutputEventSpec extends Specification {
         setup:
             Process process0 = new Process(id: new ObjectId('000000000000000000000000'))
 
-            Orchestrator orchestrator = Mock(Orchestrator)
+            OldOrchestratorImpl orchestrator = Mock(OldOrchestratorImpl)
             orchestrator.getProcess(new ObjectId('000000000000000000000000')) >> process0
             orchestrator.getProcessesListeningTo(process0) >> [ new Process(id: new ObjectId('111111111111111111111111')), new Process(id: new ObjectId('222222222222222222222222')) ]
 

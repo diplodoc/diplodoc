@@ -17,10 +17,10 @@ class ProcessCall implements Runnable {
     JsonSlurper jsonSlurper = new JsonSlurper()
     RestTemplate restTemplate = new RestTemplate()
 
-    Orchestrator orchestrator
+    OldOrchestratorImpl orchestrator
     ProcessRun processRun
 
-    ProcessCall(Orchestrator orchestrator, ProcessRun processRun) {
+    ProcessCall(OldOrchestratorImpl orchestrator, ProcessRun processRun) {
         this.orchestrator = orchestrator
         this.processRun = processRun
     }

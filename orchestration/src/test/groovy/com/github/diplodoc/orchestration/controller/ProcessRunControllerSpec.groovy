@@ -1,6 +1,6 @@
 package com.github.diplodoc.orchestration.controller
 
-import com.github.diplodoc.orchestration.Orchestrator
+import com.github.diplodoc.orchestration.OldOrchestratorImpl
 import org.bson.types.ObjectId
 import spock.lang.Specification
 
@@ -9,9 +9,9 @@ import spock.lang.Specification
  */
 class ProcessRunControllerSpec extends Specification {
 
-    Orchestrator orchestrator = Mock(Orchestrator)
+    OldOrchestratorImpl orchestrator = Mock(OldOrchestratorImpl)
 
-    ProcessRunController processRunController = new ProcessRunController(orchestrator: orchestrator)
+    OrchestratorController processRunController = new OrchestratorController(orchestrator: orchestrator)
 
     def 'void run(ProcessRun processRun)'() {
         when:

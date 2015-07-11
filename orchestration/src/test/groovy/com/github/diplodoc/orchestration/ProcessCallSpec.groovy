@@ -15,7 +15,7 @@ class ProcessCallSpec extends Specification {
 
     def 'void run() - successful run'() {
         setup:
-            Orchestrator orchestrator = Mock(Orchestrator)
+            OldOrchestratorImpl orchestrator = Mock(OldOrchestratorImpl)
 
             Process process = new Process(id: new ObjectId('111111111111111111111111'), definition: 'definition')
             ProcessRun processRun = new ProcessRun(processId: new ObjectId('111111111111111111111111'), parameters: [])
@@ -34,7 +34,7 @@ class ProcessCallSpec extends Specification {
 
     def 'void run() - failed run'() {
         setup:
-            Orchestrator orchestrator = Mock(Orchestrator)
+            OldOrchestratorImpl orchestrator = Mock(OldOrchestratorImpl)
 
             Process process = new Process(id: new ObjectId('111111111111111111111111'), definition: 'definition')
             ProcessRun processRun = new ProcessRun(processId: new ObjectId('111111111111111111111111'), parameters: [])
@@ -53,7 +53,7 @@ class ProcessCallSpec extends Specification {
 
     def 'Binding binding(Map<String, Object> parameters)'() {
         setup:
-            Orchestrator orchestrator = Mock(Orchestrator)
+            OldOrchestratorImpl orchestrator = Mock(OldOrchestratorImpl)
             ProcessRun processRun = new ProcessRun()
             ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ orchestrator, processRun ])
 
@@ -77,7 +77,7 @@ class ProcessCallSpec extends Specification {
 
     def 'void bindInputParameters(Binding binding, Map parameters)'() {
         setup:
-            Orchestrator orchestrator = Mock(Orchestrator)
+            OldOrchestratorImpl orchestrator = Mock(OldOrchestratorImpl)
             ProcessRun processRun = new ProcessRun()
             ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ orchestrator, processRun ])
 
@@ -94,7 +94,7 @@ class ProcessCallSpec extends Specification {
 
     def 'void input(String[] args) - all parameters exists'() {
         setup:
-            Orchestrator orchestrator = Mock(Orchestrator)
+            OldOrchestratorImpl orchestrator = Mock(OldOrchestratorImpl)
             ProcessRun processRun = new ProcessRun()
             ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ orchestrator, processRun ])
 
@@ -113,7 +113,7 @@ class ProcessCallSpec extends Specification {
 
     def 'void input(String[] args) - missing parameter'() {
         setup:
-            Orchestrator orchestrator = Mock(Orchestrator)
+            OldOrchestratorImpl orchestrator = Mock(OldOrchestratorImpl)
             ProcessRun processRun = new ProcessRun()
             ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ orchestrator, processRun ])
 
@@ -133,7 +133,7 @@ class ProcessCallSpec extends Specification {
 
     def 'void get(Map params)'() {
         setup:
-            Orchestrator orchestrator = Mock(Orchestrator)
+            OldOrchestratorImpl orchestrator = Mock(OldOrchestratorImpl)
             ProcessRun processRun = new ProcessRun()
             ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ orchestrator, processRun ])
 
@@ -149,7 +149,7 @@ class ProcessCallSpec extends Specification {
 
     def 'void get(Map params) - default response type'() {
         setup:
-            Orchestrator orchestrator = Mock(Orchestrator)
+            OldOrchestratorImpl orchestrator = Mock(OldOrchestratorImpl)
             ProcessRun processRun = new ProcessRun()
             ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ orchestrator, processRun ])
 
@@ -165,7 +165,7 @@ class ProcessCallSpec extends Specification {
 
     def 'void post(Map params)'() {
         setup:
-            Orchestrator orchestrator = Mock(Orchestrator)
+            OldOrchestratorImpl orchestrator = Mock(OldOrchestratorImpl)
             ProcessRun processRun = new ProcessRun()
             ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ orchestrator, processRun ])
 
@@ -181,7 +181,7 @@ class ProcessCallSpec extends Specification {
 
     def 'void post(Map params) - default response type'() {
         setup:
-            Orchestrator orchestrator = Mock(Orchestrator)
+            OldOrchestratorImpl orchestrator = Mock(OldOrchestratorImpl)
             ProcessRun processRun = new ProcessRun()
             ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ orchestrator, processRun ])
 
@@ -197,7 +197,7 @@ class ProcessCallSpec extends Specification {
 
     def 'void send(Map params)'() {
         setup:
-            Orchestrator orchestrator = Mock(Orchestrator)
+            OldOrchestratorImpl orchestrator = Mock(OldOrchestratorImpl)
             ProcessRun processRun = new ProcessRun()
             ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ orchestrator, processRun ])
 
@@ -210,7 +210,7 @@ class ProcessCallSpec extends Specification {
 
     def 'void output(Map params)'() {
         setup:
-            Orchestrator orchestrator = Mock(Orchestrator)
+            OldOrchestratorImpl orchestrator = Mock(OldOrchestratorImpl)
             ProcessRun processRun = new ProcessRun(id: new ObjectId('111111111111111111111111'))
             ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ orchestrator, processRun ])
 
@@ -223,7 +223,7 @@ class ProcessCallSpec extends Specification {
 
     def 'void notify(Map params)'() {
         setup:
-            Orchestrator orchestrator = Mock(Orchestrator)
+            OldOrchestratorImpl orchestrator = Mock(OldOrchestratorImpl)
             ProcessRun processRun = new ProcessRun()
             ProcessCall processCall = Spy(ProcessCall, constructorArgs: [ orchestrator, processRun ])
 

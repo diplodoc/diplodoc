@@ -21,7 +21,7 @@ class OrchestratorSpec extends Specification {
     ProcessRepository processRepository = Mock(ProcessRepository)
     ProcessRunRepository processRunRepository = Mock(ProcessRunRepository)
 
-    Orchestrator orchestrator = Spy(Orchestrator)
+    OldOrchestratorImpl orchestrator = Spy(OldOrchestratorImpl)
 
     @Ignore
     def 'void run(ProcessRun processRun)'() {

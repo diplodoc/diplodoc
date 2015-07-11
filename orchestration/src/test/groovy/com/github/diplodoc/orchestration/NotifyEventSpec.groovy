@@ -12,7 +12,7 @@ class NotifyEventSpec extends Specification {
 
     def 'Collection<ProcessRun> shouldNotifyRuns(Orchestrator orchestrator)'() {
         setup:
-            Orchestrator orchestrator = Mock(Orchestrator)
+            OldOrchestratorImpl orchestrator = Mock(OldOrchestratorImpl)
         orchestrator.getProcessesWaitingFor('event-1') >> [ new Process(id: new ObjectId('111111111111111111111111')), new Process(id: new ObjectId('222222222222222222222222')) ]
 
             NotifyEvent notifyEvent = new NotifyEvent('event-1', [ 'key' : 'value' ])

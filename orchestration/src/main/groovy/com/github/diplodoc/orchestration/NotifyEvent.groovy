@@ -23,7 +23,7 @@ class NotifyEvent implements OrchestrationEvent {
     }
 
     @Override
-    Collection<ProcessRun> shouldNotifyRuns(Orchestrator orchestrator) {
+    Collection<ProcessRun> shouldNotifyRuns(OldOrchestratorImpl orchestrator) {
         orchestrator.getProcessesWaitingFor(eventName).collect { Process process ->
             ProcessRun processRun = new ProcessRun()
             processRun.processId = process.id

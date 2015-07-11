@@ -23,7 +23,7 @@ class OutputEvent implements OrchestrationEvent {
     }
 
     @Override
-    Collection<ProcessRun> shouldNotifyRuns(Orchestrator orchestrator) {
+    Collection<ProcessRun> shouldNotifyRuns(OldOrchestratorImpl orchestrator) {
         Process outputProcess = orchestrator.getProcess(source.processId)
         orchestrator.getProcessesListeningTo(outputProcess).collect { Process process ->
             ProcessRun processRun = new ProcessRun()
