@@ -2,6 +2,7 @@ package com.github.diplodoc.orchestration
 
 import com.github.diplodoc.domain.mongodb.orchestration.Process
 import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
+import com.github.diplodoc.domain.mongodb.orchestration.ProcessRunParameter
 import com.github.diplodoc.domain.repository.mongodb.orchestration.ProcessRunRepository
 import groovy.util.logging.Slf4j
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
@@ -43,11 +44,14 @@ class LocalThreadsProcessRunner implements ProcessRunner {
         start(process, [:])
     }
 
-    private ProcessRun toProcessRun(Process process, Map paramenters) {
-        assert null : 'not implemented yet'
+    private ProcessRun toProcessRun(Process process, Map parameters) {
+        ProcessRun processRun = new ProcessRun(processId: process.id)
+        processRun.parameters = parameters.collect ProcessRunParameter.&fromKeyValue
+
+        return processRun
     }
 
-    private RunnableProcess toRunableProcess(ProcessRun processRun, Process process, Map paramenters) {
+    private RunnableProcess toRunableProcess(ProcessRun processRun, Process process, Map parameters) {
         assert null : 'not implemented yet'
     }
 }
