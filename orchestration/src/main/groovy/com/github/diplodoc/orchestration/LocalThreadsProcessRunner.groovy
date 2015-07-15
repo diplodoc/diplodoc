@@ -11,7 +11,7 @@ import javax.annotation.PostConstruct
  * @author yaroslav.yermilov
  */
 @Slf4j
-class LocalThreadsOrchestrator implements Orchestrator {
+class LocalThreadsProcessRunner implements ProcessRunner {
 
     ProcessRepository processRepository
 

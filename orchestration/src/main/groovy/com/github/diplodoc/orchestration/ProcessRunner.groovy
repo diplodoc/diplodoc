@@ -6,7 +6,7 @@ import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
 /**
  * @author yaroslav.yermilov
  */
-interface Orchestrator {
+interface ProcessRunner {
 
     ProcessRun start(Process process, Map parameters)
 

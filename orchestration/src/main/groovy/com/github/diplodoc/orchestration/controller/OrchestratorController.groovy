@@ -3,7 +3,7 @@ package com.github.diplodoc.orchestration.controller
 import com.github.diplodoc.domain.mongodb.orchestration.Process
 import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
 import com.github.diplodoc.domain.repository.mongodb.orchestration.ProcessRepository
-import com.github.diplodoc.orchestration.Orchestrator
+import com.github.diplodoc.orchestration.ProcessRunner
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 class OrchestratorController {
 
     @Autowired
-    Orchestrator orchestrator
+    ProcessRunner processRunner
 
     @Autowired
     ProcessRepository processRepository
@@ -30,7 +30,7 @@ class OrchestratorController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody String run(@PathVariable('processId') String processId) {
         Process process = processRepository.findOne new ObjectId(processId)
-        ProcessRun processRun = orchestrator.start process
+        ProcessRun processRun = processRunner.start process
 
         return processRun.id
     }
