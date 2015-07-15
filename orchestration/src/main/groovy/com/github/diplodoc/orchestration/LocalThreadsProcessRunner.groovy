@@ -2,7 +2,6 @@ package com.github.diplodoc.orchestration
 
 import com.github.diplodoc.domain.mongodb.orchestration.Process
 import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
-import com.github.diplodoc.domain.repository.mongodb.orchestration.ProcessRepository
 import groovy.util.logging.Slf4j
 
 import javax.annotation.PostConstruct
@@ -13,15 +12,13 @@ import javax.annotation.PostConstruct
 @Slf4j
 class LocalThreadsProcessRunner implements ProcessRunner {
 
-    ProcessRepository processRepository
+    ProcessInteractor processInteractor
 
     @PostConstruct
-    void init() {
-        log.info "initializing orchestrator..."
-
-        activeProcesses()
-                .findAll({ Process process -> findSchedulingPeriod(process) != null })
-                .each this.&start
+    @Override
+    Collection<ProcessRun> selfStart() {
+        log.info "initializing process runner..."
+        processInteractor.selfStartingProcesses().each this.&start
     }
 
     @Override
@@ -32,9 +29,5 @@ class LocalThreadsProcessRunner implements ProcessRunner {
     @Override
     ProcessRun start(Process process) {
         start(process, [:])
-    }
-
-    private Collection<Process> activeProcesses() {
-        processRepository.findByActiveIsTrue()
     }
 }

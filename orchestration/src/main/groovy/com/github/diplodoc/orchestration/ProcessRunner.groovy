@@ -8,6 +8,8 @@ import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
  */
 interface ProcessRunner {
 
+    Collection<ProcessRun> selfStart()
+
     ProcessRun start(Process process, Map parameters)
 
     ProcessRun start(Process process)
