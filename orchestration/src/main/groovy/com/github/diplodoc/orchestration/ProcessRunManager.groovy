@@ -14,5 +14,5 @@ interface ProcessRunManager {
 
     ProcessRun markJustSucceed(ProcessRun processRun)
 
-    ProcessRun markJustFailed(ProcessRun processRun)
+    ProcessRun markJustFailed(ProcessRun processRun, Throwable reason)
 }

@@ -18,7 +18,6 @@ class RunnableProcess implements Runnable {
 
     GroovyBindings groovyBindings
 
-
     @Override
     void run() {
         try {
