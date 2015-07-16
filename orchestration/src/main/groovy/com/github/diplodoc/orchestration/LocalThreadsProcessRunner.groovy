@@ -2,8 +2,6 @@ package com.github.diplodoc.orchestration
 
 import com.github.diplodoc.domain.mongodb.orchestration.Process
 import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
-import com.github.diplodoc.domain.mongodb.orchestration.ProcessRunParameter
-import com.github.diplodoc.domain.repository.mongodb.orchestration.ProcessRunRepository
 import groovy.util.logging.Slf4j
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 
@@ -19,7 +17,9 @@ class LocalThreadsProcessRunner implements ProcessRunner {
 
     ProcessInteractor processInteractor
 
-    ProcessRunRepository processRunRepository
+    ProcessRunManager processRunManager
+
+    GroovyBindings groovyBindings
 
     @PostConstruct
     @Override
@@ -30,8 +30,7 @@ class LocalThreadsProcessRunner implements ProcessRunner {
 
     @Override
     ProcessRun start(Process process, Map parameters) {
-        ProcessRun processRun = toProcessRun(process, parameters)
-        processRunRepository.save processRun
+        ProcessRun processRun = processRunManager.create(process, parameters)
 
         log.info "starting process ${processRun}..."
         scheduler.execute toRunableProcess(processRun, process, parameters)
@@ -44,14 +43,12 @@ class LocalThreadsProcessRunner implements ProcessRunner {
         start(process, [:])
     }
 
-    private ProcessRun toProcessRun(Process process, Map parameters) {
-        ProcessRun processRun = new ProcessRun(processId: process.id)
-        processRun.parameters = parameters.collect ProcessRunParameter.&fromKeyValue
-
-        return processRun
-    }
-
     private RunnableProcess toRunableProcess(ProcessRun processRun, Process process, Map parameters) {
-        assert null : 'not implemented yet'
+        RunnableProcess runnableProcess = new RunnableProcess(processRun: processRun, process: process, parameters: parameters)
+
+        runnableProcess.processRunManager = processRunManager
+        runnableProcess.groovyBindings = groovyBindings
+
+        return runnableProcess
     }
 }
