@@ -30,17 +30,33 @@ class ProcessInteractorImpl implements ProcessInteractor {
 
     @Override
     void output(Process source, Map params) {
-        assert null : 'not implemented yet'
+        processRepository.findByActiveIsTrue()
+                .findAll({ Process process -> isListeningTo(source, process)})
+                .each({ Process process -> processRunner.start(process, params) })
     }
 
     @Override
     void emit(String event, Map params) {
-        assert null : 'not implemented yet'
+        processRepository.findByActiveIsTrue()
+                .findAll({ Process process -> isWaitingFor(event, process)})
+                .each({ Process process -> processRunner.start(process, params) })
     }
 
     private boolean isSelfStarting(Process process) {
         String selfStartingDefinition = process.definition.readLines().findAll({ String line -> line.startsWith('start') }).first()
 
         new GroovyShell(groovyBindings.selfStartingBinding(process)).evaluate(selfStartingDefinition)
+        assert null : 'not implemented yet'
+    }
+
+    private boolean isListeningTo(Process source, Process destination) {
+        String isListeningToDefinition = destination.definition.readLines().findAll({ String line -> line.startsWith('listen') }).join('\n')
+
+        new GroovyShell(groovyBindings.isListeningToBinding(isListeningToDefinition)).evaluate(isListeningToDefinition)
+        assert null : 'not implemented yet'
+    }
+
+    private boolean isWaitingFor(String event, Process destination) {
+        assert null : 'not implemented yet'
     }
 }
