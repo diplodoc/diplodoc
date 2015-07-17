@@ -12,7 +12,9 @@ class StartExecutionEnchancer implements GroovyBindingEnhancer {
 
     @Override
     Binding enhance(Binding binding, Process process, Map input, ProcessRun processRun) {
-        binding.start = { /* do nothing */ }
+        binding.start = {
+            assert null : 'not implemented yet'
+        }
 
         Integer.metaClass.propertyMissing = { String name ->
             TimeUnit timeUnit = TimeUnit.valueOf(name.toUpperCase())
