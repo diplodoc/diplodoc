@@ -1,4 +1,4 @@
-package com.github.diplodoc.orchestration
+package com.github.diplodoc.orchestration.old
 
 import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
 

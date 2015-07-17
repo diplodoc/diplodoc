@@ -1,4 +1,4 @@
-package com.github.diplodoc.orchestration
+package com.github.diplodoc.orchestration.old
 
 import com.github.diplodoc.domain.mongodb.orchestration.Process
 import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
@@ -12,20 +12,19 @@ import groovy.transform.ToString
  */
 @ToString
 @EqualsAndHashCode
-class OutputEvent implements OrchestrationEvent {
+class NotifyEvent implements OrchestrationEvent {
 
-    ProcessRun source
+    String eventName
     Map<String, Object> parameters
 
-    OutputEvent(ProcessRun source, Map<String, Object> parameters) {
-        this.source = source
+    NotifyEvent(String eventName, Map<String, Object> parameters) {
+        this.eventName = eventName
         this.parameters = parameters
     }
 
     @Override
     Collection<ProcessRun> shouldNotifyRuns(OldOrchestratorImpl orchestrator) {
-        Process outputProcess = orchestrator.getProcess(source.processId)
-        orchestrator.getProcessesListeningTo(outputProcess).collect { Process process ->
+        orchestrator.getProcessesWaitingFor(eventName).collect { Process process ->
             ProcessRun processRun = new ProcessRun()
             processRun.processId = process.id
             processRun.parameters = parameters.collect { String key, Object value ->

@@ -2,6 +2,8 @@ package com.github.diplodoc.orchestration
 
 import com.github.diplodoc.domain.mongodb.orchestration.Process
 import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
+import com.github.diplodoc.orchestration.old.NotifyEvent
+import com.github.diplodoc.orchestration.old.OldOrchestratorImpl
 import org.bson.types.ObjectId
 import spock.lang.Specification
 

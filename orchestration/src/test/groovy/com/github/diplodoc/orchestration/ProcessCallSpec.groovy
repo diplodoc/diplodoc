@@ -3,6 +3,12 @@ package com.github.diplodoc.orchestration
 import com.github.diplodoc.domain.mongodb.orchestration.Process
 import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
 import com.github.diplodoc.domain.mongodb.orchestration.ProcessRunParameter
+import com.github.diplodoc.orchestration.old.NotifyEvent
+import com.github.diplodoc.orchestration.old.OldOrchestratorImpl
+import com.github.diplodoc.orchestration.old.OutputEvent
+import com.github.diplodoc.orchestration.old.ProcessCall
+import com.github.diplodoc.orchestration.old.ProcessCallEvent
+import com.github.diplodoc.orchestration.old.SendEvent
 import groovy.json.JsonOutput
 import org.bson.types.ObjectId
 import org.springframework.web.client.RestTemplate

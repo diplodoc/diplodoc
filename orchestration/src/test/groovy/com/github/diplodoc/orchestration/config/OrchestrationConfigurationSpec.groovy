@@ -2,7 +2,7 @@ package com.github.diplodoc.orchestration.config
 
 import com.github.diplodoc.domain.repository.mongodb.orchestration.ProcessRepository
 import com.github.diplodoc.domain.repository.mongodb.orchestration.ProcessRunRepository
-import com.github.diplodoc.orchestration.OldOrchestratorImpl
+import com.github.diplodoc.orchestration.old.OldOrchestratorImpl
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import spock.lang.Ignore
 import spock.lang.Specification

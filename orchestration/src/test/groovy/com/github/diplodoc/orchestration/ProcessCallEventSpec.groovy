@@ -1,6 +1,7 @@
 package com.github.diplodoc.orchestration
 
 import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
+import com.github.diplodoc.orchestration.old.ProcessCallEvent
 import spock.lang.Specification
 
 /**

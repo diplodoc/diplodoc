@@ -1,6 +1,6 @@
 package com.github.diplodoc.orchestration.controller
 
-import com.github.diplodoc.orchestration.OldOrchestratorImpl
+import com.github.diplodoc.orchestration.old.OldOrchestratorImpl
 import org.bson.types.ObjectId
 import spock.lang.Specification
 

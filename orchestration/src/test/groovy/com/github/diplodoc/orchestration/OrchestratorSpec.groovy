@@ -4,6 +4,10 @@ import com.github.diplodoc.domain.mongodb.orchestration.Process
 import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
 import com.github.diplodoc.domain.repository.mongodb.orchestration.ProcessRepository
 import com.github.diplodoc.domain.repository.mongodb.orchestration.ProcessRunRepository
+import com.github.diplodoc.orchestration.old.OldOrchestratorImpl
+import com.github.diplodoc.orchestration.old.OrchestrationEvent
+import com.github.diplodoc.orchestration.old.ProcessCall
+import com.github.diplodoc.orchestration.old.ProcessCallEvent
 import org.bson.types.ObjectId
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import spock.lang.Ignore

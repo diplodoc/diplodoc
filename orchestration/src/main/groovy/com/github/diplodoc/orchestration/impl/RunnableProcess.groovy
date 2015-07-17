@@ -1,7 +1,9 @@
-package com.github.diplodoc.orchestration
+package com.github.diplodoc.orchestration.impl
 
 import com.github.diplodoc.domain.mongodb.orchestration.Process
 import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
+import com.github.diplodoc.orchestration.GroovyBindings
+import com.github.diplodoc.orchestration.ProcessRunManager
 import groovy.util.logging.Slf4j
 
 /**
