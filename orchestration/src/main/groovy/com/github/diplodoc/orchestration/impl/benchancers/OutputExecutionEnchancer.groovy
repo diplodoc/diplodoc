@@ -7,18 +7,13 @@ import com.github.diplodoc.orchestration.ProcessInteractor
 /**
  * @author yaroslav.yermilov
  */
-class EmitEnchancer implements GroovyBindingEnhancer {
+class OutputExecutionEnchancer implements GroovyBindingEnhancer {
 
     ProcessInteractor processInteractor
 
     @Override
     Binding enhance(Binding binding, Process process, Map input, ProcessRun processRun) {
-        binding.emit = this.&emit
+        binding.output = { Map params -> processInteractor.output(process, params) }
         return binding
-    }
-
-    private void emit(Map params) {
-        String eventName = params.remove 'that'
-        processInteractor.emit(eventName, params)
     }
 }

@@ -6,11 +6,11 @@ import com.github.diplodoc.orchestration.GroovyBindingEnhancer
 /**
  * @author yaroslav.yermilov
  */
-class WaitingEnchancer implements GroovyBindingEnhancer {
+class InputParametersExecutionEnhancer implements GroovyBindingEnhancer {
 
     @Override
     Binding enhance(Binding binding, Process process, Map input, ProcessRun processRun) {
-        binding.waiting = { /* do nothing */ }
+        input.each { key, value -> binding."${key}" = value }
         return binding
     }
 }

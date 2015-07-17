@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 /**
  * @author yaroslav.yermilov
  */
-class StartEnchancer implements GroovyBindingEnhancer {
+class StartExecutionEnchancer implements GroovyBindingEnhancer {
 
     @Override
     Binding enhance(Binding binding, Process process, Map input, ProcessRun processRun) {

@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate
 /**
  * @author yaroslav.yermilov
  */
-class GetEnchancer implements GroovyBindingEnhancer {
+class GetExecutionEnchancer implements GroovyBindingEnhancer {
 
     RestTemplate restTemplate
 

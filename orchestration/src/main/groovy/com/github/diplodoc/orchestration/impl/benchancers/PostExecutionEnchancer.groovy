@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate
 /**
  * @author yaroslav.yermilov
  */
-class PostEnchancer implements GroovyBindingEnhancer {
+class PostExecutionEnchancer implements GroovyBindingEnhancer {
 
     RestTemplate restTemplate
 
