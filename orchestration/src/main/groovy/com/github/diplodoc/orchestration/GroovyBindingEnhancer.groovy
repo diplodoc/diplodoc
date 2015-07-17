@@ -5,7 +5,7 @@ import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
 /**
  * @author yaroslav.yermilov
  */
-interface GroovyBindings {
+interface GroovyBindingEnhancer {
 
-    Binding executionBinding(Process process, Map input, ProcessRun processRun)
+    Binding enhance(Binding binding, Process process, Map input, ProcessRun processRun)
 }
