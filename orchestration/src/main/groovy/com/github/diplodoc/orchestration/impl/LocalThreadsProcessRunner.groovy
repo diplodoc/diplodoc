@@ -29,7 +29,7 @@ class LocalThreadsProcessRunner implements ProcessRunner {
     @Override
     Collection<ProcessRun> selfStart() {
         log.info "initializing process runner..."
-        processInteractor.selfStartingProcesses().collect this.&start
+        processInteractor.processSelfStart()
     }
 
     @Override

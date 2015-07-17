@@ -18,8 +18,8 @@ class ProcessInteractorImpl implements ProcessInteractor {
     GroovyBindings groovyBindings
 
     @Override
-    Collection<Process> selfStartingProcesses() {
-        processRepository.findByActiveIsTrue().findAll this.&isSelfStarting
+    void processSelfStart() {
+        processRepository.findByActiveIsTrue().findAll(this.&isSelfStarting).each(processRunner.&start)
     }
 
     @Override

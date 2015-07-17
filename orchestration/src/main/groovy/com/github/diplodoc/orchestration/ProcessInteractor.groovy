@@ -7,7 +7,7 @@ import com.github.diplodoc.domain.mongodb.orchestration.Process
  */
 interface ProcessInteractor {
 
-    Collection<Process> selfStartingProcesses()
+    void processSelfStart()
 
     void send(String destination, Map params)
 
