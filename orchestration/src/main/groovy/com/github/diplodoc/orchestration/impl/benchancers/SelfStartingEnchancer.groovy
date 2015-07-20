@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 class SelfStartingEnchancer implements GroovyBindingEnhancer {
 
     @Override
-    Binding enhance(Binding binding, Process process, Map input, ProcessRun processRun) {
+    Binding enhance(Binding binding, Map context) {
         binding._IS_SELF_STARTING_ = false
 
         binding.start = { Map params ->

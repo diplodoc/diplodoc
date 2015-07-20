@@ -1,6 +1,5 @@
 package com.github.diplodoc.orchestration.impl.benchancers
 
-import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
 import com.github.diplodoc.orchestration.GroovyBindingEnhancer
 import com.github.diplodoc.orchestration.ProcessInteractor
 
@@ -12,7 +11,7 @@ class EmitExecutionEnchancer implements GroovyBindingEnhancer {
     ProcessInteractor processInteractor
 
     @Override
-    Binding enhance(Binding binding, Process process, Map input, ProcessRun processRun) {
+    Binding enhance(Binding binding, Map context) {
         binding.emit = this.&emit
         return binding
     }

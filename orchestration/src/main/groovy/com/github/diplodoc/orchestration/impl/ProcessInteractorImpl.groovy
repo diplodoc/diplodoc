@@ -53,7 +53,7 @@ class ProcessInteractorImpl implements ProcessInteractor {
 
     private boolean isListeningTo(Process source, Process destination) {
         String isListeningToDefinition = destination.definition.readLines().findAll({ String line -> line.startsWith('listen') }).join('\n')
-        Binding isListeningToBinding = groovyBindings.isListeningToBinding(isListeningToDefinition, source)
+        Binding isListeningToBinding = groovyBindings.isListeningToBinding(source, destination)
 
         new GroovyShell(isListeningToBinding).evaluate(isListeningToDefinition)
 
@@ -62,7 +62,7 @@ class ProcessInteractorImpl implements ProcessInteractor {
 
     private boolean isWaitingFor(String event, Process destination) {
         String isWaitingForDefinition = destination.definition.readLines().findAll({ String line -> line.startsWith('waiting') }).join('\n')
-        Binding isWaitingForBinding = groovyBindings.isWaitingForBinding(isWaitingForDefinition, event)
+        Binding isWaitingForBinding = groovyBindings.isWaitingForBinding(event, destination)
 
         new GroovyShell(isWaitingForBinding).evaluate(isWaitingForDefinition)
 

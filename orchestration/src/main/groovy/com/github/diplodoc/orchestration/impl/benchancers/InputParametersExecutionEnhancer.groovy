@@ -1,6 +1,5 @@
 package com.github.diplodoc.orchestration.impl.benchancers
 
-import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
 import com.github.diplodoc.orchestration.GroovyBindingEnhancer
 
 /**
@@ -9,8 +8,8 @@ import com.github.diplodoc.orchestration.GroovyBindingEnhancer
 class InputParametersExecutionEnhancer implements GroovyBindingEnhancer {
 
     @Override
-    Binding enhance(Binding binding, Process process, Map input, ProcessRun processRun) {
-        input.each { key, value -> binding."${key}" = value }
+    Binding enhance(Binding binding, Map context) {
+        context.input.each { key, value -> binding."${key}" = value }
         return binding
     }
 }

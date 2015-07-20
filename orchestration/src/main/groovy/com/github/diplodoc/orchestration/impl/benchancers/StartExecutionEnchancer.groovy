@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 class StartExecutionEnchancer implements GroovyBindingEnhancer {
 
     @Override
-    Binding enhance(Binding binding, Process process, Map input, ProcessRun processRun) {
+    Binding enhance(Binding binding, Map context) {
         binding.start = {
             assert null : 'not implemented yet'
         }

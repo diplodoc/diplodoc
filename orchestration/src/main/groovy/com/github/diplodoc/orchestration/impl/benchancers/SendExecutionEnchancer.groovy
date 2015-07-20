@@ -12,7 +12,7 @@ class SendExecutionEnchancer implements GroovyBindingEnhancer {
     ProcessInteractor processInteractor
 
     @Override
-    Binding enhance(Binding binding, Process process, Map input, ProcessRun processRun) {
+    Binding enhance(Binding binding, Map context) {
         binding.send = this.&send
         return binding
     }

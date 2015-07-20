@@ -1,5 +1,6 @@
 package com.github.diplodoc.orchestration.impl
 
+import com.github.diplodoc.domain.mongodb.orchestration.Process
 import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
 import com.github.diplodoc.orchestration.GroovyBindingEnhancer
 import com.github.diplodoc.orchestration.GroovyBindings
@@ -26,6 +27,8 @@ class GroovyBindingsImpl implements GroovyBindings {
 
     private List<GroovyBindingEnhancer> executionEnchancers
     private List<GroovyBindingEnhancer> selfStartingEnchancers
+    private List<GroovyBindingEnhancer> isListeningToEnchancers
+    private List<GroovyBindingEnhancer> isWaitingForEnchancers
 
     RestTemplate restTemplate
 
@@ -49,24 +52,36 @@ class GroovyBindingsImpl implements GroovyBindings {
         selfStartingEnchancers = [
             new SelfStartingEnchancer()
         ]
+
+        isListeningToEnchancers = []
+
+        isWaitingForEnchancers = []
     }
 
     @Override
     Binding executionBinding(Process process, Map input, ProcessRun processRun) {
-        enchance(executionEnchancers, process, input, processRun)
+        enchance(executionEnchancers, [ process: process, input: input, processRun: processRun ])
     }
 
     @Override
     Binding selfStartingBinding(Process process) {
-        enchance(selfStartingEnchancers, process, null, null)
+        enchance(selfStartingEnchancers, [ process: process ])
     }
 
-    private Binding enchance(List<GroovyBindingEnhancer> enchancers, Process process, Map input, ProcessRun processRun) {
+    @Override
+    Binding isListeningToBinding(Process source, Process destination) {
+        enchance(isListeningToEnchancers, [ source: source, destination: destination ])
+    }
+
+    @Override
+    Binding isWaitingForBinding(String event, Process destination) {
+        enchance(isWaitingForEnchancers, [ event: event, destination: destination ])
+    }
+
+    private Binding enchance(List<GroovyBindingEnhancer> enchancers, Map context) {
         Binding binding = new Binding()
 
-        enchancers.each { enhancer ->
-            binding = enhancer.enhance(binding, process, input, processRun)
-        }
+        enchancers.each { enhancer -> binding = enhancer.enhance(binding, context) }
 
         return binding
 

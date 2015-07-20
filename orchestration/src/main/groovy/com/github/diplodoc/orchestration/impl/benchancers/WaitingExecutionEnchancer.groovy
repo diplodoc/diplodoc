@@ -9,7 +9,7 @@ import com.github.diplodoc.orchestration.GroovyBindingEnhancer
 class WaitingExecutionEnchancer implements GroovyBindingEnhancer {
 
     @Override
-    Binding enhance(Binding binding, Process process, Map input, ProcessRun processRun) {
+    Binding enhance(Binding binding, Map context) {
         binding.waiting = { /* do nothing */ }
         return binding
     }
