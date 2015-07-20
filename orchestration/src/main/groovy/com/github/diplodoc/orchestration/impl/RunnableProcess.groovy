@@ -27,6 +27,7 @@ class RunnableProcess implements Runnable {
             execute()
             processRun = processRunManager.markJustSucceed(processRun)
         } catch (e) {
+            log.error "process ${processRun} failed", e
             processRun = processRunManager.markJustFailed(processRun, e)
         }
     }
