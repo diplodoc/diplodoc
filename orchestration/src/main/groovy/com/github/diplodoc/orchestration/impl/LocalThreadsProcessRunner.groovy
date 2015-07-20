@@ -47,6 +47,16 @@ class LocalThreadsProcessRunner implements ProcessRunner {
         start(process, [:])
     }
 
+    @Override
+    ProcessRun schedule(Process process, Date startAt) {
+        ProcessRun processRun = processRunManager.create(process, [:])
+
+        log.info "scheduling process ${processRun} to start at ${startAt}..."
+        scheduler.schedule(toRunableProcess(processRun, process, [:]), startAt)
+
+        return processRun
+    }
+
     private RunnableProcess toRunableProcess(ProcessRun processRun, Process process, Map parameters) {
         RunnableProcess runnableProcess = new RunnableProcess(processRun: processRun, process: process, parameters: parameters)
 

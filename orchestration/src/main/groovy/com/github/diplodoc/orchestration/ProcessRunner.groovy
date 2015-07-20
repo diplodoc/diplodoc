@@ -13,4 +13,6 @@ interface ProcessRunner {
     ProcessRun start(Process process, Map parameters)
 
     ProcessRun start(Process process)
+
+    ProcessRun schedule(Process process, Date startAt)
 }

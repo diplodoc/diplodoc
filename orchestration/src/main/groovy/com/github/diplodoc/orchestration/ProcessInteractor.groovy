@@ -14,4 +14,6 @@ interface ProcessInteractor {
     void output(Process source, Map params)
 
     void emit(String event, Map params)
+
+    void repeatOnce(Process process, long afterMillis)
 }

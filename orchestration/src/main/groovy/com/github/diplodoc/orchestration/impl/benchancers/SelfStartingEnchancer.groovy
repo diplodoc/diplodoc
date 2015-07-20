@@ -15,7 +15,7 @@ class SelfStartingEnchancer implements GroovyBindingEnhancer {
         binding._IS_SELF_STARTING_ = false
 
         binding.start = { Map params ->
-            def period = params.remove 'every'
+            long period = params.remove 'every'
             binding._IS_SELF_STARTING_ = binding._IS_SELF_STARTING_ || (period >= 0)
         }
 

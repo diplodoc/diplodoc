@@ -42,6 +42,12 @@ class ProcessInteractorImpl implements ProcessInteractor {
                 .each({ Process process -> processRunner.start(process, params) })
     }
 
+    @Override
+    void repeatOnce(Process process, long afterMillis) {
+        Date startAt = new Date(System.currentTimeMillis() + afterMillis)
+        processRunner.schedule(process, startAt)
+    }
+
     private boolean isSelfStarting(Process process) {
         String selfStartingDefinition = process.definition.readLines().findAll({ String line -> line.startsWith('start') }).join('\n')
         Binding selfStartingBinding = groovyBindings.selfStartingBinding(process)

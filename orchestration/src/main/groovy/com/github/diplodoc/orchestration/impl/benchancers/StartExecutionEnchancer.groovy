@@ -1,7 +1,7 @@
 package com.github.diplodoc.orchestration.impl.benchancers
 
-import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
 import com.github.diplodoc.orchestration.GroovyBindingEnhancer
+import com.github.diplodoc.orchestration.ProcessInteractor
 
 import java.util.concurrent.TimeUnit
 
@@ -10,9 +10,13 @@ import java.util.concurrent.TimeUnit
  */
 class StartExecutionEnchancer implements GroovyBindingEnhancer {
 
+    ProcessInteractor processInteractor
+
     @Override
     Binding enhance(Binding binding, Map context) {
         binding.start = {
+            long period = params.remove 'every'
+            processInteractor.repeatOnce(context.process, period)
             assert null : 'not implemented yet'
         }
 

@@ -48,7 +48,7 @@ class GroovyBindingsImpl implements GroovyBindings {
             new EmitExecutionEnchancer(processInteractor: processInteractor),
             new ListenExecutionEnchancer(),
             new WaitingExecutionEnchancer(),
-            new StartExecutionEnchancer()
+            new StartExecutionEnchancer(processInteractor: processInteractor)
         ]
 
         selfStartingEnchancers = [
