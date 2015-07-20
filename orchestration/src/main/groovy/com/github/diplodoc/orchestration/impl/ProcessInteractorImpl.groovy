@@ -43,7 +43,7 @@ class ProcessInteractorImpl implements ProcessInteractor {
     }
 
     private boolean isSelfStarting(Process process) {
-        String selfStartingDefinition = process.definition.readLines().findAll({ String line -> line.startsWith('start') }).first()
+        String selfStartingDefinition = process.definition.readLines().findAll({ String line -> line.startsWith('start') }).join('\n')
         Binding selfStartingBinding = groovyBindings.selfStartingBinding(process)
 
         new GroovyShell(selfStartingBinding).evaluate(selfStartingDefinition)
@@ -53,12 +53,19 @@ class ProcessInteractorImpl implements ProcessInteractor {
 
     private boolean isListeningTo(Process source, Process destination) {
         String isListeningToDefinition = destination.definition.readLines().findAll({ String line -> line.startsWith('listen') }).join('\n')
+        Binding isListeningToBinding = groovyBindings.isListeningToBinding(isListeningToDefinition, source)
 
-        new GroovyShell(groovyBindings.isListeningToBinding(isListeningToDefinition)).evaluate(isListeningToDefinition)
-        assert null : 'not implemented yet'
+        new GroovyShell(isListeningToBinding).evaluate(isListeningToDefinition)
+
+        return isListeningToBinding._IS_LISTENING_
     }
 
     private boolean isWaitingFor(String event, Process destination) {
-        assert null : 'not implemented yet'
+        String isWaitingForDefinition = destination.definition.readLines().findAll({ String line -> line.startsWith('waiting') }).join('\n')
+        Binding isWaitingForBinding = groovyBindings.isWaitingForBinding(isWaitingForDefinition, event)
+
+        new GroovyShell(isWaitingForBinding).evaluate(isWaitingForDefinition)
+
+        return isWaitingForBinding._IS_WAITING_FOR_
     }
 }
