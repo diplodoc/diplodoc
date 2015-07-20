@@ -14,10 +14,9 @@ class StartExecutionEnchancer implements GroovyBindingEnhancer {
 
     @Override
     Binding enhance(Binding binding, Map context) {
-        binding.start = {
+        binding.start = { Map params ->
             long period = params.remove 'every'
             processInteractor.repeatOnce(context.process, period)
-            assert null : 'not implemented yet'
         }
 
         Integer.metaClass.propertyMissing = { String name ->
