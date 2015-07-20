@@ -9,6 +9,7 @@ import com.github.diplodoc.orchestration.impl.benchancers.EmitExecutionEnchancer
 import com.github.diplodoc.orchestration.impl.benchancers.GetExecutionEnchancer
 import com.github.diplodoc.orchestration.impl.benchancers.InputExecutionEnchancer
 import com.github.diplodoc.orchestration.impl.benchancers.InputParametersExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benchancers.IsListeningToEnchancher
 import com.github.diplodoc.orchestration.impl.benchancers.ListenExecutionEnchancer
 import com.github.diplodoc.orchestration.impl.benchancers.OutputExecutionEnchancer
 import com.github.diplodoc.orchestration.impl.benchancers.PostExecutionEnchancer
@@ -53,7 +54,9 @@ class GroovyBindingsImpl implements GroovyBindings {
             new SelfStartingEnchancer()
         ]
 
-        isListeningToEnchancers = []
+        isListeningToEnchancers = [
+            new IsListeningToEnchancher()
+        ]
 
         isWaitingForEnchancers = []
     }

@@ -1,6 +1,5 @@
 package com.github.diplodoc.orchestration.impl.benchancers
 
-import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
 import com.github.diplodoc.orchestration.GroovyBindingEnhancer
 
 /**
