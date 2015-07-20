@@ -12,9 +12,11 @@ class SelfStartingEnchancer implements GroovyBindingEnhancer {
 
     @Override
     Binding enhance(Binding binding, Process process, Map input, ProcessRun processRun) {
+        binding._IS_SELF_STARTING_ = false
+
         binding.start = { Map params ->
             def period = params.remove 'every'
-            return (period >= 0)
+            binding._IS_SELF_STARTING_ = binding._IS_SELF_STARTING_ || (period >= 0)
         }
 
         Integer.metaClass.propertyMissing = {String name ->

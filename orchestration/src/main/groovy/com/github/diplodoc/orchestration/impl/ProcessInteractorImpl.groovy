@@ -44,9 +44,11 @@ class ProcessInteractorImpl implements ProcessInteractor {
 
     private boolean isSelfStarting(Process process) {
         String selfStartingDefinition = process.definition.readLines().findAll({ String line -> line.startsWith('start') }).first()
+        Binding selfStartingBinding = groovyBindings.selfStartingBinding(process)
 
-        new GroovyShell(groovyBindings.selfStartingBinding(process)).evaluate(selfStartingDefinition)
-        assert null : 'not implemented yet'
+        new GroovyShell(selfStartingBinding).evaluate(selfStartingDefinition)
+
+        return selfStartingBinding._IS_SELF_STARTING_
     }
 
     private boolean isListeningTo(Process source, Process destination) {
