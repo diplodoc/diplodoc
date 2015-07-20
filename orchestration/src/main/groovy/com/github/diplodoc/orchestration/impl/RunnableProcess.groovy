@@ -23,8 +23,12 @@ class RunnableProcess implements Runnable {
     @Override
     void run() {
         try {
+            log.info "process ${processRun} started"
             processRun = processRunManager.markJustStarted(processRun)
+
             execute()
+
+            log.info "process ${processRun} succeed"
             processRun = processRunManager.markJustSucceed(processRun)
         } catch (e) {
             log.error "process ${processRun} failed", e
