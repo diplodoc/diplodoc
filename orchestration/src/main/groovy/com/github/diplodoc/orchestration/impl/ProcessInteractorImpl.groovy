@@ -5,16 +5,22 @@ import com.github.diplodoc.domain.repository.mongodb.orchestration.ProcessReposi
 import com.github.diplodoc.orchestration.GroovyBindings
 import com.github.diplodoc.orchestration.ProcessInteractor
 import com.github.diplodoc.orchestration.ProcessRunner
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 
 /**
  * @author yaroslav.yermilov
  */
+@Component
 class ProcessInteractorImpl implements ProcessInteractor {
 
+    @Autowired
     ProcessRunner processRunner
 
+    @Autowired
     ProcessRepository processRepository
 
+    @Autowired
     GroovyBindings groovyBindings
 
     @Override

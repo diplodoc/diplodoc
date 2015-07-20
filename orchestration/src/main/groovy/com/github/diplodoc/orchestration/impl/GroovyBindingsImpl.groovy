@@ -18,6 +18,8 @@ import com.github.diplodoc.orchestration.impl.benchancers.SelfStartingEnchancer
 import com.github.diplodoc.orchestration.impl.benchancers.SendExecutionEnchancer
 import com.github.diplodoc.orchestration.impl.benchancers.StartExecutionEnchancer
 import com.github.diplodoc.orchestration.impl.benchancers.WaitingExecutionEnchancer
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 
 import javax.annotation.PostConstruct
@@ -25,6 +27,7 @@ import javax.annotation.PostConstruct
 /**
  * @author yaroslav.yermilov
  */
+@Component
 class GroovyBindingsImpl implements GroovyBindings {
 
     private List<GroovyBindingEnhancer> executionEnchancers
@@ -32,8 +35,10 @@ class GroovyBindingsImpl implements GroovyBindings {
     private List<GroovyBindingEnhancer> isListeningToEnchancers
     private List<GroovyBindingEnhancer> isWaitingForEnchancers
 
+    @Autowired
     RestTemplate restTemplate
 
+    @Autowired
     ProcessInteractor processInteractor
 
     @PostConstruct

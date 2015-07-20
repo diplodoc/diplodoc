@@ -5,14 +5,18 @@ import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
 import com.github.diplodoc.domain.mongodb.orchestration.ProcessRunParameter
 import com.github.diplodoc.domain.repository.mongodb.orchestration.ProcessRunRepository
 import com.github.diplodoc.orchestration.ProcessRunManager
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 
 import java.time.LocalDateTime
 
 /**
  * @author yaroslav.yermilov
  */
+@Component
 class ProcessRunManagerImpl implements ProcessRunManager {
 
+    @Autowired
     ProcessRunRepository processRunRepository
 
     @Override

@@ -7,7 +7,9 @@ import com.github.diplodoc.orchestration.ProcessInteractor
 import com.github.diplodoc.orchestration.ProcessRunManager
 import com.github.diplodoc.orchestration.ProcessRunner
 import groovy.util.logging.Slf4j
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
+import org.springframework.stereotype.Component
 
 import javax.annotation.PostConstruct
 
@@ -15,14 +17,19 @@ import javax.annotation.PostConstruct
  * @author yaroslav.yermilov
  */
 @Slf4j
+@Component
 class LocalThreadsProcessRunner implements ProcessRunner {
 
+    @Autowired
     ThreadPoolTaskScheduler scheduler
 
+    @Autowired
     ProcessInteractor processInteractor
 
+    @Autowired
     ProcessRunManager processRunManager
 
+    @Autowired
     GroovyBindings groovyBindings
 
     @PostConstruct
