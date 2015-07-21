@@ -1,10 +1,7 @@
 package com.github.diplodoc.orchestration.config
 
-import com.github.diplodoc.domain.repository.mongodb.orchestration.ProcessRepository
-import com.github.diplodoc.domain.repository.mongodb.orchestration.ProcessRunRepository
-import com.github.diplodoc.orchestration.old.OldOrchestratorImpl
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
-import spock.lang.Ignore
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
+import org.springframework.web.client.RestTemplate
 import spock.lang.Specification
 
 /**
@@ -14,31 +11,20 @@ class OrchestrationConfigurationSpec extends Specification {
 
     OrchestrationConfiguration orchestrationConfiguration = new OrchestrationConfiguration()
 
-    @Ignore
-    def 'ThreadPoolTaskExecutor threadPool()'() {
+    def 'ThreadPoolTaskScheduler scheduler()'() {
         when:
-            def actual = orchestrationConfiguration.threadPool()
+            def actual = orchestrationConfiguration.scheduler()
 
         then:
-            actual instanceof ThreadPoolTaskExecutor
-            actual.corePoolSize == 5
-            actual.maxPoolSize == 20
+            actual instanceof ThreadPoolTaskScheduler
+            actual.poolSize == 5
     }
 
-    @Ignore
-    def 'Orchestrator orchestrator(ThreadPoolTaskExecutor threadPool, ProcessRepository processRepository, ProcessRunRepository processRunRepository)'() {
-        given:
-            ThreadPoolTaskExecutor threadPoolTaskExecutor = Mock(ThreadPoolTaskExecutor)
-            ProcessRepository processRepository = Mock(ProcessRepository)
-            ProcessRunRepository processRunRepository = Mock(ProcessRunRepository)
-
+    def 'RestTemplate restTemplate()'() {
         when:
-            def actual = orchestrationConfiguration.orchestrator(threadPoolTaskExecutor, processRepository, processRunRepository)
+            def actual = orchestrationConfiguration.restTemplate()
 
         then:
-            actual instanceof OldOrchestratorImpl
-            actual.threadPool == threadPoolTaskExecutor
-            actual.processRepository == processRepository
-            actual.processRunRepository == processRunRepository
+            actual instanceof RestTemplate
     }
 }
