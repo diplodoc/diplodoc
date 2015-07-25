@@ -1,4 +1,4 @@
-package com.github.diplodoc.orchestration.impl.benchancers
+package com.github.diplodoc.orchestration.impl.benhancers
 
 import com.github.diplodoc.orchestration.GroovyBindingEnhancer
 

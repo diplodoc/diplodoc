@@ -1,4 +1,4 @@
-package com.github.diplodoc.orchestration.impl.benchancers
+package com.github.diplodoc.orchestration.impl.benhancers
 
 import com.github.diplodoc.orchestration.GroovyBindingEnhancer
 import com.github.diplodoc.orchestration.ProcessInteractor
@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 /**
  * @author yaroslav.yermilov
  */
-class StartExecutionEnchancer implements GroovyBindingEnhancer {
+class StartExecutionEnhancer implements GroovyBindingEnhancer {
 
     ProcessInteractor processInteractor
 

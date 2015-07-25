@@ -1,4 +1,4 @@
-package com.github.diplodoc.orchestration.impl.benchancers
+package com.github.diplodoc.orchestration.impl.benhancers
 
 import com.github.diplodoc.domain.mongodb.orchestration.Process
 import com.github.diplodoc.orchestration.GroovyBindingEnhancer
@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 /**
  * @author yaroslav.yermilov
  */
-class IsListeningToEnchancher implements GroovyBindingEnhancer {
+class IsListeningToEnhancer implements GroovyBindingEnhancer {
 
     @Override
     Binding enhance(Binding binding, Map context) {

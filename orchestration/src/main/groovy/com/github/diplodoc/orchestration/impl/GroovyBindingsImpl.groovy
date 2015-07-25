@@ -5,19 +5,19 @@ import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
 import com.github.diplodoc.orchestration.GroovyBindingEnhancer
 import com.github.diplodoc.orchestration.GroovyBindings
 import com.github.diplodoc.orchestration.ProcessInteractor
-import com.github.diplodoc.orchestration.impl.benchancers.EmitExecutionEnchancer
-import com.github.diplodoc.orchestration.impl.benchancers.GetExecutionEnchancer
-import com.github.diplodoc.orchestration.impl.benchancers.InputExecutionEnchancer
-import com.github.diplodoc.orchestration.impl.benchancers.InputParametersExecutionEnhancer
-import com.github.diplodoc.orchestration.impl.benchancers.IsListeningToEnchancher
-import com.github.diplodoc.orchestration.impl.benchancers.IsWaitingForEnchancer
-import com.github.diplodoc.orchestration.impl.benchancers.ListenExecutionEnchancer
-import com.github.diplodoc.orchestration.impl.benchancers.OutputExecutionEnchancer
-import com.github.diplodoc.orchestration.impl.benchancers.PostExecutionEnchancer
-import com.github.diplodoc.orchestration.impl.benchancers.SelfStartingEnchancer
-import com.github.diplodoc.orchestration.impl.benchancers.SendExecutionEnchancer
-import com.github.diplodoc.orchestration.impl.benchancers.StartExecutionEnchancer
-import com.github.diplodoc.orchestration.impl.benchancers.WaitingExecutionEnchancer
+import com.github.diplodoc.orchestration.impl.benhancers.EmitExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.GetExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.InputExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.InputParametersExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.IsListeningToEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.IsWaitingForEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.ListenExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.OutputExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.PostExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.SelfStartingEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.SendExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.StartExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.WaitingExecutionEnhancer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
@@ -30,10 +30,10 @@ import javax.annotation.PostConstruct
 @Component
 class GroovyBindingsImpl implements GroovyBindings {
 
-    List<GroovyBindingEnhancer> executionEnchancers
-    List<GroovyBindingEnhancer> selfStartingEnchancers
-    List<GroovyBindingEnhancer> isListeningToEnchancers
-    List<GroovyBindingEnhancer> isWaitingForEnchancers
+    List<GroovyBindingEnhancer> executionEnhancers
+    List<GroovyBindingEnhancer> selfStartingEnhancers
+    List<GroovyBindingEnhancer> isListeningToEnhancers
+    List<GroovyBindingEnhancer> isWaitingForEnhancers
 
     @Autowired
     RestTemplate restTemplate
@@ -43,56 +43,56 @@ class GroovyBindingsImpl implements GroovyBindings {
 
     @PostConstruct
     void init() {
-        executionEnchancers = [
+        executionEnhancers = [
             new InputParametersExecutionEnhancer(),
-            new InputExecutionEnchancer(),
-            new GetExecutionEnchancer(restTemplate: restTemplate),
-            new PostExecutionEnchancer(restTemplate: restTemplate),
-            new SendExecutionEnchancer(processInteractor: processInteractor),
-            new OutputExecutionEnchancer(processInteractor: processInteractor),
-            new EmitExecutionEnchancer(processInteractor: processInteractor),
-            new ListenExecutionEnchancer(),
-            new WaitingExecutionEnchancer(),
-            new StartExecutionEnchancer(processInteractor: processInteractor)
+            new InputExecutionEnhancer(),
+            new GetExecutionEnhancer(restTemplate: restTemplate),
+            new PostExecutionEnhancer(restTemplate: restTemplate),
+            new SendExecutionEnhancer(processInteractor: processInteractor),
+            new OutputExecutionEnhancer(processInteractor: processInteractor),
+            new EmitExecutionEnhancer(processInteractor: processInteractor),
+            new ListenExecutionEnhancer(),
+            new WaitingExecutionEnhancer(),
+            new StartExecutionEnhancer(processInteractor: processInteractor)
         ]
 
-        selfStartingEnchancers = [
-            new SelfStartingEnchancer()
+        selfStartingEnhancers = [
+            new SelfStartingEnhancer()
         ]
 
-        isListeningToEnchancers = [
-            new IsListeningToEnchancher()
+        isListeningToEnhancers = [
+            new IsListeningToEnhancer()
         ]
 
-        isWaitingForEnchancers = [
-            new IsWaitingForEnchancer()
+        isWaitingForEnhancers = [
+            new IsWaitingForEnhancer()
         ]
     }
 
     @Override
     Binding executionBinding(Process process, Map input, ProcessRun processRun) {
-        enchance(executionEnchancers, [ process: process, input: input, processRun: processRun ])
+        enhance(executionEnhancers, [ process: process, input: input, processRun: processRun ])
     }
 
     @Override
     Binding selfStartingBinding(Process process) {
-        enchance(selfStartingEnchancers, [ process: process ])
+        enhance(selfStartingEnhancers, [ process: process ])
     }
 
     @Override
     Binding isListeningToBinding(Process source, Process destination) {
-        enchance(isListeningToEnchancers, [ source: source, destination: destination ])
+        enhance(isListeningToEnhancers, [ source: source, destination: destination ])
     }
 
     @Override
     Binding isWaitingForBinding(String event, Process destination) {
-        enchance(isWaitingForEnchancers, [ event: event, destination: destination ])
+        enhance(isWaitingForEnhancers, [ event: event, destination: destination ])
     }
 
-    Binding enchance(List<GroovyBindingEnhancer> enchancers, Map context) {
+    Binding enhance(List<GroovyBindingEnhancer> enhancers, Map context) {
         Binding binding = new Binding()
 
-        enchancers.each { enhancer -> binding = enhancer.enhance(binding, context) }
+        enhancers.each { enhancer -> binding = enhancer.enhance(binding, context) }
 
         return binding
     }

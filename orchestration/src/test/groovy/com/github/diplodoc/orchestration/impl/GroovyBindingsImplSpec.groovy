@@ -4,19 +4,19 @@ import com.github.diplodoc.domain.mongodb.orchestration.Process
 import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
 import com.github.diplodoc.orchestration.GroovyBindingEnhancer
 import com.github.diplodoc.orchestration.ProcessInteractor
-import com.github.diplodoc.orchestration.impl.benchancers.EmitExecutionEnchancer
-import com.github.diplodoc.orchestration.impl.benchancers.GetExecutionEnchancer
-import com.github.diplodoc.orchestration.impl.benchancers.InputExecutionEnchancer
-import com.github.diplodoc.orchestration.impl.benchancers.InputParametersExecutionEnhancer
-import com.github.diplodoc.orchestration.impl.benchancers.IsListeningToEnchancher
-import com.github.diplodoc.orchestration.impl.benchancers.IsWaitingForEnchancer
-import com.github.diplodoc.orchestration.impl.benchancers.ListenExecutionEnchancer
-import com.github.diplodoc.orchestration.impl.benchancers.OutputExecutionEnchancer
-import com.github.diplodoc.orchestration.impl.benchancers.PostExecutionEnchancer
-import com.github.diplodoc.orchestration.impl.benchancers.SelfStartingEnchancer
-import com.github.diplodoc.orchestration.impl.benchancers.SendExecutionEnchancer
-import com.github.diplodoc.orchestration.impl.benchancers.StartExecutionEnchancer
-import com.github.diplodoc.orchestration.impl.benchancers.WaitingExecutionEnchancer
+import com.github.diplodoc.orchestration.impl.benhancers.EmitExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.GetExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.InputExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.InputParametersExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.IsListeningToEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.IsWaitingForEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.ListenExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.OutputExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.PostExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.SelfStartingEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.SendExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.StartExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.WaitingExecutionEnhancer
 import org.springframework.web.client.RestTemplate
 import spock.lang.Specification
 
@@ -39,26 +39,26 @@ class GroovyBindingsImplSpec extends Specification {
             groovyBindings.init()
 
         then:
-            groovyBindings.executionEnchancers.size() == 10
-            groovyBindings.executionEnchancers.find({ it instanceof InputParametersExecutionEnhancer }) != null
-            groovyBindings.executionEnchancers.find({ it instanceof InputExecutionEnchancer }) != null
-            groovyBindings.executionEnchancers.find({ it instanceof GetExecutionEnchancer && it.restTemplate == restTemplate }) != null
-            groovyBindings.executionEnchancers.find({ it instanceof PostExecutionEnchancer && it.restTemplate == restTemplate }) != null
-            groovyBindings.executionEnchancers.find({ it instanceof SendExecutionEnchancer && it.processInteractor == processInteractor }) != null
-            groovyBindings.executionEnchancers.find({ it instanceof OutputExecutionEnchancer && it.processInteractor == processInteractor }) != null
-            groovyBindings.executionEnchancers.find({ it instanceof EmitExecutionEnchancer && it.processInteractor == processInteractor }) != null
-            groovyBindings.executionEnchancers.find({ it instanceof ListenExecutionEnchancer }) != null
-            groovyBindings.executionEnchancers.find({ it instanceof WaitingExecutionEnchancer }) != null
-            groovyBindings.executionEnchancers.find({ it instanceof StartExecutionEnchancer && it.processInteractor == processInteractor }) != null
+            groovyBindings.executionEnhancers.size() == 10
+            groovyBindings.executionEnhancers.find({ it instanceof InputParametersExecutionEnhancer }) != null
+            groovyBindings.executionEnhancers.find({ it instanceof InputExecutionEnhancer }) != null
+            groovyBindings.executionEnhancers.find({ it instanceof GetExecutionEnhancer && it.restTemplate == restTemplate }) != null
+            groovyBindings.executionEnhancers.find({ it instanceof PostExecutionEnhancer && it.restTemplate == restTemplate }) != null
+            groovyBindings.executionEnhancers.find({ it instanceof SendExecutionEnhancer && it.processInteractor == processInteractor }) != null
+            groovyBindings.executionEnhancers.find({ it instanceof OutputExecutionEnhancer && it.processInteractor == processInteractor }) != null
+            groovyBindings.executionEnhancers.find({ it instanceof EmitExecutionEnhancer && it.processInteractor == processInteractor }) != null
+            groovyBindings.executionEnhancers.find({ it instanceof ListenExecutionEnhancer }) != null
+            groovyBindings.executionEnhancers.find({ it instanceof WaitingExecutionEnhancer }) != null
+            groovyBindings.executionEnhancers.find({ it instanceof StartExecutionEnhancer && it.processInteractor == processInteractor }) != null
 
-            groovyBindings.selfStartingEnchancers.size() == 1
-            groovyBindings.selfStartingEnchancers.find({ it instanceof SelfStartingEnchancer }) != null
+            groovyBindings.selfStartingEnhancers.size() == 1
+            groovyBindings.selfStartingEnhancers.find({ it instanceof SelfStartingEnhancer }) != null
 
-            groovyBindings.isListeningToEnchancers.size() == 1
-            groovyBindings.isListeningToEnchancers.find({ it instanceof IsListeningToEnchancher }) != null
+            groovyBindings.isListeningToEnhancers.size() == 1
+            groovyBindings.isListeningToEnhancers.find({ it instanceof IsListeningToEnhancer }) != null
 
-            groovyBindings.isWaitingForEnchancers.size() == 1
-            groovyBindings.isWaitingForEnchancers.find({ it instanceof IsWaitingForEnchancer }) != null
+            groovyBindings.isWaitingForEnhancers.size() == 1
+            groovyBindings.isWaitingForEnhancers.find({ it instanceof IsWaitingForEnhancer }) != null
     }
 
     def 'Binding executionBinding(Process process, Map input, ProcessRun processRun)'() {
@@ -66,66 +66,66 @@ class GroovyBindingsImplSpec extends Specification {
             Process process = Mock(Process)
             Map input = Mock(Map)
             ProcessRun processRun = Mock(ProcessRun)
-            List executionEnchancers = Mock(List)
+            List executionEnhancers = Mock(List)
 
-            groovyBindings.executionEnchancers = executionEnchancers
+            groovyBindings.executionEnhancers = executionEnhancers
 
         when:
             groovyBindings.executionBinding(process, input, processRun)
 
         then:
-            1 * groovyBindings.enchance(executionEnchancers, [ process: process, input: input, processRun: processRun ]) >> null
+            1 * groovyBindings.enhance(executionEnhancers, [ process: process, input: input, processRun: processRun ]) >> null
     }
 
     def 'Binding selfStartingBinding(Process process)'() {
         given:
             Process process = Mock(Process)
-            List selfStartingEnchancers = Mock(List)
+            List selfStartingEnhancers = Mock(List)
 
-            groovyBindings.selfStartingEnchancers = selfStartingEnchancers
+            groovyBindings.selfStartingEnhancers = selfStartingEnhancers
 
         when:
             groovyBindings.selfStartingBinding(process)
 
         then:
-            1 * groovyBindings.enchance(selfStartingEnchancers, [ process: process ]) >> null
+            1 * groovyBindings.enhance(selfStartingEnhancers, [ process: process ]) >> null
     }
 
     def 'Binding isListeningToBinding(Process source, Process destination)'() {
         given:
             Process source = Mock(Process)
             Process destination = Mock(Process)
-            List isListeningToEnchancers = Mock(List)
+            List isListeningToEnhancers = Mock(List)
 
-            groovyBindings.isListeningToEnchancers = isListeningToEnchancers
+            groovyBindings.isListeningToEnhancers = isListeningToEnhancers
 
         when:
             groovyBindings.isListeningToBinding(source, destination)
 
         then:
-        1 * groovyBindings.enchance(isListeningToEnchancers, [ source: source, destination: destination ]) >> null
+            1 * groovyBindings.enhance(isListeningToEnhancers, [ source: source, destination: destination ]) >> null
     }
 
     def 'Binding isWaitingForBinding(String event, Process destination)'() {
         given:
             Process destination = Mock(Process)
             String event = 'event'
-            List isWaitingForEnchancers = Mock(List)
+            List isWaitingForEnhancers = Mock(List)
 
-            groovyBindings.isWaitingForEnchancers = isWaitingForEnchancers
+            groovyBindings.isWaitingForEnhancers = isWaitingForEnhancers
 
         when:
             groovyBindings.isWaitingForBinding(event, destination)
 
         then:
-            1 * groovyBindings.enchance(isWaitingForEnchancers, [ event: event, destination: destination ]) >> null
+            1 * groovyBindings.enhance(isWaitingForEnhancers, [ event: event, destination: destination ]) >> null
     }
 
-    def 'Binding enchance(List<GroovyBindingEnhancer> enchancers, Map context)'() {
+    def 'Binding enhance(List<GroovyBindingEnhancer> enhancers, Map context)'() {
         given:
             GroovyBindingEnhancer enhancer1 = Mock(GroovyBindingEnhancer)
             GroovyBindingEnhancer enhancer2 = Mock(GroovyBindingEnhancer)
-            List enchancers = [ enhancer1, enhancer2 ]
+            List enhancers = [ enhancer1, enhancer2 ]
 
             Map context = Mock(Map)
 
@@ -133,7 +133,7 @@ class GroovyBindingsImplSpec extends Specification {
             Binding binding2 = Mock(Binding)
 
         when:
-            def actual = groovyBindings.enchance(enchancers, context)
+            def actual = groovyBindings.enhance(enhancers, context)
 
         then:
             1 * enhancer1.enhance(_, context) >> binding1

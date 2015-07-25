@@ -1,4 +1,4 @@
-package com.github.diplodoc.orchestration.impl.benchancers
+package com.github.diplodoc.orchestration.impl.benhancers
 
 import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
 import com.github.diplodoc.orchestration.GroovyBindingEnhancer
@@ -7,7 +7,7 @@ import com.github.diplodoc.orchestration.ProcessInteractor
 /**
  * @author yaroslav.yermilov
  */
-class SendExecutionEnchancer implements GroovyBindingEnhancer {
+class SendExecutionEnhancer implements GroovyBindingEnhancer {
 
     ProcessInteractor processInteractor
 

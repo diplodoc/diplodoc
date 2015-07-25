@@ -1,11 +1,11 @@
-package com.github.diplodoc.orchestration.impl.benchancers
+package com.github.diplodoc.orchestration.impl.benhancers
 
 import com.github.diplodoc.orchestration.GroovyBindingEnhancer
 
 /**
  * @author yaroslav.yermilov
  */
-class WaitingExecutionEnchancer implements GroovyBindingEnhancer {
+class WaitingExecutionEnhancer implements GroovyBindingEnhancer {
 
     @Override
     Binding enhance(Binding binding, Map context) {

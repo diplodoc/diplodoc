@@ -1,11 +1,11 @@
-package com.github.diplodoc.orchestration.impl.benchancers
+package com.github.diplodoc.orchestration.impl.benhancers
 
 import com.github.diplodoc.orchestration.GroovyBindingEnhancer
 
 /**
  * @author yaroslav.yermilov
  */
-class InputExecutionEnchancer implements GroovyBindingEnhancer {
+class InputExecutionEnhancer implements GroovyBindingEnhancer {
 
     @Override
     Binding enhance(Binding binding, Map context) {
