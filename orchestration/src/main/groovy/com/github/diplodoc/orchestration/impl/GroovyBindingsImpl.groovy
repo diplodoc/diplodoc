@@ -30,10 +30,10 @@ import javax.annotation.PostConstruct
 @Component
 class GroovyBindingsImpl implements GroovyBindings {
 
-    private List<GroovyBindingEnhancer> executionEnchancers
-    private List<GroovyBindingEnhancer> selfStartingEnchancers
-    private List<GroovyBindingEnhancer> isListeningToEnchancers
-    private List<GroovyBindingEnhancer> isWaitingForEnchancers
+    List<GroovyBindingEnhancer> executionEnchancers
+    List<GroovyBindingEnhancer> selfStartingEnchancers
+    List<GroovyBindingEnhancer> isListeningToEnchancers
+    List<GroovyBindingEnhancer> isWaitingForEnchancers
 
     @Autowired
     RestTemplate restTemplate
@@ -89,12 +89,11 @@ class GroovyBindingsImpl implements GroovyBindings {
         enchance(isWaitingForEnchancers, [ event: event, destination: destination ])
     }
 
-    private Binding enchance(List<GroovyBindingEnhancer> enchancers, Map context) {
+    Binding enchance(List<GroovyBindingEnhancer> enchancers, Map context) {
         Binding binding = new Binding()
 
         enchancers.each { enhancer -> binding = enhancer.enhance(binding, context) }
 
         return binding
-
     }
 }
