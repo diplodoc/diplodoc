@@ -3,6 +3,7 @@ package com.github.diplodoc.modules.client
 import com.github.diplodoc.domain.mongodb.data.Doc
 import com.github.diplodoc.domain.repository.mongodb.data.DocRepository
 import com.github.diplodoc.modules.services.AuditService
+import com.github.diplodoc.modules.services.SecurityService
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
@@ -32,21 +33,29 @@ class Feeder {
     @Autowired
     AuditService auditService
 
+    @Autowired
+    SecurityService securityService
+
     @RequestMapping(value = '/feed', method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody def feed(@RequestParam(value = 'page', required = false) Integer page, @RequestParam(value = 'size', required = false) Integer size) {
+    @ResponseBody def feed(@RequestParam(value = 'id_token') String idToken, @RequestParam(value = 'page', required = false) Integer page, @RequestParam(value = 'size', required = false) Integer size) {
         auditService.runMethodUnderAudit('client.Feeder', 'feed') { module, moduleMethod, moduleMethodRun ->
-            moduleMethodRun.parameters = [ 'page': page, 'size': size ]
+            moduleMethodRun.parameters = [ 'page': page, 'size': size, 'idToken': idToken ]
 
-            List<Doc> docs = docRepository.findAll(new PageRequest(page?:0, size?:DEFAULT_SIZE, SORT)).content
+            def feed = null
+            def user = securityService.authenticate(idToken)
 
-            def feed = docs.collect { Doc doc ->
-                [   'id'         : doc.id.toString(),
-                    'url'        : doc.uri,
-                    'title'      : doc.title,
-                    'time'       : doc.publishTime,
-                    'description': doc.description
-                ]
+            if (user) {
+                List<Doc> docs = docRepository.findAll(new PageRequest(page?:0, size?:DEFAULT_SIZE, SORT)).content
+
+                feed = docs.collect { Doc doc ->
+                    [   'id'         : doc.id.toString(),
+                        'url'        : doc.uri,
+                        'title'      : doc.title,
+                        'time'       : doc.publishTime,
+                        'description': doc.description
+                    ]
+                }
             }
 
             [ 'result': feed, 'moduleMethodRun': moduleMethodRun ]

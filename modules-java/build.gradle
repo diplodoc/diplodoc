@@ -16,6 +16,8 @@ dependencies {
     compile dependency.spring.web
     compile dependency.spring.webmvc
 
+    compile 'com.google.api-client:google-api-client:1.19.1'
+
     compile dependency.jackson.core
     compile dependency.jackson.databind
 
