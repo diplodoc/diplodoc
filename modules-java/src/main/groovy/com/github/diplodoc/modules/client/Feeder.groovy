@@ -38,24 +38,30 @@ class Feeder {
 
     @RequestMapping(value = '/feed', method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody def feed(@RequestParam(value = 'id_token') String idToken, @RequestParam(value = 'page', required = false) Integer page, @RequestParam(value = 'size', required = false) Integer size) {
+    @ResponseBody def feed( @RequestParam(value = 'auth_provider', required = false) String authProvider,
+                            @RequestParam(value = 'auth_type', required = false) String authType,
+                            @RequestParam(value = 'auth_token', required = false) String authToken,
+                            @RequestParam(value = 'page', required = false) Integer page,
+                            @RequestParam(value = 'size', required = false) Integer size) {
+
+        def user = securityService.authenticate(authProvider, authType, authToken)
+
+        if (!user) {
+            return []
+        }
+
         auditService.runMethodUnderAudit('client.Feeder', 'feed') { module, moduleMethod, moduleMethodRun ->
-            moduleMethodRun.parameters = [ 'page': page, 'size': size, 'idToken': idToken ]
+            moduleMethodRun.parameters = [ 'page': page, 'size': size, 'userId': user.id.toString() ]
 
-            def feed = null
-            def user = securityService.authenticate(idToken)
+            List<Doc> docs = docRepository.findAll(new PageRequest(page?:0, size?:DEFAULT_SIZE, SORT)).content
 
-            if (user) {
-                List<Doc> docs = docRepository.findAll(new PageRequest(page?:0, size?:DEFAULT_SIZE, SORT)).content
-
-                feed = docs.collect { Doc doc ->
-                    [   'id'         : doc.id.toString(),
-                        'url'        : doc.uri,
-                        'title'      : doc.title,
-                        'time'       : doc.publishTime,
-                        'description': doc.description
-                    ]
-                }
+            def feed = docs.collect { Doc doc ->
+                [   'id'         : doc.id.toString(),
+                    'url'        : doc.uri,
+                    'title'      : doc.title,
+                    'time'       : doc.publishTime,
+                    'description': doc.description
+                ]
             }
 
             [ 'result': feed, 'moduleMethodRun': moduleMethodRun ]
