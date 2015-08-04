@@ -10,4 +10,6 @@ import org.springframework.data.mongodb.repository.MongoRepository
 interface UserRepository extends MongoRepository<User, ObjectId> {
 
     User findOneByGoogleId(String googleId)
+
+    User findOneByGoogleSubject(String googleSubject)
 }

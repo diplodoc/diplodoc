@@ -16,4 +16,6 @@ class User {
     ObjectId id
 
     String googleId
+
+    String googleSubject
 }

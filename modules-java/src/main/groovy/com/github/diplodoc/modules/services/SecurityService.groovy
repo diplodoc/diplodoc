@@ -9,6 +9,8 @@ import com.google.api.client.http.HttpTransport
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.JsonFactory
 import com.google.api.client.json.jackson2.JacksonFactory
+import com.google.api.services.plus.Plus
+import com.google.api.services.plus.model.Person
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -55,11 +57,11 @@ class SecurityService {
                 GoogleIdToken.Payload payload = idToken.getPayload()
                 log.info "Receive payload ${payload.getSubject()}"
 
-                User user = userRepository.findOneByGoogleId(payload.getSubject())
+                User user = userRepository.findOneByGoogleSubject(payload.getSubject())
                 log.info "Corresponding user ${user}"
 
                 if (!user) {
-                    user = new User(googleId: payload.getSubject())
+                    user = new User(googleSubject: payload.getSubject())
                     userRepository.save user
 
                     log.info "Create new user ${user}"
@@ -78,11 +80,23 @@ class SecurityService {
 
     def authWithGoogleAccessToken(String accessToken) {
         try {
-            GoogleCredential credential = new GoogleCredential().setAccessToken(accessToken);
+            GoogleCredential credential = new GoogleCredential().setAccessToken(accessToken)
+            Plus plus = new Plus.Builder(transport, jsonFactory, credential).build()
 
-            log.info "Receive serviceAccountId:${credential.serviceAccountId}, serviceAccountPrivateKey:${credential.serviceAccountPrivateKey}, serviceAccountPrivateKeyId:${credential.serviceAccountPrivateKeyId}"
+            Person profile = plus.people().get('me').execute()
+            log.info "Receive profile id:${profile.getId()}"
 
-            return null
+            User user = userRepository.findOneByGoogleId(profile.getId())
+            log.info "Corresponding user ${user}"
+
+            if (!user) {
+                user = new User(googleId: profile.getId())
+                userRepository.save user
+
+                log.info "Create new user ${user}"
+            }
+
+            return user
         } catch (e) {
             log.info "Exception during authentication ${e}", e
             return null
