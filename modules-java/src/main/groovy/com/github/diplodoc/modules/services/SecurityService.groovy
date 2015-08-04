@@ -57,11 +57,11 @@ class SecurityService {
                 GoogleIdToken.Payload payload = idToken.getPayload()
                 log.info "Receive payload ${payload.getSubject()}"
 
-                User user = userRepository.findOneByGoogleSubject(payload.getSubject())
+                User user = userRepository.findOneByGoogleId(payload.getSubject())
                 log.info "Corresponding user ${user}"
 
                 if (!user) {
-                    user = new User(googleSubject: payload.getSubject())
+                    user = new User(googleId: payload.getSubject())
                     userRepository.save user
 
                     log.info "Create new user ${user}"
