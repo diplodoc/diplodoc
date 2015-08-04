@@ -9,11 +9,46 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 
     <link rel="stylesheet" href="src/styles.css">
+
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="565991565381-gj9nfu1in725cjuev8okk5t1l3i507sa.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <script src="src/hello.js" />  
+
+
   </head>
   
 
 
   <body>
+    
+    
+    
+     <script>
+       hello.on('auth.login', function(auth) { 
+
+         Call user information, for the given network 
+         hello(auth.network).api('/me').then(function(r) { 
+           Inject it into the container 
+           var label = document.getElementById('profile_' + auth.network); 
+           if (!label) { 
+             label = document.createElement('div'); 
+             label.id = 'profile_' + auth.network; 
+             document.getElementById('profile').appendChild(label); 
+           } 
+           label.innerHTML = '<img src="' + r.thumbnail + '" /> Hey ' + r.name; 
+         }); 
+       }); 
+     </script>  
+  
+     <script> 
+       console.log('here') 
+       hello.init( 
+         {google: '565991565381-gj9nfu1in725cjuev8okk5t1l3i507sa.apps.googleusercontent.com'}, 
+         {redirect_uri: 'http://env-6227801.whelastic.net/client-webui/home.html'}); 
+     </script>
+    
 
     <nav class="top-bar" data-topbar>
       <ul class="title-area">
@@ -30,6 +65,13 @@
             <a class="active" href="#">Saved</a>
           </li>
           <li class="divider"></li>
+          <li>
+            <button onclick="hello('google').login()">google</button>
+            <!-- <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div> -->
+          </li>
+          <li>
+            <div id="profile"></div>
+          </li>
         </ul>
          
         <ul class="right">
@@ -154,6 +196,8 @@
         </div>
       </div>
     </footer> 
+
+
 
  
 </body>
