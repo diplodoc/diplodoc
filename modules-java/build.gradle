@@ -16,6 +16,9 @@ dependencies {
     compile dependency.spring.web
     compile dependency.spring.webmvc
 
+    compile dependency.google.client
+    compile dependency.google.plus
+
     compile dependency.jackson.core
     compile dependency.jackson.databind
 
