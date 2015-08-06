@@ -30,55 +30,51 @@ class SecurityService {
     @Autowired
     UserRepository userRepository
 
-    def authenticate(String authProvider, String authType, String authToken) {
+    User authenticate(String authProvider, String authType, String authToken) {
         log.debug "Going to authenticate authProvider:${authProvider}, authType:${authType}, authToken:${authToken}"
+
+        String googleId = null
 
         if (authProvider == 'google') {
             if (authType == 'id_token') {
-                return authWithGoogleIdToken(authToken)
+                googleId = authWithGoogleIdToken(authToken)
             }
 
             if (authType == 'access_token') {
-                return authWithGoogleAccessToken(authToken)
+                googleId = authWithGoogleAccessToken(authToken)
             }
         }
 
-        return null
+        User user = null
+        if (googleId) {
+            user = userRepository.findOneByGoogleId(googleId)
+            log.debug "Corresponding user ${user}"
+
+            if (!user) {
+                user = new User(googleId: googleId)
+                user = userRepository.save user
+
+                log.debug "Create new user ${user}"
+            }
+        }
+
+        return user
     }
 
-    def authWithGoogleIdToken(String idTokenString) {
+    String authWithGoogleIdToken(String idTokenString) {
         try {
             GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
                     .setAudience(Arrays.asList(CLIENT_ID))
                     .build()
 
-            GoogleIdToken idToken = verifier.verify(idTokenString)
-            if (idToken) {
-                GoogleIdToken.Payload payload = idToken.getPayload()
-                log.debug "Receive payload ${payload.getSubject()}"
-
-                User user = userRepository.findOneByGoogleId(payload.getSubject())
-                log.debug "Corresponding user ${user}"
-
-                if (!user) {
-                    user = new User(googleId: payload.getSubject())
-                    userRepository.save user
-
-                    log.debug "Create new user ${user}"
-                }
-
-                return user
-            } else {
-                log.debug "Google return null"
-                return null
-            }
+            return verifier.verify(idTokenString)?.getPayload()
         } catch (e) {
             log.warn "Exception during authentication ${e}", e
             return null
         }
     }
 
-    def authWithGoogleAccessToken(String accessToken) {
+    String authWithGoogleAccessToken(String accessToken) {
         try {
             GoogleCredential credential = new GoogleCredential().setAccessToken(accessToken)
             Plus plus = new Plus.Builder(transport, jsonFactory, credential).build()
@@ -86,17 +82,7 @@ class SecurityService {
             Person profile = plus.people().get('me').execute()
             log.debug "Receive profile id:${profile.getId()}"
 
-            User user = userRepository.findOneByGoogleId(profile.getId())
-            log.debug "Corresponding user ${user}"
-
-            if (!user) {
-                user = new User(googleId: profile.getId())
-                userRepository.save user
-
-                log.debug "Create new user ${user}"
-            }
-
-            return user
+            return profile?.getId()
         } catch (e) {
             log.warn "Exception during authentication ${e}", e
             return null
