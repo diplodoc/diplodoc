@@ -33,9 +33,11 @@ class SecurityService {
     User authenticate(String authProvider, String authType, String authToken) {
         log.debug "Going to authenticate authProvider:${authProvider}, authType:${authType}, authToken:${authToken}"
 
-        String googleId = null
+        User user = null
 
         if (authProvider == 'google') {
+            String googleId = null
+
             if (authType == 'id_token') {
                 googleId = authWithGoogleIdToken(authToken)
             }
@@ -43,18 +45,17 @@ class SecurityService {
             if (authType == 'access_token') {
                 googleId = authWithGoogleAccessToken(authToken)
             }
-        }
+            
+            if (googleId) {
+                user = userRepository.findOneByGoogleId(googleId)
+                log.debug "Corresponding user ${user}"
 
-        User user = null
-        if (googleId) {
-            user = userRepository.findOneByGoogleId(googleId)
-            log.debug "Corresponding user ${user}"
+                if (!user) {
+                    user = new User(googleId: googleId)
+                    user = userRepository.save user
 
-            if (!user) {
-                user = new User(googleId: googleId)
-                user = userRepository.save user
-
-                log.debug "Create new user ${user}"
+                    log.debug "Create new user ${user}"
+                }
             }
         }
 
