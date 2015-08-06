@@ -25,7 +25,7 @@ class FeederSpec extends Specification {
 
     Feeder feeder = new Feeder(docRepository: docRepository, auditService: auditService, securityService: securityService)
 
-    def 'def feed(Integer page, Integer size)'() {
+    def 'def feed(String authProvider, String authType, String authToken, Integer page, Integer size)'() {
         when:
             1 * auditService.runMethodUnderAudit('client.Feeder', 'feed', _) >> { it ->
                 Module module = new Module()
@@ -61,7 +61,7 @@ class FeederSpec extends Specification {
             1         | 50        | 1              | 50
     }
 
-    def 'def feed(Integer page, Integer size) - authentication failed'() {
+    def 'def feed(String authProvider, String authType, String authToken, Integer page, Integer size) - authentication failed'() {
         when:
             securityService.authenticate('provider', 'type', 'token') >> null
 
