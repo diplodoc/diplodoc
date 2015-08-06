@@ -31,7 +31,7 @@ class SecurityService {
     UserRepository userRepository
 
     def authenticate(String authProvider, String authType, String authToken) {
-        log.info "Going to authenticate authProvider:${authProvider}, authType:${authType}, authToken:${authToken}"
+        log.debug "Going to authenticate authProvider:${authProvider}, authType:${authType}, authToken:${authToken}"
 
         if (authProvider == 'google') {
             if (authType == 'id_token') {
@@ -55,25 +55,25 @@ class SecurityService {
             GoogleIdToken idToken = verifier.verify(idTokenString)
             if (idToken) {
                 GoogleIdToken.Payload payload = idToken.getPayload()
-                log.info "Receive payload ${payload.getSubject()}"
+                log.debug "Receive payload ${payload.getSubject()}"
 
                 User user = userRepository.findOneByGoogleId(payload.getSubject())
-                log.info "Corresponding user ${user}"
+                log.debug "Corresponding user ${user}"
 
                 if (!user) {
                     user = new User(googleId: payload.getSubject())
                     userRepository.save user
 
-                    log.info "Create new user ${user}"
+                    log.debug "Create new user ${user}"
                 }
 
                 return user
             } else {
-                log.info "Google return null"
+                log.debug "Google return null"
                 return null
             }
         } catch (e) {
-            log.info "Exception during authentication ${e}", e
+            log.warn "Exception during authentication ${e}", e
             return null
         }
     }
@@ -84,21 +84,21 @@ class SecurityService {
             Plus plus = new Plus.Builder(transport, jsonFactory, credential).build()
 
             Person profile = plus.people().get('me').execute()
-            log.info "Receive profile id:${profile.getId()}"
+            log.debug "Receive profile id:${profile.getId()}"
 
             User user = userRepository.findOneByGoogleId(profile.getId())
-            log.info "Corresponding user ${user}"
+            log.debug "Corresponding user ${user}"
 
             if (!user) {
                 user = new User(googleId: profile.getId())
                 userRepository.save user
 
-                log.info "Create new user ${user}"
+                log.debug "Create new user ${user}"
             }
 
             return user
         } catch (e) {
-            log.info "Exception during authentication ${e}", e
+            log.warn "Exception during authentication ${e}", e
             return null
         }
     }
