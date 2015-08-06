@@ -1,5 +1,6 @@
 package com.github.diplodoc.modules.client
 
+import com.github.diplodoc.domain.mongodb.User
 import com.github.diplodoc.domain.mongodb.data.Doc
 import com.github.diplodoc.domain.repository.mongodb.data.DocRepository
 import com.github.diplodoc.modules.services.AuditService
@@ -44,7 +45,7 @@ class Feeder {
                             @RequestParam(value = 'page', required = false) Integer page,
                             @RequestParam(value = 'size', required = false) Integer size) {
 
-        def user = securityService.authenticate(authProvider, authType, authToken)
+        User user = securityService.authenticate(authProvider, authType, authToken)
 
         if (!user) {
             return []
