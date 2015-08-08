@@ -55,7 +55,23 @@ function topPosition(domElt) {
     InfiniteScroll._defaultLoader = loader;
   };
 
-url = "http://localhost:8080/modules-java/client/feeder/feed?size=16&page="
+function buildURI() {
+  var token = null;
+
+  if (hello('google').getAuthResponse()) {
+    token = hello('google').getAuthResponse().access_token;
+  }
+  // console.log(gapi.auth2);
+  // var token = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().id_token;
+
+  console.log(token);
+  if (token) {
+    return "http://localhost:8080/modules-java/client/feeder/feed?size=16&auth_provider=google&auth_type=access_token&auth_token=" + token + "&page="
+  }
+  return "http://localhost:8080/modules-java/client/feeder/feed?size=16&page="
+}
+
+url = buildURI()
 
 var DiploPanel = React.createClass({
   render: function() {
