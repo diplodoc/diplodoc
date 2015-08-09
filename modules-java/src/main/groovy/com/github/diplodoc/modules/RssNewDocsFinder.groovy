@@ -56,6 +56,7 @@ class RssNewDocsFinder {
                                                         sourceId: new ObjectId(sourceId),
                                                         title: rssEntry.title,
                                                         description: rssEntry.description.value,
+                                                        imageUrl: rssEntry.enclosures?.find({ it.type.startsWith('image/') })?.url,
                                                         publishTime: LocalDateTime.ofInstant(rssEntry.publishedDate.toInstant(), ZoneId.systemDefault())
                                             )
                                         }

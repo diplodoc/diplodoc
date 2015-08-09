@@ -38,6 +38,8 @@ class Doc {
 
     String publishTime
 
+    String imageUrl
+
 
     @Field('train_meaningHtml')
     String trainMeaningHtml
