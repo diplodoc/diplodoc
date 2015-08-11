@@ -75,10 +75,20 @@ url = buildURI()
 
 var DiploPanel = React.createClass({
   render: function() {
+    var divStyle = {
+      height: '100px',
+      overflow: 'hidden'
+    };
+
     return (
-        <div className="panel" style={{height: '300px'}}>
-          <h5><a href={this.props.url} title={this.props.title}>{this.props.title}</a></h5>
-          <p>{this.props.description}</p>
+        <div className="card blue-grey darken-1">
+          <div style={divStyle} className="card-content white-text" >
+            <span className="card-title">{this.props.title}</span>
+            <p>{this.props.description}</p>
+          </div>
+          <div className="card-action">
+            <a href={this.props.url}>Read more...</a>
+          </div>
         </div>
       ); 
   }
@@ -89,18 +99,18 @@ var DiploPanelBlock = React.createClass({
   styleConfig: function(style) {
     switch (style) {
       case '6-3-3':
-        return ["large-6 columns", "large-3 columns", "large-3 columns"];
+        return ["col s6", "col s3", "col s3"];
       case '3-6-3':
-        return ["large-3 columns", "large-6 columns", "large-3 columns"];
+        return ["col s3", "col s6", "col s3"];
       case '3-3-6':
-        return ["large-3 columns", "large-3 columns", "large-6 columns"];
+        return ["col s3", "col s3", "col s6"];
       case '4-8':
-        return ["large-4 columns", "large-8 columns"];
+        return ["col s4", "col s8"];
       case '8-4':
-        return ["large-8 columns", "large-4 columns"];
+        return ["col s8", "col s4"];
       default:
         // 4-4-4
-        return ["large-4 columns", "large-4 columns", "large-4 columns"];
+        return ["col s4", "col s4", "col s4"];
     }
   },
 
@@ -143,6 +153,7 @@ var DiploPagelet = React.createClass({
         console.error(this.props.url, status, err.toString());
       }.bind(this)
     });
+    // this.setState({data: [{title: 'f', description: 'd', url: 'f'}, {title: 'f', description: 'd', url: 'f'}, {title: 'f', description: 'd', url: 'f'}]});
   },
 
   getInitialState: function() {
@@ -155,7 +166,6 @@ var DiploPagelet = React.createClass({
   },
 
   render: function() {
-    console.log('here')
     var pagelet = []
     var styles = this.styleList()
     var index = Math.floor(Math.random() * styles.length);
@@ -209,10 +219,18 @@ var DiploPage = React.createClass({
   },
 });
 
-document.onload = React.render(
-  <DiploPage />,
-  document.getElementById('article_list')
-);
+
+var token = null;
+
+if (hello('google').getAuthResponse()) {
+  token = hello('google').getAuthResponse().access_token;
+}
+if (token) {
+  document.onload = React.render(
+    <DiploPage />,
+    document.getElementById('article_list')
+  );
+}
 
 // document.onload = React.render(
 //   <DiploPagelet url={url} pollInterval={5000} />,
