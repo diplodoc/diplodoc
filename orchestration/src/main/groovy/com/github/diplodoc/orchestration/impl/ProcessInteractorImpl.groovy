@@ -1,6 +1,7 @@
 package com.github.diplodoc.orchestration.impl
 
 import com.github.diplodoc.domain.mongodb.orchestration.Process
+import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
 import com.github.diplodoc.domain.repository.mongodb.orchestration.ProcessRepository
 import com.github.diplodoc.orchestration.GroovyBindings
 import com.github.diplodoc.orchestration.ProcessInteractor
@@ -24,8 +25,8 @@ class ProcessInteractorImpl implements ProcessInteractor {
     GroovyBindings groovyBindings
 
     @Override
-    void processSelfStart() {
-        processRepository.findByActiveIsTrue().findAll(this.&isSelfStarting).each(processRunner.&start)
+    Collection<ProcessRun> processSelfStart() {
+        processRepository.findByActiveIsTrue().findAll(this.&isSelfStarting).collect(processRunner.&start)
     }
 
     @Override

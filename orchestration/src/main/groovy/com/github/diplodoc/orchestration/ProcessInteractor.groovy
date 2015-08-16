@@ -1,13 +1,14 @@
 package com.github.diplodoc.orchestration
 
 import com.github.diplodoc.domain.mongodb.orchestration.Process
+import com.github.diplodoc.domain.mongodb.orchestration.ProcessRun
 
 /**
  * @author yaroslav.yermilov
  */
 interface ProcessInteractor {
 
-    void processSelfStart()
+    Collection<ProcessRun> processSelfStart()
 
     void send(String destination, Map params)
 
