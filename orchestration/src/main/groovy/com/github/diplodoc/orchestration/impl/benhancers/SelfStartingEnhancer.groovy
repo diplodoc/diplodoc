@@ -19,7 +19,7 @@ class SelfStartingEnhancer implements GroovyBindingEnhancer {
             binding._IS_SELF_STARTING_ = binding._IS_SELF_STARTING_ || (period >= 0)
         }
 
-        Integer.metaClass.propertyMissing = {String name ->
+        Integer.metaClass.propertyMissing = { String name ->
             TimeUnit timeUnit = TimeUnit.valueOf(name.toUpperCase())
             if (timeUnit != null) {
                 return timeUnit.toMillis(delegate)
