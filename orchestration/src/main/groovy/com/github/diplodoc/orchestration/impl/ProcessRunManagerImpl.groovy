@@ -29,7 +29,7 @@ class ProcessRunManagerImpl implements ProcessRunManager {
 
     @Override
     ProcessRun markJustStarted(ProcessRun processRun) {
-        processRun.startTime = LocalDateTime.now()
+        processRun.startTime = now()
         processRun.exitStatus = ProcessRun.EXIT_STATUSES.NOT_FINISHED
 
         processRunRepository.save processRun
@@ -37,7 +37,7 @@ class ProcessRunManagerImpl implements ProcessRunManager {
 
     @Override
     ProcessRun markJustSucceed(ProcessRun processRun) {
-        processRun.endTime = LocalDateTime.now()
+        processRun.endTime = now()
         processRun.exitStatus = ProcessRun.EXIT_STATUSES.SUCCEED
 
         processRunRepository.save processRun
@@ -45,10 +45,14 @@ class ProcessRunManagerImpl implements ProcessRunManager {
 
     @Override
     ProcessRun markJustFailed(ProcessRun processRun, Throwable reason) {
-        processRun.endTime = LocalDateTime.now()
+        processRun.endTime = now()
         processRun.exitStatus = ProcessRun.EXIT_STATUSES.FAILED
         processRun.errorMessage = reason.message
 
         processRunRepository.save processRun
+    }
+
+    String now() {
+        LocalDateTime.now()
     }
 }
