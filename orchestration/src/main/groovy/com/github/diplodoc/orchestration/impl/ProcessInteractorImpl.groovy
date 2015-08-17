@@ -30,55 +30,62 @@ class ProcessInteractorImpl implements ProcessInteractor {
     }
 
     @Override
-    void send(String destination, Map params) {
-        Process destinationProcess = processRepository.findByNameAndActiveIsTrue(destination)
+    ProcessRun send(String destination, Map params) {
+        Process destinationProcess = processRepository.findOneByNameAndActiveIsTrue(destination)
         processRunner.start(destinationProcess, params)
     }
 
     @Override
-    void output(Process source, Map params) {
+    Collection<ProcessRun> output(Process source, Map params) {
         processRepository.findByActiveIsTrue()
                 .findAll({ Process process -> isListeningTo(source, process)})
-                .each({ Process process -> processRunner.start(process, params) })
+                .collect({ Process process -> processRunner.start(process, params) })
     }
 
     @Override
-    void emit(String event, Map params) {
+    Collection<ProcessRun> emit(String event, Map params) {
         processRepository.findByActiveIsTrue()
                 .findAll({ Process process -> isWaitingFor(event, process)})
-                .each({ Process process -> processRunner.start(process, params) })
+                .collect({ Process process -> processRunner.start(process, params) })
     }
 
     @Override
-    void repeatOnce(Process process, long afterMillis) {
-        Date startAt = new Date(System.currentTimeMillis() + afterMillis)
-        processRunner.schedule(process, startAt)
+    ProcessRun repeatOnce(Process process, long afterMillis) {
+        processRunner.schedule(process, dateAfterMillis(afterMillis))
     }
 
-    private boolean isSelfStarting(Process process) {
+    boolean isSelfStarting(Process process) {
         String selfStartingDefinition = process.definition.readLines().findAll({ String line -> line.startsWith('start') }).join('\n')
         Binding selfStartingBinding = groovyBindings.selfStartingBinding(process)
 
-        new GroovyShell(selfStartingBinding).evaluate(selfStartingDefinition)
+        evaluate(selfStartingBinding, selfStartingDefinition)
 
         return selfStartingBinding._IS_SELF_STARTING_
     }
 
-    private boolean isListeningTo(Process source, Process destination) {
+    boolean isListeningTo(Process source, Process destination) {
         String isListeningToDefinition = destination.definition.readLines().findAll({ String line -> line.startsWith('listen') }).join('\n')
         Binding isListeningToBinding = groovyBindings.isListeningToBinding(source, destination)
 
-        new GroovyShell(isListeningToBinding).evaluate(isListeningToDefinition)
+        evaluate(isListeningToBinding, isListeningToDefinition)
 
         return isListeningToBinding._IS_LISTENING_
     }
 
-    private boolean isWaitingFor(String event, Process destination) {
+    boolean isWaitingFor(String event, Process destination) {
         String isWaitingForDefinition = destination.definition.readLines().findAll({ String line -> line.startsWith('waiting') }).join('\n')
         Binding isWaitingForBinding = groovyBindings.isWaitingForBinding(event, destination)
 
-        new GroovyShell(isWaitingForBinding).evaluate(isWaitingForDefinition)
+        evaluate(isWaitingForBinding, isWaitingForDefinition)
 
         return isWaitingForBinding._IS_WAITING_FOR_
+    }
+
+    void evaluate(Binding binding, String definition) {
+        new GroovyShell(binding).evaluate(definition)
+    }
+
+    Date dateAfterMillis(long afterMillis) {
+        new Date(System.currentTimeMillis() + afterMillis)
     }
 }

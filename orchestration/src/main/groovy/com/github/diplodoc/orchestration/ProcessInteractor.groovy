@@ -10,11 +10,11 @@ interface ProcessInteractor {
 
     Collection<ProcessRun> processSelfStart()
 
-    void send(String destination, Map params)
+    ProcessRun send(String destination, Map params)
 
-    void output(Process source, Map params)
+    Collection<ProcessRun> output(Process source, Map params)
 
-    void emit(String event, Map params)
+    Collection<ProcessRun> emit(String event, Map params)
 
-    void repeatOnce(Process process, long afterMillis)
+    ProcessRun repeatOnce(Process process, long afterMillis)
 }
