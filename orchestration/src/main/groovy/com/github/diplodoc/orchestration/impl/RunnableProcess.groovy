@@ -36,7 +36,7 @@ class RunnableProcess implements Runnable {
         }
     }
 
-    private execute() {
+    void execute() {
         new GroovyShell(groovyBindings.executionBinding(process, parameters, processRun)).evaluate(process.definition)
     }
 }
