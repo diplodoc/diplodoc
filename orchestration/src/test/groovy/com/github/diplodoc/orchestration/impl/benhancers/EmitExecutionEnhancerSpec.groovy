@@ -11,7 +11,7 @@ class EmitExecutionEnhancerSpec extends Specification {
     ProcessInteractor processInteractor = Mock(ProcessInteractor)
     EmitExecutionEnhancer emitExecutionEnhancer = new EmitExecutionEnhancer(processInteractor: processInteractor)
 
-    def 'Binding enhance(Binding binding, Map context) - emit works well'() {
+    def 'Binding enhance(Binding binding, Map context)'() {
         given:
             Binding binding = emitExecutionEnhancer.enhance(new Binding(), [:])
 
