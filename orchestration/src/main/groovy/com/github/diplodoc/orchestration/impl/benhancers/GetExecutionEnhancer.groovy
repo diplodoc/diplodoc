@@ -16,13 +16,17 @@ class GetExecutionEnhancer implements GroovyBindingEnhancer {
         return binding
     }
 
-    private def get(Map params) {
+    def get(Map params) {
         String root = params.root
         String path = params.from
-        Class responseType = params.expect ?: String
+        Class responseType = params.expect ? Class.forName(params.expect) : String
 
-        String url = "${System.getProperty 'modules_host'}/$root/$path"
+        String url = "${modulesHost()}/$root/$path"
 
         restTemplate.getForObject(url, responseType)
+    }
+
+    String modulesHost() {
+        System.getProperty 'modules_host'
     }
 }
