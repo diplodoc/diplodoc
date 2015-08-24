@@ -16,14 +16,18 @@ class PostExecutionEnhancer implements GroovyBindingEnhancer {
         return binding
     }
 
-    private def post(Map params) {
+    def post(Map params) {
         String root = params.root
         String path = params.to
         Object request = params.request
-        Class responseType = params.expect ?: String
+        Class responseType = params.expect ? Class.forName(params.expect) : String
 
-        String url = "${System.getProperty 'modules_host'}/$root/$path"
+        String url = "${modulesHost()}/$root/$path"
 
         restTemplate.postForObject(url, request, responseType)
+    }
+
+    String modulesHost() {
+        System.getProperty 'modules_host'
     }
 }
