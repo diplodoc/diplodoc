@@ -16,7 +16,7 @@ class SelfStartingEnhancer implements GroovyBindingEnhancer {
 
         binding.start = { Map params ->
             long period = params.remove 'every'
-            binding._IS_SELF_STARTING_ = binding._IS_SELF_STARTING_ || (period >= 0)
+            binding._IS_SELF_STARTING_ = binding._IS_SELF_STARTING_ || (period > 0)
         }
 
         Integer.metaClass.propertyMissing = { String name ->
