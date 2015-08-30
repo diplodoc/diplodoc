@@ -4,6 +4,8 @@ plugins {
 apply plugin: 'groovy'
 apply plugin: 'war'
 
+version = '0.1.0'
+
 dependencies {
     compile dependency.groovy
     compile dependency.spring.context
