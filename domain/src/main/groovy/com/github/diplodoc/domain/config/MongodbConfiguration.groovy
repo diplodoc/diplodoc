@@ -20,7 +20,21 @@ class MongodbConfiguration extends AbstractMongoConfiguration {
 
     @Override
     Mongo mongo() throws Exception {
-        new Mongo(System.getProperty('mongodb_host'), Integer.parseInt(System.getProperty('mongodb_port')))
+        String host = System.getProperty('mongodb_host')
+        String port = System.getProperty('mongodb_port')
+
+        if (!host) {
+            return new Mongo()
+        }
+
+        if (host && !port) {
+            return new Mongo(host)
+        }
+
+        if (host && port) {
+            return new Mongo(host, Integer.parseInt(port))
+        }
+
     }
 
     @Override
@@ -30,6 +44,13 @@ class MongodbConfiguration extends AbstractMongoConfiguration {
 
     @Override
     protected UserCredentials getUserCredentials() {
-        new UserCredentials(System.getProperty('mongodb_user'), System.getProperty('mongodb_password'))
+        String username = System.getProperty('mongodb_user')
+        String password = System.getProperty('mongodb_password')
+
+        if (username) {
+            return new UserCredentials(username, password)
+        }
+
+        return null
     }
 }
