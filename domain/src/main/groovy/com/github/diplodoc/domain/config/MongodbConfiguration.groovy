@@ -34,7 +34,6 @@ class MongodbConfiguration extends AbstractMongoConfiguration {
         if (host && port) {
             return new Mongo(host, Integer.parseInt(port))
         }
-
     }
 
     @Override
