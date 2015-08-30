@@ -20,7 +20,16 @@ class PostExecutionEnhancer implements GroovyBindingEnhancer {
         String root = params.root
         String path = params.to
         Object request = params.request
-        Class responseType = params.expect ? Class.forName(params.expect) : String
+
+        Class responseType = String
+        if (params.expect) {
+            if (params.expect instanceof Class) {
+                responseType = params.expect
+            }
+            if (params.expect instanceof String) {
+                responseType = Class.forName(params.expect)
+            }
+        }
 
         String url = "${modulesHost()}/$root/$path"
 

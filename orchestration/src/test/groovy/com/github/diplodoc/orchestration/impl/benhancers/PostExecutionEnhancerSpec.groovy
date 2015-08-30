@@ -11,7 +11,7 @@ class PostExecutionEnhancerSpec extends Specification {
     RestTemplate restTemplate = Mock(RestTemplate)
     PostExecutionEnhancer postExecutionEnhancer = Spy(PostExecutionEnhancer)
 
-    def 'Binding enhance(Binding binding, Map context)'() {
+    def 'Binding enhance(Binding binding, Map context) - expect of type String'() {
         given:
             postExecutionEnhancer.restTemplate = restTemplate
             postExecutionEnhancer.modulesHost() >> 'modulesHost'
@@ -22,6 +22,23 @@ class PostExecutionEnhancerSpec extends Specification {
 
         when:
             def actual = binding.post.call([ 'root': 'rootValue', 'to': 'toValue', 'request': 'request', 'expect': Integer.name, 'key': 'value' ])
+
+        then:
+            1 * restTemplate.postForObject('modulesHost/rootValue/toValue', 'request', Integer) >> returnValue
+            actual == returnValue
+    }
+
+    def 'Binding enhance(Binding binding, Map context) - expect of type Class'() {
+        given:
+            postExecutionEnhancer.restTemplate = restTemplate
+            postExecutionEnhancer.modulesHost() >> 'modulesHost'
+
+            Binding binding = postExecutionEnhancer.enhance(new Binding(), [:])
+
+            def returnValue = 'returnValue'
+
+        when:
+            def actual = binding.post.call([ 'root': 'rootValue', 'to': 'toValue', 'request': 'request', 'expect': Integer, 'key': 'value' ])
 
         then:
             1 * restTemplate.postForObject('modulesHost/rootValue/toValue', 'request', Integer) >> returnValue

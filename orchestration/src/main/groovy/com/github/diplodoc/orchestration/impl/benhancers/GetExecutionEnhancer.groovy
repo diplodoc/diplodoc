@@ -19,7 +19,16 @@ class GetExecutionEnhancer implements GroovyBindingEnhancer {
     def get(Map params) {
         String root = params.root
         String path = params.from
-        Class responseType = params.expect ? Class.forName(params.expect) : String
+
+        Class responseType = String
+        if (params.expect) {
+            if (params.expect instanceof Class) {
+                responseType = params.expect
+            }
+            if (params.expect instanceof String) {
+                responseType = Class.forName(params.expect)
+            }
+        }
 
         String url = "${modulesHost()}/$root/$path"
 
