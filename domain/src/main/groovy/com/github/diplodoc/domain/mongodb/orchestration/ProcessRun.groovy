@@ -13,6 +13,8 @@ import org.springframework.data.mongodb.core.mapping.Field
 @ToString
 class ProcessRun {
 
+    enum EXIT_STATUSES { UNKNOWN, NOT_FINISHED, SUCCEED, FAILED  }
+
     @Id
     ObjectId id
 
@@ -24,7 +26,9 @@ class ProcessRun {
 
     String endTime
 
-    String exitStatus
+    String exitStatus = EXIT_STATUSES.UNKNOWN
+
+    String errorMessage
 
     Collection<ProcessRunParameter> parameters
 }

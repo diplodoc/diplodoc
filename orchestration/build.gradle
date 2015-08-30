@@ -1,8 +1,10 @@
 plugins {
-    id "net.saliman.cobertura" version "2.2.8"
+    id 'net.saliman.cobertura' version '2.2.8'
 }
 apply plugin: 'groovy'
 apply plugin: 'war'
+
+version = '0.1.0'
 
 dependencies {
     compile dependency.groovy
