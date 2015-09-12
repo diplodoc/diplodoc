@@ -20,6 +20,8 @@ apply plugin: 'asset-pipeline'
 apply plugin: 'org.grails.grails-web'
 apply plugin: 'org.grails.grails-gsp'
 
+version = '0.0.9-SNAPSHOT'
+
 ext {
     grailsVersion = versions.grails
 }
