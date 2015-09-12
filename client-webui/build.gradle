@@ -1,8 +1,12 @@
+version = '0.0.9-SNAPSHOT'
+
 task clean(type: Delete) {
     delete file('build')
 }
 
 task build(type: Zip) {
+    Map ENVIRONMENT_MODULES_HOSTS = [ 'local': 'http://localhost:8080', 'shared': 'http://env-6227801.whelastic.net' ]
+
     from '.'
 
     exclude 'build'
@@ -10,13 +14,13 @@ task build(type: Zip) {
     exclude 'client-webui.iml'
 
     destinationDir = file('build/libs')
-    baseName = project.name
+    baseName = "${project.name}-${project.version}"
 
     doFirst {
-        files({ file('src').listFiles() }).findAll({ it.name.endsWith 'js' }).each({ it.text = it.text.replace 'localhost:8080', 'env-6227801.whelastic.net' })
+        files({ file('src').listFiles() }).findAll({ it.name.endsWith 'js' }).each({ it.text = it.text.replace '${modules_host}', ENVIRONMENT_MODULES_HOSTS[targetEnv] })
     }
 
     doLast {
-        files({ file('src').listFiles() }).findAll({ it.name.endsWith 'js' }).each({ it.text = it.text.replace 'env-6227801.whelastic.net', 'localhost:8080' })
+        files({ file('src').listFiles() }).findAll({ it.name.endsWith 'js' }).each({ it.text = it.text.replace ENVIRONMENT_MODULES_HOSTS[targetEnv], '${modules_host}' })
     }
 }
