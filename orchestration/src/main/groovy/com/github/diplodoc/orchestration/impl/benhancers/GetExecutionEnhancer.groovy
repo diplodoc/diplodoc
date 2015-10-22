@@ -36,6 +36,7 @@ class GetExecutionEnhancer implements GroovyBindingEnhancer {
     }
 
     String modulesHost() {
-        System.getProperty 'modules_host'
+        // TODO: bad, bad design
+        System.getProperty 'modules_host' ?: 'localhost:8080'
     }
 }
