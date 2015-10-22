@@ -4,54 +4,49 @@
     <script src="http://fb.me/react-0.13.2.js"></script>
     <script src="http://fb.me/JSXTransformer-0.13.2.js"></script>
 
-    <!-- <link rel="stylesheet" href="css/foundation.css" /> -->
-    <!-- // <script src="js/vendor/modernizr.js"></script> -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 
     <link rel="stylesheet" href="src/styles.css">
 
-    
-
 
     <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>     
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <script src="src/hello.js" />
 
   </head>
 
   <body>
-    <!-- // <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script> -->
-    <!-- // <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script> -->
+
     <script type="text/javascript" src="js/materialize.min.js"></script>
 
     <script>
-       hello.on('auth.login', function(auth) {
-        // Call user information, for the given network
-        hello(auth.network).api('/me').then(function(r) {
-          // Inject it into the container
-          var label = document.getElementById('profile_' + auth.network);
-          if (!label) {
-            label = document.createElement('div');
-            label.id = 'profile_' + auth.network;
-            document.getElementById('profile').appendChild(label);
-          }
-          label.innerHTML = '<img src="' + r.thumbnail + '" /> Hey ' + r.name;
+        hello.on('auth.login', function(auth) {
+          // Call user information, for the given network
+          hello(auth.network).api('/me').then(function(r) {
+            // Inject it into the container
+            var label = document.getElementById('profile_' + auth.network);
+            if (!label) {
+              label = document.createElement('div');
+              label.id = 'profile_' + auth.network;
+              document.getElementById('profile').appendChild(label);
+            }
+            label.innerHTML = '<img src="' + r.thumbnail + '" /> Hey ' + r.name;
 
-          var login = document.getElementById("login");
-          if (login) {
-            login.parentNode.removeChild(login);
-          }
-
+            var login = document.getElementById("login");
+            if (login) {
+              login.parentNode.removeChild(login);
+            }
+          });
         });
-      });
-     </script>  
-  
-     <script> 
-       hello.init( 
-         {google: '565991565381-gj9nfu1in725cjuev8okk5t1l3i507sa.apps.googleusercontent.com'}, 
-         {redirect_uri: 'http://env-6227801.whelastic.net/client-webui/home.html'}); 
-     </script>
+    </script>
+
+    <script>
+      hello.init(
+        {google: '565991565381-gj9nfu1in725cjuev8okk5t1l3i507sa.apps.googleusercontent.com'},
+        {redirect_uri: 'http://env-6227801.whelastic.net/client-webui/home.html'}
+      );
+    </script>
 
     <nav>
       <div class="nav-wrapper teal lighten-1">
@@ -63,12 +58,11 @@
             <div id="profile"></div>
           </li>
         </ul>
-
       </div>
     </nav>
-    
 
-    <div class="container" id="article_list"> 
+
+    <div class="container" id="article_list">
       <div class="row" style="height: 200px; overflow: hidden;">
         <div class="col s12">
           <div class="card blue-grey darken-1">
@@ -81,8 +75,8 @@
       </div>
 
     </div>
+
     <script type="text/jsx" src="src/home.js" />
-    
- 
+
   </body>
 </html>
