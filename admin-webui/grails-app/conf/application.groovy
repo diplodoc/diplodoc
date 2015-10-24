@@ -46,27 +46,13 @@ grails {
     }
 }
 
-environments {
-    development {
-        grails {
-            mongodb {
-                host = 'localhost'
-                port = 27017
-                databaseName = 'diplodata'
-                connectionString = "mongodb://$host:$port/$databaseName"
-            }
-        }
-    }
-    production {
-        grails {
-            mongodb {
-                databaseName = 'diplodata'
-                host = System.getProperty 'mongodb_host'
-                port = System.getProperty 'mongodb_port'
-                username = System.getProperty 'mongodb_user'
-                password = System.getProperty 'mongodb_password'
-                connectionString = "mongodb://$username:$password@$host:$port/$databaseName"
-            }
-        }
+grails {
+    mongodb {
+        databaseName = 'diplodata'
+        host = System.getProperty('mongodb_host') ?: 'localhost'
+        port = System.getProperty('mongodb_port') ?: 27017
+        username = System.getProperty 'mongodb_user'
+        password = System.getProperty 'mongodb_password'
+        connectionString = (username && password) ? "mongodb://$username:$password@$host:$port/$databaseName" : "mongodb://$host:$port/$databaseName"
     }
 }
