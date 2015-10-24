@@ -23,17 +23,15 @@ class MongodbConfiguration extends AbstractMongoConfiguration {
         String host = System.getProperty('mongodb_host')
         String port = System.getProperty('mongodb_port')
 
-        if (!host) {
-            return new Mongo()
+        if (host != null && port != null) {
+            return new Mongo(host, Integer.parseInt(port))
         }
 
-        if (host && !port) {
+        if (host != null) {
             return new Mongo(host)
         }
 
-        if (host && port) {
-            return new Mongo(host, Integer.parseInt(port))
-        }
+        return new Mongo()
     }
 
     @Override

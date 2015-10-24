@@ -5,7 +5,7 @@ task clean(type: Delete) {
 }
 
 task build(type: Zip) {
-    Map ENVIRONMENT_MODULES_HOSTS = [ 'local': 'http://localhost:8080', 'shared': 'http://env-6227801.whelastic.net' ]
+    Map ENVIRONMENT_MODULES_HOSTS = [ 'local': 'http://localhost:8080', 'shared': 'http://diplodoc-test.whelastic.net' ]
 
     from '.'
 
@@ -18,9 +18,11 @@ task build(type: Zip) {
 
     doFirst {
         files({ file('src').listFiles() }).findAll({ it.name.endsWith 'js' }).each({ it.text = it.text.replace '${modules_host}', ENVIRONMENT_MODULES_HOSTS[targetEnv] })
+        files({ file('.').listFiles() }).findAll({ it.name.endsWith 'html' }).each({ it.text = it.text.replace '${modules_host}', ENVIRONMENT_MODULES_HOSTS[targetEnv] })
     }
 
     doLast {
         files({ file('src').listFiles() }).findAll({ it.name.endsWith 'js' }).each({ it.text = it.text.replace ENVIRONMENT_MODULES_HOSTS[targetEnv], '${modules_host}' })
+        files({ file('.').listFiles() }).findAll({ it.name.endsWith 'html' }).each({ it.text = it.text.replace ENVIRONMENT_MODULES_HOSTS[targetEnv], '${modules_host}' })
     }
 }

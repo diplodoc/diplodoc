@@ -6,12 +6,16 @@ import com.github.diplodoc.domain.repository.mongodb.orchestration.ProcessReposi
 import com.github.diplodoc.orchestration.GroovyBindings
 import com.github.diplodoc.orchestration.ProcessInteractor
 import com.github.diplodoc.orchestration.ProcessRunner
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+
+import java.util.concurrent.TimeUnit
 
 /**
  * @author yaroslav.yermilov
  */
+@Slf4j
 @Component
 class ProcessInteractorImpl implements ProcessInteractor {
 
@@ -26,7 +30,23 @@ class ProcessInteractorImpl implements ProcessInteractor {
 
     @Override
     Collection<ProcessRun> processSelfStart() {
-        processRepository.findByActiveIsTrue().findAll(this.&isSelfStarting).collect(processRunner.&start)
+        if (processRepository != null) {
+            processRepository.findByActiveIsTrue().findAll(this.&isSelfStarting).collect(processRunner.&start)
+        } else {
+            log.warn "processSelfStart() invoked but processRepository is not initialized. Waiting..."
+            new Thread() {
+
+                @Override
+                void run() {
+                    while (processRepository == null) {
+                        log.warn "Still waiting for processRepository to be initialized..."
+                        Thread.sleep(TimeUnit.MINUTES.toMillis(1))
+                    }
+                    log.warn "processRepository is finally initialized."
+                    processSelfStart()
+                }
+            }.start()
+        }
     }
 
     @Override
