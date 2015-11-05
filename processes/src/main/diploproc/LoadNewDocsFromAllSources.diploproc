@@ -1,3 +1,5 @@
+start every: 15.minutes
+
 def sourceIds = get from: '/data/sources', root: 'modules-java', expect: List
 
 sourceIds.each { sourceId ->
