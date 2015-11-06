@@ -6,7 +6,9 @@ sourceIds.each { sourceId ->
     def newDocsIds = post to: "/rss-new-docs-finder/source/${sourceId}/new-docs", root: 'modules-java', expect: List
 
     newDocsIds.each { docId ->
-        post to: "/html-doc-loader/doc/${docId}/load", root: 'modules-java'
-        output docId: docId
+        ignoreFailures {
+            post to: "/html-doc-loader/doc/${docId}/load", root: 'modules-java'
+            output docId: docId
+        }
     }
 }
