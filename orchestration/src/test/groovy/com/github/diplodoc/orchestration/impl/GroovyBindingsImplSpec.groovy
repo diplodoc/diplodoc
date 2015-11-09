@@ -6,6 +6,7 @@ import com.github.diplodoc.orchestration.GroovyBindingEnhancer
 import com.github.diplodoc.orchestration.ProcessInteractor
 import com.github.diplodoc.orchestration.impl.benhancers.EmitExecutionEnhancer
 import com.github.diplodoc.orchestration.impl.benhancers.GetExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.IgnoreFailuresEnhancer
 import com.github.diplodoc.orchestration.impl.benhancers.InputExecutionEnhancer
 import com.github.diplodoc.orchestration.impl.benhancers.InputParametersExecutionEnhancer
 import com.github.diplodoc.orchestration.impl.benhancers.IsListeningToEnhancer
@@ -39,7 +40,7 @@ class GroovyBindingsImplSpec extends Specification {
             groovyBindings.init()
 
         then:
-            groovyBindings.executionEnhancers.size() == 10
+            groovyBindings.executionEnhancers.size() == 11
             groovyBindings.executionEnhancers.find({ it instanceof InputParametersExecutionEnhancer }) != null
             groovyBindings.executionEnhancers.find({ it instanceof InputExecutionEnhancer }) != null
             groovyBindings.executionEnhancers.find({ it instanceof GetExecutionEnhancer && it.restTemplate == restTemplate }) != null
@@ -50,6 +51,7 @@ class GroovyBindingsImplSpec extends Specification {
             groovyBindings.executionEnhancers.find({ it instanceof ListenExecutionEnhancer }) != null
             groovyBindings.executionEnhancers.find({ it instanceof WaitingExecutionEnhancer }) != null
             groovyBindings.executionEnhancers.find({ it instanceof StartExecutionEnhancer && it.processInteractor == processInteractor }) != null
+            groovyBindings.executionEnhancers.find({ it instanceof IgnoreFailuresEnhancer }) != null
 
             groovyBindings.selfStartingEnhancers.size() == 1
             groovyBindings.selfStartingEnhancers.find({ it instanceof SelfStartingEnhancer }) != null
