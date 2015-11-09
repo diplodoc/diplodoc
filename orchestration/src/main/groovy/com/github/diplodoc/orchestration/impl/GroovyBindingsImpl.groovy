@@ -7,6 +7,7 @@ import com.github.diplodoc.orchestration.GroovyBindings
 import com.github.diplodoc.orchestration.ProcessInteractor
 import com.github.diplodoc.orchestration.impl.benhancers.EmitExecutionEnhancer
 import com.github.diplodoc.orchestration.impl.benhancers.GetExecutionEnhancer
+import com.github.diplodoc.orchestration.impl.benhancers.IgnoreFailuresEnhancer
 import com.github.diplodoc.orchestration.impl.benhancers.InputExecutionEnhancer
 import com.github.diplodoc.orchestration.impl.benhancers.InputParametersExecutionEnhancer
 import com.github.diplodoc.orchestration.impl.benhancers.IsListeningToEnhancer
@@ -53,7 +54,8 @@ class GroovyBindingsImpl implements GroovyBindings {
             new EmitExecutionEnhancer(processInteractor: processInteractor),
             new ListenExecutionEnhancer(),
             new WaitingExecutionEnhancer(),
-            new StartExecutionEnhancer(processInteractor: processInteractor)
+            new StartExecutionEnhancer(processInteractor: processInteractor),
+            new IgnoreFailuresEnhancer()
         ]
 
         selfStartingEnhancers = [
