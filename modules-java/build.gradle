@@ -4,7 +4,7 @@ plugins {
 apply plugin: 'groovy'
 apply plugin: 'war'
 
-version = '0.0.9'
+version = '0.0.10-SNAPSHOT'
 
 dependencies {
     compile dependency.groovy

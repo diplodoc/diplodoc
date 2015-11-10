@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="http://fb.me/react-0.13.2.js"></script>
+        <script src="http://fb.me/JSXTransformer-0.13.2.js"></script>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+        <link rel="stylesheet" href="src/styles.css">
+
+
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+        <script src="src/hello.js" />
+    </head>
+
+    <body>
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+
+        <script>
+            hello.on('auth.login', function(auth) {
+                // Call user information, for the given network
+                hello(auth.network).api('/me').then(function(r) {
+                    // Inject it into the container
+                    var label = document.getElementById('profile_' + auth.network);
+                    if (!label) {
+                        label = document.createElement('div');
+                        label.id = 'profile_' + auth.network;
+                        document.getElementById('profile').appendChild(label);
+                    }
+                    label.innerHTML = '<img src="' + r.thumbnail + '" /> Hey ' + r.name;
+
+                    var login = document.getElementById("login");
+                    if (login) {
+                        login.parentNode.removeChild(login);
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            hello.init(
+                    {google: '565991565381-gj9nfu1in725cjuev8okk5t1l3i507sa.apps.googleusercontent.com'},
+                    {redirect_uri: '${modules_host}/client-webui/sources.html'}
+            );
+        </script>
+
+        <nav>
+            <div class="nav-wrapper teal lighten-1">
+                <a href="#" class="brand-logo">DIPLODOC</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><button class="btn waves-effect waves-light red" onclick="hello('google').login()" id="login">google</button></li>
+                    <li>
+                        <div id="profile"></div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+
+        <div class="container" id="article_list">
+            <div class="row" style="height: 200px; overflow: hidden;">
+                <div class="col s12">
+                    <div class="card blue-grey darken-1">
+                        <div class="card-content white-text">
+                            <span class="card-title">NOTHING TO SHOW</span>
+                            <p>Use google to log in bro</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <script type="text/jsx" src="src/sources.js" />
+
+    </body>
+</html>
