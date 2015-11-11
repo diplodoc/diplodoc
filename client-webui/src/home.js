@@ -65,9 +65,9 @@ function buildURI() {
 
     console.log(token);
     if (token) {
-        return "${modules_host}/modules-java/client/feeder/feed?size=16&auth_provider=google&auth_type=access_token&auth_token=" + token + "&page="
+        return "${modules_host}/client-api/feed?size=16&auth_provider=google&auth_type=access_token&auth_token=" + token + "&page="
     }
-    return "${modules_host}/modules-java/client/feeder/feed?size=16&page="
+    return "${modules_host}/client-api/feed?size=16&page="
 }
 
 url = buildURI()

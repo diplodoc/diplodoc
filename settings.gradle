@@ -2,9 +2,13 @@ rootProject.name = 'diplodoc'
 
 include 'domain'
 
-include 'modules-java'
+include 'services'
 
-include 'modules-python'
+include 'client-api'
+
+include 'initializer'
+
+include 'new-docs-finder'
 
 include 'orchestration'
 

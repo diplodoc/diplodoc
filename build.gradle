@@ -9,18 +9,42 @@ allprojects {
     }
 }
 
-project(':modules-java') {
+project(':orchestration') {
+    apply plugin: 'java'
+
+    dependencies {
+        compile project(':domain')
+    }
+}
+
+project(':services') {
+    apply plugin: 'java'
+
+    dependencies {
+        compile project(':domain')
+    }
+}
+
+project(':client-api') {
 	apply plugin: 'java'
 
 	dependencies {
-		compile project(':domain')
+		compile project(':services')
 	}
 }
 
-project(':orchestration') {
+project(':initializer') {
 	apply plugin: 'java'
 
 	dependencies {
-		compile project(':domain')
+		compile project(':services')
 	}
+}
+
+project(':new-docs-finder') {
+    apply plugin: 'java'
+
+    dependencies {
+        compile project(':services')
+    }
 }
