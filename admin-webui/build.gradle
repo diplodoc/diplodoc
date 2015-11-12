@@ -22,11 +22,6 @@ apply plugin: 'org.grails.grails-gsp'
 
 version = '0.0.10'
 
-if (project.hasProperty('targetEnv')) {
-    Map ENVIRONMENTS = [ 'local': 'dev', 'shared': 'prod' ]
-    System.setProperty('grails.env', ENVIRONMENTS[targetEnv])
-}
-
 ext {
     grailsVersion = versions.grails
 }
