@@ -1,0 +1,7 @@
+[
+  {
+    "name"       : "load-new-docs-from-all-sources",
+    "definition" : "start every: 15.minutes \n def sourceIds = get from: '/sources', root: 'new-docs-finder', expect: List \n sourceIds.each { sourceId -> \n def newDocsIds = post to: \"/source/${sourceId}/new-docs\", root: 'new-docs-finder', expect: List \n newDocsIds.each { docId -> \n ignoreFailures { \n post to: \"/doc/${docId}/load\", root: 'new-docs-finder' \n output docId: docId \n } \n } \n }",
+    "active"     : true
+  }
+]

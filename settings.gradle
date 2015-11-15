@@ -12,8 +12,6 @@ include 'new-docs-finder'
 
 include 'orchestration'
 
-include 'processes'
-
 include 'admin-webui'
 
 include 'client-webui'
