@@ -18,7 +18,5 @@ class Source {
 
     String name
 
-    String newDocsFinderModule
-
     String rssUrl
 }
