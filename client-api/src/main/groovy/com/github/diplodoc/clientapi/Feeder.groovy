@@ -3,6 +3,7 @@ package com.github.diplodoc.clientapi
 import com.github.diplodoc.domain.mongodb.User
 import com.github.diplodoc.domain.mongodb.data.Doc
 import com.github.diplodoc.domain.repository.mongodb.data.DocRepository
+import com.github.diplodoc.domain.repository.mongodb.data.SourceRepository
 import com.github.diplodoc.services.AuditService
 import com.github.diplodoc.services.SecurityService
 import groovy.util.logging.Slf4j
@@ -29,6 +30,9 @@ class Feeder {
 
     @Autowired
     DocRepository docRepository
+
+    @Autowired
+    SourceRepository sourceRepository
 
     @Autowired
     AuditService auditService
@@ -60,7 +64,7 @@ class Feeder {
                     'url'        : doc.uri,
                     'title'      : doc.title,
                     'time'       : doc.publishTime,
-                    'description': doc.description
+                    'sourceName' : sourceRepository.findOne(doc.sourceId).name
                 ]
             }
 

@@ -23,7 +23,7 @@ class SourcesInitializer {
 
     @RequestMapping(value = '/sources/init', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    def init() {
+    void init() {
         log.info 'Going to delete all sources...'
         sourceRepository.deleteAll()
 

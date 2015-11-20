@@ -25,7 +25,7 @@ class ProcessesInitializer {
 
     @RequestMapping(value = '/processes/init', method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    def init() {
+    void init() {
         log.info 'Going to delete all processes...'
         processRepository.deleteAll()
 

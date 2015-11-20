@@ -2,5 +2,57 @@
   {
     "name"   : "pravda.com.ua",
     "rssUrl" : "http://www.pravda.com.ua/rss/"
+  },
+  {
+    "name"   : "football.ua",
+    "rssUrl" : "http://football.ua/rss2.ashx"
+  },
+  {
+    "name"   : "geektimes.ru",
+    "rssUrl" : "http://geektimes.ru/rss/all/"
+  },
+  {
+    "name"   : "habrahabr.ru",
+    "rssUrl" : "http://habrahabr.ru/rss/all/"
+  },
+  {
+    "name"   : "kinopoisk.ru",
+    "rssUrl" : "http://st.kp.yandex.net/rss/news.rss"
+  },
+  {
+    "name"   : "meduza.io",
+    "rssUrl" : "https://meduza.io/rss/all"
+  },
+  {
+    "name"   : "megamozg.ru",
+    "rssUrl" : "http://megamozg.ru/rss/all/"
+  },
+  {
+    "name"   : "liga.net",
+    "rssUrl" : "http://news.liga.net/all/rss.xml"
+  },
+  {
+    "name"   : "nplus1.ru",
+    "rssUrl" : "https://nplus1.ru/rss"
+  },
+  {
+    "name"   : "nv.ua",
+    "rssUrl" : "http://nv.ua/rsslist.html"
+  },
+  {
+    "name"   : "petrimazepa.com",
+    "rssUrl" : "http://petrimazepa.com/articles.rss"
+  },
+  {
+    "name"   : "shevchenkopost.com",
+    "rssUrl" : "http://www.shevchenkopost.com/feed/"
+  },
+  {
+    "name"   : "sportarena.com",
+    "rssUrl" : "http://sportarena.com/feed/"
+  },
+  {
+    "name"   : "zn.ua",
+    "rssUrl" : "http://zn.ua/rss/"
   }
 ]

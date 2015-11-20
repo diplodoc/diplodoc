@@ -83,11 +83,9 @@ var DiploPanel = React.createClass({
             <div className="card blue-grey darken-1">
                 <div style={divStyle} className="card-content white-text">
                     <span className="card-title">{this.props.title}</span>
-
-                    <p>{this.props.description}</p>
                 </div>
                 <div className="card-action">
-                    <a href={this.props.url}>Read more...</a>
+                    <a href={this.props.url}>Read more on {this.props.sourceName}...</a>
                 </div>
             </div>
         );
@@ -123,7 +121,7 @@ var DiploPanelBlock = React.createClass({
             var data_elem = this.props.data[i]
             nodes.push(
                 <div className={class_name}>
-                    <DiploPanel title={data_elem.title} description="" url={data_elem.url}/>
+                    <DiploPanel title={data_elem.title} url={data_elem.url} sourceName={data_elem.sourceName}/>
                 </div>
             )
         }
