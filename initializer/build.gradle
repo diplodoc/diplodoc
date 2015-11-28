@@ -1,29 +1,41 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.3.0.RELEASE'
+    }
+}
+
 plugins {
-    id "net.saliman.cobertura" version "2.2.8"
+    id 'net.saliman.cobertura' version '2.2.8'
 }
 apply plugin: 'groovy'
+apply plugin: 'spring-boot'
 apply plugin: 'war'
 
 version = '0.0.1-SNAPSHOT'
 
+repositories {
+    jcenter()
+}
+
 dependencies {
-    compile dependency.groovy
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 
-    compile dependency.spring.context
+    compile 'org.codehaus.groovy:groovy-all'
 
-    compile dependency.servlet
-    compile dependency.spring.web
-    compile dependency.spring.webmvc
+    compile 'org.slf4j:slf4j-api'
+    compile 'ch.qos.logback:logback-classic'
 
-    compile dependency.jackson.core
-    compile dependency.jackson.databind
+    testCompile 'org.spockframework:spock-core'
+    testCompile 'cglib:cglib-nodep'
+    testCompile 'org.objenesis:objenesis'
+}
 
-    compile dependency.log.slf4j
-    compile dependency.log.logback
-
-    testCompile dependency.spock
-    testCompile dependency.cglib
-    testCompile dependency.objenesis
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
 }
 
 cobertura {
