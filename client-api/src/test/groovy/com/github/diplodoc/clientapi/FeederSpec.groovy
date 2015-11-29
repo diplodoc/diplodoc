@@ -1,5 +1,6 @@
 package com.github.diplodoc.clientapi
 
+import com.github.diplodoc.clientapi.controllers.Feeder
 import com.github.diplodoc.domain.mongodb.User
 import com.github.diplodoc.domain.mongodb.data.Doc
 import com.github.diplodoc.domain.mongodb.orchestration.Module
