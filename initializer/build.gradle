@@ -28,6 +28,8 @@ dependencies {
 
     compile 'org.codehaus.groovy:groovy-all'
 
+    compile 'commons-lang:commons-lang:2.6'
+
     compile 'org.slf4j:slf4j-api'
     compile 'ch.qos.logback:logback-classic'
 

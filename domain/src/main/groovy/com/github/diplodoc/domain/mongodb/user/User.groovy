@@ -15,4 +15,7 @@ class User {
     String id
 
     String googleId
+
+
+    List<String> interestedInSourcesIds
 }
