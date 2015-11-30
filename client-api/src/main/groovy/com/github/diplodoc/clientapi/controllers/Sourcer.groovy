@@ -30,7 +30,7 @@ class Sourcer {
     SecurityService securityService
 
     @RequestMapping(value = '/sources', method = RequestMethod.GET)
-    List<Map<String, String>> sources(
+    List<Map<String, ?>> sources(
                     @RequestParam(value = 'auth_provider', required = false) String authProvider,
                     @RequestParam(value = 'auth_type', required = false) String authType,
                     @RequestParam(value = 'auth_token', required = false) String authToken,
@@ -48,8 +48,9 @@ class Sourcer {
 
         sources.collect { Source source ->
             [
-                'name'   : source.name,
-                'rssUrl' : source.rssUrl
+                'name'       : source.name,
+                'rssUrl'     : source.rssUrl,
+                'interested' : (user.interestedInSourcesIds != null && user.interestedInSourcesIds.contains(source.id))
             ]
         }
     }

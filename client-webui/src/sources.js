@@ -79,8 +79,15 @@ var DiploPanel = React.createClass({
             overflow: 'hidden'
         };
 
+        var colorClass
+        if (this.props.interested) {
+            colorClass = 'card lime darken-3'
+        } else {
+            colorClass = 'card grey darken-3'
+        }
+
         return (
-            <div className="card blue-grey darken-1">
+            <div className={colorClass}>
                 <div style={divStyle} className="card-content white-text">
                     <span className="card-title">{this.props.title}</span>
                 </div>
@@ -121,7 +128,7 @@ var DiploPanelBlock = React.createClass({
             var data_elem = this.props.data[i]
             nodes.push(
                 <div className={class_name}>
-                    <DiploPanel title={data_elem.name} rssUrl={data_elem.rssUrl}/>
+                    <DiploPanel title={data_elem.name} rssUrl={data_elem.rssUrl} interested={data_elem.interested}/>
                 </div>
             )
         }
