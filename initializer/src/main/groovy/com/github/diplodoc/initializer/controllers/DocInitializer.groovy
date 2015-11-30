@@ -24,5 +24,7 @@ public class DocInitializer {
     void init() {
         log.info 'Going to delete all docs...'
         docRepository.deleteAll()
+
+        log.info 'All docs deleted'
     }
 }
