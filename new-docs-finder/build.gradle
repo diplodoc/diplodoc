@@ -24,6 +24,8 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-web'
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 
+    compile project(':domain')
+
     compile 'org.codehaus.groovy:groovy-all'
 
     compile 'com.rometools:rome:1.5.0'

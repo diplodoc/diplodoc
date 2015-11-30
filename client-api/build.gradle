@@ -24,6 +24,8 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-web'
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 
+    compile project(':domain')
+
     compile 'org.codehaus.groovy:groovy-all'
 
     compile 'com.google.api-client:google-api-client:1.19.1'
