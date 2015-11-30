@@ -1,6 +1,6 @@
 package com.github.diplodoc.clientapi
 
-import com.github.diplodoc.services.config.ServicesConfiguration
+import com.github.diplodoc.domain.DomainApplication
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.builder.SpringApplicationBuilder
@@ -10,16 +10,16 @@ import org.springframework.context.annotation.Import
 /**
  * @author yaroslav.yermilov
  */
-@Import(ServicesConfiguration)
+@Import(DomainApplication)
 @SpringBootApplication
 class ClientApiApplication extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        application.sources(ClientApiApplication.class)
+        application.sources(ClientApiApplication)
     }
 
     static void main(String[] args) {
-        SpringApplication.run(ClientApiApplication.class, args)
+        SpringApplication.run(ClientApiApplication, args)
     }
 }

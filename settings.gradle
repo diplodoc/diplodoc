@@ -2,8 +2,6 @@ rootProject.name = 'diplodoc'
 
 include 'domain'
 
-include 'services'
-
 include 'client-api'
 
 include 'initializer'
@@ -11,7 +9,5 @@ include 'initializer'
 include 'new-docs-finder'
 
 include 'orchestration'
-
-include 'admin-webui'
 
 include 'client-webui'

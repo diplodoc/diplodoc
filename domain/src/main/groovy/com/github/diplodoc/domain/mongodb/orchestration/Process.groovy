@@ -2,7 +2,6 @@ package com.github.diplodoc.domain.mongodb.orchestration
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
-import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 
 /**
@@ -13,7 +12,7 @@ import org.springframework.data.annotation.Id
 class Process {
 
     @Id
-    ObjectId id
+    String id
 
 
     String name

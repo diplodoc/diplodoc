@@ -1,4 +1,4 @@
-package com.github.diplodoc.initializer
+package com.github.diplodoc.newdocsfinder
 
 import com.github.diplodoc.domain.DomainApplication
 import org.springframework.boot.SpringApplication
@@ -12,14 +12,14 @@ import org.springframework.context.annotation.Import
  */
 @Import(DomainApplication)
 @SpringBootApplication
-class InitializerApplication extends SpringBootServletInitializer {
+class NewDocsFinderApplication extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        application.sources(InitializerApplication)
+        application.sources(NewDocsFinderApplication)
     }
 
     static void main(String[] args) {
-        SpringApplication.run(InitializerApplication, args)
+        SpringApplication.run(NewDocsFinderApplication, args)
     }
 }

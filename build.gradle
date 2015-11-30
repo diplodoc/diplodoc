@@ -1,23 +1,4 @@
-apply from: 'repository.gradle'
-
-allprojects {
-	group = 'com.github.diplodoc'
-	version = '0.1'
-
-    repositories {
-        jcenter()
-    }
-}
-
 project(':orchestration') {
-    apply plugin: 'java'
-
-    dependencies {
-        compile project(':domain')
-    }
-}
-
-project(':services') {
     apply plugin: 'java'
 
     dependencies {
@@ -29,7 +10,7 @@ project(':client-api') {
 	apply plugin: 'java'
 
 	dependencies {
-		compile project(':services')
+		compile project(':domain')
 	}
 }
 
@@ -37,7 +18,7 @@ project(':initializer') {
 	apply plugin: 'java'
 
 	dependencies {
-		compile project(':services')
+		compile project(':domain')
 	}
 }
 
@@ -45,6 +26,6 @@ project(':new-docs-finder') {
     apply plugin: 'java'
 
     dependencies {
-        compile project(':services')
+        compile project(':domain')
     }
 }

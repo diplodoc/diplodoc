@@ -1,4 +1,4 @@
-package com.github.diplodoc.domain.mongodb.data
+package com.github.diplodoc.domain.mongodb.user
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
@@ -9,21 +9,10 @@ import org.springframework.data.annotation.Id
  */
 @EqualsAndHashCode
 @ToString
-class Doc {
+class User {
 
     @Id
     String id
 
-
-    String uri
-
-    String sourceId
-
-
-    String html
-
-
-    String title
-
-    String publishTime
+    String googleId
 }
