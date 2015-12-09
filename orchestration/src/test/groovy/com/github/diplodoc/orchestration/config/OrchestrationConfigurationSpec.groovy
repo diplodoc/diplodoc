@@ -1,5 +1,6 @@
 package com.github.diplodoc.orchestration.config
 
+import com.github.diplodoc.orchestration.OrchestrationApplication
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import org.springframework.web.client.RestTemplate
 import spock.lang.Specification
@@ -9,11 +10,11 @@ import spock.lang.Specification
  */
 class OrchestrationConfigurationSpec extends Specification {
 
-    OrchestrationConfiguration orchestrationConfiguration = new OrchestrationConfiguration()
+    OrchestrationApplication orchestrationApplication = new OrchestrationApplication()
 
     def 'ThreadPoolTaskScheduler scheduler()'() {
         when:
-            def actual = orchestrationConfiguration.scheduler()
+            def actual = orchestrationApplication.scheduler()
 
         then:
             actual instanceof ThreadPoolTaskScheduler
@@ -22,7 +23,7 @@ class OrchestrationConfigurationSpec extends Specification {
 
     def 'RestTemplate restTemplate()'() {
         when:
-            def actual = orchestrationConfiguration.restTemplate()
+            def actual = orchestrationApplication.restTemplate()
 
         then:
             actual instanceof RestTemplate
