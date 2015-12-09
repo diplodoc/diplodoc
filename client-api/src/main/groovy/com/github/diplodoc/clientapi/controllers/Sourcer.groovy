@@ -50,7 +50,7 @@ class Sourcer {
             [
                 'name'       : source.name,
                 'rssUrl'     : source.rssUrl,
-                'interested' : (user.interestedInSourcesIds != null && user.interestedInSourcesIds.contains(source.id))
+                'interested' : user.interestedInSourcesIds.contains(source.id)
             ]
         }
     }

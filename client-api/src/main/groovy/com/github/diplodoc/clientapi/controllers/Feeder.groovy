@@ -48,14 +48,9 @@ class Feeder {
             return []
         }
 
-        List<Doc> docs = docRepository.findAll(new PageRequest(page?:0, size?:DEFAULT_SIZE, SORT)).content
+        List<Doc> docs = docRepository.findBySourceIdIn(user.interestedInSourcesIds, new PageRequest(page?:0, size?:DEFAULT_SIZE, SORT))
 
-        // FIXME: filtering should be in the scope of the query
-        docs
-            .findAll { Doc doc ->
-                user.interestedInSourcesIds != null && user.interestedInSourcesIds.contains(doc.sourceId)
-            }
-            .collect { Doc doc ->
+        docs.collect { Doc doc ->
                 [
                     'id'         : doc.id.toString(),
                     'url'        : doc.uri,

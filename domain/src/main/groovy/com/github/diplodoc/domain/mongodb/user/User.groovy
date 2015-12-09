@@ -17,5 +17,5 @@ class User {
     String googleId
 
 
-    List<String> interestedInSourcesIds
+    List<String> interestedInSourcesIds = []
 }
