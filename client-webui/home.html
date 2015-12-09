@@ -1,26 +1,26 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="en" class="no-js">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+		<title>Loading Effects for Grid Items | Demo 1</title>
+		<meta name="description" content="Loading Effects for Grid Items with CSS Animations" />
+		<meta name="keywords" content="css animation, loading effect, google plus, grid items, masonry" />
+		<meta name="author" content="Codrops" />
+		<link rel="shortcut icon" href="../favicon.ico"> 
+		<link rel="stylesheet" type="text/css" href="css/default.css" />
+		<link rel="stylesheet" type="text/css" href="css/component.css" />
+		<script src="js/modernizr.custom.js"></script>
+
     <script src="http://fb.me/react-0.13.2.js"></script>
     <script src="http://fb.me/JSXTransformer-0.13.2.js"></script>
-
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-
-    <link rel="stylesheet" href="src/styles.css">
-
-
-    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-    <script src="src/hello.js" />
-
-  </head>
-
-  <body>
-
-    <script type="text/javascript" src="js/materialize.min.js"></script>
-
-    <script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hellojs/1.9.8/hello.all.min.js"></script>
+	</head>
+	<body>
+		<script>
         hello.on('auth.login', function(auth) {
           // Call user information, for the given network
           hello(auth.network).api('/me').then(function(r) {
@@ -40,11 +40,10 @@
           });
         });
     </script>
-
     <script>
       hello.init(
         {google: '565991565381-gj9nfu1in725cjuev8okk5t1l3i507sa.apps.googleusercontent.com'},
-        {redirect_uri: '${modules_host}/client-webui/home.html'}
+        {redirect_uri: 'http://localhost:8080/client-webui/home.html'}
       );
     </script>
 
@@ -52,7 +51,6 @@
       <div class="nav-wrapper teal lighten-1">
         <a href="#" class="brand-logo">DIPLODOC</a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
-          <li><a href="#">Saved</a></li>
           <li><button class="btn waves-effect waves-light red" onclick="hello('google').login()" id="login">google</button></li>
           <li>
             <div id="profile"></div>
@@ -61,22 +59,125 @@
       </div>
     </nav>
 
-
-    <div class="container" id="article_list">
-      <div class="row" style="height: 200px; overflow: hidden;">
-        <div class="col s12">
-          <div class="card blue-grey darken-1">
+		<div class="container" id="root">
+			<!-- Top Navigation -->
+			<ul class="grid effect-1" id="grid">
+				<li>
+					<div class="card blue-grey darken-1">
             <div class="card-content white-text">
-              <span class="card-title">NOTHING TO SHOW</span>
-              <p>Use google to log in bro</p>
+              <span class="card-title">Card Title</span>
+              <p>I am a very simple card. I am good at containing small bits of information.
+              I am convenient because I require little markup to use effectively.
+            I am a very simple card. I am good at containing small bits of information.
+              I am convenient because I require little markup to use effectively.</p>
+            </div>
+            <div class="card-action">
+              <a href="#">This is a link</a>
+              <a href="#">This is a link</a>
             </div>
           </div>
-        </div>
-      </div>
-
-    </div>
-
-    <script type="text/jsx" src="src/home.js" />
-
-  </body>
+				</li>
+				<li><a href="http://drbl.in/fGhI"><img src="images/5.jpg"></a></li>
+				<li><a href="http://drbl.in/fKCf"><img src="images/6.jpg"></a></li>
+				<li><a href="http://drbl.in/fLBG"><img src="images/7.jpg"></a></li>
+				<li><a href="http://drbl.in/fPEY"><img src="images/8.jpg"></a></li>
+				<li>
+					<div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title">Card Title</span>
+              <p>I am a very simple card. I am good at containing small bits of information.
+              I am convenient because I require little markup to use effectively.
+            I am a very simple card. I am good at containing small bits of information.
+              I am convenient because I require little markup to use effectively.
+            I am a very simple card. I am good at containing small bits of information.
+              I am convenient because I require little markup to use effectively.
+            I am a very simple card. I am good at containing small bits of information.
+              I am convenient because I require little markup to use effectively.</p>
+            </div>
+            <div class="card-action">
+              <a href="#">This is a link</a>
+              <a href="#">This is a link</a>
+            </div>
+          </div>
+				</li>
+				<li><a href="http://drbl.in/fWwG"><img src="images/9.jpg"></a></li>
+				<li><a href="http://drbl.in/fQdt"><img src="images/12.png"></a></li>
+				<li><a href="http://drbl.in/fHaa"><img src="images/13.png"></a></li>
+				<li><a href="http://drbl.in/gXMo"><img src="images/10.png"></a></li>
+				<li><a href="http://drbl.in/gXMn"><img src="images/11.png"></a></li>
+				<li><a href="http://drbl.in/fzYo"><img src="images/2.jpg"></a></li>
+				<li><a href="http://drbl.in/fARU"><img src="images/14.png"></a></li>
+				<li><a href="http://drbl.in/fWMM"><img src="images/1.jpg"></a></li>
+				<li><a href="http://drbl.in/fWPV"><img src="images/3.jpg"></a></li>
+				<li><a href="http://drbl.in/fWMT"><img src="images/4.jpg"></a></li>
+				<li><a href="http://drbl.in/fGhI"><img src="images/5.jpg"></a></li>
+				<li>
+					<div class="card blue-grey darken-13">
+            <div class="card-content white-text">
+              <span class="card-title">Card Title</span>
+              <p>I am a very simple card. I am good at containing small bits of information.
+              I am convenient because I require little markup to use effectively.</p>
+            </div>
+            <div class="card-action">
+              <a href="#">This is a link</a>
+              <a href="#">This is a link</a>
+            </div>
+          </div>
+				</li>
+				<li><a href="http://drbl.in/fKCf"><img src="images/6.jpg"></a></li>
+				<li><a href="http://drbl.in/fLBG"><img src="images/7.jpg"></a></li>
+				<li><a href="http://drbl.in/fPEY"><img src="images/8.jpg"></a></li>
+				<li><a href="http://drbl.in/fWwG"><img src="images/9.jpg"></a></li>
+				<li><a href="http://drbl.in/fQdt"><img src="images/12.png"></a></li>
+				<li><a href="http://drbl.in/fHaa"><img src="images/13.png"></a></li>
+				<li><a href="http://drbl.in/gXMo"><img src="images/10.png"></a></li>
+				<li><a href="http://drbl.in/gXMn"><img src="images/11.png"></a></li>
+				<li><a href="http://drbl.in/fzYo"><img src="images/2.jpg"></a></li>
+				<li><a href="http://drbl.in/fARU"><img src="images/14.png"></a></li>
+				<li><a href="http://drbl.in/fWMM"><img src="images/1.jpg"></a></li>
+				<li><a href="http://drbl.in/fWPV"><img src="images/3.jpg"></a></li>
+				<li><a href="http://drbl.in/fWMT"><img src="images/4.jpg"></a></li>
+				<li><a href="http://drbl.in/fGhI"><img src="images/5.jpg"></a></li>
+				<li><a href="http://drbl.in/fKCf"><img src="images/6.jpg"></a></li>
+				<li><a href="http://drbl.in/fLBG"><img src="images/7.jpg"></a></li>
+				<li><a href="http://drbl.in/fPEY"><img src="images/8.jpg"></a></li>
+				<li><a href="http://drbl.in/fWwG"><img src="images/9.jpg"></a></li>
+				<li><a href="http://drbl.in/fQdt"><img src="images/12.png"></a></li>
+				<li><a href="http://drbl.in/fHaa"><img src="images/13.png"></a></li>
+				<li><a href="http://drbl.in/gXMo"><img src="images/10.png"></a></li>
+				<li><a href="http://drbl.in/gXMn"><img src="images/11.png"></a></li>
+				<li><a href="http://drbl.in/fzYo"><img src="images/2.jpg"></a></li>
+				<li><a href="http://drbl.in/fARU"><img src="images/14.png"></a></li>
+				<li><a href="http://drbl.in/fWMM"><img src="images/1.jpg"></a></li>
+				<li><a href="http://drbl.in/fWPV"><img src="images/3.jpg"></a></li>
+				<li><a href="http://drbl.in/fWMT"><img src="images/4.jpg"></a></li>
+				<li><a href="http://drbl.in/fGhI"><img src="images/5.jpg"></a></li>
+				<li><a href="http://drbl.in/fKCf"><img src="images/6.jpg"></a></li>
+				<li><a href="http://drbl.in/fLBG"><img src="images/7.jpg"></a></li>
+				<li><a href="http://drbl.in/fPEY"><img src="images/8.jpg"></a></li>
+				<li><a href="http://drbl.in/fWwG"><img src="images/9.jpg"></a></li>
+				<li><a href="http://drbl.in/fQdt"><img src="images/12.png"></a></li>
+				<li><a href="http://drbl.in/fHaa"><img src="images/13.png"></a></li>
+				<li><a href="http://drbl.in/gXMo"><img src="images/10.png"></a></li>
+				<li><a href="http://drbl.in/gXMn"><img src="images/11.png"></a></li>
+				<li><a href="http://drbl.in/fzYo"><img src="images/2.jpg"></a></li>
+				<li><a href="http://drbl.in/fARU"><img src="images/14.png"></a></li>
+				<li><a href="http://drbl.in/fWMM"><img src="images/1.jpg"></a></li>
+				<li><a href="http://drbl.in/fWPV"><img src="images/3.jpg"></a></li>
+				
+			</ul>
+		</div>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/3.3.2/masonry.pkgd.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/3.2.0/imagesloaded.pkgd.min.js"></script><script src="js/classie.js"></script>
+		<script src="js/AnimOnScroll.js"></script>
+		<script>
+			new AnimOnScroll( document.getElementById( 'grid' ), {
+				minDuration : 0.4,
+				maxDuration : 0.7,
+				viewportFactor : 0.2
+			} );
+		</script>
+    <script type="text/jsx" src="js/card.js" />
+	</body>
 </html>
