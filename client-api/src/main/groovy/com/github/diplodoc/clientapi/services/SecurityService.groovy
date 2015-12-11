@@ -23,8 +23,11 @@ class SecurityService {
 
     private final static String CLIENT_ID = System.getProperty('google_clientId')
 
-    private HttpTransport transport = new NetHttpTransport()
-    private JsonFactory jsonFactory = JacksonFactory.getDefaultInstance()
+    @Autowired
+    HttpTransport transport
+
+    @Autowired
+    JsonFactory jsonFactory
 
     @Autowired
     UserRepository userRepository
@@ -39,9 +42,7 @@ class SecurityService {
 
             if (authType == 'id_token') {
                 googleId = authWithGoogleIdToken(authToken)
-            }
-
-            if (authType == 'access_token') {
+            } else if (authType == 'access_token') {
                 googleId = authWithGoogleAccessToken(authToken)
             }
 

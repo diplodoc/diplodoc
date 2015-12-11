@@ -37,6 +37,10 @@ dependencies {
     testCompile 'org.spockframework:spock-core'
     testCompile 'cglib:cglib-nodep:2.2'
     testCompile 'org.objenesis:objenesis:1.2'
+    testCompile 'org.spockframework:spock-spring'
+    testCompile 'org.springframework:spring-test'
+    testCompile 'com.jayway.jsonpath:json-path:0.8.1'
+    testCompile 'com.jayway.jsonpath:json-path-assert:0.8.1'
 }
 
 task wrapper(type: Wrapper) {

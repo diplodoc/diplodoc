@@ -2,7 +2,6 @@ package com.github.diplodoc.clientapi.services
 
 import com.github.diplodoc.domain.mongodb.user.User
 import com.github.diplodoc.domain.repository.mongodb.user.UserRepository
-import org.bson.types.ObjectId
 import spock.lang.Specification
 
 /**
@@ -28,7 +27,7 @@ class SecurityServiceSpec extends Specification {
 
         where:
             googleId                   | user
-            'user-id'                  | new User(id: new ObjectId('111111111111111111111111'))
+            'user-id'                  | new User(id: 'id-1')
             null                       | null
     }
 
@@ -47,7 +46,7 @@ class SecurityServiceSpec extends Specification {
 
         where:
             googleId                   | user
-            'user-id'                  | new User(id: new ObjectId('111111111111111111111111'))
+            'user-id'                  | new User(id: 'id-1')
             null                       | null
     }
 
@@ -59,12 +58,12 @@ class SecurityServiceSpec extends Specification {
             userRepository.findOneByGoogleId('user-id') >> null
 
         when:
-            1 * userRepository.save(new User(googleId: 'user-id')) >> new User(id: new ObjectId('111111111111111111111111'), googleId: 'user-id')
+            1 * userRepository.save(new User(googleId: 'user-id')) >> new User(id: 'id-1', googleId: 'user-id')
 
             User actual = securityService.authenticate('google', 'id_token', 'TOKEN')
 
         then:
-            actual == new User(id: new ObjectId('111111111111111111111111'), googleId: 'user-id')
+            actual == new User(id: 'id-1', googleId: 'user-id')
     }
 
     def 'User authenticate(String authProvider, String authType, String authToken) - new user with access_token'() {
@@ -75,12 +74,12 @@ class SecurityServiceSpec extends Specification {
             userRepository.findOneByGoogleId('user-id') >> null
 
         when:
-            1 * userRepository.save(new User(googleId: 'user-id')) >> new User(id: new ObjectId('111111111111111111111111'), googleId: 'user-id')
+            1 * userRepository.save(new User(googleId: 'user-id')) >> new User(id: 'id-1', googleId: 'user-id')
 
             User actual = securityService.authenticate('google', 'access_token', 'TOKEN')
 
         then:
-            actual == new User(id: new ObjectId('111111111111111111111111'), googleId: 'user-id')
+            actual == new User(id: 'id-1', googleId: 'user-id')
     }
 
     def 'User authenticate(String authProvider, String authType, String authToken) - unknown provider'() {
