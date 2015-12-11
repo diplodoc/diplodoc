@@ -54,4 +54,42 @@ class SourcerSpec extends Specification {
                 .andExpect(jsonPath('$[1].interested', is(false)))
                 .andExpect(jsonPath('$[1].rssUrl', is('rss-url-2')))
     }
+
+    def 'GET /sources - with page and size parameters'() {
+        setup:
+            User user = new User(interestedInSourcesIds: [ 'id-1' ])
+            1 * securityService.authenticate('auth_provider', 'auth_type', 'auth_token') >> user
+
+            Source source1 = new Source(id: 'id-1', name: 'source-1', rssUrl: 'rss-url-1')
+            Source source2 = new Source(id: 'id-2', name: 'source-2', rssUrl: 'rss-url-2')
+            1 * sourceRepository.findAll(new PageRequest(2, 28, SORT)) >> new PageImpl<Source>([ source1, source2 ])
+
+        when:
+            def response = mockMvc.perform(get('/sources?auth_provider=auth_provider&auth_type=auth_type&auth_token=auth_token&page=2&size=28').contentType(APPLICATION_JSON_UTF8))
+
+        then:
+            response
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath('$', hasSize(2)))
+                .andExpect(jsonPath('$[0].name', is('source-1')))
+                .andExpect(jsonPath('$[0].interested', is(true)))
+                .andExpect(jsonPath('$[0].rssUrl', is('rss-url-1')))
+                .andExpect(jsonPath('$[1].name', is('source-2')))
+                .andExpect(jsonPath('$[1].interested', is(false)))
+                .andExpect(jsonPath('$[1].rssUrl', is('rss-url-2')))
+    }
+    def 'GET /sources - user is not found'() {
+        setup:
+            1 * securityService.authenticate(_, _, _) >> null
+
+        when:
+            def response = mockMvc.perform(get('/sources?auth_provider=auth_provider&auth_type=auth_type&auth_token=auth_token').contentType(APPLICATION_JSON_UTF8))
+
+        then:
+            response
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath('$', hasSize(0)))
+    }
 }
